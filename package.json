@@ -8,7 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.6",
+    "apollo-server-micro": "^2.19.1",
     "autoprefixer": "^10.1.0",
+    "graphql": "^15.4.0",
+    "micro": "^9.3.4",
     "next": "10.0.4",
     "postcss": "^8.2.1",
     "react": "17.0.1",

@@ -9,7 +9,15 @@ const QUERY = gql`
 
 export default function Home() {
   const { data, loading, error } = useQuery(QUERY);
-  console.log({ data, loading, error });
+
+  let content;
+  if (loading) {
+    content = 'Loading...';
+  } else if (error) {
+    content = error.message;
+  } else if (data) {
+    content = data.sayHello;
+  }
 
   return (
     <div>
@@ -19,7 +27,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <div className="flex justify-center text-red-700 text-xl mt-4">Hi</div>
+        <div className="flex justify-center text-red-700 text-xl mt-4">
+          {content}
+        </div>
       </main>
     </div>
   );

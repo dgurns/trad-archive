@@ -1,25 +1,15 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
-
-const typeDefs = gql`
-  type Query {
-    sayHello: String
-  }
-`;
-
-const resolvers = {
-  Query: {
-    sayHello() {
-      return 'Hello World';
-    },
-  },
-};
-
-const apolloServer = new ApolloServer({ typeDefs, resolvers });
+import 'reflect-metadata';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { createServer } from 'api/server';
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
-export default apolloServer.createHandler({ path: '/api/graphql' });
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const server = await createServer();
+  const handler = server.createHandler({ path: '/api/graphql' });
+  return handler(req, res);
+};

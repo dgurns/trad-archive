@@ -3,12 +3,13 @@ import { useQuery, gql } from '@apollo/client';
 
 const QUERY = gql`
   query {
-    sayHello
+    signUp
   }
 `;
 
 export default function Home() {
   const { data, loading, error } = useQuery(QUERY);
+  console.log(data);
 
   let content;
   if (loading) {
@@ -16,7 +17,7 @@ export default function Home() {
   } else if (error) {
     content = error.message;
   } else if (data) {
-    content = data.sayHello;
+    content = data.signUp.id;
   }
 
   return (

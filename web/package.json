@@ -15,7 +15,7 @@
     "graphql": "^15.4.0",
     "graphql-depth-limit": "^1.1.0",
     "micro": "^9.3.4",
-    "next": "^10.0.4",
+    "next": "10.0.5-canary.8",
     "pg": "^8.5.1",
     "postcss": "^8.2.1",
     "react": "17.0.1",

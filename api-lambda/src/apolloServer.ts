@@ -31,7 +31,13 @@ export const graphqlHandler = (
   callback: APIGatewayProxyCallback
 ) => {
   createServer().then((server) => {
-    const handler = server.createHandler();
+    const handler = server.createHandler({
+      cors: {
+        // TODO: Set allowed origins
+        origin: true,
+        credentials: true,
+      },
+    });
     return handler(event, context, callback);
   });
 };

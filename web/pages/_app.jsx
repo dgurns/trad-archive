@@ -1,9 +1,9 @@
-import "tailwindcss/tailwind.css";
+import 'tailwindcss/tailwind.css';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: '/api/graphql',
-  cache: new InMemoryCache()
+  uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
+  cache: new InMemoryCache(),
 });
 
 function MyApp({ Component, pageProps }) {
@@ -14,4 +14,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp
+export default MyApp;

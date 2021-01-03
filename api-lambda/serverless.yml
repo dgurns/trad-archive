@@ -2,18 +2,25 @@ service: api-lambda
 provider:
   name: aws
   runtime: nodejs12.x
-plugins:
-  - serverless-plugin-typescript
-  - serverless-offline
 functions:
   graphql:
-    handler: graphql.graphqlHandler
+    handler: src/apolloServer.graphqlHandler
     events:
       - http:
           path: graphql
           method: post
+          # TODO: Set allowed origins
           cors: true
       - http:
           path: graphql
           method: get
+          # TODO: Set allowed origins
           cors: true
+plugins:
+  - serverless-webpack
+  - serverless-offline
+custom:
+  serverless-offline:
+    httpPort: 4000
+  webpack:
+    includeModules: true

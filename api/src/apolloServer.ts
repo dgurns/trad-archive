@@ -7,11 +7,11 @@ import {
   Context as LambdaContext,
 } from 'aws-lambda';
 
-import { connectToDatabase } from './db';
+// import { connectToDatabase } from './db';
 import { UserResolver } from 'resolvers/UserResolver';
 
 const createServer = async () => {
-  await connectToDatabase();
+  // await connectToDatabase();
 
   const schema = await buildSchema({
     resolvers: [UserResolver],

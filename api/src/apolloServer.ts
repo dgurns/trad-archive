@@ -8,6 +8,8 @@ import {
 } from 'aws-lambda';
 
 import { connectToDatabase } from 'db';
+import { createCustomContext } from 'context';
+import { authChecker } from 'auth';
 import { UserResolver } from 'resolvers/UserResolver';
 
 const createServer = async () => {
@@ -16,26 +18,13 @@ const createServer = async () => {
   const schema = await buildSchema({
     resolvers: [UserResolver],
     dateScalarMode: 'isoDate',
+    authChecker,
+    authMode: 'null',
   });
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ event, context }) => ({
-      event,
-      context,
-      user: 'authed user',
-    }),
-    formatResponse: (response: any, requestContext: any) => {
-      // Check to see if the response includes an auth error. If so, set a
-      // header signifying that to the client.
-      if (requestContext.response && requestContext.response.http) {
-        requestContext.response.http.headers.set(
-          'user-auth',
-          requestContext.context.user
-        );
-      }
-      return response;
-    },
+    context: ({ event, context }) => createCustomContext(event, context),
   });
 
   return apolloServer;

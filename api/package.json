@@ -2,7 +2,6 @@
   "name": "trad-archive-api",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
     "dev": "sls offline start"
   },
@@ -10,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server-lambda": "^2.19.1",
+    "bcrypt": "^5.0.0",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",

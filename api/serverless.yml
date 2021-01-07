@@ -2,6 +2,10 @@ service: trad-archive-api
 provider:
   name: aws
   runtime: nodejs12.x
+  # Settings to get ahead of deprecation warnings
+  apiGateway:
+    shouldStartNameWithService: true
+  lambdaHashingVersion: '20201221'
 functions:
   graphql:
     handler: src/apolloServer.graphqlHandler
@@ -23,4 +27,5 @@ custom:
   serverless-offline:
     httpPort: 4000
   webpack:
+    webpackConfig: 'webpack.config.js'
     includeModules: true

@@ -7,11 +7,11 @@ import {
   Context as LambdaContext,
 } from 'aws-lambda';
 
-// import { connectToDatabase } from './db';
+import { connectToDatabase } from 'db';
 import { UserResolver } from 'resolvers/UserResolver';
 
 const createServer = async () => {
-  // await connectToDatabase();
+  await connectToDatabase();
 
   const schema = await buildSchema({
     resolvers: [UserResolver],
@@ -20,6 +20,18 @@ const createServer = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
+    context: ({ event, context }) => ({
+      headers: event.headers,
+      functionName: context.functionName,
+      event,
+      context,
+    }),
+    formatResponse: (response: any, requestContext: any) => {
+      if (requestContext.response && requestContext.response.http) {
+        requestContext.response.http.headers.set('custom-key', 'custom-value');
+      }
+      return response;
+    },
   });
 
   return apolloServer;

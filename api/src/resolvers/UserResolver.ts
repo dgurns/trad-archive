@@ -1,12 +1,10 @@
-import { Resolver, Query } from 'type-graphql';
+import { Resolver, Query, Ctx } from 'type-graphql';
 import { User } from 'entities/User';
-
 @Resolver()
 export class UserResolver {
   @Query(() => User)
-  test() {
-    const user = new User();
-    user.id = 1;
-    return user;
+  test(@Ctx() ctx: any) {
+    console.log('resolver ctx', ctx);
+    return { id: 1 };
   }
 }

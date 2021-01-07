@@ -28,7 +28,10 @@ const createServer = async () => {
     }),
     formatResponse: (response: any, requestContext: any) => {
       if (requestContext.response && requestContext.response.http) {
-        requestContext.response.http.headers.set('custom-key', 'custom-value');
+        requestContext.response.http.headers.set(
+          'custom-key',
+          'custom-value-hi'
+        );
       }
       return response;
     },

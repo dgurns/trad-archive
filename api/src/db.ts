@@ -1,6 +1,14 @@
-import { createConnection } from 'typeorm';
+import { createConnection, getConnectionManager } from 'typeorm';
+
+const DEFAULT_CONNECTION_NAME = 'default';
 
 export const connectToDatabase = async () => {
+  const connectionManager = getConnectionManager();
+  const isConnected = connectionManager.has(DEFAULT_CONNECTION_NAME);
+  if (isConnected) {
+    return;
+  }
+
   await createConnection({
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',

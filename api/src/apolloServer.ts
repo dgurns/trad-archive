@@ -21,16 +21,17 @@ const createServer = async () => {
   const apolloServer = new ApolloServer({
     schema,
     context: ({ event, context }) => ({
-      headers: event.headers,
-      functionName: context.functionName,
       event,
       context,
+      user: 'authed user',
     }),
     formatResponse: (response: any, requestContext: any) => {
+      // Check to see if the response includes an auth error. If so, set a
+      // header signifying that to the client.
       if (requestContext.response && requestContext.response.http) {
         requestContext.response.http.headers.set(
-          'custom-key',
-          'custom-value-hi'
+          'user-auth',
+          requestContext.context.user
         );
       }
       return response;

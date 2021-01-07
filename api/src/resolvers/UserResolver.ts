@@ -4,7 +4,7 @@ import { User } from 'entities/User';
 export class UserResolver {
   @Query(() => User)
   test(@Ctx() ctx: any) {
-    console.log('resolver ctx', ctx);
+    console.log('user from context', ctx.user);
     return { id: 1 };
   }
 }

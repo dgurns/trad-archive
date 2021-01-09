@@ -1,6 +1,6 @@
 import { AuthChecker } from 'type-graphql';
 import { User, UserPermission } from 'entities/User';
-import { CustomContext } from 'context';
+import { CustomContext } from 'middleware/context';
 
 // authChecker is run whenever a resolver is protected by the `@Authorized`
 // decorator. It returns a boolean for whether the request is authorized.

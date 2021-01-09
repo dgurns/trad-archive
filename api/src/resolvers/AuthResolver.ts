@@ -1,18 +1,21 @@
 import bcrypt from 'bcrypt';
-import { Resolver, Mutation, Arg } from 'type-graphql';
+import { Resolver, Mutation, Arg, Ctx } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { UserInputError, AuthenticationError } from 'apollo-server-lambda';
 
 import { User } from 'entities/User';
 import AuthService from 'services/Auth';
+import { makeValidAuthCookie } from 'middleware/cookie';
+import { CustomContext } from 'middleware/context';
 
 @Resolver()
 export class AuthResolver {
-  @Mutation(() => String)
+  @Mutation(() => Boolean)
   async signUp(
     @Arg('email') email: string,
     @Arg('username') username: string,
-    @Arg('password') password: string
+    @Arg('password') password: string,
+    @Ctx() ctx: CustomContext
   ) {
     if (!email || !username || !password) {
       throw new UserInputError('Must provide email, username, and password');
@@ -51,11 +54,17 @@ export class AuthResolver {
     await user.save();
 
     const jwtAccessToken = AuthService.createJwtAccessToken(user);
-    return jwtAccessToken;
+    ctx.setResponseAuthCookie = makeValidAuthCookie(jwtAccessToken);
+
+    return true;
   }
 
-  @Mutation(() => String)
-  async logIn(@Arg('email') email: string, @Arg('password') password: string) {
+  @Mutation(() => Boolean)
+  async logIn(
+    @Arg('email') email: string,
+    @Arg('password') password: string,
+    @Ctx() ctx: CustomContext
+  ) {
     if (!email || !password) {
       throw new UserInputError('Must provide email and password');
     }
@@ -73,6 +82,8 @@ export class AuthResolver {
     }
 
     const jwtAccessToken = AuthService.createJwtAccessToken(user);
-    return jwtAccessToken;
+    ctx.setResponseAuthCookie = makeValidAuthCookie(jwtAccessToken);
+
+    return true;
   }
 }

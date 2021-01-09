@@ -8,8 +8,9 @@ import {
 } from 'aws-lambda';
 
 import { connectToDatabase } from 'db';
-import { createCustomContext } from 'context';
-import { authChecker } from 'auth';
+import { createCustomContext } from 'middleware/context';
+const apolloServerPlugins = require('middleware/plugins');
+import { authChecker } from 'resolvers/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
 import { UserResolver } from 'resolvers/UserResolver';
 
@@ -25,6 +26,7 @@ const createServer = async () => {
 
   const apolloServer = new ApolloServer({
     schema,
+    plugins: apolloServerPlugins,
     context: ({ event, context }) => createCustomContext(event, context),
   });
 

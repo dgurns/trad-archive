@@ -1,11 +1,13 @@
 import { APIGatewayProxyEvent, Context as LambdaContext } from 'aws-lambda';
 import { User } from 'entities/User';
 import AuthService from 'services/Auth';
+import { makeInvalidAuthCookie, ResponseAuthCookie } from 'middleware/cookie';
 
 export interface CustomContext {
   event: APIGatewayProxyEvent;
   context: LambdaContext;
   user?: User;
+  setResponseAuthCookie?: ResponseAuthCookie;
 }
 
 // createCustomContext checks for a JWT Access Token in the requests's
@@ -16,6 +18,8 @@ export const createCustomContext = async (
   context: LambdaContext
 ): Promise<CustomContext> => {
   let user: User | undefined;
+  let setResponseAuthCookie: ResponseAuthCookie | undefined;
+
   const authHeader = event.headers['Authorization'];
   if (authHeader) {
     const headerParts = authHeader.split('Bearer ');
@@ -24,12 +28,18 @@ export const createCustomContext = async (
       const userId = AuthService.extractUserIdFromJwtAccessToken(token);
       if (userId) {
         user = await User.findOne(userId);
+      } else {
+        // There was an auth token but no valid userId could be extracted, so
+        // set the response cookie to an `expires` date in the past
+        setResponseAuthCookie = makeInvalidAuthCookie();
       }
     }
   }
+
   return {
     event,
     context,
     user,
+    setResponseAuthCookie,
   };
 };

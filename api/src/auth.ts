@@ -1,17 +1,6 @@
 import { AuthChecker } from 'type-graphql';
-import { AuthenticationError } from 'apollo-server-lambda';
 import { User, UserPermission } from 'entities/User';
 import { CustomContext } from 'context';
-
-// authenticateRequest checks the incoming request context for a valid user. If
-// no valid user is found, it returns an AuthenticationError.
-export const authenticateRequest = (
-  ctx: CustomContext
-): AuthenticationError | void => {
-  if (!ctx.user) {
-    return new AuthenticationError('Request must contain a valid user');
-  }
-};
 
 // authChecker is run whenever a resolver is protected by the `@Authorized`
 // decorator. It returns a boolean for whether the request is authorized.

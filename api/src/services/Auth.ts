@@ -20,17 +20,24 @@ const isSecurePassword = (password?: string) => {
 };
 
 const createJwtAccessToken = (user: User) => {
-  const token = jwt.sign(user, JWT_SECRET_KEY, { expiresIn: '15m' });
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY, {
+    expiresIn: '15m',
+  });
   return token;
 };
 
-const extractUserFromJwtAccessToken = (token: string): User | undefined => {
+type JwtAccessTokenPayload = {
+  userId: number;
+};
+
+const extractUserIdFromJwtAccessToken = (token: string): number | undefined => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     if (!decoded || typeof decoded !== 'object') {
       throw new Error();
     }
-    return decoded as User;
+    const payload = decoded as JwtAccessTokenPayload;
+    return payload.userId;
   } catch {
     return undefined;
   }
@@ -40,5 +47,5 @@ export default {
   isValidEmail,
   isSecurePassword,
   createJwtAccessToken,
-  extractUserFromJwtAccessToken,
+  extractUserIdFromJwtAccessToken,
 };

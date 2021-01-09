@@ -11,23 +11,22 @@ export interface CustomContext {
 // createCustomContext checks for a JWT Access Token in the requests's
 // Authorization Header. If there is a token and it's valid, this function sets
 // the user on context.
-export const createCustomContext = (
+export const createCustomContext = async (
   event: APIGatewayProxyEvent,
   context: LambdaContext
-): CustomContext => {
+): Promise<CustomContext> => {
   let user: User | undefined;
   const authHeader = event.headers['Authorization'];
   if (authHeader) {
     const headerParts = authHeader.split('Bearer ');
     if (headerParts.length === 2) {
       const token = headerParts[1];
-      const userFromToken = AuthService.extractUserFromJwtAccessToken(token);
-      if (userFromToken) {
-        user = userFromToken;
+      const userId = AuthService.extractUserIdFromJwtAccessToken(token);
+      if (userId) {
+        user = await User.findOne(userId);
       }
     }
   }
-  console.log('createCustomContext with user: ', user);
   return {
     event,
     context,

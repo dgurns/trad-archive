@@ -1,4 +1,5 @@
 import { createConnection, getConnectionManager } from 'typeorm';
+import { User } from 'entities/User';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
@@ -17,13 +18,13 @@ export const connectToDatabase = async () => {
     password: process.env.DATABASE_PASSWORD ?? 'password',
     database: process.env.DATABASE_NAME ?? 'postgres',
     logging: false,
-    entities: ['./entities/*'],
+    entities: [User],
     // TODO: Set synchronize to false in production
     synchronize: true,
     migrationsRun: true,
-    migrations: ['./migrations/*'],
+    migrations: ['src/migrations/*'],
     cli: {
-      migrationsDir: './migrations',
+      migrationsDir: 'src/migrations',
     },
   });
 };

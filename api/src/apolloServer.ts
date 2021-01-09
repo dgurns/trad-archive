@@ -10,13 +10,14 @@ import {
 import { connectToDatabase } from 'db';
 import { createCustomContext } from 'context';
 import { authChecker } from 'auth';
+import { AuthResolver } from 'resolvers/AuthResolver';
 import { UserResolver } from 'resolvers/UserResolver';
 
 const createServer = async () => {
   await connectToDatabase();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [AuthResolver, UserResolver],
     dateScalarMode: 'isoDate',
     authChecker,
     authMode: 'null',

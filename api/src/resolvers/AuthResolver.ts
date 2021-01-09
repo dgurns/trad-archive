@@ -5,7 +5,6 @@ import { UserInputError, AuthenticationError } from 'apollo-server-lambda';
 
 import { User } from 'entities/User';
 import AuthService from 'services/Auth';
-import { makeValidAuthCookie } from 'middleware/cookie';
 import { CustomContext } from 'middleware/context';
 
 @Resolver()
@@ -53,8 +52,8 @@ export class AuthResolver {
     });
     await user.save();
 
-    const jwtAccessToken = AuthService.createJwtAccessToken(user);
-    ctx.setResponseAuthCookie = makeValidAuthCookie(jwtAccessToken);
+    const jwt = AuthService.createJwt(user);
+    ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
 
     return true;
   }
@@ -81,9 +80,15 @@ export class AuthResolver {
       throw new AuthenticationError('Invalid password');
     }
 
-    const jwtAccessToken = AuthService.createJwtAccessToken(user);
-    ctx.setResponseAuthCookie = makeValidAuthCookie(jwtAccessToken);
+    const jwt = AuthService.createJwt(user);
+    ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
 
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  logOut(@Ctx() ctx: CustomContext) {
+    ctx.setResponseJwtCookie = AuthService.makeInvalidJwtCookie();
     return true;
   }
 }

@@ -1,45 +1,40 @@
+import cookie from 'cookie';
 import { APIGatewayProxyEvent, Context as LambdaContext } from 'aws-lambda';
-import { User } from 'entities/User';
-import AuthService from 'services/Auth';
-import { makeInvalidAuthCookie, ResponseAuthCookie } from 'middleware/cookie';
-
+import AuthService, { JwtCookie } from 'services/Auth';
 export interface CustomContext {
   event: APIGatewayProxyEvent;
   context: LambdaContext;
-  user?: User;
-  setResponseAuthCookie?: ResponseAuthCookie;
+  userId?: number;
+  setResponseJwtCookie?: JwtCookie;
 }
 
 // createCustomContext checks for a JWT Access Token in the requests's
 // Authorization Header. If there is a token and it's valid, this function sets
 // the user on context.
-export const createCustomContext = async (
+export const createCustomContext = (
   event: APIGatewayProxyEvent,
   context: LambdaContext
-): Promise<CustomContext> => {
-  let user: User | undefined;
-  let setResponseAuthCookie: ResponseAuthCookie | undefined;
+): CustomContext => {
+  let userId: number | undefined;
+  let setResponseJwtCookie: JwtCookie | undefined;
 
-  const authHeader = event.headers['Authorization'];
-  if (authHeader) {
-    const headerParts = authHeader.split('Bearer ');
-    if (headerParts.length === 2) {
-      const token = headerParts[1];
-      const userId = AuthService.extractUserIdFromJwtAccessToken(token);
-      if (userId) {
-        user = await User.findOne(userId);
-      } else {
-        // There was an auth token but no valid userId could be extracted, so
-        // set the response cookie to an `expires` date in the past
-        setResponseAuthCookie = makeInvalidAuthCookie();
-      }
+  const requestCookie = event.headers['Cookie'];
+  if (requestCookie) {
+    const { jwtCookie } = cookie.parse(requestCookie);
+    const userIdFromCookie = AuthService.extractUserIdFromJwt(jwtCookie);
+    if (userIdFromCookie) {
+      userId = userIdFromCookie;
+    } else {
+      // There was an auth token but no valid userId could be extracted, so
+      // set the response cookie to an `expires` date in the past
+      setResponseJwtCookie = AuthService.makeInvalidJwtCookie();
     }
   }
 
   return {
     event,
     context,
-    user,
-    setResponseAuthCookie,
+    userId,
+    setResponseJwtCookie,
   };
 };

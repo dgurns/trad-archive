@@ -10,7 +10,7 @@ import {
 import { connectToDatabase } from 'db';
 import { createCustomContext } from 'middleware/context';
 const apolloServerPlugins = require('middleware/plugins');
-import { authChecker } from 'resolvers/authChecker';
+import { authChecker } from 'middleware/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
 import { UserResolver } from 'resolvers/UserResolver';
 

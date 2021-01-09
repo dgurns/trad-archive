@@ -3,7 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 
 const QUERY = gql`
   query {
-    test {
+    getCurrentUser {
       id
     }
   }
@@ -18,7 +18,7 @@ export default function Home() {
   } else if (error) {
     content = error.message;
   } else if (data) {
-    content = data.test.id;
+    content = data.getCurrentUser?.id;
   }
 
   return (

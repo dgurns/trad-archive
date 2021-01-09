@@ -1,4 +1,7 @@
 import jwt from 'jsonwebtoken';
+import { CookieSerializeOptions } from 'cookie';
+import addDays from 'date-fns/addDays';
+import subYears from 'date-fns/subYears';
 import { User } from 'entities/User';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? 'my-jwt-secret-key';
@@ -19,33 +22,62 @@ const isSecurePassword = (password?: string) => {
   return true;
 };
 
-const createJwtAccessToken = (user: User) => {
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY, {
-    expiresIn: '15m',
-  });
+const createJwt = (user: User) => {
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY);
   return token;
 };
 
-type JwtAccessTokenPayload = {
+type JwtPayload = {
   userId: number;
 };
 
-const extractUserIdFromJwtAccessToken = (token: string): number | undefined => {
+const extractUserIdFromJwt = (token: string): number | undefined => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     if (!decoded || typeof decoded !== 'object') {
       throw new Error();
     }
-    const payload = decoded as JwtAccessTokenPayload;
+    const payload = decoded as JwtPayload;
     return payload.userId;
   } catch {
     return undefined;
   }
 };
+export interface JwtCookie {
+  name: string;
+  value: string;
+  options: CookieSerializeOptions;
+}
+
+const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
+  return {
+    name: 'jwtCookie',
+    value: token,
+    options: {
+      path: '/',
+      expires: expirationDate,
+      httpOnly: true,
+      sameSite: 'lax', // TODO: 'none' in production mode
+      secure: false, // TODO: 'true' in production mode
+    },
+  };
+};
+
+const makeValidJwtCookie = (token: string): JwtCookie => {
+  const validExpirationDate = addDays(new Date(), 30);
+  return makeJwtCookie(token, validExpirationDate);
+};
+
+const makeInvalidJwtCookie = (): JwtCookie => {
+  const invalidExpirationDate = subYears(new Date(), 1);
+  return makeJwtCookie('', invalidExpirationDate);
+};
 
 export default {
   isValidEmail,
   isSecurePassword,
-  createJwtAccessToken,
-  extractUserIdFromJwtAccessToken,
+  createJwt,
+  extractUserIdFromJwt,
+  makeValidJwtCookie,
+  makeInvalidJwtCookie,
 };

@@ -4,11 +4,12 @@ import { CustomContext } from 'middleware/context';
 
 // authChecker is run whenever a resolver is protected by the `@Authorized`
 // decorator. It returns a boolean for whether the request is authorized.
-export const authChecker: AuthChecker<CustomContext> = (
+export const authChecker: AuthChecker<CustomContext> = async (
   { root, context },
   requiredRoles
 ) => {
-  const { user } = context;
+  const { userId } = context;
+  const user = await User.findOne(userId);
 
   // If there is no user in context, the request is not authorized
   if (!user) {

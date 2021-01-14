@@ -104,7 +104,10 @@ const SignUp = () => {
         {error && <div className="text-red-600 mb-4">{error.message}</div>}
 
         <div>
-          Already have an account? <Link href="/login">Log In</Link>
+          Already have an account?{' '}
+          <Link href="/login">
+            <button className="btn-text">Log In</button>
+          </Link>
         </div>
       </div>
     </Layout>

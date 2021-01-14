@@ -31,7 +31,7 @@ const Header = () => {
         <div>
           <span>Hello, {currentUser.username}</span>
           <button
-            className="btn-text text-current hover:text-gray-200 ml-4"
+            className="btn-text text-current hover:text-gray-400 ml-4"
             onClick={onLogOutClicked}
           >
             Log Out
@@ -42,14 +42,14 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <a className="btn-text text-current hover:text-current ml-4">
+            <button className="btn-text text-current hover:text-gray-400 ml-4">
               Log In
-            </a>
+            </button>
           </Link>
           <Link href="/signup">
-            <a className="btn text-current no-underline hover:text-current ml-4">
+            <button className="btn text-current no-underline hover:text-current ml-4">
               Sign Up
-            </a>
+            </button>
           </Link>
         </div>
       );
@@ -62,7 +62,9 @@ const Header = () => {
       suppressHydrationWarning
     >
       <Link href="/">
-        <a className="btn-text text-current hover:text-current">Trad Archive</a>
+        <button className="btn-text text-current hover:text-gray-400">
+          Trad Archive
+        </button>
       </Link>
 
       {userActions}

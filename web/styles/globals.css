@@ -31,10 +31,7 @@
   }
 
   .btn-text {
-    @apply text-teal-600 no-underline;
-  }
-  .btn-text:hover {
-    @apply underline text-teal-800;
+    @apply text-teal-600 no-underline hover:no-underline hover:text-teal-900;
   }
   .btn-text:disabled {
     @apply opacity-50;

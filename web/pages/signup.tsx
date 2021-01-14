@@ -97,11 +97,13 @@ const SignUp = () => {
             value="Sign Up"
           />
         </form>
+
         {validationError && (
           <div className="text-red-600 mb-4">{validationError}</div>
         )}
         {error && <div className="text-red-600 mb-4">{error.message}</div>}
-                <div>
+
+        <div>
           Already have an account? <Link href="/login">Log In</Link>
         </div>
       </div>

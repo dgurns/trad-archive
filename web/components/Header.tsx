@@ -30,7 +30,10 @@ const Header = () => {
       return (
         <div>
           <span>Hello, {currentUser.username}</span>
-          <button className="btn-text ml-4" onClick={onLogOutClicked}>
+          <button
+            className="btn-text text-current hover:text-gray-200 ml-4"
+            onClick={onLogOutClicked}
+          >
             Log Out
           </button>
         </div>
@@ -39,10 +42,14 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <button className="btn-text text-current">Log In</button>
+            <a className="btn-text text-current hover:text-current ml-4">
+              Log In
+            </a>
           </Link>
           <Link href="/signup">
-            <button className="btn ml-4">Sign Up</button>
+            <a className="btn text-current no-underline hover:text-current ml-4">
+              Sign Up
+            </a>
           </Link>
         </div>
       );
@@ -55,7 +62,7 @@ const Header = () => {
       suppressHydrationWarning
     >
       <Link href="/">
-        <a className="text-current">Trad Archive</a>
+        <a className="btn-text text-current hover:text-current">Trad Archive</a>
       </Link>
 
       {userActions}

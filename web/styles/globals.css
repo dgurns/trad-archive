@@ -8,7 +8,10 @@
   }
 
   a {
-    @apply text-teal-600 hover:underline;
+    @apply text-teal-600 underline;
+  }
+  a:hover {
+    @apply text-teal-800;
   }
 
   button:focus {
@@ -28,7 +31,10 @@
   }
 
   .btn-text {
-    @apply hover:underline;
+    @apply text-teal-600 no-underline;
+  }
+  .btn-text:hover {
+    @apply underline text-teal-800;
   }
   .btn-text:disabled {
     @apply opacity-50;

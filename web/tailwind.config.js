@@ -9,6 +9,7 @@ module.exports = {
       current: 'currentColor',
       black: colors.black,
       white: colors.white,
+      gray: colors.gray,
       teal: colors.teal,
     },
     fontFamily: {

@@ -13,8 +13,10 @@ const Header = () => {
     } else {
       return (
         <>
-          <button>Log In</button>
-          <button className="btn-primary ml-4">Sign Up</button>
+          <Link href="/login">Log In</Link>
+          <Link href="/signup">
+            <a className="btn ml-4">Sign Up</a>
+          </Link>
         </>
       );
     }

@@ -11,7 +11,11 @@
     @apply hover:underline;
   }
 
-  .btn-primary {
-    @apply bg-teal-600 rounded p-2 px-3 hover:no-underline hover:bg-teal-700;
+  .btn {
+    @apply bg-teal-600 text-white rounded p-2 px-3 hover:no-underline hover:bg-teal-700;
+  }
+
+  input {
+    @apply bg-white p-2 border border-gray-300 rounded focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600 w-full;
   }
 }

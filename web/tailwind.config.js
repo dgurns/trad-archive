@@ -11,13 +11,17 @@ module.exports = {
       white: colors.white,
       gray: colors.gray,
       teal: colors.teal,
+      red: colors.red,
     },
     fontFamily: {
       sans: ['Karla', 'sans-serif'],
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      backgroundColor: ['disabled'],
+      cursor: ['disabled'],
+    },
   },
   plugins: [],
 };

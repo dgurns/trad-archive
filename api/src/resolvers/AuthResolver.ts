@@ -9,7 +9,7 @@ import { CustomContext } from 'middleware/context';
 
 @Resolver()
 export class AuthResolver {
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
   async signUp(
     @Arg('email') email: string,
     @Arg('username') username: string,
@@ -55,10 +55,10 @@ export class AuthResolver {
     const jwt = AuthService.createJwt(user);
     ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
 
-    return true;
+    return user;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
   async logIn(
     @Arg('email') email: string,
     @Arg('password') password: string,
@@ -83,7 +83,7 @@ export class AuthResolver {
     const jwt = AuthService.createJwt(user);
     ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
 
-    return true;
+    return user;
   }
 
   @Mutation(() => Boolean)

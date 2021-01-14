@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
+import { useQuery, gql, QueryResult } from '@apollo/client';
 import { User } from 'types';
 
 export const CURRENT_USER_QUERY = gql`
@@ -17,28 +16,10 @@ interface QueryData {
   currentUser: User;
 }
 
-const useCurrentUser = (): [
-  User | undefined,
-  LazyQueryResult<QueryData, {}>
-] => {
-  let jwtCookie;
-  if (process.browser) {
-    jwtCookie = document.cookie.replace(
-      /(?:(?:^|.*;\s*)user-jwt\s*\=\s*([^;]*).*$)|^.*$/,
-      '$1'
-    );
-  }
+const useCurrentUser = (): [User | undefined, QueryResult<QueryData, {}>] => {
+  const currentUserQuery = useQuery<QueryData>(CURRENT_USER_QUERY);
 
-  // TODO: If cookie is present, fire getCurrentUser query
-
-  const [getCurrentUser, currentUserQuery] = useLazyQuery<QueryData>(
-    CURRENT_USER_QUERY
-  );
-
-  const { data } = currentUserQuery;
-  const currentUser = data?.currentUser;
-
-  return [currentUser, currentUserQuery];
+  return [currentUserQuery.data?.currentUser, currentUserQuery];
 };
 
 export default useCurrentUser;

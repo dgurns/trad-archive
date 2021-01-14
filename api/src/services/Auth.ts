@@ -50,9 +50,11 @@ export interface JwtCookie {
   options: CookieSerializeOptions;
 }
 
+export const COOKIE_NAME = 'jwt';
+
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
   return {
-    name: 'user-jwt',
+    name: COOKIE_NAME,
     value: token,
     options: {
       path: '/',

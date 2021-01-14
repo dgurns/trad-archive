@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import { APIGatewayProxyEvent, Context as LambdaContext } from 'aws-lambda';
-import AuthService, { JwtCookie } from 'services/Auth';
+import AuthService, { JwtCookie, COOKIE_NAME } from 'services/Auth';
 export interface CustomContext {
   event: APIGatewayProxyEvent;
   context: LambdaContext;
@@ -20,8 +20,10 @@ export const createCustomContext = (
 
   const requestCookie = event.headers['Cookie'];
   if (requestCookie) {
-    const { jwtCookie } = cookie.parse(requestCookie);
-    const userIdFromCookie = AuthService.extractUserIdFromJwt(jwtCookie);
+    const parsedCookie = cookie.parse(requestCookie);
+    const userIdFromCookie = AuthService.extractUserIdFromJwt(
+      parsedCookie[COOKIE_NAME]
+    );
     if (userIdFromCookie) {
       userId = userIdFromCookie;
     } else {

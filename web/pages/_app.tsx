@@ -1,21 +1,16 @@
 import 'styles/globals.css';
-import { Head } from 'next/document';
+import Head from 'next/head';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import useCurrentUser from 'hooks/useCurrentUser';
 
-const client = new ApolloClient({
+export const apolloClient = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
   cache: new InMemoryCache(),
   credentials: 'include',
 });
 
 function MyApp({ Component, pageProps }) {
-  const [currentUser] = useCurrentUser();
-
-  // TODO: If no currentUser, return app. If loading, wait.
-
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={apolloClient}>
       <Head>
         <title>Trad Archive</title>
       </Head>

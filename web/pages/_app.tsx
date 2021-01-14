@@ -1,4 +1,5 @@
 import 'styles/globals.css';
+import { Head } from 'next/document';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import useCurrentUser from 'hooks/useCurrentUser';
 
@@ -15,6 +16,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ApolloProvider client={client}>
+      <Head>
+        <title>Trad Archive</title>
+      </Head>
       <Component {...pageProps} />
     </ApolloProvider>
   );

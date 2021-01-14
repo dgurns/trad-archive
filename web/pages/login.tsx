@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useMutation, gql } from '@apollo/client';
 import useCurrentUser from 'hooks/useCurrentUser';
 import Layout from 'components/Layout';
+import { User } from 'types';
 
 const LOG_IN_MUTATION = gql`
   mutation LogIn($email: String!, $password: String!) {
@@ -14,25 +15,31 @@ const LOG_IN_MUTATION = gql`
     }
   }
 `;
+interface MutationData {
+  logIn: User;
+}
 
 const Login = () => {
   const router = useRouter();
-  const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
-
-  const [logIn, { loading, data, error }] = useMutation(LOG_IN_MUTATION, {
-    errorPolicy: 'all',
-  });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [logIn, { loading, data, error }] = useMutation<MutationData>(
+    LOG_IN_MUTATION,
+    {
+      errorPolicy: 'all',
+    }
+  );
   const onLogIn = (event) => {
     event.preventDefault();
     logIn({ variables: { email, password } });
   };
 
+  const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
+
   useEffect(() => {
-    if (data) {
+    if (data?.logIn) {
       refetchCurrentUser();
     }
   }, [data, refetchCurrentUser]);

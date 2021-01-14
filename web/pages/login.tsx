@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useMutation, gql } from '@apollo/client';
 import useCurrentUser from 'hooks/useCurrentUser';
 import Layout from 'components/Layout';
@@ -74,7 +75,10 @@ const Login = () => {
             value="Log In"
           />
         </form>
-        {error && <div className="text-red-600">{error.message}</div>}
+        {error && <div className="text-red-600 mb-4">{error.message}</div>}
+        <div>
+          Don't have an account yet? <Link href="/signup">Sign Up</Link>
+        </div>
       </div>
     </Layout>
   );

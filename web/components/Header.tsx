@@ -39,10 +39,10 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <a className="btn-text">Log In</a>
+            <button className="btn-text text-current">Log In</button>
           </Link>
           <Link href="/signup">
-            <a className="btn ml-4">Sign Up</a>
+            <button className="btn ml-4">Sign Up</button>
           </Link>
         </div>
       );
@@ -54,7 +54,9 @@ const Header = () => {
       className="flex flex-row p-4 justify-between text-white items-center bg-teal-900"
       suppressHydrationWarning
     >
-      <Link href="/">Trad Archive</Link>
+      <Link href="/">
+        <a className="text-current">Trad Archive</a>
+      </Link>
 
       {userActions}
     </div>

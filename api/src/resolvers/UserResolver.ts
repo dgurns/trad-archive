@@ -5,7 +5,7 @@ import { User } from 'entities/User';
 @Resolver()
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  async getCurrentUser(@Ctx() ctx: CustomContext) {
+  async currentUser(@Ctx() ctx: CustomContext) {
     if (!ctx.userId) {
       return null;
     }

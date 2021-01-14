@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  a {
+    @apply text-current hover:underline;
+  }
+
+  button {
+    @apply hover:underline;
+  }
+
+  .btn-primary {
+    @apply bg-teal-600 rounded p-2 px-3 hover:no-underline hover:bg-teal-700;
+  }
+}

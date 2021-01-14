@@ -52,7 +52,7 @@ export interface JwtCookie {
 
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
   return {
-    name: 'jwtCookie',
+    name: 'user-jwt',
     value: token,
     options: {
       path: '/',

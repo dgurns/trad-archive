@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Resolver, Mutation, Arg, Ctx } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { UserInputError, AuthenticationError } from 'apollo-server-lambda';
 
@@ -9,6 +9,15 @@ import { CustomContext } from 'middleware/context';
 
 @Resolver()
 export class AuthResolver {
+  @Query(() => User, { nullable: true })
+  async currentUser(@Ctx() ctx: CustomContext) {
+    if (!ctx.userId) {
+      return null;
+    }
+    const user = await User.findOne(ctx.userId);
+    return user;
+  }
+
   @Mutation(() => User)
   async signUp(
     @Arg('email') email: string,

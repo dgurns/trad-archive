@@ -1,5 +1,6 @@
 import { createConnection, getConnectionManager } from 'typeorm';
 import { User } from 'entities/User';
+import { AudioItem } from 'entities/Item';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
@@ -18,7 +19,7 @@ export const connectToDatabase = async () => {
     password: process.env.DATABASE_PASSWORD ?? 'password',
     database: process.env.DATABASE_NAME ?? 'postgres',
     logging: false,
-    entities: [User],
+    entities: [User, AudioItem],
     // TODO: Set synchronize to false in production
     synchronize: true,
     migrationsRun: true,

@@ -12,7 +12,6 @@ export enum UserPermission {
   User = 'USER',
   Admin = 'ADMIN',
 }
-
 registerEnumType(UserPermission, {
   name: 'UserPermission',
 });

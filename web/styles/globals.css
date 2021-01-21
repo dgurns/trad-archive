@@ -23,21 +23,21 @@
   }
 
   .btn,
+  .link-btn,
   input[type='submit'] {
-    @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-700 disabled:bg-gray-300;
-  }
-  .btn:hover {
-    @apply no-underline;
+    @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-700 disabled:bg-gray-300 hover:no-underline;
   }
 
-  .btn-text {
+  .btn-text,
+  .link-no-underline {
     @apply text-teal-600 no-underline hover:no-underline hover:text-teal-900;
   }
-  .btn-text:disabled {
+  .btn-text:disabled,
+  .link-no-underline:disabled {
     @apply opacity-50;
   }
 
   input {
-    @apply bg-white p-2 border border-gray-300 rounded focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600 w-full;
+    @apply w-full bg-white p-2 border border-gray-300 rounded appearance-none focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600;
   }
 }

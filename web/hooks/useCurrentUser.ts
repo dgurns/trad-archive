@@ -16,7 +16,10 @@ interface QueryData {
   currentUser: User;
 }
 
-const useCurrentUser = (): [User | undefined, QueryResult<QueryData, {}>] => {
+const useCurrentUser = (): [
+  User | null | undefined,
+  QueryResult<QueryData, {}>
+] => {
   const currentUserQuery = useQuery<QueryData>(CURRENT_USER_QUERY);
 
   return [currentUserQuery.data?.currentUser, currentUserQuery];

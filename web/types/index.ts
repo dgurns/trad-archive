@@ -3,11 +3,25 @@ export enum UserPermission {
   Admin = 'ADMIN',
 }
 
-export interface User {
-  id: number;
+export class User {
+  id: string;
   permissions: UserPermission[];
   email: string;
   username: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export class Item {
+  id: string;
+  title: string | null;
+  description: string | null;
+  addedByUserId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export class AudioItem extends Item {
+  urlSource: string;
+  urlMp3: string | null;
 }

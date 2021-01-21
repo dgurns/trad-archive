@@ -42,14 +42,14 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <button className="btn-text text-current hover:text-gray-400 ml-4">
+            <a className="link-no-underline text-current hover:text-gray-400 ml-4">
               Log In
-            </button>
+            </a>
           </Link>
           <Link href="/signup">
-            <button className="btn text-current no-underline hover:text-current ml-4">
+            <a className="link-btn text-current no-underline hover:text-current ml-4">
               Sign Up
-            </button>
+            </a>
           </Link>
         </div>
       );
@@ -62,9 +62,9 @@ const Header = () => {
       suppressHydrationWarning
     >
       <Link href="/">
-        <button className="btn-text text-current hover:text-gray-400">
+        <a className="link-no-underline text-current hover:text-gray-400">
           Trad Archive
-        </button>
+        </a>
       </Link>
 
       {userActions}

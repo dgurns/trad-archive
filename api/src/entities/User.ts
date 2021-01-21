@@ -1,12 +1,12 @@
 import {
-  Entity,
+  Entity as TypeOrmEntity,
   BaseEntity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, Int, registerEnumType } from 'type-graphql';
+import { ObjectType, Field, registerEnumType } from 'type-graphql';
 
 export enum UserPermission {
   User = 'USER',
@@ -17,11 +17,11 @@ registerEnumType(UserPermission, {
 });
 
 @ObjectType()
-@Entity()
+@TypeOrmEntity()
 export class User extends BaseEntity {
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  readonly id!: number;
+  @Field(() => String)
+  @PrimaryGeneratedColumn('uuid')
+  readonly id!: string;
 
   @Field(() => [UserPermission])
   @Column({

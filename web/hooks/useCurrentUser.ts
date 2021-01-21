@@ -1,8 +1,9 @@
-import { useQuery, gql, QueryResult } from '@apollo/client';
+import { useEffect } from 'react';
+import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
 import { User } from 'types';
 
 export const CURRENT_USER_QUERY = gql`
-  query CurrentUser {
+  query {
     currentUser {
       id
       permissions
@@ -18,9 +19,15 @@ interface QueryData {
 
 const useCurrentUser = (): [
   User | null | undefined,
-  QueryResult<QueryData, {}>
+  LazyQueryResult<QueryData, {}>
 ] => {
-  const currentUserQuery = useQuery<QueryData>(CURRENT_USER_QUERY);
+  const [getCurrentUser, currentUserQuery] = useLazyQuery<QueryData>(
+    CURRENT_USER_QUERY
+  );
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [getCurrentUser]);
 
   return [currentUserQuery.data?.currentUser, currentUserQuery];
 };

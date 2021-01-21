@@ -1,6 +1,6 @@
 import {
   Entity as TypeOrmEntity,
-  BaseEntity,
+  BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
@@ -20,7 +20,7 @@ import {
 
 @ObjectType()
 @TypeOrmEntity()
-export class Tag extends BaseEntity {
+export class Tag extends TypeOrmBaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
@@ -50,7 +50,7 @@ export class Tag extends BaseEntity {
   dateEntity!: DateEntity;
 
   @Field(() => User)
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User)
   createdByUser!: User;
 
   @Field()

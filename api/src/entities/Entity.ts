@@ -1,6 +1,6 @@
 import {
   Entity as TypeOrmEntity,
-  BaseEntity,
+  BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
@@ -10,10 +10,10 @@ import {
 import { ObjectType, Field, Float } from 'type-graphql';
 import { User } from 'entities/User';
 
-// Entity represents the basic fields that are inherited by every sub-Entity
+// BaseEntity represents the basic fields that are inherited by every Entity
 // type like PersonEntity or PlaceEntity
 @ObjectType()
-export class Entity extends BaseEntity {
+export class BaseEntity extends TypeOrmBaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
@@ -53,10 +53,10 @@ export class Entity extends BaseEntity {
 }
 
 // PlaceEntity contains properties specific to a Place that are not shared with
-// the basic Entity type
+// the BaseEntity type
 @ObjectType()
 @TypeOrmEntity()
-export class PlaceEntity extends Entity {
+export class PlaceEntity extends BaseEntity {
   @Field(() => Float)
   @Column({ nullable: true, default: null })
   latitude!: number;
@@ -68,16 +68,16 @@ export class PlaceEntity extends Entity {
 
 @ObjectType()
 @TypeOrmEntity()
-export class PersonEntity extends Entity {}
+export class PersonEntity extends BaseEntity {}
 
 @ObjectType()
 @TypeOrmEntity()
-export class InstrumentEntity extends Entity {}
+export class InstrumentEntity extends BaseEntity {}
 
 @ObjectType()
 @TypeOrmEntity()
-export class TuneEntity extends Entity {}
+export class TuneEntity extends BaseEntity {}
 
 @ObjectType()
 @TypeOrmEntity()
-export class DateEntity extends Entity {}
+export class DateEntity extends BaseEntity {}

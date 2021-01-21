@@ -1,6 +1,6 @@
 import {
   Entity as TypeOrmEntity,
-  BaseEntity,
+  BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
@@ -18,7 +18,7 @@ registerEnumType(UserPermission, {
 
 @ObjectType()
 @TypeOrmEntity()
-export class User extends BaseEntity {
+export class User extends TypeOrmBaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;

@@ -1,6 +1,6 @@
 import {
   Entity as TypeOrmEntity,
-  BaseEntity,
+  BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
@@ -14,7 +14,7 @@ import { ObjectType, Field, createUnionType } from 'type-graphql';
 import { User } from 'entities/User';
 import { Tag } from 'entities/Tag';
 
-export const ItemUnion = createUnionType({
+export const Item = createUnionType({
   name: 'Item',
   types: () => [AudioItem],
   resolveType: (value) => {
@@ -25,11 +25,11 @@ export const ItemUnion = createUnionType({
   },
 });
 
-// Item represents the basic shared fields that all Items have. Each subclass
-// that inherits this base Item class (ie. AudioItem) is stored in its own DB
+// BaseItem represents the basic shared fields that all Items have. Each subclass
+// that inherits this base BaseItem class (ie. AudioItem) is stored in its own DB
 // table.
 @ObjectType()
-export class Item extends BaseEntity {
+export class BaseItem extends TypeOrmBaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
@@ -60,11 +60,11 @@ export class Item extends BaseEntity {
   updatedAt!: Date;
 }
 
-// AudioItem contains the base Item fields as well as fields specific to
+// AudioItem contains the BaseItem fields as well as fields specific to
 // AudioItems.
 @ObjectType()
 @TypeOrmEntity()
-export class AudioItem extends Item {
+export class AudioItem extends BaseItem {
   @Field(() => String)
   @Column()
   urlSource!: string;

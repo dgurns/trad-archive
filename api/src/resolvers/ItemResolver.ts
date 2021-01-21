@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { AudioItem } from 'entities/Item';
+import { AudioItem, Item } from 'entities/Item';
 import { User, UserPermission } from 'entities/User';
 
 @Resolver()
@@ -15,7 +15,28 @@ export class ItemResolver {
     @Arg('take', { defaultValue: 20 }) take?: number,
     @Arg('skip', { defaultValue: 0 }) skip?: number
   ) {
-    return AudioItem.find({ take, skip, relations: ['addedByUser', 'tags'] });
+    return AudioItem.find({
+      take,
+      skip,
+      order: { createdAt: 'DESC' },
+      relations: ['addedByUser', 'tags'],
+    });
+  }
+
+  @Query(() => [Item])
+  async items(
+    @Arg('take', { defaultValue: 20 }) take?: number,
+    @Arg('skip', { defaultValue: 0 }) skip?: number
+  ) {
+    const audioItems = await AudioItem.find({
+      take,
+      skip,
+      order: { createdAt: 'DESC' },
+      relations: ['addedByUser', 'tags'],
+    });
+    // When there are more Item types, compile most recent across all queries
+    // and return
+    return [...audioItems];
   }
 
   @Mutation(() => AudioItem)

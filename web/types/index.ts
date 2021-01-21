@@ -30,6 +30,10 @@ export interface AudioItem extends BaseItem {
 // Item defines a union of all the possible Item types
 export type Item = AudioItem;
 
+export function isAudioItem(item: Item): item is AudioItem {
+  return (item as AudioItem).urlMp3 !== undefined;
+}
+
 export interface Tag {
   id: string;
   audioItem: AudioItem | null;

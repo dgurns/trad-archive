@@ -22,18 +22,17 @@
     @apply cursor-not-allowed hover:no-underline;
   }
 
+  /* Primary buttons */
   .btn,
-  .link-btn,
   input[type='submit'] {
     @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-700 disabled:bg-gray-300 hover:no-underline;
   }
 
-  .btn-text,
-  .link-no-underline {
+  /* Text buttons */
+  .btn-text {
     @apply text-teal-600 no-underline hover:no-underline hover:text-teal-900;
   }
-  .btn-text:disabled,
-  .link-no-underline:disabled {
+  .btn-text:disabled {
     @apply opacity-50;
   }
 

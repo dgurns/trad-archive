@@ -42,12 +42,12 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <a className="link-no-underline text-current hover:text-gray-400 ml-4">
+            <a className="btn-text text-current hover:text-gray-400 ml-4">
               Log In
             </a>
           </Link>
           <Link href="/signup">
-            <a className="link-btn text-current no-underline hover:text-current ml-4">
+            <a className="btn text-current no-underline hover:text-current ml-4">
               Sign Up
             </a>
           </Link>
@@ -62,7 +62,7 @@ const Header = () => {
       suppressHydrationWarning
     >
       <Link href="/">
-        <a className="link-no-underline text-current hover:text-gray-400">
+        <a className="btn-text text-current hover:text-gray-400">
           Trad Archive
         </a>
       </Link>

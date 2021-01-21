@@ -19,7 +19,7 @@ export class ItemResolver {
   }
 
   @Mutation(() => AudioItem)
-  // @Authorized(UserPermission.Admin)
+  @Authorized(UserPermission.Admin)
   async createAudioItem(
     @Arg('title') title: string,
     @Arg('urlSource') urlSource: string,
@@ -29,7 +29,7 @@ export class ItemResolver {
     if (!urlSource) {
       throw new Error('A new AudioItem must have a urlSource');
     }
-    const addedByUser = await User.findOne({ where: { email: 'dan@dan.com' } });
+    const addedByUser = await User.findOne(ctx.userId);
     if (!addedByUser) {
       throw new Error('Error fetching the user who is adding the item');
     }

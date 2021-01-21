@@ -26,6 +26,7 @@ export class Entity extends BaseEntity {
   @Column({ unique: true })
   slug!: string;
 
+  // Due to `simple-array` column type, array items must not contain commas
   @Field(() => [String], { defaultValue: [] })
   @Column('simple-array', { nullable: true, default: [] })
   aliases!: string[];

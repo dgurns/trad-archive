@@ -19,6 +19,10 @@ class MyDocument extends Document {
           <link rel="icon" href="/favicon.ico" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
+            rel="stylesheet preconnect"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
+          <link
             href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"
             rel="stylesheet"
           />

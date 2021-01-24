@@ -59,6 +59,8 @@ const SignUp = () => {
     router.push(typeof redirectTo === 'string' ? redirectTo : '/');
   }
 
+  const logInLinkQueryParams = redirectTo ? { redirectTo } : undefined;
+
   return (
     <Layout>
       <h1 className="mb-4">
@@ -108,7 +110,7 @@ const SignUp = () => {
 
         <div>
           Already have an account?{' '}
-          <Link href={{ pathname: '/login', query: { redirectTo } }}>
+          <Link href={{ pathname: '/login', query: logInLinkQueryParams }}>
             Log in
           </Link>
         </div>

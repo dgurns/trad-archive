@@ -1,27 +1,10 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
-import { useMutation, gql } from '@apollo/client';
 import useCurrentUser from 'hooks/useCurrentUser';
-
-const LOG_OUT_MUTATION = gql`
-  mutation LogOut {
-    logOut
-  }
-`;
+import UserService from 'services/User';
 
 const Header = () => {
   const [currentUser, { loading }] = useCurrentUser();
-  const [logOut, { data: logOutData }] = useMutation(LOG_OUT_MUTATION, {
-    errorPolicy: 'all',
-  });
-
-  const onLogOutClicked = () => logOut();
-
-  useEffect(() => {
-    if (logOutData?.logOut) {
-      window.location.reload();
-    }
-  }, [logOutData]);
 
   const userActions = useMemo(() => {
     if (loading) {
@@ -30,12 +13,18 @@ const Header = () => {
       return (
         <div>
           <span>Hello, {currentUser.username}</span>
-          <button
-            className="btn-text text-current hover:text-gray-400 ml-4"
-            onClick={onLogOutClicked}
-          >
-            Log Out
-          </button>
+          {UserService.isAdmin(currentUser) && (
+            <Link href="/admin">
+              <a className="btn-text text-current hover:text-gray-400 ml-4">
+                Admin
+              </a>
+            </Link>
+          )}
+          <Link href="/logout">
+            <a className="btn-text text-current hover:text-gray-400 ml-4">
+              Log out
+            </a>
+          </Link>
         </div>
       );
     } else {

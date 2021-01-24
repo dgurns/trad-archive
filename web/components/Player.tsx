@@ -36,7 +36,7 @@ const Player = () => {
   }
 
   return (
-    <div className="flex flex-col align-center justify-center p-4 bg-white shadow-2xl align-center">
+    <div className="flex flex-col align-center justify-center p-4 bg-white align-center">
       <div className="flex flex-row justify-between mb-3">
         <div>
           Now playing:{' '}

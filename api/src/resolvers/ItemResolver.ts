@@ -47,8 +47,11 @@ export class ItemResolver {
     @Arg('description', { nullable: true }) description: string,
     @Ctx() ctx: CustomContext
   ) {
-    if (!urlSource) {
-      throw new Error('A new AudioItem must have a urlSource');
+    if (!title || !urlSource) {
+      throw new Error('A new Audio Item must have a Title and Source URL');
+    }
+    if (!urlSource.includes('http')) {
+      throw new Error('The source URL is invalid');
     }
     const addedByUser = await User.findOne(ctx.userId);
     if (!addedByUser) {

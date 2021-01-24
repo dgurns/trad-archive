@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Layout from 'components/Layout';
 import RequireAdmin from 'components/RequireAdmin';
 
@@ -5,7 +6,7 @@ const AdminHome = () => {
   return (
     <Layout>
       <RequireAdmin>
-        <div>Admin home</div>
+        <Link href="/items/audio/new">Create Audio Item</Link>
       </RequireAdmin>
     </Layout>
   );

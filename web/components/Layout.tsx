@@ -13,7 +13,11 @@ const Layout = ({ children }: Props) => {
     <div>
       <Header />
       <div className="flex flex-col justify-start items-center">
-        <div className="w-full lg:max-w-5xl p-8">{children}</div>
+        <div
+          className={`w-full lg:max-w-5xl p-8 ${activePlayerItem && 'pb-48'}`}
+        >
+          {children}
+        </div>
       </div>
       {activePlayerItem && (
         <div

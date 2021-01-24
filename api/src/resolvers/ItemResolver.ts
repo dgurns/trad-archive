@@ -48,7 +48,9 @@ export class ItemResolver {
     @Ctx() ctx: CustomContext
   ) {
     if (!title || !urlSource) {
-      throw new Error('A new Audio Item must have a Title and Source URL');
+      throw new Error(
+        'A new Audio Item must have at least a Title and Source URL'
+      );
     }
     if (!urlSource.includes('http')) {
       throw new Error('The source URL is invalid');

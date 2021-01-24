@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import usePlayer from 'hooks/usePlayer';
 import { AudioItem, isAudioItem } from 'types';
@@ -26,14 +27,13 @@ const Player = () => {
     return null;
   }
 
-  let player;
-  if (activePlayerItem) {
-    player = isAudioItem(activePlayerItem) ? (
-      <AudioPlayer item={activePlayerItem} key={activePlayerItem.id} />
-    ) : (
-      'No player yet for this item type'
-    );
-  }
+  const player = useMemo(() => {
+    if (isAudioItem(activePlayerItem)) {
+      return <AudioPlayer item={activePlayerItem} key={activePlayerItem.id} />;
+    } else {
+      return 'This item type cannot be played yet';
+    }
+  }, [activePlayerItem]);
 
   return (
     <div className="flex flex-col align-center justify-center p-4 bg-white align-center">

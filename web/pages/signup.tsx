@@ -23,6 +23,7 @@ interface MutationData {
 
 const SignUp = () => {
   const router = useRouter();
+  const { redirectTo } = router.query;
 
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -55,12 +56,14 @@ const SignUp = () => {
   }, [data, refetchCurrentUser]);
 
   if (currentUser) {
-    router.push('/');
+    router.push(typeof redirectTo === 'string' ? redirectTo : '/');
   }
 
   return (
     <Layout>
-      <h1 className="mb-4">Create your account</h1>
+      <h1 className="mb-4">
+        {redirectTo ? 'Create an account to continue' : 'Create your account'}
+      </h1>
       <div className="flex flex-col align-start max-w-xs">
         <form onSubmit={onSignUp}>
           <input
@@ -104,7 +107,10 @@ const SignUp = () => {
         {error && <div className="text-red-600 mb-4">{error.message}</div>}
 
         <div>
-          Already have an account? <Link href="/login">Log In</Link>
+          Already have an account?{' '}
+          <Link href={{ pathname: '/login', query: { redirectTo } }}>
+            Log in
+          </Link>
         </div>
       </div>
     </Layout>

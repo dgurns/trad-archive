@@ -22,6 +22,7 @@ interface MutationData {
 
 const Login = () => {
   const router = useRouter();
+  const { redirectTo } = router.query;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,12 +47,14 @@ const Login = () => {
   }, [data, refetchCurrentUser]);
 
   if (currentUser) {
-    router.push('/');
+    router.push(typeof redirectTo === 'string' ? redirectTo : '/');
   }
 
   return (
     <Layout>
-      <h1 className="mb-4">Log in to Trad Archive</h1>
+      <h1 className="mb-4">
+        Log in to {redirectTo ? 'continue' : 'Trad Archive'}
+      </h1>
       <div className="flex flex-col align-start max-w-xs">
         <form onSubmit={onLogIn}>
           <input
@@ -77,7 +80,10 @@ const Login = () => {
         </form>
         {error && <div className="text-red-600 mb-4">{error.message}</div>}
         <div>
-          Don't have an account yet? <Link href="/signup">Sign Up</Link>
+          Don't have an account yet?{' '}
+          <Link href={{ pathname: '/signup', query: { redirectTo } }}>
+            Sign Up
+          </Link>
         </div>
       </div>
     </Layout>

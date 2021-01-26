@@ -1,35 +1,15 @@
 import { useEffect } from 'react';
 import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
 import { Item } from 'types';
-
-export const ItemsHookFragments = {
-  audioItem: gql`
-    fragment ItemsHookAudioItem on AudioItem {
-      id
-      title
-      description
-      addedByUser {
-        id
-        username
-      }
-      tags {
-        id
-      }
-      createdAt
-      updatedAt
-      urlSource
-      urlMp3
-    }
-  `,
-};
+import { ItemFragments } from 'fragments';
 
 export const ITEMS_QUERY = gql`
   query {
     items {
-      ...ItemsHookAudioItem
+      ...AudioItem
     }
   }
-  ${ItemsHookFragments.audioItem}
+  ${ItemFragments.audioItem}
 `;
 
 interface QueryData {

@@ -54,18 +54,14 @@ export class EntityResolver {
     });
     if (existingSlug) {
       throw new Error(
-        'This custom identifier slug has already been taken. Please pick another one.'
+        'This URL slug has already been taken. Please pick another one.'
       );
-    }
-    let cleanedAliases: string[] = [];
-    if (aliases) {
-      cleanedAliases = aliases.split(',');
     }
 
     const personEntity = PersonEntity.create({
       name,
       slug: cleanedSlug,
-      aliases: cleanedAliases,
+      aliases,
       description,
       firstName,
       middleName,

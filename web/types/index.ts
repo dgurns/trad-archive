@@ -51,7 +51,7 @@ interface BaseEntity {
   id: string;
   name: string;
   slug: string;
-  aliases: string[];
+  aliases: string;
   description: string | null;
   createdByUser: User;
   lastUpdatedByUser: User;

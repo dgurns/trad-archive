@@ -45,10 +45,9 @@ export class BaseEntity extends TypeOrmBaseEntity {
   @Column({ unique: true })
   slug!: string;
 
-  // Due to `simple-array` column type, array items must not contain commas
-  @Field(() => [String], { defaultValue: [] })
-  @Column('simple-array', { nullable: true, default: [] })
-  aliases!: string[];
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, default: null })
+  aliases!: string;
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true, default: null })

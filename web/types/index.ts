@@ -64,7 +64,11 @@ export interface PlaceEntity extends BaseEntity {
   longitude: number | null;
 }
 
-export interface PersonEntity extends BaseEntity {}
+export interface PersonEntity extends BaseEntity {
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+}
 
 export interface InstrumentEntity extends BaseEntity {}
 

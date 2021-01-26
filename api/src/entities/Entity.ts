@@ -7,8 +7,27 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, Float } from 'type-graphql';
+import { ObjectType, Field, Float, createUnionType } from 'type-graphql';
 import { User } from 'entities/User';
+
+export const Entity = createUnionType({
+  name: 'Entity',
+  types: () => [
+    PlaceEntity,
+    PersonEntity,
+    InstrumentEntity,
+    TuneEntity,
+    DateEntity,
+  ],
+  resolveType: (value) => {
+    if ('latitude' in value) {
+      return PlaceEntity;
+    } else if ('firstName' in value) {
+      return PersonEntity;
+    }
+    return undefined;
+  },
+});
 
 // BaseEntity represents the basic fields that are inherited by every Entity
 // type like PersonEntity or PlaceEntity
@@ -68,7 +87,19 @@ export class PlaceEntity extends BaseEntity {
 
 @ObjectType()
 @TypeOrmEntity()
-export class PersonEntity extends BaseEntity {}
+export class PersonEntity extends BaseEntity {
+  @Field(() => String)
+  @Column()
+  firstName!: string;
+
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, default: null })
+  middleName!: string;
+
+  @Field(() => String)
+  @Column()
+  lastName!: string;
+}
 
 @ObjectType()
 @TypeOrmEntity()

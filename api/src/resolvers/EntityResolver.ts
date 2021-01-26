@@ -28,7 +28,7 @@ export class EntityResolver {
   @Mutation(() => PersonEntity)
   async createPersonEntity(
     @Arg('slug') slug: string,
-    @Arg('aliases', { nullable: true }) aliases: string[],
+    @Arg('aliases', { nullable: true }) aliases: string,
     @Arg('description', { nullable: true }) description: string,
     @Arg('firstName') firstName: string,
     @Arg('middleName', { nullable: true }) middleName: string,
@@ -57,18 +57,15 @@ export class EntityResolver {
         'This custom identifier slug has already been taken. Please pick another one.'
       );
     }
+    let cleanedAliases: string[] = [];
     if (aliases) {
-      aliases.forEach((alias) => {
-        if (alias.indexOf(',') > -1) {
-          throw new Error('Aliases may not contain commas');
-        }
-      });
+      cleanedAliases = aliases.split(',');
     }
 
     const personEntity = PersonEntity.create({
       name,
       slug: cleanedSlug,
-      aliases,
+      aliases: cleanedAliases,
       description,
       firstName,
       middleName,

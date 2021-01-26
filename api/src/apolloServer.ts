@@ -13,12 +13,13 @@ const apolloServerPlugins = require('middleware/plugins');
 import { authChecker } from 'middleware/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
 import { ItemResolver } from 'resolvers/ItemResolver';
+import { EntityResolver } from 'resolvers/EntityResolver';
 
 const createServer = async () => {
   await connectToDatabase();
 
   const schema = await buildSchema({
-    resolvers: [AuthResolver, ItemResolver],
+    resolvers: [AuthResolver, ItemResolver, EntityResolver],
     dateScalarMode: 'isoDate',
     authChecker,
     authMode: 'error',

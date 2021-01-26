@@ -7,7 +7,7 @@ import RequireUser from 'components/RequireUser';
 const CREATE_PERSON_ENTITY_MUTATION = gql`
   mutation CreatePersonEntity(
     $slug: String!
-    $aliases: []String
+    $aliases: String
     $description: String
     $firstName: String!
     $middleName: String
@@ -43,14 +43,13 @@ const EntitiesPersonNew = () => {
 
   const onCreatePersonEntity = (event) => {
     event.preventDefault();
-    const aliasesArray = aliases.split(',');
     createPersonEntity({
       variables: {
         firstName,
         middleName,
         lastName,
         slug,
-        aliases: aliasesArray,
+        aliases,
         description,
       },
     });
@@ -97,23 +96,31 @@ const EntitiesPersonNew = () => {
               <input
                 placeholder="Custom identifier slug (ie. mary-jane-smith)"
                 className="mb-2"
-                value={lastName}
-                onChange={(event) => setLastName(event.target.value)}
+                value={slug}
+                onChange={(event) => setSlug(event.target.value)}
               />
-              This will be used for the URL of this Person Entity, for example
-              https://trad-archive.com/entities/person/mary-jane-smith
+              <div className="text-sm text-gray-400 mb-2 ml-2">
+                This will be used for the URL of this Person Entity, for example
+                {`https://trad-archive.com/entities/person/${
+                  slug || 'mary-jane-smith'
+                }`}
+              </div>
               <input
                 placeholder="Aliases"
                 className="mb-2"
-                value={lastName}
-                onChange={(event) => setLastName(event.target.value)}
+                value={aliases}
+                onChange={(event) => setAliases(event.target.value)}
               />
-              A list of comma-separated aliases for this Person Entity. For
-              example, "Tony D, The Tradfather, Tony from the County Calamari"
+              <div className="text-sm text-gray-400 mb-2 ml-2">
+                A list of comma-separated aliases for this Person Entity. For
+                example:{' '}
+                <em>Tony D, The Tradfather, Tony from the County Calamari</em>
+              </div>
               <textarea
                 placeholder="Description"
                 className="mb-2"
                 value={description}
+                rows={5}
                 onChange={(event) => setDescription(event.target.value)}
               />
               <input

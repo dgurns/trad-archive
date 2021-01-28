@@ -51,7 +51,7 @@ const Player = () => {
         </div>
         <div className="flex flex-row items-top ml-4">
           <Link href={itemHref}>
-            <a className="whitespace-nowrap">Go to Item</a>
+            <a className="whitespace-nowrap">View Details</a>
           </Link>
           <button
             className="btn-icon flex ml-4"

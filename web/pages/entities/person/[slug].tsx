@@ -35,7 +35,7 @@ const EntitiesPersonSlug = () => {
 
   return (
     <Layout>
-      <h1>Items tagged with {data.personEntity?.name}</h1>
+      <h1>Items Tagged with "{data.personEntity?.name}"</h1>
     </Layout>
   );
 };

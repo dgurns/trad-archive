@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { Tag } from 'types';
+import Modal from 'components/Modal';
 
 interface TagProps {
   tag: Tag;
@@ -22,6 +24,8 @@ interface TagsProps {
   tags: Tag[];
 }
 const Tags = ({ tags }: TagsProps) => {
+  const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
+
   return (
     <div className="flex flex-row items-center">
       {tags.map((tag, index) => (
@@ -29,7 +33,19 @@ const Tags = ({ tags }: TagsProps) => {
           <TagLink tag={tag} />
         </div>
       ))}
-      <button className="btn-text">+ Add Tag</button>
+      <button
+        className="btn-text"
+        onClick={() => setAddTagModalIsVisible(true)}
+      >
+        + Add Tag
+      </button>
+      <Modal
+        title="Add Tag"
+        isVisible={addTagModalIsVisible}
+        onClose={() => setAddTagModalIsVisible(false)}
+      >
+        Add Tag form goes here
+      </Modal>
     </div>
   );
 };

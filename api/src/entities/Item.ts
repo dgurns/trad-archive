@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  ManyToMany,
+  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   JoinTable,
@@ -46,11 +46,6 @@ export class BaseItem extends TypeOrmBaseEntity {
   @ManyToOne(() => User)
   addedByUser!: User;
 
-  @Field(() => [Tag], { defaultValue: [] })
-  @ManyToMany(() => Tag, { nullable: true })
-  @JoinTable()
-  tags!: Tag[];
-
   @Field()
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
@@ -65,6 +60,10 @@ export class BaseItem extends TypeOrmBaseEntity {
 @ObjectType()
 @TypeOrmEntity()
 export class AudioItem extends BaseItem {
+  @Field(() => [Tag], { defaultValue: [] })
+  @OneToMany(() => Tag, (tag) => tag.audioItem)
+  tags!: Tag[];
+
   @Field(() => String)
   @Column()
   urlSource!: string;

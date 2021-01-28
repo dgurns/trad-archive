@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Ctx, Arg } from 'type-graphql';
+import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
@@ -18,6 +18,21 @@ import {
 
 @Resolver()
 export class TagResolver {
+  @Query(() => Tag)
+  tag(@Arg('id') id: string) {
+    return Tag.findOne(id, {
+      relations: [
+        'audioItem',
+        'placeEntity',
+        'personEntity',
+        'instrumentEntity',
+        'tuneEntity',
+        'dateEntity',
+        'createdByUser',
+      ],
+    });
+  }
+
   @Mutation(() => Tag)
   async createTag(
     @Arg('data') data: CreateTagInput,

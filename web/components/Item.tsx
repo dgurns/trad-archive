@@ -3,20 +3,25 @@ import { Item } from 'types';
 import DateTime from 'services/DateTime';
 import usePlayer from 'hooks/usePlayer';
 
+import Tags from 'components/Tags';
+
 interface Props {
   item: Item;
 }
 
 const ItemComponent = ({ item }: Props) => {
-  const { title, description, addedByUser, createdAt } = item;
+  const { title, description, tags, addedByUser, createdAt } = item;
 
   const { activePlayerItem, setActivePlayerItem } = usePlayer();
   const itemIsInPlayer = activePlayerItem?.id === item.id;
 
   return (
     <div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 mb-8">
-      <h1 className="mb-4">{title}</h1>
-      <div className="flex flex-row w-full justify-start items-center mb-4 h-14 border border-gray-200 rounded">
+      <h1 className="mb-2">{title}</h1>
+      <div className="mb-6">
+        <Tags tags={tags} />
+      </div>
+      <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
         {itemIsInPlayer ? (
           <div className="pl-3 text-gray-400">Playing</div>
         ) : (

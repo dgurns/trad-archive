@@ -35,6 +35,13 @@ const Player = () => {
     }
   }, [activePlayerItem]);
 
+  const itemHref = useMemo(() => {
+    if (isAudioItem(activePlayerItem)) {
+      return `/items/audio/${activePlayerItem.id}`;
+    }
+    return window.location.href;
+  }, [activePlayerItem]);
+
   return (
     <div className="flex flex-col align-center justify-center p-4 bg-white align-center">
       <div className="flex flex-row justify-between mb-3">
@@ -43,7 +50,7 @@ const Player = () => {
           <span className="text-gray-500">{activePlayerItem.title}</span>
         </div>
         <div className="flex flex-row items-top ml-4">
-          <Link href={`/items/${activePlayerItem.id}`}>
+          <Link href={itemHref}>
             <a className="whitespace-nowrap">Go to Item</a>
           </Link>
           <button

@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
+import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
 import { PersonEntity } from 'entities/Entity';
 import { User } from 'entities/User';
@@ -6,8 +6,16 @@ import { User } from 'entities/User';
 @Resolver()
 export class EntityResolver {
   @Query(() => PersonEntity, { nullable: true })
-  personEntity(@Arg('id') id: string) {
-    return PersonEntity.findOne(id, {
+  personEntity(
+    @Arg('id', { nullable: true }) id: string,
+    @Arg('slug', { nullable: true }) slug: string
+  ) {
+    if (!id && !slug) {
+      throw new Error('Must provide an ID or slug');
+    }
+    const whereOptions = id ? { id } : { slug };
+    return PersonEntity.findOne({
+      where: whereOptions,
       relations: ['createdByUser', 'lastUpdatedByUser'],
     });
   }

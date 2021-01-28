@@ -17,12 +17,12 @@ interface BaseItem {
   title: string | null;
   description: string | null;
   addedByUser: User;
-  tags: Tag[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AudioItem extends BaseItem {
+  tags: Tag[];
   urlSource: string;
   urlMp3: string | null;
 }

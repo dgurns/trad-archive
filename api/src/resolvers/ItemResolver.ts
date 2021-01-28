@@ -7,7 +7,17 @@ import { User, UserPermission } from 'entities/User';
 export class ItemResolver {
   @Query(() => AudioItem, { nullable: true })
   audioItem(@Arg('id') id: string) {
-    return AudioItem.findOne(id, { relations: ['addedByUser', 'tags'] });
+    return AudioItem.findOne(id, {
+      relations: [
+        'addedByUser',
+        'tags',
+        'tags.placeEntity',
+        'tags.personEntity',
+        'tags.instrumentEntity',
+        'tags.tuneEntity',
+        'tags.dateEntity',
+      ],
+    });
   }
 
   @Query(() => [AudioItem])
@@ -19,7 +29,15 @@ export class ItemResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: ['addedByUser', 'tags'],
+      relations: [
+        'addedByUser',
+        'tags',
+        'tags.placeEntity',
+        'tags.personEntity',
+        'tags.instrumentEntity',
+        'tags.tuneEntity',
+        'tags.dateEntity',
+      ],
     });
   }
 
@@ -32,7 +50,15 @@ export class ItemResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: ['addedByUser', 'tags'],
+      relations: [
+        'addedByUser',
+        'tags',
+        'tags.placeEntity',
+        'tags.personEntity',
+        'tags.instrumentEntity',
+        'tags.tuneEntity',
+        'tags.dateEntity',
+      ],
     });
     // When there are more Item types, compile most recent across all queries
     // and return

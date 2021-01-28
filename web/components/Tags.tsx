@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { Tag } from 'types';
 import Modal from 'components/Modal';
@@ -25,6 +25,7 @@ interface TagsProps {
 }
 const Tags = ({ tags }: TagsProps) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   return (
     <div className="flex flex-row items-center">
@@ -39,12 +40,18 @@ const Tags = ({ tags }: TagsProps) => {
       >
         + Add Tag
       </button>
+
       <Modal
         title="Add Tag"
         isVisible={addTagModalIsVisible}
         onClose={() => setAddTagModalIsVisible(false)}
       >
-        Add Tag form goes here
+        <input
+          autoFocus
+          placeholder="Start typing a tag..."
+          value={inputValue}
+          onChange={(event) => setInputValue(event.target.value)}
+        />
       </Modal>
     </div>
   );

@@ -4,6 +4,7 @@ import { useQuery, gql } from '@apollo/client';
 import { ItemFragments } from 'fragments';
 import Layout from 'components/Layout';
 import Item from 'components/Item';
+import Loading from 'components/Loading';
 
 const AUDIO_ITEM_QUERY = gql`
   query AudioItem($id: String!) {
@@ -25,7 +26,7 @@ const ItemsAudioId = () => {
 
   let statusMessage;
   if (!data && !error) {
-    statusMessage = 'Loading...';
+    statusMessage = <Loading />;
   } else if (error) {
     statusMessage = `Error fetching Audio Item with ID ${id}`;
   }

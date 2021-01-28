@@ -3,9 +3,20 @@ interface Props {
   isVisible: boolean;
   onClose: () => void;
   title?: string;
+  className?: string;
 }
 
-const Modal = ({ children, isVisible = false, onClose, title }: Props) => {
+const Modal = ({
+  children,
+  isVisible = false,
+  onClose,
+  title,
+  className,
+}: Props) => {
+  if (!isVisible) {
+    return null;
+  }
+
   return (
     <div
       className={`${
@@ -17,7 +28,11 @@ const Modal = ({ children, isVisible = false, onClose, title }: Props) => {
         onClick={onClose}
       />
 
-      <div className="bg-white rounded relative p-4 m-4">
+      <div
+        className={`bg-white rounded relative w-full p-4 m-4 md:max-w-md ${
+          className ?? ''
+        }`}
+      >
         <div className="flex flex-row justify-between items-center mb-4">
           <h1>{title}</h1>
           <button

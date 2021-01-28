@@ -3,6 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 
 import { EntityFragments } from 'fragments';
 import Layout from 'components/Layout';
+import Loading from 'components/Loading';
 
 const PERSON_ENTITY_QUERY = gql`
   query PersonEntity($slug: String!) {
@@ -24,7 +25,7 @@ const EntitiesPersonSlug = () => {
 
   let statusMessage;
   if (!data && !error) {
-    statusMessage = 'Loading...';
+    statusMessage = <Loading />;
   } else if (error) {
     statusMessage = `Error fetching Person Entity with slug ${slug}`;
   }

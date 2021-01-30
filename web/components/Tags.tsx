@@ -46,12 +46,28 @@ const Tags = ({ tags }: TagsProps) => {
         isVisible={addTagModalIsVisible}
         onClose={() => setAddTagModalIsVisible(false)}
       >
-        <input
-          autoFocus
-          placeholder="Start typing a tag..."
-          value={inputValue}
-          onChange={(event) => setInputValue(event.target.value)}
-        />
+        <div className="relative mb-2">
+          <input
+            autoFocus
+            placeholder="Start typing a tag..."
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+          />
+          <i className="material-icons absolute top-2 right-2 animate-spin text-gray-500">
+            scatter_plot
+          </i>
+        </div>
+        <ul className="mb-2">
+          <li className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200">
+            <span>Tony DeMarco</span>
+            <span className="uppercase text-gray-500 text-sm">Person</span>
+          </li>
+          <li className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200">
+            <span>Fiddle</span>
+            <span className="uppercase text-gray-500 text-sm">Instrument</span>
+          </li>
+        </ul>
+        <button className="btn-text ml-2">Create New</button>
       </Modal>
     </div>
   );

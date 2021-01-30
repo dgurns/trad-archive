@@ -1,5 +1,5 @@
 interface Props {
-  children: React.ReactChild;
+  children: React.ReactChild | React.ReactChild[];
   isVisible: boolean;
   onClose: () => void;
   title?: string;

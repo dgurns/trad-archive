@@ -17,6 +17,48 @@ export const EntityFragments = {
       lastName
     }
   `,
+  placeEntity: gql`
+    fragment PlaceEntity on PlaceEntity {
+      id
+      entityType
+      name
+      slug
+      aliases
+      description
+      createdByUser {
+        id
+      }
+      latitude
+      longitude
+    }
+  `,
+  instrumentEntity: gql`
+    fragment InstrumentEntity on InstrumentEntity {
+      id
+      entityType
+      name
+      slug
+      aliases
+      description
+      createdByUser {
+        id
+      }
+    }
+  `,
+  tuneEntity: gql`
+    fragment TuneEntity on TuneEntity {
+      id
+      entityType
+      name
+      slug
+      aliases
+      description
+      createdByUser {
+        id
+      }
+      composer
+    }
+  `,
 };
 
 export const ItemFragments = {

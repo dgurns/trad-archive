@@ -49,36 +49,55 @@ export class EntityResolver {
       throw new Error('Must include a search term of at least 3 letters');
     }
     const takeFromEach = Math.round(take / 4);
+    const entityManager = getManager();
     const results = await Promise.all([
-      PersonEntity.find({
-        where: [
-          { name: Like(`%${searchTerm}%`) },
-          { aliases: Like(`%${searchTerm}%`) },
-        ],
-        take: takeFromEach,
-      }),
-      PlaceEntity.find({
-        where: [
-          { name: Like(`%${searchTerm}%`) },
-          { aliases: Like(`%${searchTerm}%`) },
-        ],
-        take: takeFromEach,
-      }),
-      InstrumentEntity.find({
-        where: [
-          { name: Like(`%${searchTerm}%`) },
-          { aliases: Like(`%${searchTerm}%`) },
-        ],
-        take: takeFromEach,
-      }),
-      TuneEntity.find({
-        where: [
-          { name: Like(`%${searchTerm}%`) },
-          { aliases: Like(`%${searchTerm}%`) },
-          { composer: Like(`%${searchTerm}%`) },
-        ],
-        take: takeFromEach,
-      }),
+      entityManager
+        .createQueryBuilder(PersonEntity, 'personEntity')
+        .leftJoinAndSelect('personEntity.createdByUser', 'user')
+        .where('LOWER(personEntity.name) LIKE :name', {
+          name: `%${searchTerm.toLowerCase()}%`,
+        })
+        .orWhere('LOWER(personEntity.aliases) LIKE :aliases', {
+          aliases: `%${searchTerm.toLowerCase()}%`,
+        })
+        .take(takeFromEach)
+        .getMany(),
+      entityManager
+        .createQueryBuilder(PlaceEntity, 'placeEntity')
+        .leftJoinAndSelect('placeEntity.createdByUser', 'user')
+        .where('LOWER(placeEntity.name) LIKE :name', {
+          name: `%${searchTerm.toLowerCase()}%`,
+        })
+        .orWhere('LOWER(placeEntity.aliases) LIKE :aliases', {
+          aliases: `%${searchTerm.toLowerCase()}%`,
+        })
+        .take(takeFromEach)
+        .getMany(),
+      entityManager
+        .createQueryBuilder(InstrumentEntity, 'instrumentEntity')
+        .leftJoinAndSelect('instrumentEntity.createdByUser', 'user')
+        .where('LOWER(instrumentEntity.name) LIKE :name', {
+          name: `%${searchTerm.toLowerCase()}%`,
+        })
+        .orWhere('LOWER(instrumentEntity.aliases) LIKE :aliases', {
+          aliases: `%${searchTerm.toLowerCase()}%`,
+        })
+        .take(takeFromEach)
+        .getMany(),
+      entityManager
+        .createQueryBuilder(TuneEntity, 'tuneEntity')
+        .leftJoinAndSelect('tuneEntity.createdByUser', 'user')
+        .where('LOWER(tuneEntity.name) LIKE :name', {
+          name: `%${searchTerm.toLowerCase()}%`,
+        })
+        .orWhere('LOWER(tuneEntity.aliases) LIKE :aliases', {
+          aliases: `%${searchTerm.toLowerCase()}%`,
+        })
+        .orWhere('LOWER(tuneEntity.composer) LIKE :composer', {
+          composer: `%${searchTerm.toLowerCase()}%`,
+        })
+        .take(takeFromEach)
+        .getMany(),
     ]);
     const output: Array<
       PersonEntity | PlaceEntity | InstrumentEntity | TuneEntity

@@ -8,7 +8,6 @@ export enum CreateTagEntityType {
   PersonEntity = 'PersonEntity',
   InstrumentEntity = 'InstrumentEntity',
   TuneEntity = 'TuneEntity',
-  DateEntity = 'DateEntity',
 }
 registerEnumType(CreateTagItemType, {
   name: 'CreateTagItemType',

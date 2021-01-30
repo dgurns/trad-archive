@@ -15,7 +15,6 @@ export class ItemResolver {
         'tags.personEntity',
         'tags.instrumentEntity',
         'tags.tuneEntity',
-        'tags.dateEntity',
       ],
     });
   }
@@ -36,7 +35,6 @@ export class ItemResolver {
         'tags.personEntity',
         'tags.instrumentEntity',
         'tags.tuneEntity',
-        'tags.dateEntity',
       ],
     });
   }
@@ -57,7 +55,6 @@ export class ItemResolver {
         'tags.personEntity',
         'tags.instrumentEntity',
         'tags.tuneEntity',
-        'tags.dateEntity',
       ],
     });
     // When there are more Item types, compile most recent across all queries

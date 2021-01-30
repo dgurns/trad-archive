@@ -7,7 +7,6 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
 } from 'typeorm';
 import { ObjectType, Field, createUnionType } from 'type-graphql';
 
@@ -18,10 +17,12 @@ export const Item = createUnionType({
   name: 'Item',
   types: () => [AudioItem],
   resolveType: (value) => {
-    if ('urlMp3' in value) {
-      return AudioItem;
+    switch (value.itemType) {
+      case 'Audio':
+        return AudioItem;
+      default:
+        return undefined;
     }
-    return undefined;
   },
 });
 
@@ -60,6 +61,10 @@ export class BaseItem extends TypeOrmBaseEntity {
 @ObjectType()
 @TypeOrmEntity()
 export class AudioItem extends BaseItem {
+  @Field(() => String)
+  @Column({ nullable: true, default: 'Audio' })
+  itemType!: 'Audio';
+
   @Field(() => [Tag], { defaultValue: [] })
   @OneToMany(() => Tag, (tag) => tag.audioItem)
   tags!: Tag[];

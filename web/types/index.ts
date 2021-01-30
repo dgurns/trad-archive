@@ -22,6 +22,7 @@ interface BaseItem {
 }
 
 export interface AudioItem extends BaseItem {
+  itemType: 'Audio';
   tags: Tag[];
   urlSource: string;
   urlMp3: string | null;
@@ -31,7 +32,7 @@ export interface AudioItem extends BaseItem {
 export type Item = AudioItem;
 
 export function isAudioItem(item: Item): item is AudioItem {
-  return (item as AudioItem).urlMp3 !== undefined;
+  return (item as AudioItem).itemType === 'Audio';
 }
 
 export interface Tag {
@@ -41,7 +42,6 @@ export interface Tag {
   personEntity: PersonEntity | null;
   instrumentEntity: InstrumentEntity | null;
   tuneEntity: TuneEntity | null;
-  dateEntity: DateEntity | null;
   createdByUser: User;
   createdAt: string;
   updatedAt: string;
@@ -60,26 +60,25 @@ interface BaseEntity {
 }
 
 export interface PlaceEntity extends BaseEntity {
+  entityType: 'Place';
   latitude: number | null;
   longitude: number | null;
 }
 
 export interface PersonEntity extends BaseEntity {
+  entityType: 'Person';
   firstName: string;
   middleName: string | null;
   lastName: string;
 }
 
-export interface InstrumentEntity extends BaseEntity {}
+export interface InstrumentEntity extends BaseEntity {
+  entityType: 'Instrument';
+}
 
-export interface TuneEntity extends BaseEntity {}
-
-export interface DateEntity extends BaseEntity {}
+export interface TuneEntity extends BaseEntity {
+  entityType: 'Tune';
+}
 
 // Entity defines a union of all the different Entity types
-export type Entity =
-  | PlaceEntity
-  | PersonEntity
-  | InstrumentEntity
-  | TuneEntity
-  | DateEntity;
+export type Entity = PlaceEntity | PersonEntity | InstrumentEntity | TuneEntity;

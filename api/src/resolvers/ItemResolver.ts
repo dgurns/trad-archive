@@ -22,8 +22,8 @@ export class ItemResolver {
 
   @Query(() => [AudioItem])
   async audioItems(
-    @Arg('take', { defaultValue: 20 }) take?: number,
-    @Arg('skip', { defaultValue: 0 }) skip?: number
+    @Arg('take', { nullable: true, defaultValue: 20 }) take: number,
+    @Arg('skip', { nullable: true, defaultValue: 0 }) skip: number
   ) {
     return AudioItem.find({
       take,
@@ -43,8 +43,8 @@ export class ItemResolver {
 
   @Query(() => [Item])
   async items(
-    @Arg('take', { defaultValue: 20 }) take?: number,
-    @Arg('skip', { defaultValue: 0 }) skip?: number
+    @Arg('take', { nullable: true, defaultValue: 20 }) take: number,
+    @Arg('skip', { nullable: true, defaultValue: 0 }) skip: number
   ) {
     const audioItems = await AudioItem.find({
       take,

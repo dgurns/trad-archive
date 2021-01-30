@@ -7,7 +7,6 @@ import {
   PersonEntity,
   InstrumentEntity,
   TuneEntity,
-  DateEntity,
 } from 'entities/Entity';
 
 const DEFAULT_CONNECTION_NAME = 'default';
@@ -35,7 +34,6 @@ export const connectToDatabase = async () => {
       PersonEntity,
       InstrumentEntity,
       TuneEntity,
-      DateEntity,
     ],
     // TODO: Set synchronize to false in production
     synchronize: true,

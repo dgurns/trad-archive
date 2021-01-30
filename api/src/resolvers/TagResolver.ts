@@ -9,7 +9,6 @@ import {
 } from 'resolvers/TagResolverTypes';
 import { AudioItem } from 'entities/Item';
 import {
-  DateEntity,
   InstrumentEntity,
   PersonEntity,
   PlaceEntity,
@@ -27,7 +26,6 @@ export class TagResolver {
         'personEntity',
         'instrumentEntity',
         'tuneEntity',
-        'dateEntity',
         'createdByUser',
       ],
     });
@@ -83,12 +81,6 @@ export class TagResolver {
         const tuneEntity = await TuneEntity.findOne(entityId);
         if (tuneEntity) {
           tag.tuneEntity = tuneEntity;
-          break;
-        }
-      case CreateTagEntityType.DateEntity:
-        const dateEntity = await DateEntity.findOne(entityId);
-        if (dateEntity) {
-          tag.dateEntity = dateEntity;
           break;
         }
       default:

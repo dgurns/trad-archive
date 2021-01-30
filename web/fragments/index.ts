@@ -4,6 +4,7 @@ export const EntityFragments = {
   personEntity: gql`
     fragment PersonEntity on PersonEntity {
       id
+      entityType
       name
       slug
       aliases
@@ -22,6 +23,7 @@ export const ItemFragments = {
   audioItem: gql`
     fragment AudioItem on AudioItem {
       id
+      itemType
       title
       description
       addedByUser {

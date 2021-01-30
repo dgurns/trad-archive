@@ -1,6 +1,13 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
+import { getManager, Like } from 'typeorm';
 import { CustomContext } from 'middleware/context';
-import { PersonEntity } from 'entities/Entity';
+import {
+  Entity,
+  PersonEntity,
+  PlaceEntity,
+  InstrumentEntity,
+  TuneEntity,
+} from 'entities/Entity';
 import { User } from 'entities/User';
 
 @Resolver()
@@ -21,7 +28,7 @@ export class EntityResolver {
   }
 
   @Query(() => [PersonEntity])
-  async personEntities(
+  personEntities(
     @Arg('take', { defaultValue: 20 }) take?: number,
     @Arg('skip', { defaultValue: 0 }) skip?: number
   ) {
@@ -31,6 +38,53 @@ export class EntityResolver {
       order: { createdAt: 'DESC' },
       relations: ['createdByUser', 'lastUpdatedByUser'],
     });
+  }
+
+  @Query(() => [Entity])
+  async searchEntities(
+    @Arg('searchTerm') searchTerm: string,
+    @Arg('take', { nullable: true, defaultValue: 20 }) take: number
+  ) {
+    if (searchTerm.length < 3) {
+      throw new Error('Must include a search term of at least 3 letters');
+    }
+    const takeFromEach = Math.round(take / 4);
+    const results = await Promise.all([
+      PersonEntity.find({
+        where: [
+          { name: Like(`%${searchTerm}%`) },
+          { aliases: Like(`%${searchTerm}%`) },
+        ],
+        take: takeFromEach,
+      }),
+      PlaceEntity.find({
+        where: [
+          { name: Like(`%${searchTerm}%`) },
+          { aliases: Like(`%${searchTerm}%`) },
+        ],
+        take: takeFromEach,
+      }),
+      InstrumentEntity.find({
+        where: [
+          { name: Like(`%${searchTerm}%`) },
+          { aliases: Like(`%${searchTerm}%`) },
+        ],
+        take: takeFromEach,
+      }),
+      TuneEntity.find({
+        where: [
+          { name: Like(`%${searchTerm}%`) },
+          { aliases: Like(`%${searchTerm}%`) },
+          { composer: Like(`%${searchTerm}%`) },
+        ],
+        take: takeFromEach,
+      }),
+    ]);
+    const output: Array<
+      PersonEntity | PlaceEntity | InstrumentEntity | TuneEntity
+    > = [];
+    results.forEach((resultArray) => output.push(...resultArray));
+    return output;
   }
 
   @Mutation(() => PersonEntity)

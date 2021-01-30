@@ -15,7 +15,6 @@ import {
   PersonEntity,
   InstrumentEntity,
   TuneEntity,
-  DateEntity,
 } from 'entities/Entity';
 
 @ObjectType()
@@ -44,10 +43,6 @@ export class Tag extends TypeOrmBaseEntity {
   @Field(() => TuneEntity, { nullable: true })
   @ManyToOne(() => TuneEntity, { nullable: true })
   tuneEntity!: TuneEntity;
-
-  @Field(() => DateEntity, { nullable: true })
-  @ManyToOne(() => DateEntity, { nullable: true })
-  dateEntity!: DateEntity;
 
   @Field(() => User)
   @ManyToOne(() => User)

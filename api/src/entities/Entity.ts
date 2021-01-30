@@ -12,20 +12,20 @@ import { User } from 'entities/User';
 
 export const Entity = createUnionType({
   name: 'Entity',
-  types: () => [
-    PlaceEntity,
-    PersonEntity,
-    InstrumentEntity,
-    TuneEntity,
-    DateEntity,
-  ],
+  types: () => [PlaceEntity, PersonEntity, InstrumentEntity, TuneEntity],
   resolveType: (value) => {
-    if ('latitude' in value) {
-      return PlaceEntity;
-    } else if ('firstName' in value) {
-      return PersonEntity;
+    switch (value.entityType) {
+      case 'Place':
+        return PlaceEntity;
+      case 'Person':
+        return PersonEntity;
+      case 'Instrument':
+        return InstrumentEntity;
+      case 'Tune':
+        return TuneEntity;
+      default:
+        return undefined;
     }
-    return undefined;
   },
 });
 
@@ -75,6 +75,11 @@ export class BaseEntity extends TypeOrmBaseEntity {
 @ObjectType()
 @TypeOrmEntity()
 export class PlaceEntity extends BaseEntity {
+  // entityType field is used for discriminating the type in GraphQL Union type
+  @Field(() => String)
+  @Column({ nullable: true, default: 'Place' })
+  entityType!: 'Place';
+
   @Field(() => Float)
   @Column({ nullable: true, default: null })
   latitude!: number;
@@ -87,6 +92,10 @@ export class PlaceEntity extends BaseEntity {
 @ObjectType()
 @TypeOrmEntity()
 export class PersonEntity extends BaseEntity {
+  @Field(() => String)
+  @Column({ nullable: true, default: 'Person' })
+  entityType!: 'Person';
+
   @Field(() => String)
   @Column()
   firstName!: string;
@@ -102,12 +111,20 @@ export class PersonEntity extends BaseEntity {
 
 @ObjectType()
 @TypeOrmEntity()
-export class InstrumentEntity extends BaseEntity {}
+export class InstrumentEntity extends BaseEntity {
+  @Field(() => String)
+  @Column({ nullable: true, default: 'Instrument' })
+  entityType!: 'Instrument';
+}
 
 @ObjectType()
 @TypeOrmEntity()
-export class TuneEntity extends BaseEntity {}
+export class TuneEntity extends BaseEntity {
+  @Field(() => String)
+  @Column({ nullable: true, default: 'Tune' })
+  entityType!: 'Tune';
 
-@ObjectType()
-@TypeOrmEntity()
-export class DateEntity extends BaseEntity {}
+  @Field(() => String, { nullable: true })
+  @Column({ nullable: true, default: null })
+  composer!: string;
+}

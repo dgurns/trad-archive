@@ -45,7 +45,8 @@ const AddTag = ({ item }: AddTagProps) => {
     }
   }, [searchTerm]);
 
-  const shouldShowResults = searchTerm.length >= 3 && !loading && data;
+  const shouldShowResults =
+    searchTerm.length >= 3 && !loading && data && !error;
 
   return (
     <>
@@ -97,6 +98,9 @@ const AddTag = ({ item }: AddTagProps) => {
               <button className="btn-text">Create New Entity</button>
             </div>
           </>
+        )}
+        {error && (
+          <div className="text-red-600 ml-2 mt-4">Error fetching results</div>
         )}
       </Modal>
     </>

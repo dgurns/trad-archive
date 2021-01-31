@@ -84,6 +84,13 @@ export class TagResolver {
         throw new Error('Must provide a valid Entity type and ID');
     }
 
+    // Check to make sure the tag doesn't already exist
+    const existingTag = await Tag.findOne({ where: { ...tag } });
+    console.log(existingTag);
+    if (existingTag) {
+      throw new Error('This Tag has already been added');
+    }
+
     await tag.save();
     return tag;
   }

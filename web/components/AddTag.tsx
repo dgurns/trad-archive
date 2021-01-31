@@ -48,6 +48,7 @@ interface AddTagProps {
 const AddTag = ({ item }: AddTagProps) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
 
   const [
     searchEntities,
@@ -59,7 +60,7 @@ const AddTag = ({ item }: AddTagProps) => {
   ] = useLazyQuery<{
     searchEntities: Entity[];
   }>(SEARCH_ENTITIES_QUERY);
-  const debouncedSearchEntities = useCallback(debounce(searchEntities, 300), [
+  const debouncedSearchEntities = useCallback(debounce(searchEntities, 500), [
     searchEntities,
   ]);
 
@@ -71,7 +72,7 @@ const AddTag = ({ item }: AddTagProps) => {
 
   const [
     createTag,
-    { loading: createTagLoading, data: createTagData },
+    { loading: createTagLoading, data: createTagData, error: createTagError },
   ] = useMutation<{ createTag: Tag }, { input: CreateTagInput }>(
     CREATE_TAG_MUTATION,
     {
@@ -81,7 +82,7 @@ const AddTag = ({ item }: AddTagProps) => {
 
   const [getItem, { loading: getItemLoading }] = useLazyQuery<{
     getItem: Item;
-  }>(ITEM_QUERY, { variables: { id: item.id } });
+  }>(ITEM_QUERY, { variables: { id: item.id }, fetchPolicy: 'network-only' });
 
   const onTagResultClicked = useCallback(
     (entity: Entity) => {
@@ -106,6 +107,16 @@ const AddTag = ({ item }: AddTagProps) => {
       refetchItemAndClose();
     }
   }, [createTagData, refetchItemAndClose]);
+  useEffect(() => {
+    if (createTagError) {
+      setError(createTagError.message);
+    }
+  }, [createTagError, setError]);
+
+  const onChangeSearchTerm = (event) => {
+    setError('');
+    setSearchTerm(event.target.value);
+  };
 
   const shouldShowLoading = createTagLoading || getItemLoading;
   const shouldShowResults =
@@ -137,7 +148,7 @@ const AddTag = ({ item }: AddTagProps) => {
                 autoFocus
                 placeholder="Start typing..."
                 value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
+                onChange={onChangeSearchTerm}
               />
               {searchEntitiesLoading && (
                 <i className="material-icons absolute top-2 right-2 animate-spin text-gray-500">
@@ -145,6 +156,9 @@ const AddTag = ({ item }: AddTagProps) => {
                 </i>
               )}
             </div>
+
+            {error && <div className="text-red-600 mt-4 ml-2">{error}</div>}
+
             {shouldShowResults && (
               <>
                 <ul className="mb-2 mt-4 max-h-40">

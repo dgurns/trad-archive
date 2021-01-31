@@ -4,7 +4,6 @@ import DateTime from 'services/DateTime';
 import usePlayer from 'hooks/usePlayer';
 
 import Tags from 'components/Tags';
-import AddTag from 'components/AddTag';
 
 interface Props {
   item: Item;
@@ -19,9 +18,8 @@ const ItemComponent = ({ item }: Props) => {
   return (
     <div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 mb-8">
       <h1 className="mb-2">{title}</h1>
-      <div className="mb-6 flex flex-col items-start md:flex-row md:items-center">
-        <Tags tags={tags} />
-        <AddTag item={item} />
+      <div className="mb-6">
+        <Tags item={item} />
       </div>
       <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
         {itemIsInPlayer ? (

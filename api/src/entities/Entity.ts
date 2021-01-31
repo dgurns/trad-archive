@@ -7,21 +7,37 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, Float, createUnionType } from 'type-graphql';
+import {
+  ObjectType,
+  Field,
+  Float,
+  registerEnumType,
+  createUnionType,
+} from 'type-graphql';
 import { User } from 'entities/User';
+
+export enum EntityType {
+  Place = 'Place',
+  Person = 'Person',
+  Instrument = 'Instrument',
+  Tune = 'Tune',
+}
+registerEnumType(EntityType, {
+  name: 'EntityType',
+});
 
 export const Entity = createUnionType({
   name: 'Entity',
   types: () => [PlaceEntity, PersonEntity, InstrumentEntity, TuneEntity],
   resolveType: (value) => {
     switch (value.type) {
-      case 'Place':
+      case EntityType.Place:
         return PlaceEntity;
-      case 'Person':
+      case EntityType.Person:
         return PersonEntity;
-      case 'Instrument':
+      case EntityType.Instrument:
         return InstrumentEntity;
-      case 'Tune':
+      case EntityType.Tune:
         return TuneEntity;
       default:
         return undefined;
@@ -77,8 +93,8 @@ export class BaseEntity extends TypeOrmBaseEntity {
 export class PlaceEntity extends BaseEntity {
   // type field is used for discriminating the type in the GraphQL union
   @Field(() => String)
-  @Column({ nullable: true, default: 'Place' })
-  type!: 'Place';
+  @Column({ nullable: true, default: EntityType.Place })
+  type!: EntityType.Place;
 
   @Field(() => Float)
   @Column({ nullable: true, default: null })
@@ -93,8 +109,8 @@ export class PlaceEntity extends BaseEntity {
 @TypeOrmEntity()
 export class PersonEntity extends BaseEntity {
   @Field(() => String)
-  @Column({ nullable: true, default: 'Person' })
-  type!: 'Person';
+  @Column({ nullable: true, default: EntityType.Person })
+  type!: EntityType.Person;
 
   @Field(() => String)
   @Column()
@@ -113,16 +129,16 @@ export class PersonEntity extends BaseEntity {
 @TypeOrmEntity()
 export class InstrumentEntity extends BaseEntity {
   @Field(() => String)
-  @Column({ nullable: true, default: 'Instrument' })
-  type!: 'Instrument';
+  @Column({ nullable: true, default: EntityType.Instrument })
+  type!: EntityType.Instrument;
 }
 
 @ObjectType()
 @TypeOrmEntity()
 export class TuneEntity extends BaseEntity {
   @Field(() => String)
-  @Column({ nullable: true, default: 'Tune' })
-  type!: 'Tune';
+  @Column({ nullable: true, default: EntityType.Tune })
+  type!: EntityType.Tune;
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true, default: null })

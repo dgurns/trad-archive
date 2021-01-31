@@ -2,13 +2,10 @@ import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
+import { CreateTagInput } from 'resolvers/TagResolverTypes';
+import { ItemType, AudioItem } from 'entities/Item';
 import {
-  CreateTagInput,
-  CreateTagEntityType,
-  CreateTagItemType,
-} from 'resolvers/TagResolverTypes';
-import { AudioItem } from 'entities/Item';
-import {
+  EntityType,
   InstrumentEntity,
   PersonEntity,
   PlaceEntity,
@@ -33,10 +30,10 @@ export class TagResolver {
 
   @Mutation(() => Tag)
   async createTag(
-    @Arg('data') data: CreateTagInput,
+    @Arg('input') input: CreateTagInput,
     @Ctx() ctx: CustomContext
   ) {
-    const { itemType, itemId, entityType, entityId } = data;
+    const { itemType, itemId, entityType, entityId } = input;
 
     const user = await User.findOne(ctx.userId);
     if (!user) {
@@ -46,7 +43,7 @@ export class TagResolver {
     const tag = Tag.create({ createdByUser: user });
 
     switch (itemType) {
-      case CreateTagItemType.Audio:
+      case ItemType.Audio:
         const audioItem = await AudioItem.findOne(itemId);
         if (audioItem) {
           tag.audioItem = audioItem;
@@ -59,25 +56,25 @@ export class TagResolver {
     }
 
     switch (entityType) {
-      case CreateTagEntityType.Place:
+      case EntityType.Place:
         const placeEntity = await PlaceEntity.findOne(entityId);
         if (placeEntity) {
           tag.placeEntity = placeEntity;
           break;
         }
-      case CreateTagEntityType.Person:
+      case EntityType.Person:
         const personEntity = await PersonEntity.findOne(entityId);
         if (personEntity) {
           tag.personEntity = personEntity;
           break;
         }
-      case CreateTagEntityType.Instrument:
+      case EntityType.Instrument:
         const instrumentEntity = await InstrumentEntity.findOne(entityId);
         if (instrumentEntity) {
           tag.instrumentEntity = instrumentEntity;
           break;
         }
-      case CreateTagEntityType.Tune:
+      case EntityType.Tune:
         const tuneEntity = await TuneEntity.findOne(entityId);
         if (tuneEntity) {
           tag.tuneEntity = tuneEntity;

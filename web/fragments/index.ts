@@ -78,6 +78,18 @@ export const ItemFragments = {
           name
           slug
         }
+        instrumentEntity {
+          name
+          slug
+        }
+        placeEntity {
+          name
+          slug
+        }
+        tuneEntity {
+          name
+          slug
+        }
       }
       createdAt
       updatedAt

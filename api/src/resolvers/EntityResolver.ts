@@ -9,6 +9,11 @@ import {
   TuneEntity,
 } from 'entities/Entity';
 import { User } from 'entities/User';
+import {
+  CreatePersonEntityInput,
+  CreateInstrumentEntityInput,
+} from 'resolvers/EntityResolverTypes';
+import EntityService from 'services/Entity';
 
 @Resolver()
 export class EntityResolver {
@@ -38,6 +43,56 @@ export class EntityResolver {
       order: { createdAt: 'DESC' },
       relations: ['createdByUser', 'lastUpdatedByUser'],
     });
+  }
+
+  @Query(() => InstrumentEntity, { nullable: true })
+  instrumentEntity(
+    @Arg('id', { nullable: true }) id: string,
+    @Arg('slug', { nullable: true }) slug: string
+  ) {
+    if (!id && !slug) {
+      throw new Error('Must provide an ID or slug');
+    }
+    const whereOptions = id ? { id } : { slug };
+    return InstrumentEntity.findOne({
+      where: whereOptions,
+      relations: ['createdByUser', 'lastUpdatedByUser'],
+    });
+  }
+
+  @Query(() => Entity, { nullable: true })
+  async entity(
+    @Arg('id', { nullable: true }) id?: string,
+    @Arg('slug', { nullable: true }) slug?: string
+  ) {
+    if (!id && !slug) {
+      throw new Error('Must provide an ID or slug');
+    }
+    const results = await Promise.all([
+      PersonEntity.findOne({
+        where: [{ id }, { slug }],
+        relations: ['createdByUser', 'lastUpdatedByUser'],
+      }),
+      PlaceEntity.findOne({
+        where: [{ id }, { slug }],
+        relations: ['createdByUser', 'lastUpdatedByUser'],
+      }),
+      InstrumentEntity.findOne({
+        where: [{ id }, { slug }],
+        relations: ['createdByUser', 'lastUpdatedByUser'],
+      }),
+      TuneEntity.findOne({
+        where: [{ id }, { slug }],
+        relations: ['createdByUser', 'lastUpdatedByUser'],
+      }),
+    ]);
+    let entity;
+    results.forEach((result) => {
+      if (result) {
+        entity = result;
+      }
+    });
+    return entity;
   }
 
   @Query(() => [Entity])
@@ -108,14 +163,18 @@ export class EntityResolver {
 
   @Mutation(() => PersonEntity)
   async createPersonEntity(
-    @Arg('slug') slug: string,
-    @Arg('aliases', { nullable: true }) aliases: string,
-    @Arg('description', { nullable: true }) description: string,
-    @Arg('firstName') firstName: string,
-    @Arg('middleName', { nullable: true }) middleName: string,
-    @Arg('lastName') lastName: string,
+    @Arg('input') input: CreatePersonEntityInput,
     @Ctx() ctx: CustomContext
   ) {
+    const {
+      slug,
+      aliases,
+      description,
+      firstName,
+      middleName,
+      lastName,
+    } = input;
+
     if (!firstName || !lastName || !slug) {
       throw new Error(
         'A new PersonEntity must have at least a firstName, lastName, and slug'
@@ -129,7 +188,7 @@ export class EntityResolver {
     const name = middleName
       ? `${firstName} ${middleName} ${lastName}`
       : `${firstName} ${lastName}`;
-    const cleanedSlug = slug.replace(/[^a-zA-Z0-9-]/g, '').toLowerCase();
+    const cleanedSlug = EntityService.cleanSlug(slug);
     const existingSlug = await PersonEntity.findOne({
       where: { slug: cleanedSlug },
     });
@@ -152,5 +211,44 @@ export class EntityResolver {
     });
     await personEntity.save();
     return personEntity;
+  }
+
+  @Mutation(() => InstrumentEntity)
+  async createInstrumentEntity(
+    @Arg('input') input: CreateInstrumentEntityInput,
+    @Ctx() ctx: CustomContext
+  ) {
+    const { name, slug, aliases, description } = input;
+
+    if (!name || !slug) {
+      throw new Error(
+        'A new InstrumentEntity must have at least a name and slug'
+      );
+    }
+    const user = await User.findOne(ctx.userId);
+    if (!user) {
+      throw new Error('You must be logged in to create an InstrumentEntity');
+    }
+
+    const cleanedSlug = EntityService.cleanSlug(slug);
+    const existingSlug = await InstrumentEntity.findOne({
+      where: { slug: cleanedSlug },
+    });
+    if (existingSlug) {
+      throw new Error(
+        'This URL slug has already been taken. Please pick another one.'
+      );
+    }
+
+    const instrumentEntity = InstrumentEntity.create({
+      name,
+      slug: cleanedSlug,
+      aliases,
+      description,
+      createdByUser: user,
+      lastUpdatedByUser: user,
+    });
+    await instrumentEntity.save();
+    return instrumentEntity;
   }
 }

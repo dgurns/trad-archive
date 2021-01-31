@@ -1,31 +1,17 @@
-import { InputType, Field, registerEnumType } from 'type-graphql';
-
-export enum CreateTagItemType {
-  Audio = 'Audio',
-}
-export enum CreateTagEntityType {
-  Place = 'Place',
-  Person = 'Person',
-  Instrument = 'Instrument',
-  Tune = 'Tune',
-}
-registerEnumType(CreateTagItemType, {
-  name: 'CreateTagItemType',
-});
-registerEnumType(CreateTagEntityType, {
-  name: 'CreateTagEntityType',
-});
+import { InputType, Field } from 'type-graphql';
+import { ItemType } from 'entities/Item';
+import { EntityType } from 'entities/Entity';
 
 @InputType()
 export class CreateTagInput {
-  @Field(() => CreateTagItemType)
-  itemType!: CreateTagItemType;
+  @Field(() => ItemType)
+  itemType!: ItemType;
 
   @Field()
   itemId!: string;
 
-  @Field(() => CreateTagEntityType)
-  entityType!: CreateTagEntityType;
+  @Field(() => EntityType)
+  entityType!: EntityType;
 
   @Field()
   entityId!: string;

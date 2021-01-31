@@ -4,41 +4,30 @@ import { useRouter } from 'next/router';
 import { PersonEntity } from 'types';
 
 const CREATE_PERSON_ENTITY_MUTATION = gql`
-  mutation CreatePersonEntity(
-    $slug: String!
-    $aliases: String
-    $description: String
-    $firstName: String!
-    $middleName: String
-    $lastName: String!
-  ) {
-    createPersonEntity(
-      slug: $slug
-      aliases: $aliases
-      description: $description
-      firstName: $firstName
-      middleName: $middleName
-      lastName: $lastName
-    ) {
+  mutation CreatePersonEntity($input: CreatePersonEntityInput!) {
+    createPersonEntity(input: $input) {
       id
     }
   }
 `;
-
+interface CreatePersonEntityInput {
+  slug: string;
+  aliases?: string;
+  description?: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+}
 interface Props {
   onSuccess?: (personEntity: PersonEntity) => void;
 }
-interface MutationData {
-  createPersonEntity: PersonEntity;
-}
-
 const CreatePersonEntityForm = ({ onSuccess }: Props) => {
   const router = useRouter();
 
-  const [
-    createPersonEntity,
-    { loading, error, data },
-  ] = useMutation<MutationData>(CREATE_PERSON_ENTITY_MUTATION, {
+  const [createPersonEntity, { loading, error, data }] = useMutation<
+    { createPersonEntity: PersonEntity },
+    { input: CreatePersonEntityInput }
+  >(CREATE_PERSON_ENTITY_MUTATION, {
     errorPolicy: 'all',
   });
 
@@ -51,16 +40,15 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
 
   const onCreatePersonEntity = (event) => {
     event.preventDefault();
-    createPersonEntity({
-      variables: {
-        firstName,
-        middleName,
-        lastName,
-        slug,
-        aliases,
-        description,
-      },
-    });
+    const input = {
+      firstName,
+      middleName,
+      lastName,
+      slug,
+      aliases,
+      description,
+    };
+    createPersonEntity({ variables: { input } });
   };
 
   useEffect(() => {

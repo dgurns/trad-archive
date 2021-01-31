@@ -8,10 +8,22 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, createUnionType } from 'type-graphql';
+import {
+  ObjectType,
+  Field,
+  createUnionType,
+  registerEnumType,
+} from 'type-graphql';
 
 import { User } from 'entities/User';
 import { Tag } from 'entities/Tag';
+
+export enum ItemType {
+  Audio = 'Audio',
+}
+registerEnumType(ItemType, {
+  name: 'ItemType',
+});
 
 export const Item = createUnionType({
   name: 'Item',

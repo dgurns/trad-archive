@@ -5,17 +5,21 @@ interface TagProps {
   tag: Tag;
 }
 const TagLink = ({ tag }: TagProps) => {
-  const { personEntity } = tag;
+  const { personEntity, instrumentEntity } = tag;
+  let href = '';
   if (personEntity) {
-    return (
-      <Link href={`/entities/person/${personEntity.slug}`}>
-        <a className="p-1 px-2 no-underline border border-teal-600 rounded hover:border-teal-800">
-          {personEntity.name}
-        </a>
-      </Link>
-    );
+    href = `/entities/person/${personEntity.slug}`;
+  } else if (instrumentEntity) {
+    href = `/entities/instrument/${instrumentEntity.slug}`;
   }
-  return null;
+  const text = personEntity?.name ?? instrumentEntity?.name;
+  return (
+    <Link href={href}>
+      <a className="p-1 px-2 no-underline border border-teal-600 rounded hover:border-teal-800">
+        {text}
+      </a>
+    </Link>
+  );
 };
 
 interface TagsProps {

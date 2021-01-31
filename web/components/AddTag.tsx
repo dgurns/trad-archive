@@ -21,8 +21,8 @@ const SEARCH_ENTITIES_QUERY = gql`
   ${EntityFragments.tuneEntity}
 `;
 const CREATE_TAG_MUTATION = gql`
-  mutation CreateTag($data: CreateTagInput!) {
-    createTag(data: $data) {
+  mutation CreateTag($input: CreateTagInput!) {
+    createTag(input: $input) {
       id
     }
   }
@@ -72,7 +72,7 @@ const AddTag = ({ item }: AddTagProps) => {
   const [
     createTag,
     { loading: createTagLoading, data: createTagData },
-  ] = useMutation<{ createTag: Tag }, { data: CreateTagInput }>(
+  ] = useMutation<{ createTag: Tag }, { input: CreateTagInput }>(
     CREATE_TAG_MUTATION,
     {
       errorPolicy: 'all',
@@ -85,13 +85,13 @@ const AddTag = ({ item }: AddTagProps) => {
 
   const onTagResultClicked = useCallback(
     (entity: Entity) => {
-      const data = {
+      const input = {
         itemType: item.type,
         itemId: item.id,
         entityType: entity.type,
         entityId: entity.id,
       };
-      createTag({ variables: { data } });
+      createTag({ variables: { input } });
     },
     [item, createTag]
   );

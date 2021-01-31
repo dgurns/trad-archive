@@ -46,7 +46,7 @@ export class TagResolver {
     const tag = Tag.create({ createdByUser: user });
 
     switch (itemType) {
-      case CreateTagItemType.AudioItem:
+      case CreateTagItemType.Audio:
         const audioItem = await AudioItem.findOne(itemId);
         if (audioItem) {
           tag.audioItem = audioItem;
@@ -59,25 +59,25 @@ export class TagResolver {
     }
 
     switch (entityType) {
-      case CreateTagEntityType.PlaceEntity:
+      case CreateTagEntityType.Place:
         const placeEntity = await PlaceEntity.findOne(entityId);
         if (placeEntity) {
           tag.placeEntity = placeEntity;
           break;
         }
-      case CreateTagEntityType.PersonEntity:
+      case CreateTagEntityType.Person:
         const personEntity = await PersonEntity.findOne(entityId);
         if (personEntity) {
           tag.personEntity = personEntity;
           break;
         }
-      case CreateTagEntityType.InstrumentEntity:
+      case CreateTagEntityType.Instrument:
         const instrumentEntity = await InstrumentEntity.findOne(entityId);
         if (instrumentEntity) {
           tag.instrumentEntity = instrumentEntity;
           break;
         }
-      case CreateTagEntityType.TuneEntity:
+      case CreateTagEntityType.Tune:
         const tuneEntity = await TuneEntity.findOne(entityId);
         if (tuneEntity) {
           tag.tuneEntity = tuneEntity;

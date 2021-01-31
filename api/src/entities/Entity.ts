@@ -14,7 +14,7 @@ export const Entity = createUnionType({
   name: 'Entity',
   types: () => [PlaceEntity, PersonEntity, InstrumentEntity, TuneEntity],
   resolveType: (value) => {
-    switch (value.entityType) {
+    switch (value.type) {
       case 'Place':
         return PlaceEntity;
       case 'Person':
@@ -75,10 +75,10 @@ export class BaseEntity extends TypeOrmBaseEntity {
 @ObjectType()
 @TypeOrmEntity()
 export class PlaceEntity extends BaseEntity {
-  // entityType field is used for discriminating the type in GraphQL Union type
+  // type field is used for discriminating the type in the GraphQL union
   @Field(() => String)
   @Column({ nullable: true, default: 'Place' })
-  entityType!: 'Place';
+  type!: 'Place';
 
   @Field(() => Float)
   @Column({ nullable: true, default: null })
@@ -94,7 +94,7 @@ export class PlaceEntity extends BaseEntity {
 export class PersonEntity extends BaseEntity {
   @Field(() => String)
   @Column({ nullable: true, default: 'Person' })
-  entityType!: 'Person';
+  type!: 'Person';
 
   @Field(() => String)
   @Column()
@@ -114,7 +114,7 @@ export class PersonEntity extends BaseEntity {
 export class InstrumentEntity extends BaseEntity {
   @Field(() => String)
   @Column({ nullable: true, default: 'Instrument' })
-  entityType!: 'Instrument';
+  type!: 'Instrument';
 }
 
 @ObjectType()
@@ -122,7 +122,7 @@ export class InstrumentEntity extends BaseEntity {
 export class TuneEntity extends BaseEntity {
   @Field(() => String)
   @Column({ nullable: true, default: 'Tune' })
-  entityType!: 'Tune';
+  type!: 'Tune';
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true, default: null })

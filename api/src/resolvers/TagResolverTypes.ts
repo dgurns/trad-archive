@@ -1,13 +1,13 @@
 import { InputType, Field, registerEnumType } from 'type-graphql';
 
 export enum CreateTagItemType {
-  AudioItem = 'AudioItem',
+  Audio = 'Audio',
 }
 export enum CreateTagEntityType {
-  PlaceEntity = 'PlaceEntity',
-  PersonEntity = 'PersonEntity',
-  InstrumentEntity = 'InstrumentEntity',
-  TuneEntity = 'TuneEntity',
+  Place = 'Place',
+  Person = 'Person',
+  Instrument = 'Instrument',
+  Tune = 'Tune',
 }
 registerEnumType(CreateTagItemType, {
   name: 'CreateTagItemType',

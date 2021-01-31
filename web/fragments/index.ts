@@ -4,7 +4,7 @@ export const EntityFragments = {
   personEntity: gql`
     fragment PersonEntity on PersonEntity {
       id
-      entityType
+      type
       name
       slug
       aliases
@@ -20,7 +20,7 @@ export const EntityFragments = {
   placeEntity: gql`
     fragment PlaceEntity on PlaceEntity {
       id
-      entityType
+      type
       name
       slug
       aliases
@@ -35,7 +35,7 @@ export const EntityFragments = {
   instrumentEntity: gql`
     fragment InstrumentEntity on InstrumentEntity {
       id
-      entityType
+      type
       name
       slug
       aliases
@@ -48,7 +48,7 @@ export const EntityFragments = {
   tuneEntity: gql`
     fragment TuneEntity on TuneEntity {
       id
-      entityType
+      type
       name
       slug
       aliases
@@ -65,7 +65,7 @@ export const ItemFragments = {
   audioItem: gql`
     fragment AudioItem on AudioItem {
       id
-      itemType
+      type
       title
       description
       addedByUser {

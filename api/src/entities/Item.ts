@@ -17,7 +17,7 @@ export const Item = createUnionType({
   name: 'Item',
   types: () => [AudioItem],
   resolveType: (value) => {
-    switch (value.itemType) {
+    switch (value.type) {
       case 'Audio':
         return AudioItem;
       default:
@@ -63,7 +63,7 @@ export class BaseItem extends TypeOrmBaseEntity {
 export class AudioItem extends BaseItem {
   @Field(() => String)
   @Column({ nullable: true, default: 'Audio' })
-  itemType!: 'Audio';
+  type!: 'Audio';
 
   @Field(() => [Tag], { defaultValue: [] })
   @OneToMany(() => Tag, (tag) => tag.audioItem)

@@ -39,6 +39,22 @@ export class ItemResolver {
     });
   }
 
+  @Query(() => Item, { nullable: true })
+  async item(@Arg('id') id: string) {
+    // For now, this only checks AudioItems, but eventually will be expanded
+    // to query across all Item types.
+    return AudioItem.findOne(id, {
+      relations: [
+        'addedByUser',
+        'tags',
+        'tags.placeEntity',
+        'tags.personEntity',
+        'tags.instrumentEntity',
+        'tags.tuneEntity',
+      ],
+    });
+  }
+
   @Query(() => [Item])
   async items(
     @Arg('take', { nullable: true, defaultValue: 20 }) take: number,

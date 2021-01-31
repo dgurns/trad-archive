@@ -12,6 +12,10 @@ export interface User {
   updatedAt: string;
 }
 
+export enum ItemType {
+  Audio = 'Audio',
+}
+
 interface BaseItem {
   id: string;
   title: string | null;
@@ -22,7 +26,7 @@ interface BaseItem {
 }
 
 export interface AudioItem extends BaseItem {
-  itemType: 'Audio';
+  type: ItemType.Audio;
   tags: Tag[];
   urlSource: string;
   urlMp3: string | null;
@@ -32,7 +36,7 @@ export interface AudioItem extends BaseItem {
 export type Item = AudioItem;
 
 export function isAudioItem(item: Item): item is AudioItem {
-  return (item as AudioItem).itemType === 'Audio';
+  return (item as AudioItem).type === 'Audio';
 }
 
 export interface Tag {
@@ -45,6 +49,13 @@ export interface Tag {
   createdByUser: User;
   createdAt: string;
   updatedAt: string;
+}
+
+export enum EntityType {
+  Place = 'Place',
+  Person = 'Person',
+  Instrument = 'Instrument',
+  Tune = 'Tune',
 }
 
 interface BaseEntity {
@@ -60,24 +71,24 @@ interface BaseEntity {
 }
 
 export interface PlaceEntity extends BaseEntity {
-  entityType: 'Place';
+  type: EntityType.Place;
   latitude: number | null;
   longitude: number | null;
 }
 
 export interface PersonEntity extends BaseEntity {
-  entityType: 'Person';
+  type: EntityType.Person;
   firstName: string;
   middleName: string | null;
   lastName: string;
 }
 
 export interface InstrumentEntity extends BaseEntity {
-  entityType: 'Instrument';
+  type: EntityType.Instrument;
 }
 
 export interface TuneEntity extends BaseEntity {
-  entityType: 'Tune';
+  type: EntityType.Tune;
 }
 
 // Entity defines a union of all the different Entity types

@@ -11,8 +11,8 @@ const Header = () => {
       return null;
     } else if (currentUser) {
       return (
-        <div>
-          <span>Hello, {currentUser.username}</span>
+        <div className="flex flex-row">
+          <div className="hidden sm:flex">Hello, {currentUser.username}</div>
           {UserService.isAdmin(currentUser) && (
             <Link href="/admin">
               <a className="btn-text text-current hover:text-gray-400 ml-4">

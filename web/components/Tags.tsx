@@ -15,7 +15,7 @@ const TagLink = ({ tag }: TagProps) => {
   const text = personEntity?.name ?? instrumentEntity?.name;
   return (
     <Link href={href}>
-      <a className="p-1 px-2 no-underline border border-teal-600 rounded hover:border-teal-800">
+      <a className="block p-1 px-2 mb-2 md:mb-0 no-underline border border-teal-600 rounded hover:border-teal-800">
         {text}
       </a>
     </Link>
@@ -27,7 +27,7 @@ interface TagsProps {
 }
 const Tags = ({ tags }: TagsProps) => {
   return (
-    <div className="flex flex-row items-center">
+    <div className="flex flex-row items-center flex-wrap">
       {tags.map((tag, index) => (
         <div className="mr-4" key={index}>
           <TagLink tag={tag} />

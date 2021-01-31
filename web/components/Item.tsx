@@ -19,7 +19,7 @@ const ItemComponent = ({ item }: Props) => {
   return (
     <div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 mb-8">
       <h1 className="mb-2">{title}</h1>
-      <div className="mb-6 flex flex-row items-center">
+      <div className="mb-6 flex flex-col items-start md:flex-row md:items-center">
         <Tags tags={tags} />
         <AddTag item={item} />
       </div>

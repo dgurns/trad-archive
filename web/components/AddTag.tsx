@@ -50,6 +50,11 @@ const AddTag = ({ item }: AddTagProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
+  const onChangeSearchTerm = (event) => {
+    setError('');
+    setSearchTerm(event.target.value);
+  };
+
   const [
     searchEntities,
     {
@@ -102,21 +107,18 @@ const AddTag = ({ item }: AddTagProps) => {
     setAddTagModalIsVisible(false);
   }, [getItem, setAddTagModalIsVisible, item]);
 
+  // Once Tag has been created, refetch the Item and close the modal
   useEffect(() => {
     if (createTagData?.createTag) {
       refetchItemAndClose();
     }
   }, [createTagData, refetchItemAndClose]);
+
   useEffect(() => {
     if (createTagError) {
       setError(createTagError.message);
     }
   }, [createTagError, setError]);
-
-  const onChangeSearchTerm = (event) => {
-    setError('');
-    setSearchTerm(event.target.value);
-  };
 
   const shouldShowLoading = createTagLoading || getItemLoading;
   const shouldShowResults =

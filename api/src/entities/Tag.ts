@@ -2,21 +2,22 @@ import {
   Entity as TypeOrmEntity,
   BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
+  OneToOne,
   ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
 import { User } from 'entities/User';
-import { AudioItem } from 'entities/Item';
-import {
-  PlaceEntity,
-  PersonEntity,
-  InstrumentEntity,
-  TuneEntity,
-} from 'entities/Entity';
+import { AudioItem } from 'entities/AudioItem';
+import { Person } from 'entities/Person';
+import { Instrument } from 'entities/Instrument';
+import { Relationship } from 'entities/Relationship';
 
+// Tag represents a connection between two entities and specifies the
+// relationship between them.
 @ObjectType()
 @TypeOrmEntity()
 export class Tag extends TypeOrmBaseEntity {
@@ -24,25 +25,22 @@ export class Tag extends TypeOrmBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
 
+  @Field(() => Relationship)
+  @OneToOne(() => Relationship)
+  @JoinColumn()
+  relationship!: Relationship;
+
   @Field(() => AudioItem, { nullable: true })
   @ManyToOne(() => AudioItem, { nullable: true })
   audioItem!: AudioItem;
 
-  @Field(() => PlaceEntity, { nullable: true })
-  @ManyToOne(() => PlaceEntity, { nullable: true })
-  placeEntity!: PlaceEntity;
+  @Field(() => Person, { nullable: true })
+  @ManyToOne(() => Person, { nullable: true })
+  person!: Person;
 
-  @Field(() => PersonEntity, { nullable: true })
-  @ManyToOne(() => PersonEntity, { nullable: true })
-  personEntity!: PersonEntity;
-
-  @Field(() => InstrumentEntity, { nullable: true })
-  @ManyToOne(() => InstrumentEntity, { nullable: true })
-  instrumentEntity!: InstrumentEntity;
-
-  @Field(() => TuneEntity, { nullable: true })
-  @ManyToOne(() => TuneEntity, { nullable: true })
-  tuneEntity!: TuneEntity;
+  @Field(() => Instrument, { nullable: true })
+  @ManyToOne(() => Instrument, { nullable: true })
+  instrument!: Instrument;
 
   @Field(() => User)
   @ManyToOne(() => User)

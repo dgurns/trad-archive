@@ -1,18 +1,17 @@
 import { InputType, Field } from 'type-graphql';
-import { ItemType } from 'entities/Item';
-import { EntityType } from 'entities/Entity';
+import { EntityType } from 'entities/entityHelpers';
 
 @InputType()
 export class CreateTagInput {
-  @Field(() => ItemType)
-  itemType!: ItemType;
+  @Field(() => EntityType)
+  subjectEntityType!: EntityType;
 
   @Field()
-  itemId!: string;
+  subjectEntityId!: string;
 
   @Field(() => EntityType)
-  entityType!: EntityType;
+  objectEntityType!: EntityType;
 
   @Field()
-  entityId!: string;
+  objectEntityId!: string;
 }

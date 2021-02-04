@@ -1,13 +1,10 @@
 import { createConnection, getConnectionManager } from 'typeorm';
 import { User } from 'entities/User';
 import { Tag } from 'entities/Tag';
-import { AudioItem } from 'entities/Item';
-import {
-  PlaceEntity,
-  PersonEntity,
-  InstrumentEntity,
-  TuneEntity,
-} from 'entities/Entity';
+import { Relationship } from 'entities/Relationship';
+import { AudioItem } from 'entities/AudioItem';
+import { Person } from 'entities/Person';
+import { Instrument } from 'entities/Instrument';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
@@ -26,15 +23,7 @@ export const connectToDatabase = async () => {
     password: process.env.DATABASE_PASSWORD ?? 'password',
     database: process.env.DATABASE_NAME ?? 'postgres',
     logging: false,
-    entities: [
-      User,
-      Tag,
-      AudioItem,
-      PlaceEntity,
-      PersonEntity,
-      InstrumentEntity,
-      TuneEntity,
-    ],
+    entities: [User, Tag, Relationship, AudioItem, Person, Instrument],
     // TODO: Set synchronize to false in production
     synchronize: true,
     migrationsRun: true,

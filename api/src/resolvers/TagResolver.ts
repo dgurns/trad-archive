@@ -3,14 +3,10 @@ import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
 import { CreateTagInput } from 'resolvers/TagResolverTypes';
-import { ItemType, AudioItem } from 'entities/Item';
-import {
-  EntityType,
-  InstrumentEntity,
-  PersonEntity,
-  PlaceEntity,
-  TuneEntity,
-} from 'entities/Entity';
+import { EntityType } from 'entities/entityHelpers';
+import { AudioItem } from 'entities/AudioItem';
+import { Person } from 'entities/Person';
+import { Instrument } from 'entities/Instrument';
 
 @Resolver()
 export class TagResolver {
@@ -19,10 +15,9 @@ export class TagResolver {
     return Tag.findOne(id, {
       relations: [
         'audioItem',
-        'placeEntity',
-        'personEntity',
-        'instrumentEntity',
-        'tuneEntity',
+        'person',
+        'instrument',
+        'relationship',
         'createdByUser',
       ],
     });
@@ -33,7 +28,12 @@ export class TagResolver {
     @Arg('input') input: CreateTagInput,
     @Ctx() ctx: CustomContext
   ) {
-    const { itemType, itemId, entityType, entityId } = input;
+    const {
+      subjectEntityType,
+      subjectEntityId,
+      objectEntityType,
+      objectEntityId,
+    } = input;
 
     const user = await User.findOne(ctx.userId);
     if (!user) {
@@ -42,9 +42,9 @@ export class TagResolver {
 
     const tag = Tag.create({ createdByUser: user });
 
-    switch (itemType) {
-      case ItemType.Audio:
-        const audioItem = await AudioItem.findOne(itemId);
+    switch (subjectEntityType) {
+      case EntityType.AudioItem:
+        const audioItem = await AudioItem.findOne(subjectEntityId);
         if (audioItem) {
           tag.audioItem = audioItem;
           break;
@@ -55,13 +55,7 @@ export class TagResolver {
         throw new Error('Must provide a valid Item type and ID');
     }
 
-    switch (entityType) {
-      case EntityType.Place:
-        const placeEntity = await PlaceEntity.findOne(entityId);
-        if (placeEntity) {
-          tag.placeEntity = placeEntity;
-          break;
-        }
+    switch (objectEntityType) {
       case EntityType.Person:
         const personEntity = await PersonEntity.findOne(entityId);
         if (personEntity) {
@@ -86,7 +80,6 @@ export class TagResolver {
 
     // Check to make sure the tag doesn't already exist
     const existingTag = await Tag.findOne({ where: { ...tag } });
-    console.log(existingTag);
     if (existingTag) {
       throw new Error('This Tag has already been added');
     }

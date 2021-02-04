@@ -54,18 +54,9 @@ export interface Instrument extends BaseEntity {
   entityType: EntityType.Instrument;
 }
 
-export enum RelationshipType {
-  AudioItemIsPerformedByPerson = 'is_performed_by',
-  PersonIsPerformerOnAudioItem = 'is_performer_on',
-  AudioItemContainsInstrument = 'contains',
-  InstrumentIsPlayedOnAudioItem = 'is_played_on',
-  PersonPlaysInstrument = 'plays',
-  InstrumentIsPlayedByPerson = 'is_played_by',
-}
-
 export interface Relationship {
   id: string;
-  type: RelationshipType;
+  name: string;
   subjectEntityType: EntityType;
   objectEntityType: EntityType;
   createdByUser: User;

@@ -1,14 +1,13 @@
 import { InputType, Field } from 'type-graphql';
 import { EntityType } from 'entities/entityHelpers';
-import { RelationshipType } from 'entities/Relationship';
 
 @InputType()
 export class CreateRelationshipInput {
-  @Field(() => RelationshipType)
-  type!: RelationshipType;
+  @Field(() => String)
+  name!: string;
 
-  @Field(() => RelationshipType, { nullable: true })
-  typeReversed!: RelationshipType;
+  @Field(() => String, { nullable: true })
+  nameReversed!: string;
 
   @Field(() => EntityType)
   subjectEntityType!: EntityType;

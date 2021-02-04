@@ -7,23 +7,10 @@ import {
   UpdateDateColumn,
   Column,
 } from 'typeorm';
-import { ObjectType, Field, registerEnumType } from 'type-graphql';
+import { ObjectType, Field } from 'type-graphql';
 
 import { EntityType } from 'entities/entityHelpers';
 import { User } from 'entities/User';
-
-// RelationshipType defines the possible relationships between two entity types
-export enum RelationshipType {
-  AudioItemIsPerformedByPerson = 'is_performed_by',
-  PersonIsPerformerOnAudioItem = 'is_performer_on',
-  AudioItemContainsInstrument = 'contains',
-  InstrumentIsPlayedOnAudioItem = 'is_played_on',
-  PersonPlaysInstrument = 'plays',
-  InstrumentIsPlayedByPerson = 'is_played_by',
-}
-registerEnumType(RelationshipType, {
-  name: 'RelationshipType',
-});
 
 // Relationship represents a type of relationship between two entity types, for
 // example when a person (subject) "plays" an instrument (object).
@@ -34,9 +21,9 @@ export class Relationship extends TypeOrmBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
 
-  @Field(() => RelationshipType)
-  @Column({ type: 'enum', enum: RelationshipType })
-  type!: RelationshipType;
+  @Field(() => String)
+  @Column()
+  name!: string;
 
   @Field(() => EntityType)
   @Column({ type: 'enum', enum: EntityType })

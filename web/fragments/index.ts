@@ -4,7 +4,7 @@ export const RelationshipFragments = {
   relationship: gql`
     fragment Relationship on Relationship {
       id
-      type
+      name
       subjectEntityType
       objectEntityType
     }

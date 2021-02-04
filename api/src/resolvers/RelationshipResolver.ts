@@ -4,6 +4,7 @@ import { User } from 'entities/User';
 import { CreateRelationshipInput } from 'resolvers/RelationshipResolverTypes';
 import { Relationship } from 'entities/Relationship';
 import { EntityType } from 'entities/entityHelpers';
+import RelationshipService from 'services/Relationship';
 
 @Resolver()
 export class RelationshipResolver {
@@ -24,11 +25,11 @@ export class RelationshipResolver {
     @Arg('input') input: CreateRelationshipInput,
     @Ctx() ctx: CustomContext
   ) {
-    const { type, typeReversed, subjectEntityType, objectEntityType } = input;
+    const { name, nameReversed, subjectEntityType, objectEntityType } = input;
 
-    if (!type || !subjectEntityType || !objectEntityType) {
+    if (!name || !subjectEntityType || !objectEntityType) {
       throw new Error(
-        'Must provide a Relationship type, subject entity type, and object entity type'
+        'Must provide a Relationship name, subject entity name, and object entity name'
       );
     }
     const user = await User.findOne(ctx.userId);
@@ -36,25 +37,29 @@ export class RelationshipResolver {
       throw new Error('Must be logged in to create a Relationship');
     }
 
+    const cleanedName = RelationshipService.cleanName(name);
+
     const existingRelationship = await Relationship.findOne({
-      where: { ...input },
+      where: { name: cleanedName, subjectEntityType, objectEntityType },
     });
     if (existingRelationship) {
       throw new Error('This Relationship has already been created');
     }
 
     const relationship = Relationship.create({
-      type,
+      name: cleanedName,
       subjectEntityType,
       objectEntityType,
+      createdByUser: user,
     });
     await relationship.save();
 
-    if (typeReversed) {
+    if (nameReversed) {
       // Check to see if reverse relationship already exists
-      const existingReverseRelationship = Relationship.findOne({
+      const cleanedNameReversed = RelationshipService.cleanName(nameReversed);
+      const existingReverseRelationship = await Relationship.findOne({
         where: {
-          type: typeReversed,
+          name: cleanedNameReversed,
           subjectEntityType: objectEntityType,
           objectEntityType: subjectEntityType,
         },
@@ -62,9 +67,10 @@ export class RelationshipResolver {
       // If the reverse relationship doesn't already exist, create it
       if (!existingReverseRelationship) {
         const reverseRelationship = Relationship.create({
-          type: typeReversed,
+          name: cleanedNameReversed,
           subjectEntityType: objectEntityType,
           objectEntityType: subjectEntityType,
+          createdByUser: user,
         });
         await reverseRelationship.save();
       }

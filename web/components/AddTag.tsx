@@ -1,24 +1,25 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useLazyQuery, useMutation, gql } from '@apollo/client';
 import debounce from 'lodash/debounce';
-import { Entity, EntityType, Item, ItemType, Tag } from 'types';
-import { EntityFragments, ItemFragments } from 'fragments';
+
+import { Entity, EntityType, Tag } from 'types';
+import { EntityFragments } from 'fragments';
+
 import Modal from 'components/Modal';
-import Loading from 'components/Loading';
+import LoadingBlock from 'components/LoadingBlock';
+import LoadingCircle from 'components/LoadingCircle';
 
 const SEARCH_ENTITIES_QUERY = gql`
   query SearchEntities($searchTerm: String!) {
     searchEntities(searchTerm: $searchTerm) {
-      ...PersonEntity
-      ...PlaceEntity
-      ...InstrumentEntity
-      ...TuneEntity
+      ...AudioItem
+      ...Person
+      ...Instrument
     }
   }
-  ${EntityFragments.personEntity}
-  ${EntityFragments.placeEntity}
-  ${EntityFragments.instrumentEntity}
-  ${EntityFragments.tuneEntity}
+  ${EntityFragments.audioItem}
+  ${EntityFragments.person}
+  ${EntityFragments.instrument}
 `;
 const CREATE_TAG_MUTATION = gql`
   mutation CreateTag($input: CreateTagInput!) {
@@ -27,28 +28,36 @@ const CREATE_TAG_MUTATION = gql`
     }
   }
 `;
-const ITEM_QUERY = gql`
-  query Item($id: String!) {
-    item(id: $id) {
+const PARENT_ENTITY_QUERY = gql`
+  query Entity($id: String!) {
+    entity(id: $id) {
       ...AudioItem
+      ...Person
+      ...Instrument
     }
   }
-  ${ItemFragments.audioItem}
+  ${EntityFragments.audioItem}
+  ${EntityFragments.person}
+  ${EntityFragments.instrument}
 `;
 
 interface CreateTagInput {
-  itemType: ItemType;
-  itemId: string;
-  entityType: EntityType;
-  entityId: string;
+  relationshipId: string;
+  subjectEntityType: EntityType;
+  subjectEntityId: string;
+  objectEntityType: EntityType;
+  objectEntityId: string;
 }
 interface AddTagProps {
-  item: Item;
+  entity: Entity;
 }
-const AddTag = ({ item }: AddTagProps) => {
+const AddTag = ({ entity }: AddTagProps) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
+
+  const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
+  const [selectedRelationshipId, setSelectedRelationshipId] = useState('');
 
   const onChangeSearchTerm = (event) => {
     setError('');
@@ -85,34 +94,24 @@ const AddTag = ({ item }: AddTagProps) => {
     }
   );
 
-  const [getItem, { loading: getItemLoading }] = useLazyQuery<{
-    getItem: Item;
-  }>(ITEM_QUERY, { variables: { id: item.id }, fetchPolicy: 'network-only' });
+  const [getParentEntity, { loading: getParentEntityLoading }] = useLazyQuery<{
+    entity: Entity;
+  }>(PARENT_ENTITY_QUERY, {
+    variables: { id: entity.id },
+    fetchPolicy: 'network-only',
+  });
 
-  const onTagResultClicked = useCallback(
-    (entity: Entity) => {
-      const input = {
-        itemType: item.type,
-        itemId: item.id,
-        entityType: entity.type,
-        entityId: entity.id,
-      };
-      createTag({ variables: { input } });
-    },
-    [item, createTag]
-  );
-
-  const refetchItemAndClose = useCallback(async () => {
-    await getItem();
+  const refetchParentEntityAndClose = useCallback(async () => {
+    await getParentEntity();
     setAddTagModalIsVisible(false);
-  }, [getItem, setAddTagModalIsVisible, item]);
+  }, [getParentEntity, setAddTagModalIsVisible, entity]);
 
-  // Once Tag has been created, refetch the Item and close the modal
+  // Once Tag has been created, refetch the parent Entity and close the modal
   useEffect(() => {
     if (createTagData?.createTag) {
-      refetchItemAndClose();
+      refetchParentEntityAndClose();
     }
-  }, [createTagData, refetchItemAndClose]);
+  }, [createTagData, refetchParentEntityAndClose]);
 
   useEffect(() => {
     if (createTagError) {
@@ -120,7 +119,7 @@ const AddTag = ({ item }: AddTagProps) => {
     }
   }, [createTagError, setError]);
 
-  const shouldShowLoading = createTagLoading || getItemLoading;
+  const shouldShowLoading = createTagLoading || getParentEntityLoading;
   const shouldShowResults =
     searchTerm.length >= 3 &&
     !searchEntitiesLoading &&
@@ -142,7 +141,7 @@ const AddTag = ({ item }: AddTagProps) => {
         onClose={() => setAddTagModalIsVisible(false)}
       >
         {shouldShowLoading ? (
-          <Loading />
+          <LoadingBlock />
         ) : (
           <>
             <div className="relative">
@@ -153,9 +152,9 @@ const AddTag = ({ item }: AddTagProps) => {
                 onChange={onChangeSearchTerm}
               />
               {searchEntitiesLoading && (
-                <i className="material-icons absolute top-2 right-2 animate-spin text-gray-500">
-                  scatter_plot
-                </i>
+                <div className="absolute top-2 right-2">
+                  <LoadingCircle />
+                </div>
               )}
             </div>
 
@@ -167,12 +166,12 @@ const AddTag = ({ item }: AddTagProps) => {
                   {searchEntitiesData.searchEntities.map((entity, index) => (
                     <li
                       className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
-                      onClick={() => onTagResultClicked(entity)}
+                      onClick={() => setSelectedEntity(entity)}
                       key={index}
                     >
                       <span>{entity.name}</span>
                       <span className="uppercase text-gray-500 text-sm">
-                        {entity.type}
+                        {entity.entityType}
                       </span>
                     </li>
                   ))}

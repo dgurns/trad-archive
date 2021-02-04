@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
 
-import { ItemFragments } from 'fragments';
+import { EntityFragments } from 'fragments';
 import Layout from 'components/Layout';
-import Item from 'components/Item';
-import Loading from 'components/Loading';
+import AudioItem from 'components/AudioItem';
+import LoadingBlock from 'components/LoadingBlock';
 
 const AUDIO_ITEM_QUERY = gql`
   query AudioItem($id: String!) {
@@ -12,23 +12,23 @@ const AUDIO_ITEM_QUERY = gql`
       ...AudioItem
     }
   }
-  ${ItemFragments.audioItem}
+  ${EntityFragments.audioItem}
 `;
 
-const ItemsAudioId = () => {
+const ViewAudioItemBySlug = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { slug } = router.query;
 
   const { data, error } = useQuery(AUDIO_ITEM_QUERY, {
-    variables: { id },
-    skip: !id,
+    variables: { slug },
+    skip: !slug,
   });
 
   let statusMessage;
   if (!data && !error) {
-    statusMessage = <Loading />;
+    statusMessage = <LoadingBlock />;
   } else if (error) {
-    statusMessage = `Error fetching Audio Item with ID ${id}`;
+    statusMessage = `Error fetching Audio Item with slug ${slug}`;
   }
 
   if (statusMessage) {
@@ -37,9 +37,9 @@ const ItemsAudioId = () => {
 
   return (
     <Layout>
-      <Item item={data.audioItem} />
+      <AudioItem audioItem={data.audioItem} />
     </Layout>
   );
 };
 
-export default ItemsAudioId;
+export default ViewAudioItemBySlug;

@@ -1,17 +1,17 @@
 import Layout from 'components/Layout';
 import RequireUser from 'components/RequireUser';
-import CreateInstrumentEntityForm from 'components/CreateInstrumentEntityForm';
+import CreatePersonForm from 'components/CreatePersonForm';
 
-const EntitiesInstrumentNew = () => {
+const NewPerson = () => {
   return (
     <Layout>
       <RequireUser>
         <div className="max-w-md">
-          <CreateInstrumentEntityForm />
+          <CreatePersonForm />
         </div>
       </RequireUser>
     </Layout>
   );
 };
 
-export default EntitiesInstrumentNew;
+export default NewPerson;

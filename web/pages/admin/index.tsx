@@ -7,14 +7,14 @@ const AdminHome = () => {
     <Layout>
       <RequireAdmin>
         <>
-          <Link href="/items/audio/new">
+          <Link href="/entities/audio-items/new">
             <a className="block mb-2">Create Audio Item</a>
           </Link>
-          <Link href="/entities/person/new">
-            <a className="block mb-2">Create Person Entity</a>
+          <Link href="/entities/people/new">
+            <a className="block mb-2">Create Person</a>
           </Link>
-          <Link href="/entities/instrument/new">
-            <a className="block mb-2">Create Instrument Entity</a>
+          <Link href="/entities/instruments/new">
+            <a className="block mb-2">Create Instrument</a>
           </Link>
         </>
       </RequireAdmin>

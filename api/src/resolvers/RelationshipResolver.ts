@@ -4,6 +4,7 @@ import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
 import { CreateRelationshipInput } from 'resolvers/RelationshipResolverTypes';
 import { Relationship } from 'entities/Relationship';
+import { sub } from 'date-fns';
 
 @Resolver()
 export class RelationshipResolver {
@@ -31,7 +32,7 @@ export class RelationshipResolver {
       throw new Error('Must be logged in to create a Relationship');
     }
 
-    const existingRelationship = await Relationship.find({
+    const existingRelationship = await Relationship.findOne({
       where: { ...input },
     });
     if (existingRelationship) {
@@ -46,12 +47,23 @@ export class RelationshipResolver {
     await relationship.save();
 
     if (typeReversed) {
-      const reverseRelationship = Relationship.create({
-        type: typeReversed,
-        subjectEntityType: objectEntityType,
-        objectEntityType: subjectEntityType,
+      // Check to see if reverse relationship already exists
+      const existingReverseRelationship = Relationship.findOne({
+        where: {
+          type: typeReversed,
+          subjectEntityType: objectEntityType,
+          objectEntityType: subjectEntityType,
+        },
       });
-      await reverseRelationship.save();
+      // If the reverse relationship doesn't already exist, create it
+      if (!existingReverseRelationship) {
+        const reverseRelationship = Relationship.create({
+          type: typeReversed,
+          subjectEntityType: objectEntityType,
+          objectEntityType: subjectEntityType,
+        });
+        await reverseRelationship.save();
+      }
     }
 
     return relationship;

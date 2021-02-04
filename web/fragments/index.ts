@@ -1,100 +1,101 @@
 import { gql } from '@apollo/client';
 
-export const EntityFragments = {
-  personEntity: gql`
-    fragment PersonEntity on PersonEntity {
+export const RelationshipFragments = {
+  relationship: gql`
+    fragment Relationship on Relationship {
       id
       type
-      name
-      slug
-      aliases
-      description
-      createdByUser {
-        id
-      }
-      firstName
-      middleName
-      lastName
-    }
-  `,
-  placeEntity: gql`
-    fragment PlaceEntity on PlaceEntity {
-      id
-      type
-      name
-      slug
-      aliases
-      description
-      createdByUser {
-        id
-      }
-      latitude
-      longitude
-    }
-  `,
-  instrumentEntity: gql`
-    fragment InstrumentEntity on InstrumentEntity {
-      id
-      type
-      name
-      slug
-      aliases
-      description
-      createdByUser {
-        id
-      }
-    }
-  `,
-  tuneEntity: gql`
-    fragment TuneEntity on TuneEntity {
-      id
-      type
-      name
-      slug
-      aliases
-      description
-      createdByUser {
-        id
-      }
-      composer
+      subjectEntityType
+      objectEntityType
     }
   `,
 };
 
-export const ItemFragments = {
+export const TagFragments = {
+  tag: gql`
+    fragment Tag on Tag {
+      id
+      relationship {
+        ...Relationship
+      }
+      objectAudioItem {
+        name
+        slug
+      }
+      objectPerson {
+        name
+        slug
+      }
+      objectInstrument {
+        name
+        slug
+      }
+    }
+    ${RelationshipFragments.relationship}
+  `,
+};
+
+export const EntityFragments = {
   audioItem: gql`
     fragment AudioItem on AudioItem {
       id
       type
-      title
+      name
+      slug
+      aliases
       description
-      addedByUser {
+      tags {
+        ...Tag
+      }
+      createdByUser {
         id
         username
-      }
-      tags {
-        id
-        personEntity {
-          name
-          slug
-        }
-        instrumentEntity {
-          name
-          slug
-        }
-        placeEntity {
-          name
-          slug
-        }
-        tuneEntity {
-          name
-          slug
-        }
       }
       createdAt
       updatedAt
       urlSource
-      urlMp3
     }
+    ${TagFragments.tag}
+  `,
+  person: gql`
+    fragment Person on Person {
+      id
+      type
+      name
+      slug
+      aliases
+      description
+      tags {
+        ...Tag
+      }
+      createdByUser {
+        id
+        username
+      }
+      createdAt
+      updatedAt
+      firstName
+      middleName
+      lastName
+    }
+    ${TagFragments.tag}
+  `,
+  instrument: gql`
+    fragment Instrument on Instrument {
+      id
+      type
+      name
+      slug
+      aliases
+      description
+      tags {
+        ...Tag
+      }
+      createdByUser {
+        id
+        username
+      }
+    }
+    ${TagFragments.tag}
   `,
 };

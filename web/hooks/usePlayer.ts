@@ -1,15 +1,17 @@
 import React, { useContext } from 'react';
-import { Item } from 'types';
+import { AudioItem } from 'types';
 
 interface PlayerContextValue {
-  activePlayerItem: Item | null;
-  setActivePlayerItem: React.Dispatch<React.SetStateAction<Item>>;
+  activePlayerAudioItem: AudioItem | null;
+  setActivePlayerAudioItem: React.Dispatch<React.SetStateAction<AudioItem>>;
 }
 export const PlayerContext = React.createContext<PlayerContextValue>(null);
 
 const usePlayer = () => {
-  const { activePlayerItem, setActivePlayerItem } = useContext(PlayerContext);
-  return { activePlayerItem, setActivePlayerItem };
+  const { activePlayerAudioItem, setActivePlayerAudioItem } = useContext(
+    PlayerContext
+  );
+  return { activePlayerAudioItem, setActivePlayerAudioItem };
 };
 
 export default usePlayer;

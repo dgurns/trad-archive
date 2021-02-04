@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { PersonEntity } from 'types';
+import { Person } from 'types';
 
-const CREATE_PERSON_ENTITY_MUTATION = gql`
-  mutation CreatePersonEntity($input: CreatePersonEntityInput!) {
-    createPersonEntity(input: $input) {
+const CREATE_PERSON_MUTATION = gql`
+  mutation CreatePerson($input: CreatePersonInput!) {
+    createPerson(input: $input) {
       id
     }
   }
 `;
-interface CreatePersonEntityInput {
+interface CreatePersonInput {
   slug: string;
   aliases?: string;
   description?: string;
@@ -19,15 +19,15 @@ interface CreatePersonEntityInput {
   lastName: string;
 }
 interface Props {
-  onSuccess?: (personEntity: PersonEntity) => void;
+  onSuccess?: (person: Person) => void;
 }
-const CreatePersonEntityForm = ({ onSuccess }: Props) => {
+const CreatePersonForm = ({ onSuccess }: Props) => {
   const router = useRouter();
 
-  const [createPersonEntity, { loading, error, data }] = useMutation<
-    { createPersonEntity: PersonEntity },
-    { input: CreatePersonEntityInput }
-  >(CREATE_PERSON_ENTITY_MUTATION, {
+  const [createPerson, { loading, error, data }] = useMutation<
+    { createPerson: Person },
+    { input: CreatePersonInput }
+  >(CREATE_PERSON_MUTATION, {
     errorPolicy: 'all',
   });
 
@@ -38,7 +38,7 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
   const [aliases, setAliases] = useState('');
   const [description, setDescription] = useState('');
 
-  const onCreatePersonEntity = (event) => {
+  const onCreatePerson = (event) => {
     event.preventDefault();
     const input = {
       firstName,
@@ -48,15 +48,15 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
       aliases,
       description,
     };
-    createPersonEntity({ variables: { input } });
+    createPerson({ variables: { input } });
   };
 
   useEffect(() => {
-    if (data?.createPersonEntity) {
+    if (data?.createPerson) {
       if (onSuccess) {
-        return onSuccess(data.createPersonEntity);
+        return onSuccess(data.createPerson);
       }
-      window.alert('Person Entity created successfully!');
+      window.alert('Person created successfully!');
       setFirstName('');
       setMiddleName('');
       setLastName('');
@@ -68,9 +68,9 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
 
   return (
     <>
-      <h1 className="mb-4">Create Person Entity</h1>
+      <h1 className="mb-4">Create Person</h1>
       <div className="flex flex-col align-start">
-        <form onSubmit={onCreatePersonEntity}>
+        <form onSubmit={onCreatePerson}>
           <input
             placeholder="First name"
             autoFocus
@@ -97,8 +97,8 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
             onChange={(event) => setSlug(event.target.value)}
           />
           <div className="text-sm text-gray-400 mb-2 ml-2">
-            This will be used for the URL of this Person Entity, for example{' '}
-            {`https://trad-archive.com/entities/person/${
+            This will be used for the URL of this Person, for example{' '}
+            {`https://trad-archive.com/entities/people/${
               slug || 'kitty-hayes'
             }`}
           </div>
@@ -109,8 +109,7 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
             onChange={(event) => setAliases(event.target.value)}
           />
           <div className="text-sm text-gray-400 mb-2 ml-2">
-            A list of comma-separated aliases for this Person Entity. For
-            example:{' '}
+            A list of comma-separated aliases for this Person. For example:{' '}
             <em>Tony D, The Tradfather, Tony from the County Calamari</em>
           </div>
           <textarea
@@ -134,4 +133,4 @@ const CreatePersonEntityForm = ({ onSuccess }: Props) => {
   );
 };
 
-export default CreatePersonEntityForm;
+export default CreatePersonForm;

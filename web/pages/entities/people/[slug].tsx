@@ -3,31 +3,31 @@ import { useQuery, gql } from '@apollo/client';
 
 import { EntityFragments } from 'fragments';
 import Layout from 'components/Layout';
-import Loading from 'components/Loading';
+import LoadingBlock from 'components/LoadingBlock';
 
-const PERSON_ENTITY_QUERY = gql`
-  query PersonEntity($slug: String!) {
-    personEntity(slug: $slug) {
+const PERSON_QUERY = gql`
+  query Person($slug: String!) {
+    person(slug: $slug) {
       ...PersonEntity
     }
   }
-  ${EntityFragments.personEntity}
+  ${EntityFragments.person}
 `;
 
-const EntitiesPersonSlug = () => {
+const ViewPersonBySlug = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { data, error } = useQuery(PERSON_ENTITY_QUERY, {
+  const { data, error } = useQuery(PERSON_QUERY, {
     variables: { slug },
     skip: !slug,
   });
 
   let statusMessage;
   if (!data && !error) {
-    statusMessage = <Loading />;
+    statusMessage = <LoadingBlock />;
   } else if (error) {
-    statusMessage = `Error fetching Person Entity with slug ${slug}`;
+    statusMessage = `Error fetching Person with slug ${slug}`;
   }
 
   if (statusMessage) {
@@ -36,9 +36,9 @@ const EntitiesPersonSlug = () => {
 
   return (
     <Layout>
-      <h1>Items Tagged with "{data.personEntity?.name}"</h1>
+      <h1>Audio Items Tagged with "{data.person?.name}"</h1>
     </Layout>
   );
 };
 
-export default EntitiesPersonSlug;
+export default ViewPersonBySlug;

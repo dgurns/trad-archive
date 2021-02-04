@@ -7,6 +7,7 @@ import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { Relationship } from 'entities/Relationship';
 
 @Resolver()
 export class TagResolver {
@@ -29,6 +30,7 @@ export class TagResolver {
     @Ctx() ctx: CustomContext
   ) {
     const {
+      relationshipId,
       subjectEntityType,
       subjectEntityId,
       objectEntityType,
@@ -40,7 +42,12 @@ export class TagResolver {
       throw new Error('Must be logged in to create a Tag');
     }
 
-    const tag = Tag.create({ createdByUser: user });
+    const relationship = await Relationship.findOne(relationshipId);
+    if (!relationship) {
+      throw new Error('Could not find a Relationship with that ID');
+    }
+
+    const tag = Tag.create({ relationship, createdByUser: user });
 
     switch (subjectEntityType) {
       case EntityType.AudioItem:

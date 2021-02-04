@@ -1,14 +1,20 @@
 import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Entity } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { User, UserPermission } from 'entities/User';
+import { CreateAudioItemInput } from 'resolvers/AudioItemResolverTypes';
 
 @Resolver()
 export class AudioItemResolver {
   @Query(() => AudioItem, { nullable: true })
-  audioItem(@Arg('id') id: string) {
-    return AudioItem.findOne(id, {
+  audioItem(@Arg('id') id: string, @Arg('slug') slug: string) {
+    if (!id && !slug) {
+      throw new Error('Must search by an ID or slug');
+    }
+
+    const whereOptions = id ? { id } : { slug };
+    return AudioItem.findOne({
+      where: whereOptions,
       relations: [
         'createdByUser',
         'updatedByUser',
@@ -45,14 +51,14 @@ export class AudioItemResolver {
   @Mutation(() => AudioItem)
   @Authorized(UserPermission.Admin)
   async createAudioItem(
-    @Arg('name') name: string,
-    @Arg('urlSource') urlSource: string,
-    @Arg('description', { nullable: true }) description: string,
+    @Arg('input') input: CreateAudioItemInput,
     @Ctx() ctx: CustomContext
   ) {
-    if (!name || !urlSource) {
+    const { name, slug, aliases, description, urlSource } = input;
+
+    if (!name || !slug || !urlSource) {
       throw new Error(
-        'A new Audio Item must have at least a Title and Source URL'
+        'A new Audio Item must have at least a name, slug, and URL source'
       );
     }
     if (!urlSource.includes('http')) {
@@ -60,10 +66,13 @@ export class AudioItemResolver {
     }
     const createdByUser = await User.findOne(ctx.userId);
     if (!createdByUser) {
-      throw new Error('Error fetching the user who is adding the item');
+      throw new Error('Error fetching the user who is adding the AudioItem');
     }
+
     const audioItem = AudioItem.create({
       name,
+      slug,
+      aliases,
       description,
       urlSource,
       createdByUser,

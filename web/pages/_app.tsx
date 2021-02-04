@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { PlayerContext } from 'hooks/usePlayer';
-import { Item } from 'types';
+import { AudioItem } from 'types';
 import Player from 'components/Player';
 
 export const apolloClient = new ApolloClient({
@@ -13,19 +13,23 @@ export const apolloClient = new ApolloClient({
 });
 
 function App({ Component, pageProps }) {
-  const [activePlayerItem, setActivePlayerItem] = useState<Item>(null);
+  const [activePlayerAudioItem, setActivePlayerAudioItem] = useState<AudioItem>(
+    null
+  );
 
   return (
     <ApolloProvider client={apolloClient}>
-      <PlayerContext.Provider value={{ setActivePlayerItem, activePlayerItem }}>
+      <PlayerContext.Provider
+        value={{ setActivePlayerAudioItem, activePlayerAudioItem }}
+      >
         <Head>
           <title>Trad Archive</title>
         </Head>
 
         <Component {...pageProps} />
 
-        {/* The Player needs to be rendered here so it is global */}
-        {activePlayerItem && (
+        {/* Player is rendered here so it is persistent across all routes */}
+        {activePlayerAudioItem && (
           <div
             className="fixed bottom-0 left-0 right-0"
             style={{

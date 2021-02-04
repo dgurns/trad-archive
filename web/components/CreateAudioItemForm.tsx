@@ -4,16 +4,8 @@ import { useRouter } from 'next/router';
 import { AudioItem } from 'types';
 
 const CREATE_AUDIO_ITEM_MUTATION = gql`
-  mutation CreateAudioItem(
-    $title: String!
-    $urlSource: String!
-    $description: String
-  ) {
-    createAudioItem(
-      title: $title
-      urlSource: $urlSource
-      description: $description
-    ) {
+  mutation CreateAudioItem($input: CreateAudioItemInput!) {
+    createAudioItem(input: $input) {
       id
     }
   }
@@ -22,25 +14,33 @@ const CREATE_AUDIO_ITEM_MUTATION = gql`
 interface Props {
   onSuccess?: (audioItem: AudioItem) => void;
 }
-interface MutationData {
-  createAudioItem: AudioItem;
+interface CreateAudioItemInput {
+  name: string;
+  urlSource: string;
+  slug: string;
+  aliases?: string;
+  description?: string;
 }
 
 const CreateAudioItemForm = ({ onSuccess }: Props) => {
   const router = useRouter();
 
-  const [createAudioItem, { loading, error, data }] = useMutation<MutationData>(
-    CREATE_AUDIO_ITEM_MUTATION,
-    { errorPolicy: 'all' }
-  );
+  const [createAudioItem, { loading, error, data }] = useMutation<
+    { createAudioItem: AudioItem },
+    { input: CreateAudioItemInput }
+  >(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: 'all' });
 
-  const [title, setTitle] = useState('');
+  const [name, setTitle] = useState('');
   const [urlSource, setUrlSource] = useState('');
+  const [slug, setSlug] = useState('');
+  const [aliases, setAliases] = useState('');
   const [description, setDescription] = useState('');
 
   const onCreateAudioItem = (event) => {
     event.preventDefault();
-    createAudioItem({ variables: { title, urlSource, description } });
+    createAudioItem({
+      variables: { input: { name, urlSource, slug, aliases, description } },
+    });
   };
 
   useEffect(() => {
@@ -51,6 +51,8 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
       window.alert('Audio Item created successfully!');
       setTitle('');
       setUrlSource('');
+      setSlug('');
+      setAliases('');
       setDescription('');
     }
   }, [data, router]);
@@ -64,7 +66,7 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
             placeholder="Title"
             autoFocus
             className="mb-2"
-            value={title}
+            value={name}
             onChange={(event) => setTitle(event.target.value)}
           />
           <input
@@ -73,6 +75,28 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
             value={urlSource}
             onChange={(event) => setUrlSource(event.target.value)}
           />
+          <input
+            placeholder="URL slug (ie. finbarr-dwyer-live-at-dolans)"
+            className="mb-2"
+            value={slug}
+            onChange={(event) => setSlug(event.target.value)}
+          />
+          <div className="text-sm text-gray-400 mb-2 ml-2">
+            This will be used for the URL of this AudioItem, for example{' '}
+            {`https://trad-archive.com/entities/audio-items/${
+              slug || 'finbarr-dwyer-live-at-dolans'
+            }`}
+          </div>
+          <input
+            placeholder="Aliases"
+            className="mb-2"
+            value={aliases}
+            onChange={(event) => setAliases(event.target.value)}
+          />
+          <div className="text-sm text-gray-400 mb-2 ml-2">
+            A list of comma-separated aliases for this AudioItem. For example:{' '}
+            <em>Finbarr and Brian, Finbarr '08 at Dolan's</em>
+          </div>
           <textarea
             placeholder="Description"
             className="mb-2"

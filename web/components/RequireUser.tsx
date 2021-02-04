@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import useCurrentUser from 'hooks/useCurrentUser';
-import UserService from 'services/User';
 
 interface Props {
   children: React.ReactElement;

@@ -1,19 +1,22 @@
 import Link from 'next/link';
-import { Tag, Item } from 'types';
+import { Tag, Entity } from 'types';
 import AddTag from 'components/AddTag';
 
 interface TagProps {
   tag: Tag;
 }
 const TagLink = ({ tag }: TagProps) => {
-  const { personEntity, instrumentEntity } = tag;
+  const { objectAudioItem, objectPerson, objectInstrument } = tag;
   let href = '';
-  if (personEntity) {
-    href = `/entities/person/${personEntity.slug}`;
-  } else if (instrumentEntity) {
-    href = `/entities/instrument/${instrumentEntity.slug}`;
+  if (objectAudioItem) {
+    href = `/entities/audio-items/${objectAudioItem.slug}`;
+  } else if (objectPerson) {
+    href = `/entities/people/${objectPerson.slug}`;
+  } else if (objectInstrument) {
+    href = `/entities/instruments/${objectInstrument.slug}`;
   }
-  const text = personEntity?.name ?? instrumentEntity?.name;
+  const text =
+    objectAudioItem?.name ?? objectPerson?.name ?? objectInstrument?.name;
   return (
     <Link href={href}>
       <a className="block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800">
@@ -24,18 +27,18 @@ const TagLink = ({ tag }: TagProps) => {
 };
 
 interface TagsProps {
-  item: Item;
+  entity: Entity;
 }
-const Tags = ({ item }: TagsProps) => {
+const Tags = ({ entity }: TagsProps) => {
   return (
     <div className="flex flex-row items-center flex-wrap">
-      {item.tags.map((tag, index) => (
+      {entity.tags.map((tag, index) => (
         <div className="mr-4" key={index}>
           <TagLink tag={tag} />
         </div>
       ))}
       <div className="mb-2">
-        <AddTag item={item} />
+        <AddTag entity={entity} />
       </div>
     </div>
   );

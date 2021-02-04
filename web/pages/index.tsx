@@ -1,27 +1,27 @@
-import useItems from 'hooks/useItems';
+import useAudioItems from 'hooks/useAudioItems';
 import Layout from 'components/Layout';
-import Item from 'components/Item';
-import Loading from 'components/Loading';
+import AudioItem from 'components/AudioItem';
+import LoadingBlock from 'components/LoadingBlock';
 
 export default function Home() {
-  const [items, { loading, error }] = useItems();
+  const [audioItems, { loading, error }] = useAudioItems();
 
   if (loading) {
     return (
       <Layout>
-        <Loading />
+        <LoadingBlock />
       </Layout>
     );
   } else if (error) {
     return <Layout>{error.message}</Layout>;
-  } else if (!items) {
-    return 'No items found';
+  } else if (!audioItems) {
+    return 'No Audio Items found';
   }
 
   return (
     <Layout>
-      {items.map((item, index) => (
-        <Item item={item} key={index} />
+      {audioItems.map((audioItem, index) => (
+        <AudioItem audioItem={audioItem} key={index} />
       ))}
     </Layout>
   );

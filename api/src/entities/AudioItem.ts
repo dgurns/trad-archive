@@ -13,7 +13,7 @@ export class AudioItem extends BaseEntity {
   entityType!: EntityType.AudioItem;
 
   @Field(() => [Tag], { defaultValue: [] })
-  @OneToMany(() => Tag, (tag) => tag.audioItem)
+  @OneToMany(() => Tag, (tag) => tag.subjectAudioItem)
   tags!: Tag[];
 
   @Field(() => String)

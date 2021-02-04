@@ -21,33 +21,25 @@ const AudioPlayer = ({ item }: AudioPlayerProps) => {
 };
 
 const Player = () => {
-  const { activePlayerItem, setActivePlayerItem } = usePlayer();
+  const { activePlayerAudioItem, setActivePlayerAudioItem } = usePlayer();
 
-  if (!activePlayerItem) {
+  if (!activePlayerAudioItem) {
     return null;
   }
 
-  const player = useMemo(() => {
-    if (isAudioItem(activePlayerItem)) {
-      return <AudioPlayer item={activePlayerItem} key={activePlayerItem.id} />;
-    } else {
-      return 'This item type cannot be played yet';
-    }
-  }, [activePlayerItem]);
-
   const itemHref = useMemo(() => {
-    if (isAudioItem(activePlayerItem)) {
-      return `/items/audio/${activePlayerItem.id}`;
+    if (isAudioItem(activePlayerAudioItem)) {
+      return `/entities/audio-items/${activePlayerAudioItem.slug}`;
     }
     return window.location.href;
-  }, [activePlayerItem]);
+  }, [activePlayerAudioItem]);
 
   return (
     <div className="flex flex-col align-center justify-center p-4 bg-white align-center">
       <div className="flex flex-row justify-between mb-3">
         <div>
           Now playing:{' '}
-          <span className="text-gray-500">{activePlayerItem.title}</span>
+          <span className="text-gray-500">{activePlayerAudioItem.name}</span>
         </div>
         <div className="flex flex-row items-top ml-4">
           <Link href={itemHref}>
@@ -55,13 +47,17 @@ const Player = () => {
           </Link>
           <button
             className="btn-icon flex ml-4"
-            onClick={() => setActivePlayerItem(null)}
+            onClick={() => setActivePlayerAudioItem(null)}
           >
             <i className="material-icons">close</i>
           </button>
         </div>
       </div>
-      {player}
+
+      <AudioPlayer
+        item={activePlayerAudioItem}
+        key={activePlayerAudioItem.id}
+      />
     </div>
   );
 };

@@ -12,50 +12,17 @@ export interface User {
   updatedAt: string;
 }
 
-export enum ItemType {
-  Audio = 'Audio',
-}
-
-interface BaseItem {
-  id: string;
-  title: string | null;
-  description: string | null;
-  addedByUser: User;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AudioItem extends BaseItem {
-  type: ItemType.Audio;
-  tags: Tag[];
-  urlSource: string;
-  urlMp3: string | null;
-}
-
-// Item defines a union of all the possible Item types
-export type Item = AudioItem;
-
-export function isAudioItem(item: Item): item is AudioItem {
-  return (item as AudioItem).type === 'Audio';
-}
-
-export interface Tag {
-  id: string;
-  audioItem: AudioItem | null;
-  placeEntity: PlaceEntity | null;
-  personEntity: PersonEntity | null;
-  instrumentEntity: InstrumentEntity | null;
-  tuneEntity: TuneEntity | null;
-  createdByUser: User;
-  createdAt: string;
-  updatedAt: string;
-}
+// Entity defines a union of all the different Entity types
+export type Entity = AudioItem | Person | Instrument;
 
 export enum EntityType {
-  Place = 'Place',
+  AudioItem = 'AudioItem',
   Person = 'Person',
   Instrument = 'Instrument',
-  Tune = 'Tune',
+}
+
+export function isAudioItem(entity: Entity): entity is AudioItem {
+  return (entity as AudioItem).entityType === EntityType.AudioItem;
 }
 
 interface BaseEntity {
@@ -64,32 +31,58 @@ interface BaseEntity {
   slug: string;
   aliases: string;
   description: string | null;
+  tags: Tag[];
   createdByUser: User;
   lastUpdatedByUser: User;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface PlaceEntity extends BaseEntity {
-  type: EntityType.Place;
-  latitude: number | null;
-  longitude: number | null;
+export interface AudioItem extends BaseEntity {
+  entityType: EntityType.AudioItem;
+  urlSource: string;
 }
 
-export interface PersonEntity extends BaseEntity {
-  type: EntityType.Person;
+export interface Person extends BaseEntity {
+  entityType: EntityType.Person;
   firstName: string;
   middleName: string | null;
   lastName: string;
 }
 
-export interface InstrumentEntity extends BaseEntity {
-  type: EntityType.Instrument;
+export interface Instrument extends BaseEntity {
+  entityType: EntityType.Instrument;
 }
 
-export interface TuneEntity extends BaseEntity {
-  type: EntityType.Tune;
+export enum RelationshipType {
+  AudioItemIsPerformedByPerson = 'is_performed_by',
+  PersonIsPerformerOnAudioItem = 'is_performer_on',
+  AudioItemContainsInstrument = 'contains',
+  InstrumentIsPlayedOnAudioItem = 'is_played_on',
+  PersonPlaysInstrument = 'plays',
+  InstrumentIsPlayedByPerson = 'is_played_by',
 }
 
-// Entity defines a union of all the different Entity types
-export type Entity = PlaceEntity | PersonEntity | InstrumentEntity | TuneEntity;
+export interface Relationship {
+  id: string;
+  type: RelationshipType;
+  subjectEntityType: EntityType;
+  objectEntityType: EntityType;
+  createdByUser: User;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Tag {
+  id: string;
+  relationship: Relationship;
+  subjectAudioItem: AudioItem | null;
+  subjectPerson: Person | null;
+  subjectInstrument: Instrument | null;
+  objectAudioItem: AudioItem | null;
+  objectPerson: Person | null;
+  objectInstrument: Instrument | null;
+  createdByUser: User;
+  createdAt: string;
+  updatedAt: string;
+}

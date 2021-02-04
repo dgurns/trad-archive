@@ -1,25 +1,25 @@
 import Link from 'next/link';
-import { Item } from 'types';
+import { AudioItem } from 'types';
 import DateTime from 'services/DateTime';
 import usePlayer from 'hooks/usePlayer';
 
 import Tags from 'components/Tags';
 
 interface Props {
-  item: Item;
+  audioItem: AudioItem;
 }
 
-const ItemComponent = ({ item }: Props) => {
-  const { title, description, tags, addedByUser, createdAt } = item;
+const AudioItemComponent = ({ audioItem }: Props) => {
+  const { name, description, createdByUser, createdAt } = audioItem;
 
-  const { activePlayerItem, setActivePlayerItem } = usePlayer();
-  const itemIsInPlayer = activePlayerItem?.id === item.id;
+  const { activePlayerAudioItem, setActivePlayerAudioItem } = usePlayer();
+  const itemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
 
   return (
     <div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 mb-8">
-      <h1 className="mb-2">{title}</h1>
+      <h1 className="mb-2">{name}</h1>
       <div className="mb-6">
-        <Tags item={item} />
+        <Tags entity={audioItem} />
       </div>
       <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
         {itemIsInPlayer ? (
@@ -27,7 +27,7 @@ const ItemComponent = ({ item }: Props) => {
         ) : (
           <button
             style={{ lineHeight: 0 }}
-            onClick={() => setActivePlayerItem(item)}
+            onClick={() => setActivePlayerAudioItem(audioItem)}
           >
             <i className="material-icons text-5xl text-teal-600 hover:text-teal-800">
               play_arrow
@@ -37,8 +37,8 @@ const ItemComponent = ({ item }: Props) => {
       </div>
       <div className="text-gray-500 text-sm mb-2">
         Posted by{' '}
-        <Link href={`/users/${addedByUser.username}`}>
-          {addedByUser.username}
+        <Link href={`/users/${createdByUser.username}`}>
+          {createdByUser.username}
         </Link>{' '}
         {DateTime.formatDate(createdAt)}
       </div>
@@ -47,4 +47,4 @@ const ItemComponent = ({ item }: Props) => {
   );
 };
 
-export default ItemComponent;
+export default AudioItemComponent;

@@ -4,11 +4,11 @@ import Layout from 'components/Layout';
 import RequireAdmin from 'components/RequireAdmin';
 import CreateAudioItemForm from 'components/CreateAudioItemForm';
 
-const ItemsAudioNew = () => {
+const NewAudioItem = () => {
   const router = useRouter();
 
   const onCreateSuccess = (audioItem: AudioItem) => {
-    router.push(`/items/audio/${audioItem.id}`);
+    router.push(`/items/audio-items/${audioItem.slug}`);
   };
 
   return (
@@ -22,4 +22,4 @@ const ItemsAudioNew = () => {
   );
 };
 
-export default ItemsAudioNew;
+export default NewAudioItem;

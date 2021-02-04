@@ -1,31 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { InstrumentEntity } from 'types';
+import { Instrument } from 'types';
 
-const CREATE_INSTRUMENT_ENTITY_MUTATION = gql`
-  mutation CreateInstrumentEntity($input: CreateInstrumentEntityInput!) {
-    createInstrumentEntity(input: $input) {
+const CREATE_INSTRUMENT_MUTATION = gql`
+  mutation CreateInstrument($input: CreateInstrumentInput!) {
+    createInstrument(input: $input) {
       id
     }
   }
 `;
-interface CreateInstrumentEntityInput {
+interface CreateInstrumentInput {
   name: string;
   slug: string;
   aliases?: string;
   description?: string;
 }
 interface Props {
-  onSuccess?: (instrumentEntity: InstrumentEntity) => void;
+  onSuccess?: (instrument: Instrument) => void;
 }
-const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
+const CreateInstrumentForm = ({ onSuccess }: Props) => {
   const router = useRouter();
 
-  const [createInstrumentEntity, { loading, error, data }] = useMutation<
-    { createInstrumentEntity: InstrumentEntity },
-    { input: CreateInstrumentEntityInput }
-  >(CREATE_INSTRUMENT_ENTITY_MUTATION, {
+  const [createInstrument, { loading, error, data }] = useMutation<
+    { createInstrument: Instrument },
+    { input: CreateInstrumentInput }
+  >(CREATE_INSTRUMENT_MUTATION, {
     errorPolicy: 'all',
   });
 
@@ -34,7 +34,7 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
   const [aliases, setAliases] = useState('');
   const [description, setDescription] = useState('');
 
-  const onCreateInstrumentEntity = (event) => {
+  const onCreateInstrument = (event) => {
     event.preventDefault();
     const input = {
       name,
@@ -42,15 +42,15 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
       aliases,
       description,
     };
-    createInstrumentEntity({ variables: { input } });
+    createInstrument({ variables: { input } });
   };
 
   useEffect(() => {
-    if (data?.createInstrumentEntity) {
+    if (data?.createInstrument) {
       if (onSuccess) {
-        return onSuccess(data.createInstrumentEntity);
+        return onSuccess(data.createInstrument);
       }
-      window.alert('Instrument Entity created successfully!');
+      window.alert('Instrument created successfully!');
       setName('');
       setSlug('');
       setAliases('');
@@ -60,9 +60,9 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
 
   return (
     <>
-      <h1 className="mb-4">Create Instrument Entity</h1>
+      <h1 className="mb-4">Create Instrument</h1>
       <div className="flex flex-col align-start">
-        <form onSubmit={onCreateInstrumentEntity}>
+        <form onSubmit={onCreateInstrument}>
           <input
             placeholder="Name"
             autoFocus
@@ -77,8 +77,8 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
             onChange={(event) => setSlug(event.target.value)}
           />
           <div className="text-sm text-gray-400 mb-2 ml-2">
-            This will be used for the URL of this Instrument Entity, for example{' '}
-            {`https://trad-archive.com/entities/instrument/${
+            This will be used for the URL of this Instrument, for example{' '}
+            {`https://trad-archive.com/entities/instruments/${
               slug || 'button-accordion'
             }`}
           </div>
@@ -89,8 +89,8 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
             onChange={(event) => setAliases(event.target.value)}
           />
           <div className="text-sm text-gray-400 mb-2 ml-2">
-            A list of comma-separated aliases for this Instrument Entity. For
-            example: <em>Stomach Steinway, Squeezebox, Belly Organ</em>
+            A list of comma-separated aliases for this Instrument. For example:{' '}
+            <em>Stomach Steinway, Squeezebox, Belly Organ</em>
           </div>
           <textarea
             placeholder="Description"
@@ -113,4 +113,4 @@ const CreateInstrumentEntityForm = ({ onSuccess }: Props) => {
   );
 };
 
-export default CreateInstrumentEntityForm;
+export default CreateInstrumentForm;

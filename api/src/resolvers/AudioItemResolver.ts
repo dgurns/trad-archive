@@ -11,10 +11,12 @@ export class AudioItemResolver {
     return AudioItem.findOne(id, {
       relations: [
         'createdByUser',
+        'updatedByUser',
         'tags',
-        'tags.person',
-        'tags.instrument',
         'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
       ],
     });
   }
@@ -30,10 +32,12 @@ export class AudioItemResolver {
       order: { createdAt: 'DESC' },
       relations: [
         'createdByUser',
+        'updatedByUser',
         'tags',
-        'tags.person',
-        'tags.instrument',
         'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
       ],
     });
   }

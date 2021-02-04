@@ -46,36 +46,50 @@ export class TagResolver {
       case EntityType.AudioItem:
         const audioItem = await AudioItem.findOne(subjectEntityId);
         if (audioItem) {
-          tag.audioItem = audioItem;
+          tag.subjectAudioItem = audioItem;
           break;
         }
-      // If the item isn't found and break isn't called, the switch statement
-      // will continue on to the default case and throw an error.
-      default:
-        throw new Error('Must provide a valid Item type and ID');
-    }
-
-    switch (objectEntityType) {
       case EntityType.Person:
-        const personEntity = await PersonEntity.findOne(entityId);
-        if (personEntity) {
-          tag.personEntity = personEntity;
+        const person = await Person.findOne(subjectEntityId);
+        if (person) {
+          tag.subjectPerson = person;
           break;
         }
       case EntityType.Instrument:
-        const instrumentEntity = await InstrumentEntity.findOne(entityId);
-        if (instrumentEntity) {
-          tag.instrumentEntity = instrumentEntity;
+        const instrument = await Instrument.findOne(subjectEntityId);
+        if (instrument) {
+          tag.subjectInstrument = instrument;
           break;
         }
-      case EntityType.Tune:
-        const tuneEntity = await TuneEntity.findOne(entityId);
-        if (tuneEntity) {
-          tag.tuneEntity = tuneEntity;
-          break;
-        }
+      // If the entity isn't found and break isn't called, the switch statement
+      // will continue on to the default case and throw an error.
       default:
-        throw new Error('Must provide a valid Entity type and ID');
+        throw new Error('Must provide a valid subject entity type and ID');
+    }
+
+    switch (objectEntityType) {
+      case EntityType.AudioItem:
+        const audioItem = await AudioItem.findOne(objectEntityId);
+        if (audioItem) {
+          tag.objectAudioItem = audioItem;
+          break;
+        }
+      case EntityType.Person:
+        const person = await Person.findOne(objectEntityId);
+        if (person) {
+          tag.objectPerson = person;
+          break;
+        }
+      case EntityType.Instrument:
+        const instrument = await Instrument.findOne(objectEntityId);
+        if (instrument) {
+          tag.objectInstrument = instrument;
+          break;
+        }
+      // If the entity isn't found and break isn't called, the switch statement
+      // will continue on to the default case and throw an error.
+      default:
+        throw new Error('Must provide a valid object entity type and ID');
     }
 
     // Check to make sure the tag doesn't already exist

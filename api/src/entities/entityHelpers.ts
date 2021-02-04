@@ -17,6 +17,7 @@ import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
 
+// EntityType is an enum which defines the different types of entities
 export enum EntityType {
   AudioItem = 'AudioItem',
   Person = 'Person',

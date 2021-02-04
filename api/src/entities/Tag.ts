@@ -32,15 +32,27 @@ export class Tag extends TypeOrmBaseEntity {
 
   @Field(() => AudioItem, { nullable: true })
   @ManyToOne(() => AudioItem, { nullable: true })
-  audioItem!: AudioItem;
+  subjectAudioItem!: AudioItem;
 
   @Field(() => Person, { nullable: true })
   @ManyToOne(() => Person, { nullable: true })
-  person!: Person;
+  subjectPerson!: Person;
 
   @Field(() => Instrument, { nullable: true })
   @ManyToOne(() => Instrument, { nullable: true })
-  instrument!: Instrument;
+  subjectInstrument!: Instrument;
+
+  @Field(() => AudioItem, { nullable: true })
+  @ManyToOne(() => AudioItem, { nullable: true })
+  objectAudioItem!: AudioItem;
+
+  @Field(() => Person, { nullable: true })
+  @ManyToOne(() => Person, { nullable: true })
+  objectPerson!: Person;
+
+  @Field(() => Instrument, { nullable: true })
+  @ManyToOne(() => Instrument, { nullable: true })
+  objectInstrument!: Instrument;
 
   @Field(() => User)
   @ManyToOne(() => User)

@@ -6,9 +6,9 @@ import { CreateInstrumentInput } from 'resolvers/InstrumentResolverTypes';
 import EntityService from 'services/Entity';
 
 @Resolver()
-export class EntityResolver {
+export class InstrumentResolver {
   @Query(() => Instrument, { nullable: true })
-  instrumentEntity(
+  instrument(
     @Arg('id', { nullable: true }) id: string,
     @Arg('slug', { nullable: true }) slug: string
   ) {
@@ -18,7 +18,36 @@ export class EntityResolver {
     const whereOptions = id ? { id } : { slug };
     return Instrument.findOne({
       where: whereOptions,
-      relations: ['createdByUser', 'updatedByUser'],
+      relations: [
+        'createdByUser',
+        'updatedByUser',
+        'tags',
+        'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
+      ],
+    });
+  }
+
+  @Query(() => [Instrument])
+  instruments(
+    @Arg('take', { defaultValue: 20 }) take?: number,
+    @Arg('skip', { defaultValue: 0 }) skip?: number
+  ) {
+    return Instrument.find({
+      take,
+      skip,
+      order: { createdAt: 'DESC' },
+      relations: [
+        'createdByUser',
+        'updatedByUser',
+        'tags',
+        'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
+      ],
     });
   }
 

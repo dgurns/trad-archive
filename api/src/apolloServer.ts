@@ -12,15 +12,24 @@ import { createCustomContext } from 'middleware/context';
 const apolloServerPlugins = require('middleware/plugins');
 import { authChecker } from 'middleware/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
-import { ItemResolver } from 'resolvers/ItemResolver';
 import { TagResolver } from 'resolvers/TagResolver';
-import { EntityResolver } from 'resolvers/EntityResolver';
+import { RelationshipResolver } from 'resolvers/RelationshipResolver';
+import { AudioItemResolver } from 'resolvers/AudioItemResolver';
+import { PersonResolver } from 'resolvers/PersonResolver';
+import { InstrumentResolver } from 'resolvers/InstrumentResolver';
 
 const createServer = async () => {
   await connectToDatabase();
 
   const schema = await buildSchema({
-    resolvers: [AuthResolver, ItemResolver, TagResolver, EntityResolver],
+    resolvers: [
+      AuthResolver,
+      TagResolver,
+      RelationshipResolver,
+      AudioItemResolver,
+      PersonResolver,
+      InstrumentResolver,
+    ],
     dateScalarMode: 'isoDate',
     authChecker,
     authMode: 'error',

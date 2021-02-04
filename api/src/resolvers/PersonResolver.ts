@@ -6,9 +6,9 @@ import { CreatePersonInput } from 'resolvers/PersonResolverTypes';
 import EntityService from 'services/Entity';
 
 @Resolver()
-export class EntityResolver {
+export class PersonResolver {
   @Query(() => Person, { nullable: true })
-  personEntity(
+  person(
     @Arg('id', { nullable: true }) id: string,
     @Arg('slug', { nullable: true }) slug: string
   ) {
@@ -18,12 +18,20 @@ export class EntityResolver {
     const whereOptions = id ? { id } : { slug };
     return Person.findOne({
       where: whereOptions,
-      relations: ['createdByUser', 'updatedByUser'],
+      relations: [
+        'createdByUser',
+        'updatedByUser',
+        'tags',
+        'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
+      ],
     });
   }
 
   @Query(() => [Person])
-  personEntities(
+  people(
     @Arg('take', { defaultValue: 20 }) take?: number,
     @Arg('skip', { defaultValue: 0 }) skip?: number
   ) {
@@ -31,7 +39,15 @@ export class EntityResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: ['createdByUser', 'updatedByUser'],
+      relations: [
+        'createdByUser',
+        'updatedByUser',
+        'tags',
+        'tags.relationship',
+        'tags.objectAudioItem',
+        'tags.objectPerson',
+        'tags.objectInstrument',
+      ],
     });
   }
 

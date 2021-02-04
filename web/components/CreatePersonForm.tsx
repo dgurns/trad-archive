@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Person } from 'types';
+import { EntityFragments } from 'fragments';
 
 const CREATE_PERSON_MUTATION = gql`
   mutation CreatePerson($input: CreatePersonInput!) {
     createPerson(input: $input) {
-      id
+      ...Person
     }
   }
+  ${EntityFragments.person}
 `;
 interface CreatePersonInput {
   slug: string;

@@ -7,8 +7,8 @@ import AudioItem from 'components/AudioItem';
 import LoadingBlock from 'components/LoadingBlock';
 
 const AUDIO_ITEM_QUERY = gql`
-  query AudioItem($id: String!) {
-    audioItem(id: $id) {
+  query AudioItem($slug: String!) {
+    audioItem(slug: $slug) {
       ...AudioItem
     }
   }

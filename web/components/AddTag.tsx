@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useLazyQuery, useMutation, gql } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client';
 import debounce from 'lodash/debounce';
 
 import { Entity, EntityType, Tag } from 'types';
-import { EntityFragments } from 'fragments';
+import { EntityFragments, RelationshipFragments } from 'fragments';
 
 import Modal from 'components/Modal';
 import LoadingBlock from 'components/LoadingBlock';
@@ -20,6 +20,12 @@ const SEARCH_ENTITIES_QUERY = gql`
   ${EntityFragments.audioItem}
   ${EntityFragments.person}
   ${EntityFragments.instrument}
+`;
+const SEARCH_RELATIONSHIPS_QUERY = gql`
+  query SearchRelationships($subjectEntityType: String!) {
+    ...Relationship
+  }
+  ${RelationshipFragments.relationship}
 `;
 const CREATE_TAG_MUTATION = gql`
   mutation CreateTag($input: CreateTagInput!) {
@@ -59,6 +65,20 @@ const AddTag = ({ entity }: AddTagProps) => {
   const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
   const [selectedRelationshipId, setSelectedRelationshipId] = useState('');
 
+  const {
+    loading: relationshipsLoading,
+    data: relationshipsData,
+    error: relationshipsError,
+  } = useQuery(SEARCH_RELATIONSHIPS_QUERY, {
+    variables: { subjectEntityType: entity.entityType },
+  });
+
+  useEffect(() => {
+    if (relationshipsError) {
+      setError(relationshipsError.message);
+    }
+  }, [relationshipsError, setError]);
+
   const onChangeSearchTerm = (event) => {
     setError('');
     setSearchTerm(event.target.value);
@@ -74,9 +94,10 @@ const AddTag = ({ entity }: AddTagProps) => {
   ] = useLazyQuery<{
     searchEntities: Entity[];
   }>(SEARCH_ENTITIES_QUERY);
-  const debouncedSearchEntities = useCallback(debounce(searchEntities, 500), [
-    searchEntities,
-  ]);
+  const debouncedSearchEntities = useCallback(
+    debounce(searchEntities, 500, { leading: true }),
+    [searchEntities]
+  );
 
   useEffect(() => {
     if (searchTerm && searchTerm.length >= 3) {

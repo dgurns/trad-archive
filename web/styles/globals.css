@@ -7,15 +7,16 @@
     @apply text-xl font-bold;
   }
 
+  /* Links */
   a,
   .link {
-    @apply text-teal-600 underline;
+    @apply text-teal-600 underline hover:text-teal-800;
   }
-  a:hover,
-  .link:hover {
-    @apply text-teal-800;
+  .link-h1 {
+    @apply text-xl font-bold text-black no-underline hover:text-teal-800;
   }
 
+  /* Buttons */
   button:focus {
     @apply outline-none;
   }
@@ -27,12 +28,12 @@
   /* Primary buttons */
   .btn,
   input[type='submit'] {
-    @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-700 disabled:bg-gray-300 hover:no-underline;
+    @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
   }
 
   /* Text buttons */
   .btn-text {
-    @apply text-teal-600 no-underline hover:no-underline hover:text-teal-900;
+    @apply text-teal-600 no-underline hover:no-underline hover:text-teal-800;
   }
   .btn-text:disabled {
     @apply opacity-50;

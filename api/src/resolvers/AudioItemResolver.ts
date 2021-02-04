@@ -9,7 +9,10 @@ import EntityService from 'services/Entity';
 @Resolver()
 export class AudioItemResolver {
   @Query(() => AudioItem, { nullable: true })
-  audioItem(@Arg('id') id: string, @Arg('slug') slug: string) {
+  audioItem(
+    @Arg('id', { nullable: true }) id: string,
+    @Arg('slug', { nullable: true }) slug: string
+  ) {
     if (!id && !slug) {
       throw new Error('Must search by an ID or slug');
     }

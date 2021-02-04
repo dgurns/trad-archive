@@ -8,7 +8,7 @@ const NewAudioItem = () => {
   const router = useRouter();
 
   const onCreateSuccess = (audioItem: AudioItem) => {
-    router.push(`/items/audio-items/${audioItem.slug}`);
+    router.push(`/entities/audio-items/${audioItem.slug}`);
   };
 
   return (

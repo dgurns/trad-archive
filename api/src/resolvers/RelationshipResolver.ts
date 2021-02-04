@@ -1,16 +1,20 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
 import { CreateRelationshipInput } from 'resolvers/RelationshipResolverTypes';
 import { Relationship } from 'entities/Relationship';
-import { sub } from 'date-fns';
+import { EntityType } from 'entities/entityHelpers';
 
 @Resolver()
 export class RelationshipResolver {
-  @Query(() => Tag)
+  @Query(() => Relationship)
   relationship(@Arg('id') id: string) {
     return Relationship.findOne(id, { relations: ['createdByUser'] });
+  }
+
+  @Query(() => [Relationship])
+  searchRelationships(@Arg('subjectEntityType') subjectEntityType: EntityType) {
+    return Relationship.find({ where: { subjectEntityType } });
   }
 
   // CreateRelationship creates a relationship between two entity types, and

@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { AudioItem } from 'types';
+import { EntityFragments } from 'fragments';
 
 const CREATE_AUDIO_ITEM_MUTATION = gql`
   mutation CreateAudioItem($input: CreateAudioItemInput!) {
     createAudioItem(input: $input) {
-      id
+      ...AudioItem
     }
   }
+  ${EntityFragments.audioItem}
 `;
 
 interface Props {
@@ -30,7 +32,7 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
     { input: CreateAudioItemInput }
   >(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: 'all' });
 
-  const [name, setTitle] = useState('');
+  const [name, setName] = useState('');
   const [urlSource, setUrlSource] = useState('');
   const [slug, setSlug] = useState('');
   const [aliases, setAliases] = useState('');
@@ -49,7 +51,7 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
         return onSuccess(data.createAudioItem);
       }
       window.alert('Audio Item created successfully!');
-      setTitle('');
+      setName('');
       setUrlSource('');
       setSlug('');
       setAliases('');
@@ -63,11 +65,11 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
       <div className="flex flex-col align-start">
         <form onSubmit={onCreateAudioItem}>
           <input
-            placeholder="Title"
+            placeholder="Name"
             autoFocus
             className="mb-2"
             value={name}
-            onChange={(event) => setTitle(event.target.value)}
+            onChange={(event) => setName(event.target.value)}
           />
           <input
             placeholder="URL of Source File (ie. https://www.example.com/file.mp3)"

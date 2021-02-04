@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { Instrument } from 'types';
+import { EntityFragments } from 'fragments';
 
 const CREATE_INSTRUMENT_MUTATION = gql`
   mutation CreateInstrument($input: CreateInstrumentInput!) {
     createInstrument(input: $input) {
-      id
+      ...Instrument
     }
   }
+  ${EntityFragments.instrument}
 `;
 interface CreateInstrumentInput {
   name: string;

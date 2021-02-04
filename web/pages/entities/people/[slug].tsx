@@ -8,7 +8,7 @@ import LoadingBlock from 'components/LoadingBlock';
 const PERSON_QUERY = gql`
   query Person($slug: String!) {
     person(slug: $slug) {
-      ...PersonEntity
+      ...Person
     }
   }
   ${EntityFragments.person}

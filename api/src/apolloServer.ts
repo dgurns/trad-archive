@@ -14,6 +14,7 @@ import { authChecker } from 'middleware/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
 import { TagResolver } from 'resolvers/TagResolver';
 import { RelationshipResolver } from 'resolvers/RelationshipResolver';
+import { EntityResolver } from 'resolvers/EntityResolver';
 import { AudioItemResolver } from 'resolvers/AudioItemResolver';
 import { PersonResolver } from 'resolvers/PersonResolver';
 import { InstrumentResolver } from 'resolvers/InstrumentResolver';
@@ -26,6 +27,7 @@ const createServer = async () => {
       AuthResolver,
       TagResolver,
       RelationshipResolver,
+      EntityResolver,
       AudioItemResolver,
       PersonResolver,
       InstrumentResolver,

@@ -38,10 +38,6 @@ export class Relationship extends TypeOrmBaseEntity {
   @Column({ type: 'enum', enum: RelationshipType })
   type!: RelationshipType;
 
-  @Field(() => RelationshipType)
-  @Column({ type: 'enum', enum: RelationshipType })
-  typeReversed!: RelationshipType;
-
   @Field(() => EntityType)
   @Column({ type: 'enum', enum: EntityType })
   subjectEntityType!: EntityType;

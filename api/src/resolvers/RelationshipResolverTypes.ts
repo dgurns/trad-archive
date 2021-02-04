@@ -7,7 +7,7 @@ export class CreateRelationshipInput {
   @Field(() => RelationshipType)
   type!: RelationshipType;
 
-  @Field(() => RelationshipType)
+  @Field(() => RelationshipType, { nullable: true })
   typeReversed!: RelationshipType;
 
   @Field(() => EntityType)

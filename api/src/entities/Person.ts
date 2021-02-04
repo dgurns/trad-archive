@@ -1,15 +1,20 @@
-import { Entity as TypeOrmEntity, Column } from 'typeorm';
+import { Entity as TypeOrmEntity, Column, OneToMany } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
-import { BaseEntity, EntityType } from 'entities/entityHelpers';
+import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
+import { Tag } from 'entities/Tag';
 
 // Person represents a unique human, for example Seamus Ennis
 @ObjectType()
 @TypeOrmEntity()
-export class Person extends BaseEntity {
+export class Person extends EntityBaseFields {
   @Field(() => String)
   @Column({ nullable: true, default: EntityType.Person })
   entityType!: EntityType.Person;
+
+  @Field(() => [Tag], { defaultValue: [] })
+  @OneToMany(() => Tag, (tag) => tag.subjectPerson)
+  tags!: Tag[];
 
   @Field(() => String)
   @Column()

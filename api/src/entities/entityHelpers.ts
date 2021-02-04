@@ -6,16 +6,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {
-  ObjectType,
-  Field,
-  registerEnumType,
-  createUnionType,
-} from 'type-graphql';
+import { ObjectType, Field, registerEnumType } from 'type-graphql';
 import { User } from 'entities/User';
-import { AudioItem } from 'entities/AudioItem';
-import { Person } from 'entities/Person';
-import { Instrument } from 'entities/Instrument';
 
 // EntityType is an enum which defines the different types of entities
 export enum EntityType {
@@ -27,29 +19,10 @@ registerEnumType(EntityType, {
   name: 'EntityType',
 });
 
-// Entity is a GraphQL union type returned by resolvers. It contains logic for
-// GraphQL clients to distinguish the entity type represented by a value.
-export const Entity = createUnionType({
-  name: 'Entity',
-  types: () => [AudioItem, Person, Instrument],
-  resolveType: (value) => {
-    switch (value.entityType) {
-      case EntityType.AudioItem:
-        return AudioItem;
-      case EntityType.Person:
-        return Person;
-      case EntityType.Instrument:
-        return Instrument;
-      default:
-        return undefined;
-    }
-  },
-});
-
-// BaseEntity represents the basic fields that are inherited by every Entity
-// type like Person, AudioItem, or Instrument
+// EntityBaseFields represents the basic fields that are inherited by every
+// Entity type like Person, AudioItem, or Instrument
 @ObjectType()
-export class BaseEntity extends TypeOrmBaseEntity {
+export class EntityBaseFields extends TypeOrmBaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;

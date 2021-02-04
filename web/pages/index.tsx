@@ -14,8 +14,8 @@ export default function Home() {
     );
   } else if (error) {
     return <Layout>{error.message}</Layout>;
-  } else if (!audioItems) {
-    return 'No Audio Items found';
+  } else if (!audioItems?.length) {
+    return <Layout>No Audio Items found</Layout>;
   }
 
   return (

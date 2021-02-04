@@ -1,8 +1,29 @@
-import { Resolver, Query, Arg } from 'type-graphql';
+import { Resolver, Query, Arg, createUnionType } from 'type-graphql';
 import { getManager } from 'typeorm';
-import { Entity } from 'entities/entityHelpers';
+
+import { EntityType } from 'entities/entityHelpers';
+import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+
+// Entity is a GraphQL union type returned by resolvers. It contains logic for
+// GraphQL clients to distinguish the entity type represented by a value.
+export const Entity = createUnionType({
+  name: 'Entity',
+  types: () => [AudioItem, Person, Instrument],
+  resolveType: (value) => {
+    switch (value.entityType) {
+      case EntityType.AudioItem:
+        return AudioItem;
+      case EntityType.Person:
+        return Person;
+      case EntityType.Instrument:
+        return Instrument;
+      default:
+        return undefined;
+    }
+  },
+});
 
 // EntityResolver contains resolvers for querying across all entity types
 @Resolver()

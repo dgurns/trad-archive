@@ -39,7 +39,7 @@ export const EntityFragments = {
   audioItem: gql`
     fragment AudioItem on AudioItem {
       id
-      type
+      entityType
       name
       slug
       aliases
@@ -60,7 +60,7 @@ export const EntityFragments = {
   person: gql`
     fragment Person on Person {
       id
-      type
+      entityType
       name
       slug
       aliases
@@ -83,7 +83,7 @@ export const EntityFragments = {
   instrument: gql`
     fragment Instrument on Instrument {
       id
-      type
+      entityType
       name
       slug
       aliases

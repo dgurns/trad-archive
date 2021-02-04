@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
+
 import { CustomContext } from 'middleware/context';
 import { AudioItem } from 'entities/AudioItem';
 import { User, UserPermission } from 'entities/User';
 import { CreateAudioItemInput } from 'resolvers/AudioItemResolverTypes';
+import EntityService from 'services/Entity';
 
 @Resolver()
 export class AudioItemResolver {
@@ -69,9 +71,19 @@ export class AudioItemResolver {
       throw new Error('Error fetching the user who is adding the AudioItem');
     }
 
+    const cleanedSlug = EntityService.cleanSlug(slug);
+    const existingSlug = await AudioItem.findOne({
+      where: { slug: cleanedSlug },
+    });
+    if (existingSlug) {
+      throw new Error(
+        'This URL slug has already been taken. Please pick another one.'
+      );
+    }
+
     const audioItem = AudioItem.create({
       name,
-      slug,
+      slug: cleanedSlug,
       aliases,
       description,
       urlSource,

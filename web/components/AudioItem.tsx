@@ -10,19 +10,21 @@ interface Props {
 }
 
 const AudioItemComponent = ({ audioItem }: Props) => {
-  const { name, description, createdByUser, createdAt } = audioItem;
+  const { name, slug, description, createdByUser, createdAt } = audioItem;
 
   const { activePlayerAudioItem, setActivePlayerAudioItem } = usePlayer();
-  const itemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
+  const audioItemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
 
   return (
     <div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 mb-8">
-      <h1 className="mb-2">{name}</h1>
+      <Link href={`/entities/audio-items/${slug}`}>
+        <h1 className="mb-2">{name}</h1>
+      </Link>
       <div className="mb-6">
         <Tags entity={audioItem} />
       </div>
       <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
-        {itemIsInPlayer ? (
+        {audioItemIsInPlayer ? (
           <div className="pl-3 text-gray-400">Playing</div>
         ) : (
           <button

@@ -1,7 +1,11 @@
-import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
+import { Resolver, Mutation, Ctx, Arg, Args, Query } from 'type-graphql';
+import { ObjectLiteral } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { User } from 'entities/User';
-import { CreateRelationshipInput } from 'resolvers/RelationshipResolverTypes';
+import {
+  CreateRelationshipInput,
+  SearchRelationshipsArgs,
+} from 'resolvers/RelationshipResolverTypes';
 import { Relationship } from 'entities/Relationship';
 import { EntityType } from 'entities/entityHelpers';
 import RelationshipService from 'services/Relationship';
@@ -14,12 +18,20 @@ export class RelationshipResolver {
   }
 
   @Query(() => [Relationship])
-  searchRelationships(@Arg('subjectEntityType') subjectEntityType: EntityType) {
-    return Relationship.find({ where: { subjectEntityType } });
+  searchRelationships(
+    @Args() { subjectEntityType, objectEntityType }: SearchRelationshipsArgs
+  ) {
+    const whereOptions: ObjectLiteral = { subjectEntityType };
+    if (objectEntityType) {
+      whereOptions.objectEntityType = objectEntityType;
+    }
+    return Relationship.find({
+      where: { subjectEntityType, objectEntityType },
+    });
   }
 
-  // CreateRelationship creates a relationship between two entity types, and
-  // also its reversed version if `typeReversed` is specified
+  // CreateRelationship creates a relationship between two entity types. It also
+  // creates the reversed version if `nameReversed` is specified.
   @Mutation(() => Relationship)
   async createRelationship(
     @Arg('input') input: CreateRelationshipInput,

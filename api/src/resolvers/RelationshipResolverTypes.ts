@@ -1,5 +1,14 @@
-import { InputType, Field } from 'type-graphql';
+import { InputType, Field, ArgsType } from 'type-graphql';
 import { EntityType } from 'entities/entityHelpers';
+
+@ArgsType()
+export class SearchRelationshipsArgs {
+  @Field(() => String)
+  subjectEntityType!: EntityType;
+
+  @Field(() => String, { nullable: true })
+  objectEntityType!: EntityType;
+}
 
 @InputType()
 export class CreateRelationshipInput {

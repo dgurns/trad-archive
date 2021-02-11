@@ -1,4 +1,5 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
+import { getManager } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
@@ -40,6 +41,22 @@ export class TagResolver {
     const user = await User.findOne(ctx.userId);
     if (!user) {
       throw new Error('Must be logged in to create a Tag');
+    }
+
+    // Check to make sure the Tag doesn't already exist
+    const entityManager = getManager();
+    const existingTag = await entityManager
+      .createQueryBuilder(Tag, 'tag')
+      .where(`tag.subject${subjectEntityType}Id = :subjectEntityId`, {
+        subjectEntityId,
+      })
+      .andWhere(`tag.object${objectEntityType}Id = :objectEntityId`, {
+        objectEntityId,
+      })
+      .andWhere('tag.relationshipId = :relationshipId', { relationshipId })
+      .getOne();
+    if (existingTag) {
+      throw new Error('This Tag has already been added');
     }
 
     const relationship = await Relationship.findOne(relationshipId);
@@ -97,12 +114,6 @@ export class TagResolver {
       // will continue on to the default case and throw an error.
       default:
         throw new Error('Must provide a valid object entity type and ID');
-    }
-
-    // Check to make sure the tag doesn't already exist
-    const existingTag = await Tag.findOne({ where: { ...tag } });
-    if (existingTag) {
-      throw new Error('This Tag has already been added');
     }
 
     await tag.save();

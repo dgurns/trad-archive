@@ -61,7 +61,6 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
 
   return (
     <>
-      <h1 className="mb-4">Create Audio Item</h1>
       <div className="flex flex-col align-start">
         <form onSubmit={onCreateAudioItem}>
           <input

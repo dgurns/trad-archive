@@ -62,7 +62,6 @@ const CreateInstrumentForm = ({ onSuccess }: Props) => {
 
   return (
     <>
-      <h1 className="mb-4">Create Instrument</h1>
       <div className="flex flex-col align-start">
         <form onSubmit={onCreateInstrument}>
           <input

@@ -21,9 +21,10 @@ const SEARCH_ENTITIES_QUERY = gql`
 `;
 
 interface Props {
+  onResults?: (entities: Entity[]) => void;
   onSelect: (entity: Entity) => void;
 }
-const SearchEntities = ({ onSelect }: Props) => {
+const SearchEntities = ({ onResults, onSelect }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
 
@@ -41,11 +42,17 @@ const SearchEntities = ({ onSelect }: Props) => {
     },
   ] = useLazyQuery<{
     searchEntities: Entity[];
-  }>(SEARCH_ENTITIES_QUERY);
+  }>(SEARCH_ENTITIES_QUERY, { fetchPolicy: 'no-cache' });
   const debouncedSearchEntities = useCallback(
     debounce(searchEntities, 500, { leading: true }),
     [searchEntities]
   );
+
+  useEffect(() => {
+    if (onResults && searchEntitiesData?.searchEntities) {
+      onResults(searchEntitiesData.searchEntities);
+    }
+  }, [searchEntitiesData, onResults]);
 
   useEffect(() => {
     if (searchTerm && searchTerm.length >= 3) {

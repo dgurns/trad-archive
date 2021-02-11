@@ -17,6 +17,7 @@ const NewInstrument = () => {
     <Layout>
       <RequireUser>
         <div className="max-w-md">
+          <h1 className="mb-4">Create Instrument</h1>
           <CreateInstrumentForm onSuccess={onCreateSuccess} />
         </div>
       </RequireUser>

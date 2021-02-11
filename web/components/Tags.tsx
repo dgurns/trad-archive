@@ -30,14 +30,16 @@ interface TagsProps {
   entity: Entity;
 }
 const Tags = ({ entity }: TagsProps) => {
+  const { tags } = entity;
+
   return (
     <div className="flex flex-row items-center flex-wrap">
-      {entity.tags.map((tag, index) => (
+      {tags?.map((tag, index) => (
         <div className="mr-4" key={index}>
           <TagLink tag={tag} />
         </div>
       ))}
-      <div className="mb-2">
+      <div className={tags?.length > 0 ? 'mb-2' : undefined}>
         <AddTag entity={entity} />
       </div>
     </div>

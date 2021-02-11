@@ -17,6 +17,7 @@ const NewPerson = () => {
     <Layout>
       <RequireUser>
         <div className="max-w-md">
+          <h1 className="mb-4">Create Person</h1>
           <CreatePersonForm onSuccess={onCreateSuccess} />
         </div>
       </RequireUser>

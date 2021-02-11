@@ -91,33 +91,45 @@ export class EntityResolver {
     if (searchTerm.length < 3) {
       throw new Error('Must include a search term of at least 3 letters');
     }
-    const takeFromEach = Math.round(take / 4);
+    const searchTermLowercased = searchTerm.toLowerCase();
+    const takeFromEach = Math.round(take / 3);
     const entityManager = getManager();
     const results = await Promise.all([
       entityManager
         .createQueryBuilder(Person, 'person')
-        .leftJoinAndSelect('person.createdByUser', 'user')
+        .leftJoinAndSelect('person.createdByUser', 'createdByUser')
         .where('LOWER(person.name) LIKE :name', {
-          name: `%${searchTerm.toLowerCase()}%`,
+          name: `%${searchTermLowercased}%`,
         })
         .orWhere('LOWER(person.aliases) LIKE :aliases', {
-          aliases: `%${searchTerm.toLowerCase()}%`,
+          aliases: `%${searchTermLowercased}%`,
         })
         .take(takeFromEach)
         .getMany(),
       entityManager
         .createQueryBuilder(Instrument, 'instrument')
-        .leftJoinAndSelect('instrument.createdByUser', 'user')
+        .leftJoinAndSelect('instrument.createdByUser', 'createdByUser')
         .where('LOWER(instrument.name) LIKE :name', {
-          name: `%${searchTerm.toLowerCase()}%`,
+          name: `%${searchTermLowercased}%`,
         })
         .orWhere('LOWER(instrument.aliases) LIKE :aliases', {
-          aliases: `%${searchTerm.toLowerCase()}%`,
+          aliases: `%${searchTermLowercased}%`,
+        })
+        .take(takeFromEach)
+        .getMany(),
+      entityManager
+        .createQueryBuilder(AudioItem, 'audioItem')
+        .leftJoinAndSelect('audioItem.createdByUser', 'createdByUser')
+        .where('LOWER(audioItem.name) LIKE :name', {
+          name: `%${searchTermLowercased}%`,
+        })
+        .orWhere('LOWER(audioItem.aliases) LIKE :aliases', {
+          aliases: `%${searchTermLowercased}%`,
         })
         .take(takeFromEach)
         .getMany(),
     ]);
-    const output: Array<Person | Instrument> = [];
+    const output: Array<typeof Entity> = [];
     results.forEach((resultArray) => output.push(...resultArray));
     return output;
   }

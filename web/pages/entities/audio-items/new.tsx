@@ -15,6 +15,7 @@ const NewAudioItem = () => {
     <Layout>
       <RequireAdmin>
         <div className="max-w-md">
+          <h1 className="mb-4">Create Audio Item</h1>
           <CreateAudioItemForm onSuccess={onCreateSuccess} />
         </div>
       </RequireAdmin>

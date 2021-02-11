@@ -70,7 +70,6 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 
   return (
     <>
-      <h1 className="mb-4">Create Person</h1>
       <div className="flex flex-col align-start">
         <form onSubmit={onCreatePerson}>
           <input

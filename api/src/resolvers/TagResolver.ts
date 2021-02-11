@@ -1,9 +1,9 @@
-import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
+import { Resolver, Mutation, Ctx, Arg, Args, Query } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
-import { CreateTagInput } from 'resolvers/TagResolverTypes';
+import { TagsForEntityArgs, CreateTagInput } from 'resolvers/TagResolverTypes';
 import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
@@ -23,6 +23,50 @@ export class TagResolver {
         'createdByUser',
       ],
     });
+  }
+
+  // Get all Tags that target a particular entity, for example Tommy Peoples
+  @Query(() => [Tag])
+  async tagsForEntity(@Args() { entityType, entityId }: TagsForEntityArgs) {
+    const entityManager = getManager();
+    const tags = await entityManager
+      .createQueryBuilder(Tag, 'tag')
+      .where(`tag.object${entityType}Id = :entityId`, {
+        entityId,
+      })
+      .leftJoinAndSelect('tag.relationship', 'relationship')
+      .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
+      .leftJoinAndSelect('subjectAudioItem.tags', 'subjectAudioItemTags')
+      .leftJoinAndSelect(
+        'subjectAudioItemTags.relationship',
+        'subjectAudioItemTagsRelationship'
+      )
+      .leftJoinAndSelect(
+        'subjectAudioItem.createdByUser',
+        'subjectAudioItemCreatedByUser'
+      )
+      .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
+      .leftJoinAndSelect('subjectPerson.tags', 'subjectPersonTags')
+      .leftJoinAndSelect(
+        'subjectPersonTags.relationship',
+        'subjectPersonTagsRelationship'
+      )
+      .leftJoinAndSelect(
+        'subjectPerson.createdByUser',
+        'subjectPersonCreatedByUser'
+      )
+      .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
+      .leftJoinAndSelect('subjectInstrument.tags', 'subjectInstrumentTags')
+      .leftJoinAndSelect(
+        'subjectInstrumentTags.relationship',
+        'subjectInstrumentTagsRelationship'
+      )
+      .leftJoinAndSelect(
+        'subjectInstrument.createdByUser',
+        'subjectInstrumentCreatedByUser'
+      )
+      .getMany();
+    return tags;
   }
 
   @Mutation(() => Tag)

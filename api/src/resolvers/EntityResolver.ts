@@ -37,13 +37,41 @@ export class EntityResolver {
       throw new Error('Must provide an ID or slug');
     }
     const results = await Promise.all([
+      AudioItem.findOne({
+        where: [{ id }, { slug }],
+        relations: [
+          'createdByUser',
+          'updatedByUser',
+          'tags',
+          'tags.relationship',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
+      }),
       Person.findOne({
         where: [{ id }, { slug }],
-        relations: ['createdByUser', 'updatedByUser'],
+        relations: [
+          'createdByUser',
+          'updatedByUser',
+          'tags',
+          'tags.relationship',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
       }),
       Instrument.findOne({
         where: [{ id }, { slug }],
-        relations: ['createdByUser', 'updatedByUser'],
+        relations: [
+          'createdByUser',
+          'updatedByUser',
+          'tags',
+          'tags.relationship',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
       }),
     ]);
     let entity;

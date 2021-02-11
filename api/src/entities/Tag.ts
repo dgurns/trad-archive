@@ -26,8 +26,7 @@ export class Tag extends TypeOrmBaseEntity {
   readonly id!: string;
 
   @Field(() => Relationship)
-  @OneToOne(() => Relationship)
-  @JoinColumn()
+  @ManyToOne(() => Relationship)
   relationship!: Relationship;
 
   @Field(() => AudioItem, { nullable: true })

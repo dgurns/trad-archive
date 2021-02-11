@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
 
 import { Entity, EntityType, Tag, Relationship } from 'types';
@@ -60,12 +60,17 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
       skip: !selectedEntity,
     }
   );
-
   useEffect(() => {
     if (relationshipsError) {
       setError(relationshipsError.message);
     }
   }, [relationshipsError, setError]);
+  useEffect(() => {
+    if (relationshipsData?.searchRelationships.length > 0) {
+      const firstRelationshipResult = relationshipsData.searchRelationships[0];
+      setSelectedRelationshipId(firstRelationshipResult.id);
+    }
+  }, [relationshipsData]);
 
   const [
     createTag,
@@ -90,6 +95,17 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     }
   }, [createTagError, setError]);
 
+  const onAddTagClicked = useCallback(() => {
+    const input = {
+      relationshipId: selectedRelationshipId,
+      subjectEntityType: entity.entityType,
+      subjectEntityId: entity.id,
+      objectEntityType: selectedEntity.entityType,
+      objectEntityId: selectedEntity.id,
+    };
+    createTag({ variables: { input } });
+  }, [selectedRelationshipId, entity, selectedEntity, createTag]);
+
   return (
     <>
       {!selectedEntity ? (
@@ -103,7 +119,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
         </>
       ) : (
         <>
-          <div className="font-bold mb-4">
+          <div className="mb-4">
             What is the relationship between these two entities?
           </div>
           <div className="mb-2">
@@ -115,20 +131,36 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
           {relationshipsLoading ? (
             <LoadingCircle />
           ) : (
-            <select className="mb-2">
+            <select
+              className="mb-2"
+              value={selectedRelationshipId}
+              onChange={(event) =>
+                setSelectedRelationshipId(event.target.value)
+              }
+            >
               {relationshipsData.searchRelationships?.map(
                 (relationship, index) => (
-                  <option key={index}>{relationship.name}</option>
+                  <option value={relationship.id} key={index}>
+                    {relationship.name}
+                  </option>
                 )
               )}
             </select>
           )}
-          <div>
+          <div className="mb-4">
             <span className="text-sm uppercase text-gray-500 pr-2">
               {selectedEntity.entityType}
             </span>
             {selectedEntity.name}
           </div>
+          <button
+            className="btn"
+            onClick={onAddTagClicked}
+            disabled={createTagLoading}
+          >
+            Add Tag
+          </button>
+          {error && <div className="text-red-600 mt-4">{error}</div>}
         </>
       )}
     </>

@@ -1,14 +1,5 @@
-import { ArgsType, InputType, Field } from 'type-graphql';
+import { InputType, Field } from 'type-graphql';
 import { EntityType } from 'entities/entityHelpers';
-
-@ArgsType()
-export class TagsForEntityArgs {
-  @Field(() => EntityType)
-  entityType!: EntityType;
-
-  @Field(() => String)
-  entityId!: string;
-}
 
 @InputType()
 export class CreateTagInput {

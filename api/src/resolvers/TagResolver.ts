@@ -3,7 +3,7 @@ import { getManager } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
-import { TagsForEntityArgs, CreateTagInput } from 'resolvers/TagResolverTypes';
+import { CreateTagInput } from 'resolvers/TagResolverTypes';
 import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
@@ -17,23 +17,6 @@ export class TagResolver {
     return Tag.findOne(id, {
       relations: ['audioItem', 'person', 'instrument'],
     });
-  }
-
-  // Get all Tags that target a particular entity, for example Tommy Peoples
-  @Query(() => [Tag])
-  async tagsForEntity(@Args() { entityType, entityId }: TagsForEntityArgs) {
-    const tags = await getManager()
-      .createQueryBuilder(Tag, 'tag')
-      .where(`tag.object${entityType}Id = :entityId`, {
-        entityId,
-      })
-      .leftJoinAndSelect('tag.relationship', 'relationship')
-      .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
-      .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
-      .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
-
-      .getMany();
-    return tags;
   }
 
   @Mutation(() => Tag)

@@ -40,6 +40,7 @@ const SelectRelationship = ({
       subjectEntityType: subjectEntity.entityType,
       objectEntityType: objectEntity.entityType,
     },
+    fetchPolicy: 'no-cache',
   });
   const relationshipOptions = data?.searchRelationships ?? [];
 

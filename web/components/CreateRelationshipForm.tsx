@@ -107,7 +107,9 @@ const CreateRelationshipForm = ({ onSuccess }: Props) => {
             onChange={(event) => setName(event.target.value)}
             className="mb-4"
           />
-          <div className="mb-2">Describe the relationship when reversed:</div>
+          <div className="mb-2">
+            Describe the relationship when reversed (optional):
+          </div>
           <input
             placeholder="is played by"
             value={nameReversed}

@@ -35,11 +35,11 @@ const Tags = ({ entity }: TagsProps) => {
   return (
     <div className="flex flex-row items-center flex-wrap">
       {tags?.map((tag, index) => (
-        <div className="mr-4" key={index}>
+        <div className="mr-2" key={index}>
           <TagLink tag={tag} />
         </div>
       ))}
-      <div className={tags?.length > 0 ? 'mb-2' : undefined}>
+      <div className={tags?.length > 0 ? 'mb-2 ml-1' : undefined}>
         <AddTag entity={entity} />
       </div>
     </div>

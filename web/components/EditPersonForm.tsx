@@ -12,12 +12,15 @@ const UPDATE_PERSON_MUTATION = gql`
   }
   ${EntityFragments.person}
 `;
-interface UpdatePersonInput {
-  aliases?: string;
-  description?: string;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
+interface UpdatePersonVariables {
+  slug: string;
+  input: {
+    aliases?: string;
+    description?: string;
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+  };
 }
 interface Props {
   person: Person;
@@ -28,7 +31,7 @@ const EditPersonForm = ({ person, onSuccess }: Props) => {
 
   const [updatePerson, { loading, error, data }] = useMutation<
     { updatePerson: Person },
-    { slug: string; input: UpdatePersonInput }
+    UpdatePersonVariables
   >(UPDATE_PERSON_MUTATION, {
     errorPolicy: 'all',
   });

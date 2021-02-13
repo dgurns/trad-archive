@@ -14,3 +14,15 @@ export class CreateInstrumentInput {
   @Field(() => String, { nullable: true })
   description?: string;
 }
+
+@InputType()
+export class UpdateInstrumentInput {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  aliases?: string;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
+}

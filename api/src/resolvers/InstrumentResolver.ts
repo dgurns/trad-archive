@@ -2,7 +2,10 @@ import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
 import { Instrument } from 'entities/Instrument';
 import { User } from 'entities/User';
-import { CreateInstrumentInput } from 'resolvers/InstrumentResolverTypes';
+import {
+  CreateInstrumentInput,
+  UpdateInstrumentInput,
+} from 'resolvers/InstrumentResolverTypes';
 import EntityService from 'services/Entity';
 
 @Resolver()
@@ -80,5 +83,42 @@ export class InstrumentResolver {
     });
     await instrumentEntity.save();
     return instrumentEntity;
+  }
+
+  @Mutation(() => Instrument)
+  async updateInstrument(
+    @Arg('slug') slug: string,
+    @Arg('input') input: UpdateInstrumentInput,
+    @Ctx() ctx: CustomContext
+  ) {
+    const { name, aliases, description } = input;
+
+    const user = await User.findOne(ctx.userId);
+    if (!user) {
+      throw new Error('You must be logged in to update an Instrument');
+    }
+
+    const instrument = await Instrument.findOne(
+      { slug },
+      {
+        relations: [
+          'tags',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
+      }
+    );
+    if (!instrument) {
+      throw new Error('Could not find an Instrument with that slug');
+    }
+
+    if (name) instrument.name = name;
+    if (aliases) instrument.aliases = aliases;
+    if (description) instrument.description = description;
+
+    instrument.updatedByUser = user;
+    await instrument.save();
+    return instrument;
   }
 }

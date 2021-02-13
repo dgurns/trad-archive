@@ -39,7 +39,7 @@ const ViewPersonBySlug = () => {
   let statusMessage;
   if (!personData && !personError) {
     statusMessage = <LoadingBlock />;
-  } else if (personError) {
+  } else if (!personData && personError) {
     statusMessage = `Error fetching Person with slug ${slug}`;
   }
 
@@ -47,7 +47,8 @@ const ViewPersonBySlug = () => {
     return <Layout>{statusMessage}</Layout>;
   }
 
-  const { name, entityType, aliases, description } = personData.person;
+  const { person } = personData;
+  const { name, entityType, aliases, description } = person;
 
   return (
     <Layout>

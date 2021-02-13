@@ -66,7 +66,7 @@ const ViewUserById = () => {
         <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
           <h1 className="mb-4">About {username}</h1>
           <div className="mb-4">
-            Account created:
+            Account Created:
             <br />
             <span className="text-gray-500">
               {DateTimeService.formatDateYear(createdAt)}

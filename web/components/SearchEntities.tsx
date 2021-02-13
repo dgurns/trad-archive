@@ -8,8 +8,8 @@ import { EntityFragments } from 'fragments';
 import LoadingCircle from 'components/LoadingCircle';
 
 const SEARCH_ENTITIES_QUERY = gql`
-  query SearchEntities($searchTerm: String!) {
-    searchEntities(searchTerm: $searchTerm) {
+  query SearchEntities($input: SearchEntitiesInput!) {
+    searchEntities(input: $input) {
       ...AudioItem
       ...Person
       ...Instrument
@@ -20,6 +20,15 @@ const SEARCH_ENTITIES_QUERY = gql`
   ${EntityFragments.instrument}
 `;
 
+interface QueryData {
+  searchEntities: Entity[];
+}
+interface QueryVariables {
+  input: {
+    searchTerm: string;
+    take?: number;
+  };
+}
 interface Props {
   onResults?: (entities: Entity[]) => void;
   onSelect: (entity: Entity) => void;
@@ -40,9 +49,9 @@ const SearchEntities = ({ onResults, onSelect }: Props) => {
       data: searchEntitiesData,
       error: searchEntitiesError,
     },
-  ] = useLazyQuery<{
-    searchEntities: Entity[];
-  }>(SEARCH_ENTITIES_QUERY, { fetchPolicy: 'no-cache' });
+  ] = useLazyQuery<QueryData, QueryVariables>(SEARCH_ENTITIES_QUERY, {
+    fetchPolicy: 'no-cache',
+  });
   const debouncedSearchEntities = useCallback(
     debounce(searchEntities, 500, { leading: true }),
     [searchEntities]
@@ -56,7 +65,7 @@ const SearchEntities = ({ onResults, onSelect }: Props) => {
 
   useEffect(() => {
     if (searchTerm && searchTerm.length >= 3) {
-      debouncedSearchEntities({ variables: { searchTerm } });
+      debouncedSearchEntities({ variables: { input: { searchTerm } } });
     }
   }, [searchTerm]);
 

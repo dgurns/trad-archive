@@ -5,6 +5,7 @@ import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { SearchEntitiesInput } from 'resolvers/EntityResolverTypes';
 
 // Entity is a GraphQL union type returned by resolvers. It contains logic for
 // GraphQL clients to distinguish the entity type represented by a value.
@@ -75,10 +76,9 @@ export class EntityResolver {
   }
 
   @Query(() => [Entity])
-  async searchEntities(
-    @Arg('searchTerm') searchTerm: string,
-    @Arg('take', { nullable: true, defaultValue: 20 }) take: number
-  ) {
+  async searchEntities(@Arg('input') input: SearchEntitiesInput) {
+    const { searchTerm, take } = input;
+
     if (searchTerm.length < 3) {
       throw new Error('Must include a search term of at least 3 letters');
     }

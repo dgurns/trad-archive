@@ -1,4 +1,20 @@
-import { InputType, Field } from 'type-graphql';
+import { InputType, Field, Int } from 'type-graphql';
+import { EntityType } from 'entities/entityHelpers';
+
+@InputType()
+export class AudioItemsTaggedWithEntityInput {
+  @Field(() => EntityType)
+  entityType!: EntityType;
+
+  @Field(() => String)
+  entityId!: string;
+
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+}
 
 @InputType()
 export class CreateAudioItemInput {

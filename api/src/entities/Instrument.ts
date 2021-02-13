@@ -1,4 +1,9 @@
-import { Entity as TypeOrmEntity, Column, OneToMany } from 'typeorm';
+import {
+  Entity as TypeOrmEntity,
+  Column,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
 import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
@@ -14,5 +19,6 @@ export class Instrument extends EntityBaseFields {
 
   @Field(() => [Tag], { defaultValue: [] })
   @OneToMany(() => Tag, (tag) => tag.subjectInstrument)
+  @JoinColumn()
   tags!: Tag[];
 }

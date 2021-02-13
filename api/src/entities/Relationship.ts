@@ -34,7 +34,7 @@ export class Relationship extends TypeOrmBaseEntity {
   objectEntityType!: EntityType;
 
   @Field(() => User)
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   createdByUser!: User;
 
   @Field()

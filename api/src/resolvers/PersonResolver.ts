@@ -22,10 +22,7 @@ export class PersonResolver {
     return Person.findOne({
       where: whereOptions,
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
@@ -43,10 +40,7 @@ export class PersonResolver {
       skip,
       order: { createdAt: 'DESC' },
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',

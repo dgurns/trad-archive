@@ -40,10 +40,7 @@ export class EntityResolver {
       AudioItem.findOne({
         where: [{ id }, { slug }],
         relations: [
-          'createdByUser',
-          'updatedByUser',
           'tags',
-          'tags.relationship',
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
@@ -52,10 +49,7 @@ export class EntityResolver {
       Person.findOne({
         where: [{ id }, { slug }],
         relations: [
-          'createdByUser',
-          'updatedByUser',
           'tags',
-          'tags.relationship',
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
@@ -64,10 +58,7 @@ export class EntityResolver {
       Instrument.findOne({
         where: [{ id }, { slug }],
         relations: [
-          'createdByUser',
-          'updatedByUser',
           'tags',
-          'tags.relationship',
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',

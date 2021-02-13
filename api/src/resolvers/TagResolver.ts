@@ -15,56 +15,23 @@ export class TagResolver {
   @Query(() => Tag)
   tag(@Arg('id') id: string) {
     return Tag.findOne(id, {
-      relations: [
-        'audioItem',
-        'person',
-        'instrument',
-        'relationship',
-        'createdByUser',
-      ],
+      relations: ['audioItem', 'person', 'instrument'],
     });
   }
 
   // Get all Tags that target a particular entity, for example Tommy Peoples
   @Query(() => [Tag])
   async tagsForEntity(@Args() { entityType, entityId }: TagsForEntityArgs) {
-    const entityManager = getManager();
-    const tags = await entityManager
+    const tags = await getManager()
       .createQueryBuilder(Tag, 'tag')
       .where(`tag.object${entityType}Id = :entityId`, {
         entityId,
       })
       .leftJoinAndSelect('tag.relationship', 'relationship')
       .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
-      .leftJoinAndSelect('subjectAudioItem.tags', 'subjectAudioItemTags')
-      .leftJoinAndSelect(
-        'subjectAudioItemTags.relationship',
-        'subjectAudioItemTagsRelationship'
-      )
-      .leftJoinAndSelect(
-        'subjectAudioItem.createdByUser',
-        'subjectAudioItemCreatedByUser'
-      )
       .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
-      .leftJoinAndSelect('subjectPerson.tags', 'subjectPersonTags')
-      .leftJoinAndSelect(
-        'subjectPersonTags.relationship',
-        'subjectPersonTagsRelationship'
-      )
-      .leftJoinAndSelect(
-        'subjectPerson.createdByUser',
-        'subjectPersonCreatedByUser'
-      )
       .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
-      .leftJoinAndSelect('subjectInstrument.tags', 'subjectInstrumentTags')
-      .leftJoinAndSelect(
-        'subjectInstrumentTags.relationship',
-        'subjectInstrumentTagsRelationship'
-      )
-      .leftJoinAndSelect(
-        'subjectInstrument.createdByUser',
-        'subjectInstrumentCreatedByUser'
-      )
+
       .getMany();
     return tags;
   }

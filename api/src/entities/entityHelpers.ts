@@ -44,11 +44,11 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
   description!: string;
 
   @Field(() => User)
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   createdByUser!: User;
 
   @Field(() => User)
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   updatedByUser!: User;
 
   @Field()

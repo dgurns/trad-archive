@@ -19,10 +19,7 @@ export class InstrumentResolver {
     return Instrument.findOne({
       where: whereOptions,
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
@@ -40,10 +37,7 @@ export class InstrumentResolver {
       skip,
       order: { createdAt: 'DESC' },
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',

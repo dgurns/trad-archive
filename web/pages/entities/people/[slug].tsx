@@ -1,11 +1,10 @@
-import { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useQuery, gql } from '@apollo/client';
 
 import { EntityFragments } from 'fragments';
-import useTagsForEntity from 'hooks/useTagsForEntity';
-import { AudioItem } from 'types';
+import { Person } from 'types';
+import useAudioItemsTaggedWithEntity from 'hooks/useAudioItemsTaggedWithEntity';
 
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
@@ -24,29 +23,18 @@ const ViewPersonBySlug = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { data: personData, error: personError } = useQuery(PERSON_QUERY, {
-    variables: { slug },
-    skip: !slug,
-  });
-
-  const [tagsForEntity, tagsForEntityQuery] = useTagsForEntity(
-    personData?.person
+  const { data: personData, error: personError } = useQuery<{ person: Person }>(
+    PERSON_QUERY,
+    {
+      variables: { slug },
+      skip: !slug,
+    }
   );
 
-  const audioItems: AudioItem[] = useMemo(() => {
-    if (!tagsForEntity) {
-      return [];
-    }
-    let outputAudioItems: AudioItem[] = [];
-    tagsForEntity.forEach((tag) => {
-      if (Boolean(tag.subjectAudioItem)) {
-        outputAudioItems.push(tag.subjectAudioItem);
-      }
-    });
-    return outputAudioItems;
-  }, [tagsForEntity]);
-  const audioItemsLoading = tagsForEntityQuery.loading;
-  const audioItemsError = tagsForEntityQuery.error;
+  const [
+    audioItems = [],
+    { loading: audioItemsLoading, error: audioItemsError },
+  ] = useAudioItemsTaggedWithEntity(personData?.person);
 
   let statusMessage;
   if (!personData && !personError) {
@@ -68,7 +56,7 @@ const ViewPersonBySlug = () => {
           <h1 className="mb-4">Audio Items Tagged with "{name}"</h1>
           {audioItemsLoading && <LoadingBlock />}
           {audioItemsError && (
-            <div className="text-red-600">{audioItemsError.message}</div>
+            <div className="text-red-600">Error fetching Audio Items</div>
           )}
           {audioItems.map((audioItem, index) => (
             <AudioItemComponent audioItem={audioItem} key={index} />

@@ -1,9 +1,13 @@
 import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
+import { getManager } from 'typeorm';
 
 import { CustomContext } from 'middleware/context';
 import { AudioItem } from 'entities/AudioItem';
 import { User, UserPermission } from 'entities/User';
-import { CreateAudioItemInput } from 'resolvers/AudioItemResolverTypes';
+import {
+  AudioItemsTaggedWithEntityInput,
+  CreateAudioItemInput,
+} from 'resolvers/AudioItemResolverTypes';
 import EntityService from 'services/Entity';
 
 @Resolver()
@@ -21,10 +25,7 @@ export class AudioItemResolver {
     return AudioItem.findOne({
       where: whereOptions,
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
@@ -42,15 +43,44 @@ export class AudioItemResolver {
       skip,
       order: { createdAt: 'DESC' },
       relations: [
-        'createdByUser',
-        'updatedByUser',
         'tags',
-        'tags.relationship',
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
       ],
     });
+  }
+
+  @Query(() => [AudioItem])
+  async audioItemsTaggedWithEntity(
+    @Arg('input') input: AudioItemsTaggedWithEntityInput
+  ) {
+    const { entityType, entityId, take, skip } = input;
+
+    const query = getManager()
+      .createQueryBuilder(AudioItem, 'audioItem')
+      .leftJoinAndSelect('audioItem.createdByUser', 'createdByUser')
+      .leftJoinAndSelect('audioItem.updatedByUser', 'updatedByUser')
+      .innerJoinAndSelect(
+        'audioItem.tags',
+        'relevantTag',
+        `relevantTag.object${entityType}Id = :entityId`,
+        { entityId }
+      )
+      .leftJoinAndSelect('audioItem.tags', 'tag')
+      .leftJoinAndSelect('tag.relationship', 'tagRelationship')
+      .leftJoinAndSelect('tag.subjectAudioItem', 'tagAudioItem')
+      .leftJoinAndSelect('tag.objectPerson', 'tagObjectPerson')
+      .leftJoinAndSelect('tag.objectInstrument', 'tagObjectInstrument')
+      .leftJoinAndSelect('tag.objectAudioItem', 'tagObjectAudioItem');
+    if (take) {
+      query.take(take);
+    }
+    if (skip) {
+      query.skip(skip);
+    }
+
+    return query.getMany();
   }
 
   @Mutation(() => AudioItem)

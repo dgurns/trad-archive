@@ -26,7 +26,7 @@ export class Tag extends TypeOrmBaseEntity {
   readonly id!: string;
 
   @Field(() => Relationship)
-  @ManyToOne(() => Relationship)
+  @ManyToOne(() => Relationship, { eager: true })
   relationship!: Relationship;
 
   @Field(() => AudioItem, { nullable: true })
@@ -54,7 +54,7 @@ export class Tag extends TypeOrmBaseEntity {
   objectInstrument!: Instrument;
 
   @Field(() => User)
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   createdByUser!: User;
 
   @Field()

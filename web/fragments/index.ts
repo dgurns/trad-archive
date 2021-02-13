@@ -99,3 +99,13 @@ export const EntityFragments = {
     ${TagFragments.tag}
   `,
 };
+
+export const UserFragments = {
+  user: gql`
+    fragment User on User {
+      id
+      username
+      createdAt
+    }
+  `,
+};

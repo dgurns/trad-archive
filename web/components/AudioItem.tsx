@@ -38,11 +38,11 @@ const AudioItemComponent = ({ audioItem }: Props) => {
         )}
       </div>
       <div className="text-gray-500 text-sm mb-2">
-        Posted by{' '}
-        <Link href={`/users/${createdByUser.username}`}>
+        Added by{' '}
+        <Link href={`/users/${createdByUser.id}`}>
           {createdByUser.username}
         </Link>{' '}
-        {DateTime.formatDate(createdAt)}
+        {DateTime.formatDateYearTime(createdAt)}
       </div>
       <div className="text-sm">{description}</div>
     </div>

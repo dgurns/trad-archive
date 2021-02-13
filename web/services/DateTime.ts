@@ -2,12 +2,30 @@ import format from 'date-fns/format';
 import isToday from 'date-fns/isToday';
 import isYesterday from 'date-fns/isYesterday';
 
-const formatDate = (
+const formatDateYear = (
   date?: number | string,
   shouldCapitalize: boolean | undefined = false
 ) => {
-  if (!date) return '';
+  if (!date) {
+    return '';
+  }
+  const dateObject = new Date(date);
+  if (isToday(dateObject)) {
+    return format(dateObject, `'${shouldCapitalize ? 'T' : 't'}oday`);
+  } else if (isYesterday(dateObject)) {
+    return format(dateObject, `'${shouldCapitalize ? 'Y' : 'y'}esterday`);
+  } else {
+    return format(new Date(date), `LLLL d, y`);
+  }
+};
 
+const formatDateYearTime = (
+  date?: number | string,
+  shouldCapitalize: boolean | undefined = false
+) => {
+  if (!date) {
+    return '';
+  }
   const dateObject = new Date(date);
   if (isToday(dateObject)) {
     return format(
@@ -20,11 +38,12 @@ const formatDate = (
       `'${shouldCapitalize ? 'Y' : 'y'}esterday at' h:mm a`
     );
   } else {
-    return format(new Date(date), `LLLL d 'at' h:mm a`);
+    return format(new Date(date), `LLLL d, y 'at' h:mm a`);
   }
 };
 
 const DateTimeService = {
-  formatDate,
+  formatDateYear,
+  formatDateYearTime,
 };
 export default DateTimeService;

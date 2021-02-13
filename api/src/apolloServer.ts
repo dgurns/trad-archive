@@ -12,6 +12,7 @@ import { createCustomContext } from 'middleware/context';
 const apolloServerPlugins = require('middleware/plugins');
 import { authChecker } from 'middleware/authChecker';
 import { AuthResolver } from 'resolvers/AuthResolver';
+import { UserResolver } from 'resolvers/UserResolver';
 import { TagResolver } from 'resolvers/TagResolver';
 import { RelationshipResolver } from 'resolvers/RelationshipResolver';
 import { EntityResolver } from 'resolvers/EntityResolver';
@@ -25,6 +26,7 @@ const createServer = async () => {
   const schema = await buildSchema({
     resolvers: [
       AuthResolver,
+      UserResolver,
       TagResolver,
       RelationshipResolver,
       EntityResolver,
@@ -34,7 +36,7 @@ const createServer = async () => {
     ],
     dateScalarMode: 'isoDate',
     authChecker,
-    authMode: 'error',
+    authMode: 'null',
   });
 
   const apolloServer = new ApolloServer({

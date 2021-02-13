@@ -6,7 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, registerEnumType } from 'type-graphql';
+import { ObjectType, Authorized, Field, registerEnumType } from 'type-graphql';
 
 export enum UserPermission {
   User = 'USER',
@@ -23,6 +23,7 @@ export class User extends TypeOrmBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   readonly id!: string;
 
+  @Authorized()
   @Field(() => [UserPermission])
   @Column({
     type: 'enum',
@@ -32,6 +33,7 @@ export class User extends TypeOrmBaseEntity {
   })
   permissions!: UserPermission[];
 
+  @Authorized()
   @Field(() => String)
   @Column({ unique: true })
   email!: string;
@@ -47,6 +49,7 @@ export class User extends TypeOrmBaseEntity {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
+  @Authorized()
   @Field()
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;

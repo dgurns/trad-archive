@@ -6,6 +6,7 @@ import { AudioItem } from 'entities/AudioItem';
 import { User, UserPermission } from 'entities/User';
 import {
   AudioItemsTaggedWithEntityInput,
+  AudioItemsCreatedByUserInput,
   CreateAudioItemInput,
   UpdateAudioItemInput,
 } from 'resolvers/AudioItemResolverTypes';
@@ -80,7 +81,35 @@ export class AudioItemResolver {
     if (skip) {
       query.skip(skip);
     }
+    return query.getMany();
+  }
 
+  @Query(() => [AudioItem])
+  async audioItemsCreatedByUser(
+    @Arg('input') input: AudioItemsCreatedByUserInput
+  ) {
+    const { userId, take, skip } = input;
+
+    const query = getManager()
+      .createQueryBuilder(AudioItem, 'audioItem')
+      .innerJoinAndSelect(
+        'audioItem.createdByUser',
+        'createdByUser',
+        'createdByUser.id = :userId',
+        { userId }
+      )
+      .leftJoinAndSelect('audioItem.updatedByUser', 'updatedByUser')
+      .leftJoinAndSelect('audioItem.tags', 'tag')
+      .leftJoinAndSelect('tag.relationship', 'tagRelationship')
+      .leftJoinAndSelect('tag.objectPerson', 'tagObjectPerson')
+      .leftJoinAndSelect('tag.objectInstrument', 'tagObjectInstrument')
+      .leftJoinAndSelect('tag.objectAudioItem', 'tagObjectAudioItem');
+    if (take) {
+      query.take(take);
+    }
+    if (skip) {
+      query.skip(skip);
+    }
     return query.getMany();
   }
 

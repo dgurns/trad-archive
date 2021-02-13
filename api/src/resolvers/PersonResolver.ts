@@ -118,7 +118,14 @@ export class PersonResolver {
 
     const person = await Person.findOne(
       { slug },
-      { relations: ['createdByUser'] }
+      {
+        relations: [
+          'tags',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
+      }
     );
     if (!person) {
       throw new Error('Could not find a Person with that slug');

@@ -33,3 +33,15 @@ export class CreateAudioItemInput {
   @Field(() => String)
   urlSource!: string;
 }
+
+@InputType()
+export class UpdateAudioItemInput {
+  @Field(() => String, { nullable: true })
+  name?: string;
+
+  @Field(() => String, { nullable: true })
+  aliases?: string;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
+}

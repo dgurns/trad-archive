@@ -7,6 +7,7 @@ import { User, UserPermission } from 'entities/User';
 import {
   AudioItemsTaggedWithEntityInput,
   CreateAudioItemInput,
+  UpdateAudioItemInput,
 } from 'resolvers/AudioItemResolverTypes';
 import EntityService from 'services/Entity';
 
@@ -122,6 +123,43 @@ export class AudioItemResolver {
       urlSource,
       createdByUser,
     });
+    await audioItem.save();
+    return audioItem;
+  }
+
+  @Mutation(() => AudioItem)
+  async updateAudioItem(
+    @Arg('slug') slug: string,
+    @Arg('input') input: UpdateAudioItemInput,
+    @Ctx() ctx: CustomContext
+  ) {
+    const { name, aliases, description } = input;
+
+    const user = await User.findOne(ctx.userId);
+    if (!user) {
+      throw new Error('You must be logged in to update an AudioItem');
+    }
+
+    const audioItem = await AudioItem.findOne(
+      { slug },
+      {
+        relations: [
+          'tags',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+        ],
+      }
+    );
+    if (!audioItem) {
+      throw new Error('Could not find an AudioItem with that slug');
+    }
+
+    if (name) audioItem.name = name;
+    if (aliases) audioItem.aliases = aliases;
+    if (description) audioItem.description = description;
+
+    audioItem.updatedByUser = user;
     await audioItem.save();
     return audioItem;
   }

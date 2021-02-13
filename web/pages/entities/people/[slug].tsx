@@ -63,7 +63,7 @@ const ViewPersonBySlug = () => {
           ))}
         </div>
         <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
-          <h1 className="mb-4">About</h1>
+          <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
             <br />

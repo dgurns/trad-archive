@@ -1,59 +1,59 @@
 import { useRouter } from 'next/router';
 import { useQuery, gql } from '@apollo/client';
 
-import { Person } from 'types';
+import { AudioItem } from 'types';
 import { EntityFragments } from 'fragments';
 
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
 import RequireUser from 'components/RequireUser';
-import EditPersonForm from 'components/EditPersonForm';
+import EditAudioItemForm from 'components/EditAudioItemForm';
 
-const PERSON_QUERY = gql`
-  query Person($slug: String!) {
-    person(slug: $slug) {
-      ...Person
+const AUDIO_ITEM_QUERY = gql`
+  query AudioItem($slug: String!) {
+    audioItem(slug: $slug) {
+      ...AudioItem
     }
   }
-  ${EntityFragments.person}
+  ${EntityFragments.audioItem}
 `;
 
-const EditPerson = () => {
+const EditAudioItem = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { data, error } = useQuery(PERSON_QUERY, {
+  const { data, error } = useQuery(AUDIO_ITEM_QUERY, {
     variables: { slug },
     skip: !slug,
   });
 
-  const onEditSuccess = (person: Person) => {
-    router.push(`/entities/people/${person.slug}`);
+  const onEditSuccess = (audioItem: AudioItem) => {
+    router.push(`/entities/audio-items/${audioItem.slug}`);
   };
 
   let statusMessage;
   if (!data && !error) {
     statusMessage = <LoadingBlock />;
   } else if (!data && error) {
-    statusMessage = `Error fetching Person with slug ${slug}`;
+    statusMessage = `Error fetching AudioItem with slug ${slug}`;
   }
 
   if (statusMessage) {
     return <Layout>{statusMessage}</Layout>;
   }
 
-  const { person } = data;
+  const { audioItem } = data;
 
   return (
     <Layout>
       <RequireUser>
         <div className="max-w-md">
-          <h1 className="mb-4">Edit Person: {person.name}</h1>
-          <EditPersonForm person={person} onSuccess={onEditSuccess} />
+          <h1 className="mb-4">Edit AudioItem: {audioItem.name}</h1>
+          <EditAudioItemForm audioItem={audioItem} onSuccess={onEditSuccess} />
         </div>
       </RequireUser>
     </Layout>
   );
 };
 
-export default EditPerson;
+export default EditAudioItem;

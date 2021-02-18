@@ -18,15 +18,33 @@ export const TagFragments = {
       relationship {
         ...Relationship
       }
+      subjectAudioItem {
+        entityType
+        name
+        slug
+      }
+      subjectPerson {
+        entityType
+        name
+        slug
+      }
+      subjectInstrument {
+        entityType
+        name
+        slug
+      }
       objectAudioItem {
+        entityType
         name
         slug
       }
       objectPerson {
+        entityType
         name
         slug
       }
       objectInstrument {
+        entityType
         name
         slug
       }

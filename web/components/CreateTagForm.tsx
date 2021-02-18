@@ -80,9 +80,12 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     setSelectedEntity(instrument);
   }, []);
 
-  const onSelectRelationship = useCallback((relationshipId: string) => {
-    setSelectedRelationshipId(relationshipId);
-  }, []);
+  const onSelectRelationship = useCallback(
+    (relationshipId: string) => {
+      setSelectedRelationshipId(relationshipId);
+    },
+    [setSelectedRelationshipId]
+  );
 
   const onCreateTagClicked = useCallback(() => {
     const input = {

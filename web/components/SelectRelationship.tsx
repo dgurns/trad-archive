@@ -70,7 +70,7 @@ const SelectRelationship = ({
         <select
           className="mb-2"
           value={selectedRelationshipId}
-          onChange={(event) => setSelectedRelationshipId(event.target.value)}
+          onChange={(event) => onSelectRelationshipId(event.target.value)}
         >
           {relationshipOptions.map((relationship, index) => (
             <option value={relationship.id} key={index}>

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useQuery, gql } from '@apollo/client';
@@ -5,10 +6,16 @@ import { useQuery, gql } from '@apollo/client';
 import { EntityFragments } from 'fragments';
 import { Person } from 'types';
 import useAudioItemsTaggedWithEntity from 'hooks/useAudioItemsTaggedWithEntity';
+import useTagsFromEntity from 'hooks/useTagsFromEntity';
+import useTagsToEntity from 'hooks/useTagsToEntity';
 
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
+import LoadingCircle from 'components/LoadingCircle';
 import AudioItemComponent from 'components/AudioItem';
+import TagFromEntity from 'components/TagFromEntity';
+import TagToEntity from 'components/TagToEntity';
+import AddTag from 'components/AddTag';
 
 const PERSON_QUERY = gql`
   query Person($slug: String!) {
@@ -36,6 +43,29 @@ const ViewPersonBySlug = () => {
     { loading: audioItemsLoading, error: audioItemsError },
   ] = useAudioItemsTaggedWithEntity(personData?.person);
 
+  const [
+    tagsFromEntity = [],
+    {
+      loading: tagsFromEntityLoading,
+      error: tagsFromEntityError,
+      refetch: refetchTagsFromEntity,
+    },
+  ] = useTagsFromEntity(personData?.person);
+
+  const [
+    tagsToEntity = [],
+    {
+      loading: tagsToEntityLoading,
+      error: tagsToEntityError,
+      refetch: refetchTagsToEntity,
+    },
+  ] = useTagsToEntity(personData?.person);
+
+  const onAddTagSuccess = useCallback(() => {
+    refetchTagsFromEntity();
+    refetchTagsToEntity();
+  }, [refetchTagsFromEntity, refetchTagsToEntity]);
+
   let statusMessage;
   if (!personData && !personError) {
     statusMessage = <LoadingBlock />;
@@ -49,6 +79,10 @@ const ViewPersonBySlug = () => {
 
   const { person } = personData;
   const { name, entityType, aliases, description } = person;
+
+  const tagsAreLoading = tagsFromEntityLoading || tagsToEntityLoading;
+  const tagsError = tagsFromEntityError || tagsToEntityError;
+  const shouldShowTags = !tagsAreLoading && !tagsError;
 
   return (
     <Layout>
@@ -81,6 +115,22 @@ const ViewPersonBySlug = () => {
             <span className="text-gray-500">{description}</span>
           </div>
           <Link href={`/entities/people/${slug}/edit`}>Edit</Link>
+          <h1 className="mt-8 mb-4">Tags</h1>
+          {tagsAreLoading && <LoadingCircle />}
+          {tagsError && (
+            <div className="text-red-600 mb-4">Error fetching Tags</div>
+          )}
+          {shouldShowTags && (
+            <div>
+              {tagsFromEntity.map((tag, index) => (
+                <TagFromEntity tag={tag} key={index} className="mb-4" />
+              ))}
+              {tagsToEntity.map((tag, index) => (
+                <TagToEntity tag={tag} key={index} className="mb-4" />
+              ))}
+              <AddTag entity={person} onSuccess={onAddTagSuccess} />
+            </div>
+          )}
         </div>
       </div>
     </Layout>

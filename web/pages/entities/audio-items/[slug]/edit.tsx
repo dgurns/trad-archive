@@ -22,10 +22,13 @@ const EditAudioItem = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { data, error } = useQuery(AUDIO_ITEM_QUERY, {
-    variables: { slug },
-    skip: !slug,
-  });
+  const { data, error } = useQuery<{ audioItem?: AudioItem }>(
+    AUDIO_ITEM_QUERY,
+    {
+      variables: { slug },
+      skip: !slug,
+    }
+  );
 
   const onEditSuccess = (audioItem: AudioItem) => {
     router.push(`/entities/audio-items/${audioItem.slug}`);

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useLazyQuery, gql } from '@apollo/client';
 
-import { Entity } from 'types';
+import { Entity, Tag } from 'types';
 import { EntityFragments } from 'fragments';
 
 import Modal from 'components/Modal';
@@ -23,21 +23,28 @@ const PARENT_ENTITY_QUERY = gql`
 
 interface Props {
   entity: Entity;
+  onSuccess?: (tag: Tag) => void;
 }
-const AddTag = ({ entity }: Props) => {
+const AddTag = ({ entity, onSuccess }: Props) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
 
-  const [getParentEntity, { loading: getParentEntityLoading }] = useLazyQuery<{
+  const [getParentEntity, { loading: parentEntityLoading }] = useLazyQuery<{
     entity: Entity;
   }>(PARENT_ENTITY_QUERY, {
     variables: { id: entity.id },
     fetchPolicy: 'network-only',
   });
 
-  const refetchParentEntityAndClose = useCallback(async () => {
-    await getParentEntity();
-    setAddTagModalIsVisible(false);
-  }, [getParentEntity, setAddTagModalIsVisible, entity]);
+  const refetchParentEntityAndClose = useCallback(
+    async (tag: Tag) => {
+      await getParentEntity();
+      setAddTagModalIsVisible(false);
+      if (onSuccess) {
+        onSuccess(tag);
+      }
+    },
+    [getParentEntity, setAddTagModalIsVisible, entity]
+  );
 
   return (
     <>
@@ -53,7 +60,7 @@ const AddTag = ({ entity }: Props) => {
         isVisible={addTagModalIsVisible}
         onClose={() => setAddTagModalIsVisible(false)}
       >
-        {getParentEntityLoading ? (
+        {parentEntityLoading ? (
           <LoadingBlock />
         ) : (
           <CreateTagForm

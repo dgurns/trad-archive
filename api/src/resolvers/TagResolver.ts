@@ -27,20 +27,22 @@ export class TagResolver {
   // example, if the entity is Tommy Peoples, this would return all Tags
   // connecting other entities to Tommy Peoples.
   @Query(() => [Tag])
-  tagsToEntity(@Arg('input') input: TagsToEntityInput) {
+  async tagsToEntity(@Arg('input') input: TagsToEntityInput) {
     const { entityType, entityId } = input;
 
-    return getManager()
+    const tags = await getManager()
       .createQueryBuilder(Tag, 'tag')
       .where(`tag.object${entityType}Id = :entityId`, {
         entityId,
       })
+      .leftJoinAndSelect('tag.relationship', 'relationship')
       .leftJoinAndSelect(`tag.object${entityType}`, `object${entityType}`)
       .leftJoinAndSelect(`tag.subjectPerson`, 'subjectPerson')
       .leftJoinAndSelect(`tag.subjectInstrument`, 'subjectInstrument')
       .leftJoinAndSelect(`tag.subjectAudioItem`, 'subjectAudioItem')
       .orderBy('tag.createdAt', 'DESC')
       .getMany();
+    return tags;
   }
 
   // tagsFromEntity fetches all Tags that have the given entity as subject. For
@@ -55,6 +57,7 @@ export class TagResolver {
       .where(`tag.subject${entityType}Id = :entityId`, {
         entityId,
       })
+      .leftJoinAndSelect('tag.relationship', 'relationship')
       .leftJoinAndSelect(`tag.subject${entityType}`, `subject${entityType}`)
       .leftJoinAndSelect(`tag.objectPerson`, 'objectPerson')
       .leftJoinAndSelect(`tag.objectInstrument`, 'objectInstrument')

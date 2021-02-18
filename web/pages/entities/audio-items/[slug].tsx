@@ -22,18 +22,17 @@ const ViewAudioItemBySlug = () => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const { loading, data, error } = useQuery<{ audioItem: AudioItem }>(
-    AUDIO_ITEM_QUERY,
-    {
-      variables: { slug },
-      skip: !slug,
-    }
-  );
+  const { data: audioItemData, error: audioItemError } = useQuery<{
+    audioItem: AudioItem;
+  }>(AUDIO_ITEM_QUERY, {
+    variables: { slug },
+    skip: !slug,
+  });
 
   let statusMessage;
-  if (!data && !error) {
+  if (!audioItemData && !audioItemError) {
     statusMessage = <LoadingBlock />;
-  } else if (!data && error) {
+  } else if (!audioItemData && audioItemError) {
     statusMessage = `Error fetching Audio Item with slug ${slug}`;
   }
 
@@ -41,8 +40,8 @@ const ViewAudioItemBySlug = () => {
     return <Layout>{statusMessage}</Layout>;
   }
 
-  const { audioItem } = data;
-  const { name, entityType, aliases, description } = audioItem;
+  const { audioItem } = audioItemData;
+  const { name, entityType, aliases } = audioItem;
 
   return (
     <Layout>

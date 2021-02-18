@@ -8,6 +8,8 @@ import { AudioItem } from 'types';
 import Layout from 'components/Layout';
 import AudioItemComponent from 'components/AudioItem';
 import LoadingBlock from 'components/LoadingBlock';
+import AddTag from 'components/AddTag';
+import TagWithRelationshipToObject from 'components/TagWithRelationshipToObject';
 
 const AUDIO_ITEM_QUERY = gql`
   query AudioItem($slug: String!) {
@@ -27,6 +29,7 @@ const ViewAudioItemBySlug = () => {
   }>(AUDIO_ITEM_QUERY, {
     variables: { slug },
     skip: !slug,
+    fetchPolicy: 'cache-and-network',
   });
 
   let statusMessage;
@@ -41,7 +44,7 @@ const ViewAudioItemBySlug = () => {
   }
 
   const { audioItem } = audioItemData;
-  const { name, entityType, aliases } = audioItem;
+  const { name, entityType, aliases, tags } = audioItem;
 
   return (
     <Layout>
@@ -62,6 +65,15 @@ const ViewAudioItemBySlug = () => {
             <span className="text-gray-500">{aliases}</span>
           </div>
           <Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>
+          <h1 className="mt-8 mb-4">Tags</h1>
+          {tags.map((tag, index) => (
+            <TagWithRelationshipToObject
+              tag={tag}
+              key={index}
+              className="mb-4"
+            />
+          ))}
+          <AddTag entity={audioItem} className="self-start" />
         </div>
       </div>
     </Layout>

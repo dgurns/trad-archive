@@ -24,8 +24,9 @@ const PARENT_ENTITY_QUERY = gql`
 interface Props {
   entity: Entity;
   onSuccess?: (tag: Tag) => void;
+  className?: string;
 }
-const AddTag = ({ entity, onSuccess }: Props) => {
+const AddTag = ({ entity, onSuccess, className }: Props) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
 
   const [getParentEntity, { loading: parentEntityLoading }] = useLazyQuery<{
@@ -49,7 +50,7 @@ const AddTag = ({ entity, onSuccess }: Props) => {
   return (
     <>
       <button
-        className="btn-text"
+        className={`btn-text ${className ?? ''}`}
         onClick={() => setAddTagModalIsVisible(true)}
       >
         + Add Tag

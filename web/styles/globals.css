@@ -52,6 +52,11 @@
     @apply w-full bg-white p-2 border border-gray-300 rounded appearance-none focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600;
   }
 
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-gray-500;
+  }
+
   input[type='checkbox'] {
     @apply appearance-none rounded border border-gray-300 focus:ring-2 focus:ring-teal-600 checked:bg-teal-600 checked:border-transparent;
   }

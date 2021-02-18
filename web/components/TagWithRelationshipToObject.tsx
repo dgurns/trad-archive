@@ -8,7 +8,10 @@ interface Props {
   className?: string;
 }
 
-const TagFromEntity = ({ tag, className }: Props) => {
+// TagWithRelationshipToObject renders a Tag in the format "taught PERSON Billy
+// McComiskey", displaying the relationship from the subject entity to an object
+// entity.
+const TagWithRelationshipToObject = ({ tag, className }: Props) => {
   const { relationship, objectAudioItem, objectInstrument, objectPerson } = tag;
 
   const objectEntity: Entity =
@@ -31,4 +34,4 @@ const TagFromEntity = ({ tag, className }: Props) => {
   );
 };
 
-export default TagFromEntity;
+export default TagWithRelationshipToObject;

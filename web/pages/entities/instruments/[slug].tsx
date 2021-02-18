@@ -9,6 +9,8 @@ import useAudioItemsTaggedWithEntity from 'hooks/useAudioItemsTaggedWithEntity';
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
 import AudioItemComponent from 'components/AudioItem';
+import AddTag from 'components/AddTag';
+import TagWithRelationshipToObject from 'components/TagWithRelationshipToObject';
 
 const INSTRUMENT_QUERY = gql`
   query Instrument($slug: String!) {
@@ -28,6 +30,7 @@ const ViewInstrumentBySlug = () => {
   }>(INSTRUMENT_QUERY, {
     variables: { slug },
     skip: !slug,
+    fetchPolicy: 'cache-and-network',
   });
 
   const [
@@ -38,7 +41,7 @@ const ViewInstrumentBySlug = () => {
   let statusMessage;
   if (!instrumentData && !instrumentError) {
     statusMessage = <LoadingBlock />;
-  } else if (instrumentError) {
+  } else if (!instrumentData && instrumentError) {
     statusMessage = `Error fetching Instrument with slug ${slug}`;
   }
 
@@ -46,7 +49,14 @@ const ViewInstrumentBySlug = () => {
     return <Layout>{statusMessage}</Layout>;
   }
 
-  const { name, entityType, aliases, description } = instrumentData.instrument;
+  const { instrument } = instrumentData;
+  const {
+    name,
+    entityType,
+    aliases,
+    description,
+    tags,
+  } = instrumentData.instrument;
 
   return (
     <Layout>
@@ -79,6 +89,15 @@ const ViewInstrumentBySlug = () => {
             <span className="text-gray-500">{description}</span>
           </div>
           <Link href={`/entities/instruments/${slug}/edit`}>Edit</Link>
+          <h1 className="mt-8 mb-4">Tags</h1>
+          {tags.map((tag, index) => (
+            <TagWithRelationshipToObject
+              tag={tag}
+              key={index}
+              className="mb-4"
+            />
+          ))}
+          <AddTag entity={instrument} className="self-start" />
         </div>
       </div>
     </Layout>

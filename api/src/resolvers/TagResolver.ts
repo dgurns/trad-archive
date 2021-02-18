@@ -45,27 +45,6 @@ export class TagResolver {
     return tags;
   }
 
-  // tagsFromEntity fetches all Tags that have the given entity as subject. For
-  // example, if the entity is Fiddle, this would return all Tags connecting
-  // Fiddle to other entities.
-  @Query(() => [Tag])
-  tagsFromEntity(@Arg('input') input: TagsFromEntityInput) {
-    const { entityType, entityId } = input;
-
-    return getManager()
-      .createQueryBuilder(Tag, 'tag')
-      .where(`tag.subject${entityType}Id = :entityId`, {
-        entityId,
-      })
-      .leftJoinAndSelect('tag.relationship', 'relationship')
-      .leftJoinAndSelect(`tag.subject${entityType}`, `subject${entityType}`)
-      .leftJoinAndSelect(`tag.objectPerson`, 'objectPerson')
-      .leftJoinAndSelect(`tag.objectInstrument`, 'objectInstrument')
-      .leftJoinAndSelect(`tag.objectAudioItem`, 'objectAudioItem')
-      .orderBy('tag.createdAt', 'DESC')
-      .getMany();
-  }
-
   @Mutation(() => Tag)
   async createTag(
     @Arg('input') input: CreateTagInput,

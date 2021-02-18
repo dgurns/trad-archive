@@ -11,15 +11,6 @@ export class TagsToEntityInput {
 }
 
 @InputType()
-export class TagsFromEntityInput {
-  @Field(() => EntityType)
-  entityType!: EntityType;
-
-  @Field()
-  entityId!: string;
-}
-
-@InputType()
 export class CreateTagInput {
   @Field(() => String)
   relationshipId!: string;

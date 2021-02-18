@@ -7,14 +7,12 @@ import { EntityFragments } from 'fragments';
 import { Person } from 'types';
 import useAudioItemsTaggedWithEntity from 'hooks/useAudioItemsTaggedWithEntity';
 import useTagsFromEntity from 'hooks/useTagsFromEntity';
-import useTagsToEntity from 'hooks/useTagsToEntity';
 
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
 import LoadingCircle from 'components/LoadingCircle';
 import AudioItemComponent from 'components/AudioItem';
 import TagFromEntity from 'components/TagFromEntity';
-import TagToEntity from 'components/TagToEntity';
 import AddTag from 'components/AddTag';
 
 const PERSON_QUERY = gql`
@@ -52,19 +50,11 @@ const ViewPersonBySlug = () => {
     },
   ] = useTagsFromEntity(personData?.person);
 
-  const [
-    tagsToEntity = [],
-    {
-      loading: tagsToEntityLoading,
-      error: tagsToEntityError,
-      refetch: refetchTagsToEntity,
-    },
-  ] = useTagsToEntity(personData?.person);
-
   const onAddTagSuccess = useCallback(() => {
-    refetchTagsFromEntity();
-    refetchTagsToEntity();
-  }, [refetchTagsFromEntity, refetchTagsToEntity]);
+    if (refetchTagsFromEntity) {
+      refetchTagsFromEntity();
+    }
+  }, [refetchTagsFromEntity]);
 
   let statusMessage;
   if (!personData && !personError) {
@@ -80,9 +70,7 @@ const ViewPersonBySlug = () => {
   const { person } = personData;
   const { name, entityType, aliases, description } = person;
 
-  const tagsAreLoading = tagsFromEntityLoading || tagsToEntityLoading;
-  const tagsError = tagsFromEntityError || tagsToEntityError;
-  const shouldShowTags = !tagsAreLoading && !tagsError;
+  const shouldShowTags = !tagsFromEntityLoading && !tagsFromEntityError;
 
   return (
     <Layout>
@@ -116,17 +104,14 @@ const ViewPersonBySlug = () => {
           </div>
           <Link href={`/entities/people/${slug}/edit`}>Edit</Link>
           <h1 className="mt-8 mb-4">Tags</h1>
-          {tagsAreLoading && <LoadingCircle />}
-          {tagsError && (
+          {tagsFromEntityLoading && <LoadingCircle />}
+          {tagsFromEntityError && (
             <div className="text-red-600 mb-4">Error fetching Tags</div>
           )}
           {shouldShowTags && (
             <div>
               {tagsFromEntity.map((tag, index) => (
                 <TagFromEntity tag={tag} key={index} className="mb-4" />
-              ))}
-              {tagsToEntity.map((tag, index) => (
-                <TagToEntity tag={tag} key={index} className="mb-4" />
               ))}
               <AddTag entity={person} onSuccess={onAddTagSuccess} />
             </div>

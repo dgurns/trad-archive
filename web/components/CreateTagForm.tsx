@@ -33,6 +33,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
   >();
   const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
   const [selectedRelationshipId, setSelectedRelationshipId] = useState('');
+  const [
+    shouldCreateInverseRelationship,
+    setShouldCreateInverseRelationship,
+  ] = useState(false);
+  const [
+    selectedInverseRelationshipId,
+    setSelectedInverseRelationshipId,
+  ] = useState('');
 
   const [createPersonModalIsVisible, setCreatePersonModalIsVisible] = useState(
     false
@@ -87,16 +95,40 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     [setSelectedRelationshipId]
   );
 
-  const onCreateTagClicked = useCallback(() => {
-    const input = {
+  const onSelectInverseRelationship = useCallback(
+    (relationshipId: string) => {
+      setSelectedInverseRelationshipId(relationshipId);
+    },
+    [setSelectedInverseRelationshipId]
+  );
+
+  const onCreateTagClicked = useCallback(async () => {
+    const tagInput = {
       relationshipId: selectedRelationshipId,
       subjectEntityType: entity.entityType,
       subjectEntityId: entity.id,
       objectEntityType: selectedEntity.entityType,
       objectEntityId: selectedEntity.id,
     };
-    createTag({ variables: { input } });
-  }, [selectedRelationshipId, entity, selectedEntity, createTag]);
+    createTag({ variables: { input: tagInput } });
+
+    if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
+      const inverseTagInput = {
+        relationshipId: selectedInverseRelationshipId,
+        subjectEntityType: selectedEntity.entityType,
+        subjectEntityId: selectedEntity.id,
+        objectEntityType: entity.entityType,
+        objectEntityId: entity.id,
+      };
+      createTag({ variables: { input: inverseTagInput } });
+    }
+  }, [
+    selectedRelationshipId,
+    selectedInverseRelationshipId,
+    entity,
+    selectedEntity,
+    createTag,
+  ]);
 
   const shouldShowCreateNewPrompt = Boolean(searchEntitiesResults);
 
@@ -129,7 +161,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
         </>
       ) : (
         <>
-          <div className="mb-4">
+          <div className="mb-6 text-gray-500">
             What is the relationship between these two entities?
           </div>
           <SelectRelationship
@@ -137,18 +169,35 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
             objectEntity={selectedEntity}
             onSelect={onSelectRelationship}
           />
-          <div className="mt-4 flex flex-row items-center justify-start">
-            <input
-              type="checkbox"
-              id="create-reversed-relationship"
-              defaultChecked
-            />
-            <label htmlFor="create-reversed-relationship" className="ml-2">
-              Also create reversed relationship
-            </label>
-          </div>
+          {selectedRelationshipId && (
+            <div className="mt-6 flex flex-row items-center justify-start">
+              <input
+                type="checkbox"
+                id="reverse-relationship"
+                checked={shouldCreateInverseRelationship}
+                onChange={(event) =>
+                  setShouldCreateInverseRelationship(event.target.checked)
+                }
+              />
+              <label
+                htmlFor="reverse-relationship"
+                className="ml-2 text-gray-500"
+              >
+                Also create the inverse relationship
+              </label>
+            </div>
+          )}
+          {shouldCreateInverseRelationship && (
+            <div className="mt-6">
+              <SelectRelationship
+                subjectEntity={selectedEntity}
+                objectEntity={entity}
+                onSelect={onSelectInverseRelationship}
+              />
+            </div>
+          )}
           <button
-            className="btn mt-4"
+            className="btn mt-8"
             onClick={onCreateTagClicked}
             disabled={loading || !selectedRelationshipId}
           >

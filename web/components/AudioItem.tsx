@@ -25,7 +25,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
       </div>
       <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
         {audioItemIsInPlayer ? (
-          <div className="pl-3 text-gray-400">Playing</div>
+          <div className="pl-3 text-gray-500">Playing</div>
         ) : (
           <button
             style={{ lineHeight: 0 }}

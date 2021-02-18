@@ -5,6 +5,7 @@ import { CustomContext } from 'middleware/context';
 import { AudioItem } from 'entities/AudioItem';
 import { User, UserPermission } from 'entities/User';
 import {
+  AudioItemsInput,
   AudioItemsTaggedWithEntityInput,
   AudioItemsCreatedByUserInput,
   CreateAudioItemInput,
@@ -36,10 +37,8 @@ export class AudioItemResolver {
   }
 
   @Query(() => [AudioItem])
-  async audioItems(
-    @Arg('take', { nullable: true, defaultValue: 20 }) take: number,
-    @Arg('skip', { nullable: true, defaultValue: 0 }) skip: number
-  ) {
+  async audioItems(@Arg('input') input: AudioItemsInput) {
+    const { take, skip } = input;
     return AudioItem.find({
       take,
       skip,

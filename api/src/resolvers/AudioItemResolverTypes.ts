@@ -2,6 +2,15 @@ import { InputType, Field, Int } from 'type-graphql';
 import { EntityType } from 'entities/entityHelpers';
 
 @InputType()
+export class AudioItemsInput {
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
+  take?: number;
+
+  @Field(() => Int, { nullable: true, defaultValue: 0 })
+  skip?: number;
+}
+
+@InputType()
 export class AudioItemsTaggedWithEntityInput {
   @Field(() => EntityType)
   entityType!: EntityType;

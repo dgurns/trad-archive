@@ -49,11 +49,11 @@ const ViewAudioItemBySlug = () => {
 
   return (
     <Layout>
-      <div className="flex flex-row">
+      <div className="flex flex-col md:flex-row">
         <div className="flex flex-1 flex-col">
           <AudioItemComponent audioItem={audioItem} />
         </div>
-        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -75,7 +75,7 @@ const ViewAudioItemBySlug = () => {
             />
           ))}
           <div>
-            <AddTag entity={audioItem} className="mb-4" />
+            <AddTag entity={audioItem} />
             <span className="text-gray-500 px-2">/</span>
             <EditTags entity={audioItem} />
           </div>

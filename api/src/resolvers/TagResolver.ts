@@ -3,11 +3,7 @@ import { getManager } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'entities/Tag';
 import { User } from 'entities/User';
-import {
-  TagsToEntityInput,
-  TagsFromEntityInput,
-  CreateTagInput,
-} from 'resolvers/TagResolverTypes';
+import { TagsToEntityInput, CreateTagInput } from 'resolvers/TagResolverTypes';
 import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';

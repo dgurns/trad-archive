@@ -38,7 +38,8 @@ const ViewPersonBySlug = () => {
   const [
     audioItems = [],
     { loading: audioItemsLoading, error: audioItemsError },
-  ] = useAudioItemsTaggedWithEntity(personData?.person);
+    fetchNextPageOfAudioItems,
+  ] = useAudioItemsTaggedWithEntity({ entity: personData?.person });
 
   let statusMessage;
   if (!personData && !personError) {
@@ -54,20 +55,34 @@ const ViewPersonBySlug = () => {
   const { person } = personData;
   const { name, entityType, aliases, description, tags } = person;
 
+  const shouldShowAudioItems = audioItems.length > 0;
+
   return (
     <Layout>
-      <div className="flex flex-row">
-        <div className="flex flex-1 flex-col">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex flex-1 flex-col mb-8">
           <h1 className="mb-4">Audio Items Tagged with "{name}"</h1>
+          {shouldShowAudioItems && (
+            <>
+              {audioItems.map((audioItem, index) => (
+                <AudioItemComponent audioItem={audioItem} key={index} />
+              ))}
+              {!audioItemsLoading && (
+                <button
+                  className="btn-text"
+                  onClick={fetchNextPageOfAudioItems}
+                >
+                  Load More
+                </button>
+              )}
+            </>
+          )}
           {audioItemsLoading && <LoadingBlock />}
           {audioItemsError && (
             <div className="text-red-600">Error fetching Audio Items</div>
           )}
-          {audioItems.map((audioItem, index) => (
-            <AudioItemComponent audioItem={audioItem} key={index} />
-          ))}
         </div>
-        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -94,7 +109,7 @@ const ViewPersonBySlug = () => {
             />
           ))}
           <div>
-            <AddTag entity={person} className="mb-4" />
+            <AddTag entity={person} />
             <span className="text-gray-500 px-2">/</span>
             <EditTags entity={person} />
           </div>

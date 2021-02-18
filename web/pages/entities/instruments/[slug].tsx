@@ -8,6 +8,7 @@ import useAudioItemsTaggedWithEntity from 'hooks/useAudioItemsTaggedWithEntity';
 
 import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
+import LoadingCircle from 'components/LoadingCircle';
 import AudioItemComponent from 'components/AudioItem';
 import AddTag from 'components/AddTag';
 import EditTags from 'components/EditTags';
@@ -37,7 +38,8 @@ const ViewInstrumentBySlug = () => {
   const [
     audioItems = [],
     { loading: audioItemsLoading, error: audioItemsError },
-  ] = useAudioItemsTaggedWithEntity(instrumentData?.instrument);
+    fetchNextPageOfAudioItems,
+  ] = useAudioItemsTaggedWithEntity({ entity: instrumentData?.instrument });
 
   let statusMessage;
   if (!instrumentData && !instrumentError) {
@@ -59,20 +61,34 @@ const ViewInstrumentBySlug = () => {
     tags,
   } = instrumentData.instrument;
 
+  const shouldShowAudioItems = audioItems.length > 0;
+
   return (
     <Layout>
-      <div className="flex flex-row">
-        <div className="flex flex-1 flex-col">
+      <div className="flex flex-col md:flex-row">
+        <div className="flex flex-1 flex-col pb-8">
           <h1 className="mb-4">Audio Items Tagged with "{name}"</h1>
+          {shouldShowAudioItems && (
+            <>
+              {audioItems.map((audioItem, index) => (
+                <AudioItemComponent audioItem={audioItem} key={index} />
+              ))}
+              {!audioItemsLoading && (
+                <button
+                  className="btn-text"
+                  onClick={fetchNextPageOfAudioItems}
+                >
+                  Load More
+                </button>
+              )}
+            </>
+          )}
           {audioItemsLoading && <LoadingBlock />}
           {audioItemsError && (
             <div className="text-red-600">Error fetching Audio Items</div>
           )}
-          {audioItems.map((audioItem, index) => (
-            <AudioItemComponent audioItem={audioItem} key={index} />
-          ))}
         </div>
-        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -99,7 +115,7 @@ const ViewInstrumentBySlug = () => {
             />
           ))}
           <div>
-            <AddTag entity={instrument} className="mb-4" />
+            <AddTag entity={instrument} />
             <span className="text-gray-500 px-2">/</span>
             <EditTags entity={instrument} />
           </div>

@@ -1,40 +1,11 @@
 import 'styles/globals.css';
 import { useState } from 'react';
 import Head from 'next/head';
-import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
+import { apolloClient } from 'apolloClient';
 import { PlayerContext } from 'hooks/usePlayer';
 import { AudioItem } from 'types';
 import Player from 'components/Player';
-
-export const apolloClient = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
-  cache: new InMemoryCache({
-    typePolicies: {
-      Person: {
-        fields: {
-          tags: {
-            merge: false,
-          },
-        },
-      },
-      Instrument: {
-        fields: {
-          tags: {
-            merge: false,
-          },
-        },
-      },
-      AudioItem: {
-        fields: {
-          tags: {
-            merge: false,
-          },
-        },
-      },
-    },
-  }),
-  credentials: 'include',
-});
 
 function App({ Component, pageProps }) {
   const [activePlayerAudioItem, setActivePlayerAudioItem] = useState<AudioItem>(

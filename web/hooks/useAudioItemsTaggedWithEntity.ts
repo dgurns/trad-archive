@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
 import { Entity, EntityType, AudioItem } from 'types';
 import { EntityFragments } from 'fragments';
@@ -23,27 +23,55 @@ interface QueryVariables {
     skip?: number;
   };
 }
+interface HookArgs {
+  entity?: Entity;
+  resultsPerPage?: number;
+}
 
-const useAudioItemsTaggedWithEntity = (
-  entity?: Entity
-): [AudioItem[] | undefined, LazyQueryResult<QueryData, QueryVariables>] => {
+const useAudioItemsTaggedWithEntity = ({
+  entity,
+  resultsPerPage = 5,
+}: HookArgs): [
+  AudioItem[] | undefined,
+  LazyQueryResult<QueryData, QueryVariables>,
+  () => void
+] => {
   const [makeQuery, query] = useLazyQuery<QueryData, QueryVariables>(
-    AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY
+    AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY,
+    { notifyOnNetworkStatusChange: true }
   );
+  const { data, fetchMore } = query;
 
   useEffect(() => {
     if (entity) {
       makeQuery({
         variables: {
-          input: { entityType: entity.entityType, entityId: entity.id },
+          input: {
+            entityType: entity.entityType,
+            entityId: entity.id,
+            take: resultsPerPage,
+          },
         },
       });
     }
   }, [makeQuery, entity]);
 
-  const audioItems = query.data?.audioItemsTaggedWithEntity;
+  const audioItems = data?.audioItemsTaggedWithEntity;
 
-  return [audioItems, query];
+  const fetchNextPage = useCallback(() => {
+    fetchMore({
+      variables: {
+        input: {
+          entityType: entity.entityType,
+          entityId: entity.id,
+          take: resultsPerPage,
+          skip: audioItems.length ?? 0,
+        },
+      },
+    });
+  }, [fetchMore, resultsPerPage, entity, audioItems]);
+
+  return [audioItems, query, fetchNextPage];
 };
 
 export default useAudioItemsTaggedWithEntity;

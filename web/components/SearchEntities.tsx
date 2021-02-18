@@ -80,7 +80,7 @@ const SearchEntities = ({ onResults, onSelect }: Props) => {
       <div className="relative">
         <input
           autoFocus
-          placeholder="Start typing..."
+          placeholder="Start typing a Person, Instrument, etc..."
           value={searchTerm}
           onChange={onChangeSearchTerm}
         />

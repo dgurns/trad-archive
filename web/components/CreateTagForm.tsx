@@ -137,6 +137,16 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
             objectEntity={selectedEntity}
             onSelect={onSelectRelationship}
           />
+          <div className="mt-4 flex flex-row items-center justify-start">
+            <input
+              type="checkbox"
+              id="create-reversed-relationship"
+              defaultChecked
+            />
+            <label htmlFor="create-reversed-relationship" className="ml-2">
+              Also create reversed relationship
+            </label>
+          </div>
           <button
             className="btn mt-4"
             onClick={onCreateTagClicked}

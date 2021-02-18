@@ -25,8 +25,9 @@ interface Props {
   entity: Entity;
   onSuccess?: (tag: Tag) => void;
   className?: string;
+  children?: React.ReactChild | React.ReactChild[];
 }
-const AddTag = ({ entity, onSuccess, className }: Props) => {
+const AddTag = ({ entity, onSuccess, className, children }: Props) => {
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
 
   const [getParentEntity, { loading: parentEntityLoading }] = useLazyQuery<{
@@ -53,7 +54,7 @@ const AddTag = ({ entity, onSuccess, className }: Props) => {
         className={`btn-text ${className ?? ''}`}
         onClick={() => setAddTagModalIsVisible(true)}
       >
-        + Add Tag
+        {children ?? '+ Add Tag'}
       </button>
 
       <Modal

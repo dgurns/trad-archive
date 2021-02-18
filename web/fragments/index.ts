@@ -19,31 +19,37 @@ export const TagFragments = {
         ...Relationship
       }
       subjectAudioItem {
+        id
         entityType
         name
         slug
       }
       subjectPerson {
         entityType
+        id
         name
         slug
       }
       subjectInstrument {
+        id
         entityType
         name
         slug
       }
       objectAudioItem {
+        id
         entityType
         name
         slug
       }
       objectPerson {
+        id
         entityType
         name
         slug
       }
       objectInstrument {
+        id
         entityType
         name
         slug

@@ -8,7 +8,31 @@ import Player from 'components/Player';
 
 export const apolloClient = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_API_GRAPHQL_URL,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Person: {
+        fields: {
+          tags: {
+            merge: false,
+          },
+        },
+      },
+      Instrument: {
+        fields: {
+          tags: {
+            merge: false,
+          },
+        },
+      },
+      AudioItem: {
+        fields: {
+          tags: {
+            merge: false,
+          },
+        },
+      },
+    },
+  }),
   credentials: 'include',
 });
 

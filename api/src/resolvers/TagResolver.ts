@@ -139,4 +139,15 @@ export class TagResolver {
     await tag.save();
     return tag;
   }
+
+  @Mutation(() => Boolean)
+  async deleteTag(@Arg('id') id: string, @Ctx() ctx: CustomContext) {
+    const user = await User.findOne(ctx.userId);
+    if (!user) {
+      throw new Error('Must be logged in to delete a Tag');
+    }
+
+    await Tag.delete(id);
+    return true;
+  }
 }

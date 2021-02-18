@@ -16,6 +16,11 @@ module.exports = {
     fontFamily: {
       sans: ['Karla', 'sans-serif'],
     },
+    maxHeight: {
+      0: '0',
+      '9/10': '90%',
+      full: '100%',
+    },
   },
   variants: {
     extend: {

@@ -10,6 +10,7 @@ import Layout from 'components/Layout';
 import LoadingBlock from 'components/LoadingBlock';
 import AudioItemComponent from 'components/AudioItem';
 import AddTag from 'components/AddTag';
+import EditTags from 'components/EditTags';
 import TagWithRelationshipToObject from 'components/TagWithRelationshipToObject';
 
 const INSTRUMENT_QUERY = gql`
@@ -71,7 +72,7 @@ const ViewInstrumentBySlug = () => {
             <AudioItemComponent audioItem={audioItem} key={index} />
           ))}
         </div>
-        <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -97,7 +98,11 @@ const ViewInstrumentBySlug = () => {
               className="mb-4"
             />
           ))}
-          <AddTag entity={instrument} className="self-start" />
+          <div>
+            <AddTag entity={instrument} className="mb-4" />
+            <span className="text-gray-500 px-2">/</span>
+            <EditTags entity={instrument} />
+          </div>
         </div>
       </div>
     </Layout>

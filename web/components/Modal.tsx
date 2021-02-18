@@ -29,7 +29,7 @@ const Modal = ({
       />
 
       <div
-        className={`bg-white rounded relative w-full p-4 m-4 md:max-w-md ${
+        className={`bg-white rounded relative w-full p-4 m-4 max-h-9/10 overflow-x-scroll overflow-y-hidden md:max-w-md ${
           className ?? ''
         }`}
       >

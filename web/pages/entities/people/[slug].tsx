@@ -11,6 +11,7 @@ import LoadingBlock from 'components/LoadingBlock';
 import AudioItemComponent from 'components/AudioItem';
 import TagWithRelationshipToObject from 'components/TagWithRelationshipToObject';
 import AddTag from 'components/AddTag';
+import EditTags from 'components/EditTags';
 
 const PERSON_QUERY = gql`
   query Person($slug: String!) {
@@ -66,7 +67,7 @@ const ViewPersonBySlug = () => {
             <AudioItemComponent audioItem={audioItem} key={index} />
           ))}
         </div>
-        <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -92,7 +93,11 @@ const ViewPersonBySlug = () => {
               className="mb-4"
             />
           ))}
-          <AddTag entity={person} className="self-start" />
+          <div>
+            <AddTag entity={person} className="mb-4" />
+            <span className="text-gray-500 px-2">/</span>
+            <EditTags entity={person} />
+          </div>
         </div>
       </div>
     </Layout>

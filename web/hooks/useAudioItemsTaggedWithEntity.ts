@@ -28,20 +28,17 @@ const useAudioItemsTaggedWithEntity = (
   entity?: Entity
 ): [AudioItem[] | undefined, LazyQueryResult<QueryData, QueryVariables>] => {
   const [makeQuery, query] = useLazyQuery<QueryData, QueryVariables>(
-    AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY,
-    {
-      variables: {
-        input: {
-          entityType: entity?.entityType,
-          entityId: entity?.id,
-        },
-      },
-    }
+    AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY
   );
 
   useEffect(() => {
     if (entity) {
-      makeQuery();
+      console.log('making query', entity);
+      makeQuery({
+        variables: {
+          input: { entityType: entity.entityType, entityId: entity.id },
+        },
+      });
     }
   }, [makeQuery, entity]);
 

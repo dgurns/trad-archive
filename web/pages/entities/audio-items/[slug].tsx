@@ -9,6 +9,7 @@ import Layout from 'components/Layout';
 import AudioItemComponent from 'components/AudioItem';
 import LoadingBlock from 'components/LoadingBlock';
 import AddTag from 'components/AddTag';
+import EditTags from 'components/EditTags';
 import TagWithRelationshipToObject from 'components/TagWithRelationshipToObject';
 
 const AUDIO_ITEM_QUERY = gql`
@@ -52,7 +53,7 @@ const ViewAudioItemBySlug = () => {
         <div className="flex flex-1 flex-col">
           <AudioItemComponent audioItem={audioItem} />
         </div>
-        <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start ml-8 pl-8 w-1/4 border-l border-gray-300">
           <h1 className="mb-4">About {name}</h1>
           <div className="mb-4">
             Entity Type:
@@ -73,7 +74,11 @@ const ViewAudioItemBySlug = () => {
               className="mb-4"
             />
           ))}
-          <AddTag entity={audioItem} className="self-start" />
+          <div>
+            <AddTag entity={audioItem} className="mb-4" />
+            <span className="text-gray-500 px-2">/</span>
+            <EditTags entity={audioItem} />
+          </div>
         </div>
       </div>
     </Layout>

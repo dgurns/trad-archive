@@ -1,10 +1,13 @@
 import useAudioItems from 'hooks/useAudioItems';
+
 import Layout from 'components/Layout';
 import AudioItem from 'components/AudioItem';
 import LoadingBlock from 'components/LoadingBlock';
 
 export default function Home() {
-  const [audioItems, { loading, error }, fetchNextPage] = useAudioItems();
+  const [audioItems, { loading, error }, fetchNextPage] = useAudioItems({
+    resultsPerPage: 10,
+  });
 
   if (!audioItems && !error) {
     return (

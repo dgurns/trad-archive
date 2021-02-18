@@ -116,8 +116,12 @@ const ViewInstrumentBySlug = () => {
           ))}
           <div>
             <AddTag entity={instrument} />
-            <span className="text-gray-500 px-2">/</span>
-            <EditTags entity={instrument} />
+            {tags.length > 0 && (
+              <>
+                <span className="text-gray-500 px-2">/</span>
+                <EditTags entity={instrument} />
+              </>
+            )}
           </div>
         </div>
       </div>

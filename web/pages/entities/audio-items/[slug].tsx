@@ -76,8 +76,12 @@ const ViewAudioItemBySlug = () => {
           ))}
           <div>
             <AddTag entity={audioItem} />
-            <span className="text-gray-500 px-2">/</span>
-            <EditTags entity={audioItem} />
+            {tags.length > 0 && (
+              <>
+                <span className="text-gray-500 px-2">/</span>
+                <EditTags entity={audioItem} />
+              </>
+            )}
           </div>
         </div>
       </div>

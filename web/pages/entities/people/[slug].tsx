@@ -110,8 +110,12 @@ const ViewPersonBySlug = () => {
           ))}
           <div>
             <AddTag entity={person} />
-            <span className="text-gray-500 px-2">/</span>
-            <EditTags entity={person} />
+            {tags.length > 0 && (
+              <>
+                <span className="text-gray-500 px-2">/</span>
+                <EditTags entity={person} />
+              </>
+            )}
           </div>
         </div>
       </div>

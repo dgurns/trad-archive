@@ -33,7 +33,6 @@ const useAudioItemsTaggedWithEntity = (
 
   useEffect(() => {
     if (entity) {
-      console.log('making query', entity);
       makeQuery({
         variables: {
           input: { entityType: entity.entityType, entityId: entity.id },

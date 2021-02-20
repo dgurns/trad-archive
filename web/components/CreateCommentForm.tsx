@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { Comment, Entity, EntityType } from 'types';
+import { Comment, Entity, isAudioItem } from 'types';
 import { CommentFragments } from 'fragments';
 
 const CREATE_COMMENT_MUTATION = gql`
@@ -37,7 +37,7 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
     (event) => {
       event.preventDefault();
       let parentAudioItemId;
-      if (parentEntity?.entityType === EntityType.AudioItem) {
+      if (isAudioItem(parentEntity)) {
         parentAudioItemId = parentEntity.id;
       }
       const input = { parentAudioItemId, text };

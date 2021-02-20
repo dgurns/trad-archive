@@ -4,12 +4,11 @@ import DateTime from 'services/DateTime';
 import usePlayer from 'hooks/usePlayer';
 
 import Tags from 'components/Tags';
-import CreateCommentForm from 'components/CreateCommentForm';
+import Comments from 'components/Comments';
 
 interface Props {
   audioItem: AudioItem;
 }
-
 const AudioItemComponent = ({ audioItem }: Props) => {
   const {
     name,
@@ -48,7 +47,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
         )}
       </div>
 
-      <div className="text-gray-500 text-sm mb-2">
+      <div className="text-gray-500 text-sm mb-1">
         Added by{' '}
         <Link href={`/users/${createdByUser.id}`}>
           {createdByUser.username}
@@ -57,13 +56,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
       </div>
       <div className="text-sm mb-4">{description}</div>
 
-      {commentsCount > 0 && (
-        <button className="btn-text mb-4">
-          View Comments ({commentsCount})
-        </button>
-      )}
-
-      <CreateCommentForm parentEntity={audioItem} onSuccess={() => {}} />
+      <Comments parentEntity={audioItem} />
     </div>
   );
 };

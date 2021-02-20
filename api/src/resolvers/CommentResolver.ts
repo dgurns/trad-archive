@@ -2,18 +2,23 @@ import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { User } from 'entities/User';
-import { CreateCommentInput } from 'resolvers/CommentResolverTypes';
+import {
+  CommentsForParentEntityInput,
+  CreateCommentInput,
+} from 'resolvers/CommentResolverTypes';
 import { AudioItem } from 'entities/AudioItem';
 import { Comment } from 'entities/Comment';
 
 @Resolver()
 export class CommentResolver {
-  @Query(() => Comment)
-  commentsForAudioItem(@Arg('audioItemId') audioItemId: string) {
+  @Query(() => [Comment])
+  commentsForParentEntity(@Arg('input') input: CommentsForParentEntityInput) {
+    const { parentEntityType, parentEntityId } = input;
+
     return getManager()
       .createQueryBuilder(Comment, 'comment')
-      .where(`comment.parentAudioItemId = :audioItemId`, {
-        audioItemId,
+      .where(`comment.parent${parentEntityType}Id = :id`, {
+        id: parentEntityId,
       })
       .leftJoinAndSelect('comment.createdByUser', 'createdByUser')
       .orderBy('comment.createdAt', 'ASC')

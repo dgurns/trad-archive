@@ -39,16 +39,17 @@ const Comments = ({ parentEntity }: Props) => {
   ] = useLazyQuery<QueryData, QueryVariables>(
     COMMENTS_FOR_PARENT_ENTITY_QUERY,
     {
-      variables: {
-        input: { parentEntityType: entityType, parentEntityId: id },
-      },
       fetchPolicy: 'cache-and-network',
     }
   );
   const comments = data?.commentsForParentEntity ?? [];
 
   const fetchComments = useCallback(() => {
-    getCommentsForParentEntity();
+    getCommentsForParentEntity({
+      variables: {
+        input: { parentEntityType: entityType, parentEntityId: id },
+      },
+    });
   }, [getCommentsForParentEntity]);
 
   const shouldShowViewCommentsButton = commentsCount > 0 && !data && !loading;
@@ -66,7 +67,6 @@ const Comments = ({ parentEntity }: Props) => {
       {comments.map(({ createdByUser, createdAt, text }, index) => (
         <div className="mb-4 pl-2" key={index}>
           <div className="text-gray-500 text-sm mb-1">
-            Comment by{' '}
             <Link href={`/users/${createdByUser.id}`}>
               {createdByUser.username}
             </Link>{' '}

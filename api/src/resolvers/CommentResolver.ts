@@ -27,6 +27,9 @@ export class CommentResolver {
   ) {
     const { parentAudioItemId, text } = input;
 
+    if (!text) {
+      throw new Error('Comment text cannot be empty');
+    }
     const user = await User.findOne(ctx.userId);
     if (!user) {
       throw new Error('Must be logged in to create a Comment');

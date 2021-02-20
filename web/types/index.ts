@@ -40,7 +40,8 @@ interface BaseEntity {
 
 export interface AudioItem extends BaseEntity {
   entityType: EntityType.AudioItem;
-  comments: Comment[];
+  comments?: Comment[] | null;
+  commentsCount: number;
   urlSource: string;
 }
 
@@ -81,7 +82,7 @@ export interface Tag {
 
 export interface Comment {
   id: string;
-  parentAudioItem: AudioItem | null;
+  parentAudioItem?: AudioItem | null;
   text: string;
   createdByUser: User;
   createdAt: string;

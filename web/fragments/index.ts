@@ -1,5 +1,15 @@
 import { gql } from '@apollo/client';
 
+export const UserFragments = {
+  user: gql`
+    fragment User on User {
+      id
+      username
+      createdAt
+    }
+  `,
+};
+
 export const RelationshipFragments = {
   relationship: gql`
     fragment Relationship on Relationship {
@@ -59,6 +69,21 @@ export const TagFragments = {
   `,
 };
 
+export const CommentFragments = {
+  comment: gql`
+    fragment Comment on Comment {
+      id
+      text
+      createdByUser {
+        ...User
+      }
+      createdAt
+      updatedAt
+    }
+    ${UserFragments.user}
+  `,
+};
+
 export const EntityFragments = {
   audioItem: gql`
     fragment AudioItem on AudioItem {
@@ -71,6 +96,7 @@ export const EntityFragments = {
       tags {
         ...Tag
       }
+      commentsCount
       createdByUser {
         id
         username
@@ -121,15 +147,5 @@ export const EntityFragments = {
       }
     }
     ${TagFragments.tag}
-  `,
-};
-
-export const UserFragments = {
-  user: gql`
-    fragment User on User {
-      id
-      username
-      createdAt
-    }
   `,
 };

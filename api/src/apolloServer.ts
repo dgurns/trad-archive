@@ -15,6 +15,7 @@ import { AuthResolver } from 'resolvers/AuthResolver';
 import { UserResolver } from 'resolvers/UserResolver';
 import { TagResolver } from 'resolvers/TagResolver';
 import { RelationshipResolver } from 'resolvers/RelationshipResolver';
+import { CommentResolver } from 'resolvers/CommentResolver';
 import { EntityResolver } from 'resolvers/EntityResolver';
 import { AudioItemResolver } from 'resolvers/AudioItemResolver';
 import { PersonResolver } from 'resolvers/PersonResolver';
@@ -29,6 +30,7 @@ const createServer = async () => {
       UserResolver,
       TagResolver,
       RelationshipResolver,
+      CommentResolver,
       EntityResolver,
       AudioItemResolver,
       PersonResolver,

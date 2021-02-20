@@ -2,9 +2,7 @@ import {
   Entity as TypeOrmEntity,
   BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
-  OneToOne,
   ManyToOne,
-  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';

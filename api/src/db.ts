@@ -5,6 +5,7 @@ import { Relationship } from 'entities/Relationship';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { Comment } from 'entities/Comment';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
@@ -23,7 +24,7 @@ export const connectToDatabase = async () => {
     password: process.env.DATABASE_PASSWORD ?? 'password',
     database: process.env.DATABASE_NAME ?? 'postgres',
     logging: false,
-    entities: [User, Tag, Relationship, AudioItem, Person, Instrument],
+    entities: [User, Tag, Relationship, Comment, AudioItem, Person, Instrument],
     // TODO: Set synchronize to false in production
     synchronize: true,
     migrationsRun: true,

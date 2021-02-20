@@ -3,6 +3,7 @@ import { ObjectType, Field } from 'type-graphql';
 
 import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
 import { Tag } from 'entities/Tag';
+import { Comment } from 'entities/Comment';
 
 // AudioItem represents a unique audio source file in the archive
 @ObjectType()
@@ -15,6 +16,10 @@ export class AudioItem extends EntityBaseFields {
   @Field(() => [Tag], { defaultValue: [] })
   @OneToMany(() => Tag, (tag) => tag.subjectAudioItem)
   tags!: Tag[];
+
+  @Field(() => [Comment], { defaultValue: [] })
+  @OneToMany(() => Comment, (comment) => comment.parentAudioItem)
+  comments!: Comment[];
 
   @Field(() => String)
   @Column()

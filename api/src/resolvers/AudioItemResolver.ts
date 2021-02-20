@@ -1,8 +1,19 @@
-import { Resolver, Query, Mutation, Ctx, Arg, Authorized } from 'type-graphql';
-import { getManager } from 'typeorm';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Ctx,
+  Arg,
+  Authorized,
+  FieldResolver,
+  Root,
+  Int,
+} from 'type-graphql';
+import { getManager, getRepository } from 'typeorm';
 
 import { CustomContext } from 'middleware/context';
 import { AudioItem } from 'entities/AudioItem';
+import { Comment } from 'entities/Comment';
 import { User, UserPermission } from 'entities/User';
 import {
   AudioItemsInput,
@@ -13,8 +24,18 @@ import {
 } from 'resolvers/AudioItemResolverTypes';
 import EntityService from 'services/Entity';
 
-@Resolver()
+@Resolver(() => AudioItem)
 export class AudioItemResolver {
+  @FieldResolver(() => Int)
+  async commentsCount(@Root() audioItem: AudioItem) {
+    const { count } = await getRepository(Comment)
+      .createQueryBuilder('comment')
+      .select('COUNT(id)')
+      .where('comment.parentAudioItemId = :id', { id: audioItem.id })
+      .getRawOne();
+    return parseInt(count);
+  }
+
   @Query(() => AudioItem, { nullable: true })
   audioItem(
     @Arg('id', { nullable: true }) id: string,

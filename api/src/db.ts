@@ -15,7 +15,7 @@ export const connectToDatabase = async () => {
     return;
   }
 
-  await createConnection({
+  const connection = await createConnection({
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',
     port: parseInt(process.env.DATABASE_PORT ?? '5432'),
@@ -32,4 +32,11 @@ export const connectToDatabase = async () => {
       migrationsDir: 'src/migrations',
     },
   });
+
+  // Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
+  // for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"
+  const queryRunner = connection.createQueryRunner();
+  await queryRunner.connect();
+  await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
+  await queryRunner.release();
 };

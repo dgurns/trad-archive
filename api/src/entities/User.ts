@@ -24,7 +24,7 @@ export class User extends TypeOrmBaseEntity {
   readonly id!: string;
 
   @Authorized()
-  @Field(() => [UserPermission])
+  @Field(() => [UserPermission], { nullable: true })
   @Column({
     type: 'enum',
     enum: UserPermission,
@@ -34,7 +34,7 @@ export class User extends TypeOrmBaseEntity {
   permissions!: UserPermission[];
 
   @Authorized()
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ unique: true })
   email!: string;
 
@@ -49,7 +49,6 @@ export class User extends TypeOrmBaseEntity {
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt!: Date;
 
-  @Authorized()
   @Field()
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;

@@ -5,8 +5,8 @@ export enum UserPermission {
 
 export interface User {
   id: string;
-  permissions: UserPermission[];
-  email: string;
+  permissions?: UserPermission[];
+  email?: string;
   username: string;
   createdAt: string;
   updatedAt: string;

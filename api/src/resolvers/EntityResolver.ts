@@ -89,10 +89,10 @@ export class EntityResolver {
       entityManager
         .createQueryBuilder(Person, 'person')
         .leftJoinAndSelect('person.createdByUser', 'createdByUser')
-        .where('LOWER(person.name) LIKE :name', {
+        .where('unaccent(LOWER(person.name)) LIKE unaccent(:name)', {
           name: `%${searchTermLowercased}%`,
         })
-        .orWhere('LOWER(person.aliases) LIKE :aliases', {
+        .orWhere('unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)', {
           aliases: `%${searchTermLowercased}%`,
         })
         .take(takeFromEach)
@@ -100,21 +100,22 @@ export class EntityResolver {
       entityManager
         .createQueryBuilder(Instrument, 'instrument')
         .leftJoinAndSelect('instrument.createdByUser', 'createdByUser')
-        .where('LOWER(instrument.name) LIKE :name', {
+        .where('unaccent(LOWER(instrument.name)) LIKE unaccent(:name)', {
           name: `%${searchTermLowercased}%`,
         })
-        .orWhere('LOWER(instrument.aliases) LIKE :aliases', {
-          aliases: `%${searchTermLowercased}%`,
-        })
+        .orWhere(
+          'unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)',
+          { aliases: `%${searchTermLowercased}%` }
+        )
         .take(takeFromEach)
         .getMany(),
       entityManager
         .createQueryBuilder(AudioItem, 'audioItem')
         .leftJoinAndSelect('audioItem.createdByUser', 'createdByUser')
-        .where('LOWER(audioItem.name) LIKE :name', {
+        .where('unaccent(LOWER(audioItem.name)) LIKE unaccent(:name)', {
           name: `%${searchTermLowercased}%`,
         })
-        .orWhere('LOWER(audioItem.aliases) LIKE :aliases', {
+        .orWhere('unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)', {
           aliases: `%${searchTermLowercased}%`,
         })
         .take(takeFromEach)

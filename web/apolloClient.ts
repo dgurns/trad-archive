@@ -10,10 +10,14 @@ export const apolloClient = new ApolloClient({
           audioItems: {
             keyArgs: false,
             // When new results are received for this query via fetchMore
-            // pagination, specify how to merge them with cached results.
-            // Eventually may want to ensure each ID is only cached once.
-            merge(existing = [], incoming) {
-              return [...existing, ...incoming];
+            // pagination, specify how to merge them with cached results
+            merge(existing = [], incoming, { args: { input } }) {
+              const { skip = 0 } = input;
+              const merged = existing ? existing.slice(0) : [];
+              for (let i = 0; i < incoming.length; ++i) {
+                merged[skip + i] = incoming[i];
+              }
+              return merged;
             },
           },
           audioItemsTaggedWithEntity: {

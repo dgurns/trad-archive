@@ -40,7 +40,7 @@ const useAudioItemsTaggedWithEntity = ({
     AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY,
     {
       notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'network-only',
+      fetchPolicy: 'cache-and-network',
     }
   );
   const { data, fetchMore } = query;

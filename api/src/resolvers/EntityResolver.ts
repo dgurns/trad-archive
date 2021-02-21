@@ -5,13 +5,14 @@ import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { Place } from 'entities/Place';
 import { SearchEntitiesInput } from 'resolvers/EntityResolverTypes';
 
 // Entity is a GraphQL union type returned by resolvers. It contains logic for
 // GraphQL clients to distinguish the entity type represented by a value.
 export const Entity = createUnionType({
   name: 'Entity',
-  types: () => [AudioItem, Person, Instrument],
+  types: () => [AudioItem, Person, Instrument, Place],
   resolveType: (value) => {
     switch (value.entityType) {
       case EntityType.AudioItem:
@@ -20,6 +21,8 @@ export const Entity = createUnionType({
         return Person;
       case EntityType.Instrument:
         return Instrument;
+      case EntityType.Place:
+        return Place;
       default:
         return undefined;
     }
@@ -45,6 +48,7 @@ export class EntityResolver {
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
+          'tags.objectPlace',
         ],
       }),
       Person.findOne({
@@ -54,6 +58,7 @@ export class EntityResolver {
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
+          'tags.objectPlace',
         ],
       }),
       Instrument.findOne({
@@ -63,6 +68,7 @@ export class EntityResolver {
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
+          'tags.objectPlace',
         ],
       }),
     ]);
@@ -83,7 +89,7 @@ export class EntityResolver {
       throw new Error('Must include a search term of at least 3 letters');
     }
     const searchTermLowercased = searchTerm.toLowerCase();
-    const takeFromEach = Math.round(take / 3);
+    const takeFromEach = Math.round(take / 4);
     const entityManager = getManager();
     const results = await Promise.all([
       entityManager
@@ -107,6 +113,17 @@ export class EntityResolver {
           'unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)',
           { aliases: `%${searchTermLowercased}%` }
         )
+        .take(takeFromEach)
+        .getMany(),
+      entityManager
+        .createQueryBuilder(Place, 'place')
+        .leftJoinAndSelect('place.createdByUser', 'createdByUser')
+        .where('unaccent(LOWER(place.name)) LIKE unaccent(:name)', {
+          name: `%${searchTermLowercased}%`,
+        })
+        .orWhere('unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)', {
+          aliases: `%${searchTermLowercased}%`,
+        })
         .take(takeFromEach)
         .getMany(),
       entityManager

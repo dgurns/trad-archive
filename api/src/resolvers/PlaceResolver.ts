@@ -1,17 +1,17 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Instrument } from 'entities/Instrument';
+import { Place } from 'entities/Place';
 import { User } from 'entities/User';
 import {
-  CreateInstrumentInput,
-  UpdateInstrumentInput,
-} from 'resolvers/InstrumentResolverTypes';
+  CreatePlaceInput,
+  UpdatePlaceInput,
+} from 'resolvers/PlaceResolverTypes';
 import EntityService from 'services/Entity';
 
 @Resolver()
-export class InstrumentResolver {
-  @Query(() => Instrument, { nullable: true })
-  instrument(
+export class PlaceResolver {
+  @Query(() => Place, { nullable: true })
+  place(
     @Arg('id', { nullable: true }) id: string,
     @Arg('slug', { nullable: true }) slug: string
   ) {
@@ -19,7 +19,7 @@ export class InstrumentResolver {
       throw new Error('Must provide an ID or slug');
     }
     const whereOptions = id ? { id } : { slug };
-    return Instrument.findOne({
+    return Place.findOne({
       where: whereOptions,
       relations: [
         'tags',
@@ -31,12 +31,12 @@ export class InstrumentResolver {
     });
   }
 
-  @Query(() => [Instrument])
-  instruments(
+  @Query(() => [Place])
+  places(
     @Arg('take', { defaultValue: 20 }) take?: number,
     @Arg('skip', { defaultValue: 0 }) skip?: number
   ) {
-    return Instrument.find({
+    return Place.find({
       take,
       skip,
       order: { createdAt: 'DESC' },
@@ -50,23 +50,25 @@ export class InstrumentResolver {
     });
   }
 
-  @Mutation(() => Instrument)
-  async createInstrument(
-    @Arg('input') input: CreateInstrumentInput,
+  @Mutation(() => Place)
+  async createPlace(
+    @Arg('input') input: CreatePlaceInput,
     @Ctx() ctx: CustomContext
   ) {
-    const { name, slug, aliases, description } = input;
+    const { name, slug, aliases, description, latitude, longitude } = input;
 
-    if (!name || !slug) {
-      throw new Error('A new Instrument must have at least a name and slug');
+    if (!name || !slug || !latitude || !longitude) {
+      throw new Error(
+        'A new Place must have at least a name, slug, latitude, and longitude'
+      );
     }
     const user = await User.findOne(ctx.userId);
     if (!user) {
-      throw new Error('You must be logged in to create an Instrument');
+      throw new Error('You must be logged in to create a Place');
     }
 
     const cleanedSlug = EntityService.cleanSlug(slug);
-    const existingSlug = await Instrument.findOne({
+    const existingSlug = await Place.findOne({
       where: { slug: cleanedSlug },
     });
     if (existingSlug) {
@@ -75,32 +77,34 @@ export class InstrumentResolver {
       );
     }
 
-    const instrumentEntity = Instrument.create({
+    const placeEntity = Place.create({
       name,
       slug: cleanedSlug,
       aliases,
       description,
+      latitude,
+      longitude,
       createdByUser: user,
       updatedByUser: user,
     });
-    await instrumentEntity.save();
-    return instrumentEntity;
+    await placeEntity.save();
+    return placeEntity;
   }
 
-  @Mutation(() => Instrument)
-  async updateInstrument(
+  @Mutation(() => Place)
+  async updatePlace(
     @Arg('slug') slug: string,
-    @Arg('input') input: UpdateInstrumentInput,
+    @Arg('input') input: UpdatePlaceInput,
     @Ctx() ctx: CustomContext
   ) {
-    const { name, aliases, description } = input;
+    const { name, aliases, description, latitude, longitude } = input;
 
     const user = await User.findOne(ctx.userId);
     if (!user) {
-      throw new Error('You must be logged in to update an Instrument');
+      throw new Error('You must be logged in to update a Place');
     }
 
-    const instrument = await Instrument.findOne(
+    const place = await Place.findOne(
       { slug },
       {
         relations: [
@@ -112,16 +116,18 @@ export class InstrumentResolver {
         ],
       }
     );
-    if (!instrument) {
-      throw new Error('Could not find an Instrument with that slug');
+    if (!place) {
+      throw new Error('Could not find a Place with that slug');
     }
 
-    if (name) instrument.name = name;
-    if (aliases) instrument.aliases = aliases;
-    if (description) instrument.description = description;
+    if (name) place.name = name;
+    if (aliases) place.aliases = aliases;
+    if (description) place.description = description;
+    if (latitude) place.latitude = latitude;
+    if (longitude) place.longitude = longitude;
 
-    instrument.updatedByUser = user;
-    await instrument.save();
-    return instrument;
+    place.updatedByUser = user;
+    await place.save();
+    return place;
   }
 }

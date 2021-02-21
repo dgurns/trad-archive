@@ -8,6 +8,7 @@ import { EntityType } from 'entities/entityHelpers';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { Place } from 'entities/Place';
 import { Relationship } from 'entities/Relationship';
 
 @Resolver()
@@ -15,7 +16,16 @@ export class TagResolver {
   @Query(() => Tag)
   tag(@Arg('id') id: string) {
     return Tag.findOne(id, {
-      relations: ['audioItem', 'person', 'instrument'],
+      relations: [
+        'subjectAudioItem',
+        'subjectPerson',
+        'subjectInstrument',
+        'subjectPlace',
+        'objectAudioItem',
+        'objectPerson',
+        'objectInstrument',
+        'objectPlace',
+      ],
     });
   }
 
@@ -33,9 +43,10 @@ export class TagResolver {
       })
       .leftJoinAndSelect('tag.relationship', 'relationship')
       .leftJoinAndSelect(`tag.object${entityType}`, `object${entityType}`)
-      .leftJoinAndSelect(`tag.subjectPerson`, 'subjectPerson')
-      .leftJoinAndSelect(`tag.subjectInstrument`, 'subjectInstrument')
-      .leftJoinAndSelect(`tag.subjectAudioItem`, 'subjectAudioItem')
+      .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
+      .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
+      .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
+      .leftJoinAndSelect('tag.subjectPlace', 'subjectPlace')
       .orderBy('tag.createdAt', 'DESC')
       .getMany();
     return tags;
@@ -101,6 +112,12 @@ export class TagResolver {
           tag.subjectInstrument = instrument;
           break;
         }
+      case EntityType.Place:
+        const place = await Place.findOne(subjectEntityId);
+        if (place) {
+          tag.subjectPlace = place;
+          break;
+        }
       // If the entity isn't found and break isn't called, the switch statement
       // will continue on to the default case and throw an error.
       default:
@@ -124,6 +141,12 @@ export class TagResolver {
         const instrument = await Instrument.findOne(objectEntityId);
         if (instrument) {
           tag.objectInstrument = instrument;
+          break;
+        }
+      case EntityType.Place:
+        const place = await Place.findOne(objectEntityId);
+        if (place) {
+          tag.objectPlace = place;
           break;
         }
       // If the entity isn't found and break isn't called, the switch statement

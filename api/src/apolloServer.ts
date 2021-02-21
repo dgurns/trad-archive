@@ -20,6 +20,7 @@ import { EntityResolver } from 'resolvers/EntityResolver';
 import { AudioItemResolver } from 'resolvers/AudioItemResolver';
 import { PersonResolver } from 'resolvers/PersonResolver';
 import { InstrumentResolver } from 'resolvers/InstrumentResolver';
+import { PlaceResolver } from 'resolvers/PlaceResolver';
 
 const createServer = async () => {
   await connectToDatabase();
@@ -35,6 +36,7 @@ const createServer = async () => {
       AudioItemResolver,
       PersonResolver,
       InstrumentResolver,
+      PlaceResolver,
     ],
     dateScalarMode: 'isoDate',
     authChecker,

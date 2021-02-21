@@ -53,6 +53,7 @@ export class AudioItemResolver {
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
+        'tags.objectPlace',
       ],
     });
   }
@@ -69,6 +70,7 @@ export class AudioItemResolver {
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
+        'tags.objectPlace',
       ],
     });
   }
@@ -94,6 +96,7 @@ export class AudioItemResolver {
       .leftJoinAndSelect('tag.subjectAudioItem', 'tagAudioItem')
       .leftJoinAndSelect('tag.objectPerson', 'tagObjectPerson')
       .leftJoinAndSelect('tag.objectInstrument', 'tagObjectInstrument')
+      .leftJoinAndSelect('tag.objectPlace', 'tagObjectPlace')
       .leftJoinAndSelect('tag.objectAudioItem', 'tagObjectAudioItem')
       .orderBy('audioItem.updatedAt', 'DESC');
     if (take) {
@@ -124,6 +127,7 @@ export class AudioItemResolver {
       .leftJoinAndSelect('tag.relationship', 'tagRelationship')
       .leftJoinAndSelect('tag.objectPerson', 'tagObjectPerson')
       .leftJoinAndSelect('tag.objectInstrument', 'tagObjectInstrument')
+      .leftJoinAndSelect('tag.objectPlace', 'tagObjectPlace')
       .leftJoinAndSelect('tag.objectAudioItem', 'tagObjectAudioItem')
       .orderBy('audioItem.createdAt', 'DESC');
     if (take) {
@@ -199,6 +203,7 @@ export class AudioItemResolver {
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
+          'tags.objectPlace',
         ],
       }
     );

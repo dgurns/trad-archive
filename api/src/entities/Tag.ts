@@ -12,6 +12,7 @@ import { User } from 'entities/User';
 import { AudioItem } from 'entities/AudioItem';
 import { Person } from 'entities/Person';
 import { Instrument } from 'entities/Instrument';
+import { Place } from 'entities/Place';
 import { Relationship } from 'entities/Relationship';
 
 // Tag represents a connection between two entities and specifies the
@@ -39,6 +40,10 @@ export class Tag extends TypeOrmBaseEntity {
   @ManyToOne(() => Instrument, { nullable: true })
   subjectInstrument!: Instrument;
 
+  @Field(() => Place, { nullable: true })
+  @ManyToOne(() => Place, { nullable: true })
+  subjectPlace!: Place;
+
   @Field(() => AudioItem, { nullable: true })
   @ManyToOne(() => AudioItem, { nullable: true })
   objectAudioItem!: AudioItem;
@@ -50,6 +55,10 @@ export class Tag extends TypeOrmBaseEntity {
   @Field(() => Instrument, { nullable: true })
   @ManyToOne(() => Instrument, { nullable: true })
   objectInstrument!: Instrument;
+
+  @Field(() => Place, { nullable: true })
+  @ManyToOne(() => Place, { nullable: true })
+  objectPlace!: Place;
 
   @Field(() => User)
   @ManyToOne(() => User, { eager: true })

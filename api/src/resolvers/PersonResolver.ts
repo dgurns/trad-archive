@@ -26,6 +26,7 @@ export class PersonResolver {
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
+        'tags.objectPlace',
       ],
     });
   }
@@ -44,6 +45,7 @@ export class PersonResolver {
         'tags.objectAudioItem',
         'tags.objectPerson',
         'tags.objectInstrument',
+        'tags.objectPlace',
       ],
     });
   }
@@ -124,6 +126,7 @@ export class PersonResolver {
           'tags.objectAudioItem',
           'tags.objectPerson',
           'tags.objectInstrument',
+          'tags.objectPlace',
         ],
       }
     );

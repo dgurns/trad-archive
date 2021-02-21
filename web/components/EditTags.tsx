@@ -13,11 +13,13 @@ const PARENT_ENTITY_QUERY = gql`
       ...AudioItem
       ...Person
       ...Instrument
+      ...Place
     }
   }
   ${EntityFragments.audioItem}
   ${EntityFragments.person}
   ${EntityFragments.instrument}
+  ${EntityFragments.place}
 `;
 
 const DELETE_TAG_MUTATION = gql`
@@ -44,7 +46,7 @@ const EditTags = ({ entity, onSuccess, className, children }: Props) => {
 
   const [
     deleteTag,
-    { loading: deleteTagLoading, data: deleteTagData, error: deleteTagError },
+    { loading: deleteTagLoading, data: deleteTagData },
   ] = useMutation(DELETE_TAG_MUTATION, { errorPolicy: 'all' });
 
   const onDeleteTag = useCallback(
@@ -98,9 +100,13 @@ const EditTags = ({ entity, onSuccess, className, children }: Props) => {
               objectPerson,
               objectInstrument,
               objectAudioItem,
+              objectPlace,
             } = tag;
             const objectEntity: Entity =
-              objectPerson ?? objectInstrument ?? objectAudioItem;
+              objectPerson ??
+              objectInstrument ??
+              objectAudioItem ??
+              objectPlace;
             return (
               <div
                 className="flex flex-row items-start justify-start"

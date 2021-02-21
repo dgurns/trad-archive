@@ -1,13 +1,14 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useMutation, gql } from '@apollo/client';
 
-import { Entity, EntityType, Person, Instrument, Tag } from 'types';
+import { Entity, EntityType, Person, Instrument, Place, Tag } from 'types';
 
 import SearchEntities from 'components/SearchEntities';
 import SelectRelationship from 'components/SelectRelationship';
 import Modal from 'components/Modal';
 import CreatePersonForm from 'components/CreatePersonForm';
 import CreateInstrumentForm from 'components/CreateInstrumentForm';
+import CreatePlaceForm from 'components/CreatePlaceForm';
 
 const CREATE_TAG_MUTATION = gql`
   mutation CreateTag($input: CreateTagInput!) {
@@ -49,6 +50,9 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     createInstrumentModalIsVisible,
     setCreateInstrumentModalIsVisible,
   ] = useState(false);
+  const [createPlaceModalIsVisible, setCreatePlaceModalIsVisible] = useState(
+    false
+  );
 
   const [createTag, { loading, data, error }] = useMutation<
     { createTag: Tag },
@@ -86,6 +90,11 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
   const onNewInstrumentCreated = useCallback((instrument: Instrument) => {
     setCreateInstrumentModalIsVisible(false);
     setSelectedEntity(instrument);
+  }, []);
+
+  const onNewPlaceCreated = useCallback((place: Place) => {
+    setCreatePlaceModalIsVisible(false);
+    setSelectedEntity(place);
   }, []);
 
   const onSelectRelationship = useCallback(
@@ -156,6 +165,13 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
               >
                 Instrument
               </button>
+              {', '}
+              <button
+                className="btn-text"
+                onClick={() => setCreatePlaceModalIsVisible(true)}
+              >
+                Place
+              </button>
             </div>
           )}
         </>
@@ -221,6 +237,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
         onClose={() => setCreateInstrumentModalIsVisible(false)}
       >
         <CreateInstrumentForm onSuccess={onNewInstrumentCreated} />
+      </Modal>
+
+      <Modal
+        title="Create New Place"
+        isVisible={createPlaceModalIsVisible}
+        onClose={() => setCreatePlaceModalIsVisible(false)}
+      >
+        <CreatePlaceForm onSuccess={onNewPlaceCreated} />
       </Modal>
     </>
   );

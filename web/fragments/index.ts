@@ -46,6 +46,12 @@ export const TagFragments = {
         name
         slug
       }
+      subjectPlace {
+        id
+        entityType
+        name
+        slug
+      }
       objectAudioItem {
         id
         entityType
@@ -59,6 +65,12 @@ export const TagFragments = {
         slug
       }
       objectInstrument {
+        id
+        entityType
+        name
+        slug
+      }
+      objectPlace {
         id
         entityType
         name
@@ -141,6 +153,26 @@ export const EntityFragments = {
       tags {
         ...Tag
       }
+      createdByUser {
+        id
+        username
+      }
+    }
+    ${TagFragments.tag}
+  `,
+  place: gql`
+    fragment Place on Place {
+      id
+      entityType
+      name
+      slug
+      aliases
+      description
+      tags {
+        ...Tag
+      }
+      latitude
+      longitude
       createdByUser {
         id
         username

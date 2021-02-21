@@ -10,14 +10,7 @@ interface Props {
   audioItem: AudioItem;
 }
 const AudioItemComponent = ({ audioItem }: Props) => {
-  const {
-    name,
-    slug,
-    description,
-    commentsCount,
-    createdByUser,
-    createdAt,
-  } = audioItem;
+  const { name, slug, description, createdByUser, createdAt } = audioItem;
 
   const { activePlayerAudioItem, setActivePlayerAudioItem } = usePlayer();
   const audioItemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;

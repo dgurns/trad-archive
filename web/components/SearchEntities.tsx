@@ -13,11 +13,13 @@ const SEARCH_ENTITIES_QUERY = gql`
       ...AudioItem
       ...Person
       ...Instrument
+      ...Place
     }
   }
   ${EntityFragments.audioItem}
   ${EntityFragments.person}
   ${EntityFragments.instrument}
+  ${EntityFragments.place}
 `;
 
 interface QueryData {

@@ -6,7 +6,7 @@ interface TagProps {
   tag: Tag;
 }
 const TagLink = ({ tag }: TagProps) => {
-  const { objectAudioItem, objectPerson, objectInstrument } = tag;
+  const { objectAudioItem, objectPerson, objectInstrument, objectPlace } = tag;
   let href = '';
   if (objectAudioItem) {
     href = `/entities/audio-items/${objectAudioItem.slug}`;
@@ -14,9 +14,14 @@ const TagLink = ({ tag }: TagProps) => {
     href = `/entities/people/${objectPerson.slug}`;
   } else if (objectInstrument) {
     href = `/entities/instruments/${objectInstrument.slug}`;
+  } else if (objectPlace) {
+    href = `/entities/places/${objectPlace.slug}`;
   }
   const text =
-    objectAudioItem?.name ?? objectPerson?.name ?? objectInstrument?.name;
+    objectAudioItem?.name ??
+    objectPerson?.name ??
+    objectInstrument?.name ??
+    objectPlace?.name;
   return (
     <Link href={href}>
       <a className="block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800">

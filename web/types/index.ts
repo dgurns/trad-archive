@@ -13,12 +13,13 @@ export interface User {
 }
 
 // Entity defines a union of all the different Entity types
-export type Entity = AudioItem | Person | Instrument;
+export type Entity = AudioItem | Person | Instrument | Place;
 
 export enum EntityType {
   AudioItem = 'AudioItem',
   Person = 'Person',
   Instrument = 'Instrument',
+  Place = 'Place',
 }
 
 export function isAudioItem(entity: Entity): entity is AudioItem {
@@ -56,6 +57,12 @@ export interface Instrument extends BaseEntity {
   entityType: EntityType.Instrument;
 }
 
+export interface Place extends BaseEntity {
+  entityType: EntityType.Place;
+  latitude: number;
+  longitude: number;
+}
+
 export interface Relationship {
   id: string;
   name: string;
@@ -72,9 +79,11 @@ export interface Tag {
   subjectAudioItem: AudioItem | null;
   subjectPerson: Person | null;
   subjectInstrument: Instrument | null;
+  subjectPlace: Place | null;
   objectAudioItem: AudioItem | null;
   objectPerson: Person | null;
   objectInstrument: Instrument | null;
+  objectPlace: Place | null;
   createdByUser: User;
   createdAt: string;
   updatedAt: string;

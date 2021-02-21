@@ -98,7 +98,7 @@ export class AudioItemResolver {
       .leftJoinAndSelect('tag.objectInstrument', 'tagObjectInstrument')
       .leftJoinAndSelect('tag.objectPlace', 'tagObjectPlace')
       .leftJoinAndSelect('tag.objectAudioItem', 'tagObjectAudioItem')
-      .orderBy('audioItem.updatedAt', 'DESC');
+      .orderBy('relevantTag.createdAt', 'DESC');
     if (take) {
       query.take(take);
     }

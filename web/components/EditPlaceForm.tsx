@@ -88,21 +88,25 @@ const EditPlaceForm = ({ place, onSuccess }: Props) => {
             value={latitude}
             onChange={(event) => setLatitude(event.target.value)}
           />
-          <div className="text-sm text-gray-400 mb-2 ml-2">
-            To view the current latitude and longitude coordinates, visit{' '}
-            <a href={`https://www.google.com/maps/@${latitude},${longitude}`}>
-              {latitude},{longitude} on Google Maps
-            </a>
-            . To pick a new latitude or longitude, right-click on the location
-            you'd like, and you'll see numbers like "53.2838294,-9.1888286". The
-            first one is latitude, and the second is longitude.
-          </div>
           <input
             placeholder="Longitude"
             className="mb-2"
             value={longitude}
             onChange={(event) => setLongitude(event.target.value)}
           />
+          <div className="text-sm text-gray-400 mb-2 ml-2">
+            To view the current latitude and longitude coordinates, visit{' '}
+            <a
+              href={`https://www.google.com/maps/@?api=1&map_action=map&zoom=12&center=${latitude},${longitude}`}
+              target="_blank"
+            >
+              {latitude},{longitude} on Google Maps
+            </a>
+            . To pick new coordinates, right-click on the exact location you'd
+            like, and you'll see numbers like "53.2838294,-9.1888286". Click to
+            copy them to your clipboard. The first one is latitude, and the
+            second is longitude.
+          </div>
           <textarea
             placeholder="Description"
             className="mb-2"

@@ -28,9 +28,7 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
   const [createPlace, { loading, error, data }] = useMutation<
     { createPlace: Place },
     { input: CreatePlaceInput }
-  >(CREATE_PLACE_MUTATION, {
-    errorPolicy: 'all',
-  });
+  >(CREATE_PLACE_MUTATION, { errorPolicy: 'all' });
 
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
@@ -39,7 +37,7 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
   const [longitude, setLongitude] = useState('');
   const [description, setDescription] = useState('');
 
-  const onCreatePlace = (event) => {
+  const onCreatePlace = async (event) => {
     event.preventDefault();
     const input = {
       name,
@@ -49,7 +47,11 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
       longitude: parseFloat(longitude),
       description,
     };
-    createPlace({ variables: { input } });
+    try {
+      await createPlace({ variables: { input } });
+    } catch {
+      //
+    }
   };
 
   useEffect(() => {
@@ -72,14 +74,14 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
       <div className="flex flex-col align-start">
         <form onSubmit={onCreatePlace}>
           <input
-            placeholder="First name"
+            placeholder="Name"
             autoFocus
             className="mb-2"
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
           <input
-            placeholder="URL slug (ie. kitty-hayes)"
+            placeholder="URL slug (ie. galway-city)"
             className="mb-2"
             value={slug}
             onChange={(event) => setSlug(event.target.value)}
@@ -106,21 +108,24 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
             value={latitude}
             onChange={(event) => setLatitude(event.target.value)}
           />
-          <div className="text-sm text-gray-400 mb-2 ml-2">
-            To find the latitude, visit{' '}
-            <a href={`https://www.google.com/maps/place/${name}`}>
-              {name ? `${name} on ` : ''}Google Maps
-            </a>{' '}
-            and right-click on the location you'd like. You'll see numbers like
-            "53.2838294,-9.1888286". The first one is latitude, and the second
-            is longitude.
-          </div>
           <input
             placeholder="Longitude"
             className="mb-2"
             value={longitude}
             onChange={(event) => setLongitude(event.target.value)}
           />
+          <div className="text-sm text-gray-400 mb-2 ml-2">
+            To find the latitude and longitude, visit{' '}
+            <a
+              href={`https://www.google.com/maps/place/${name}`}
+              target="_blank"
+            >
+              {name ? `${name} on ` : ''}Google Maps
+            </a>{' '}
+            and right-click on the exact location you'd like. You'll see numbers
+            like "53.2838294,-9.1888286". Click to copy them to your clipboard.
+            The first one is latitude, and the second is longitude.
+          </div>
           <textarea
             placeholder="Description"
             className="mb-2"

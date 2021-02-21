@@ -56,6 +56,8 @@ const ViewPersonBySlug = () => {
   const { name, entityType, aliases, description, tags } = person;
 
   const shouldShowAudioItems = audioItems.length > 0;
+  const noAudioItemsFound =
+    !audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
   return (
     <Layout>
@@ -78,6 +80,7 @@ const ViewPersonBySlug = () => {
             </>
           )}
           {audioItemsLoading && <LoadingBlock />}
+          {noAudioItemsFound && <div className="text-gray-500">None yet</div>}
           {audioItemsError && (
             <div className="text-red-600">Error fetching Audio Items</div>
           )}

@@ -64,6 +64,8 @@ const ViewPlaceBySlug = () => {
   } = place;
 
   const shouldShowAudioItems = audioItems.length > 0;
+  const noAudioItemsFound =
+    !audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
   return (
     <Layout>
@@ -86,6 +88,7 @@ const ViewPlaceBySlug = () => {
             </>
           )}
           {audioItemsLoading && <LoadingBlock />}
+          {noAudioItemsFound && <div className="text-gray-500">None yet</div>}
           {audioItemsError && (
             <div className="text-red-600">Error fetching Audio Items</div>
           )}
@@ -108,15 +111,13 @@ const ViewPlaceBySlug = () => {
             <span className="text-gray-500">
               {latitude},{longitude}
             </span>
-          </div>
-          <div className="mb-4">
-            View on Map:
             <br />
-            <Link
-              href={`https://www.google.com/maps/@${latitude},${longitude}`}
+            <a
+              href={`https://www.google.com/maps/@?api=1&map_action=map&zoom=12&center=${latitude},${longitude}`}
+              target="_blank"
             >
-              Google Maps
-            </Link>
+              View on Map
+            </a>
           </div>
           <div className="mb-4">
             Description:

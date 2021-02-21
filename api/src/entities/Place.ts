@@ -24,10 +24,10 @@ export class Place extends EntityBaseFields {
   tags!: Tag[];
 
   @Field(() => Float)
-  @Column()
+  @Column({ type: 'float' })
   latitude!: number;
 
   @Field(() => Float)
-  @Column()
+  @Column({ type: 'float' })
   longitude!: number;
 }

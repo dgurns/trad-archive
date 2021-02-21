@@ -38,7 +38,10 @@ const useAudioItemsTaggedWithEntity = ({
 ] => {
   const [makeQuery, query] = useLazyQuery<QueryData, QueryVariables>(
     AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY,
-    { notifyOnNetworkStatusChange: true }
+    {
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'network-only',
+    }
   );
   const { data, fetchMore } = query;
 

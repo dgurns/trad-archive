@@ -8,6 +8,8 @@ const makeHrefForView = (entity: Entity) => {
       return `/entities/people/${entity.slug}`;
     case EntityType.Instrument:
       return `/entities/instruments/${entity.slug}`;
+    case EntityType.Place:
+      return `/entities/places/${entity.slug}`;
     default:
       return '';
   }

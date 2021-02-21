@@ -71,6 +71,16 @@ export class EntityResolver {
           'tags.objectPlace',
         ],
       }),
+      Place.findOne({
+        where: [{ id }, { slug }],
+        relations: [
+          'tags',
+          'tags.objectAudioItem',
+          'tags.objectPerson',
+          'tags.objectInstrument',
+          'tags.objectPlace',
+        ],
+      }),
     ]);
     let entity;
     results.forEach((result) => {

@@ -22,7 +22,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
         <a className="mb-2 link-h1">{name}</a>
       </Link>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <Tags entity={audioItem} />
       </div>
 
@@ -40,18 +40,18 @@ const AudioItemComponent = ({ audioItem }: Props) => {
           </button>
         )}
       </div>
-      <div className="flex flex-row justify-start items-center mb-5">
-        <AddToCollection />
+      <div className="flex flex-row justify-start items-center mb-4">
+        <AddToCollection audioItem={audioItem} />
       </div>
 
-      <div className="text-gray-500 text-sm mb-1">
+      <div className="text-gray-500 text-sm">
         Added by{' '}
         <Link href={`/users/${createdByUser.id}`}>
           {createdByUser.username}
         </Link>{' '}
         {DateTime.formatDateYearTime(createdAt)}
       </div>
-      <div className="text-sm mb-4">{description}</div>
+      <div className="text-sm mt-1 mb-3">{description}</div>
 
       <Comments parentEntity={audioItem} />
     </div>

@@ -14,6 +14,7 @@ import { getManager, getRepository } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { AudioItem } from 'models/entities/AudioItem';
 import { Comment } from 'models/Comment';
+import { CollectionEntry } from 'models/CollectionEntry';
 import { User, UserPermission } from 'models/User';
 import {
   AudioItemsInput,
@@ -34,6 +35,24 @@ export class AudioItemResolver {
       .where('comment.parentAudioItemId = :id', { id: audioItem.id })
       .getRawOne();
     return parseInt(count);
+  }
+
+  @FieldResolver(() => Boolean)
+  async isAddedToCollection(
+    @Root() audioItem: AudioItem,
+    @Ctx() ctx: CustomContext
+  ) {
+    if (!ctx.userId) {
+      return false;
+    }
+    const existingCollectionEntry = await getManager()
+      .createQueryBuilder(CollectionEntry, 'collectionEntry')
+      .where('collectionEntry.userId = :userId', { userId: ctx.userId })
+      .andWhere('collectionEntry.audioItemId = :audioItemId', {
+        audioItemId: audioItem.id,
+      })
+      .getRawOne();
+    return Boolean(existingCollectionEntry);
   }
 
   @Query(() => AudioItem, { nullable: true })

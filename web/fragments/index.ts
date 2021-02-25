@@ -109,6 +109,7 @@ export const EntityFragments = {
         ...Tag
       }
       commentsCount
+      isAddedToCollection
       createdByUser {
         id
         username

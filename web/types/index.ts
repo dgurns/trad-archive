@@ -42,8 +42,9 @@ interface BaseEntity {
 export interface AudioItem extends BaseEntity {
   entityType: EntityType.AudioItem;
   comments?: Comment[] | null;
-  commentsCount: number;
+  commentsCount?: number;
   urlSource: string;
+  isAddedToCollection?: boolean;
 }
 
 export interface Person extends BaseEntity {

@@ -46,6 +46,10 @@ const AddToCollection = ({ audioItem }: Props) => {
   const router = useRouter();
   const [user] = useCurrentUser();
   const [, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
+  const [
+    ,
+    { refetch: refetchCollectionEntriesForUser },
+  ] = useCollectionEntriesForUser();
 
   const [
     createCollectionEntry,
@@ -111,12 +115,22 @@ const AddToCollection = ({ audioItem }: Props) => {
   ]);
 
   useEffect(() => {
+    if (createData) {
+      refetchCollectionEntriesForUser();
+    }
+  }, [createData]);
+  useEffect(() => {
     if (createError) {
       refetchParentAudioItem();
       window.alert('Error adding to collection. Please try again.');
     }
   }, [createError]);
 
+  useEffect(() => {
+    if (deleteData) {
+      refetchCollectionEntriesForUser();
+    }
+  }, [deleteData]);
   useEffect(() => {
     if (deleteError) {
       refetchParentAudioItem();

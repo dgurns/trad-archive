@@ -57,15 +57,15 @@ const Comments = ({ parentEntity }: Props) => {
   return (
     <>
       {shouldShowViewCommentsButton && (
-        <button className="btn-text mb-4" onClick={fetchComments}>
+        <button className="btn-text mb-3 text-sm" onClick={fetchComments}>
           View Comments ({commentsCount})
         </button>
       )}
 
-      {error && <div className="text-red-600 mb-4">{error.message}</div>}
+      {error && <div className="text-red-600 mb-2">{error.message}</div>}
 
       {comments.map(({ createdByUser, createdAt, text }, index) => (
-        <div className="mb-4 pl-2" key={index}>
+        <div className="mb-2 pl-2" key={index}>
           <div className="text-gray-500 text-sm mb-1">
             <Link href={`/users/${createdByUser.id}`}>
               {createdByUser.username}
@@ -77,7 +77,7 @@ const Comments = ({ parentEntity }: Props) => {
         </div>
       ))}
 
-      {loading && <LoadingCircle className="mb-4" />}
+      {loading && <LoadingCircle className="mb-2" />}
 
       <CreateCommentForm
         parentEntity={parentEntity}

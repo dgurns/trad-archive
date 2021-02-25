@@ -44,14 +44,16 @@ const AudioItemComponent = ({ audioItem }: Props) => {
         <AddToCollection audioItem={audioItem} />
       </div>
 
-      <div className="text-gray-500 text-sm">
-        Added by{' '}
-        <Link href={`/users/${createdByUser.id}`}>
-          {createdByUser.username}
-        </Link>{' '}
-        {DateTime.formatDateYearTime(createdAt)}
+      <div className="mb-2">
+        <div className="text-gray-500 text-sm">
+          Added by{' '}
+          <Link href={`/users/${createdByUser.id}`}>
+            {createdByUser.username}
+          </Link>{' '}
+          {DateTime.formatDateYearTime(createdAt)}
+        </div>
+        <div className="text-sm mt-1">{description}</div>
       </div>
-      <div className="text-sm mt-1 mb-3">{description}</div>
 
       <Comments parentEntity={audioItem} />
     </div>

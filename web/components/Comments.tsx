@@ -58,7 +58,7 @@ const Comments = ({ parentEntity }: Props) => {
     <>
       {shouldShowViewCommentsButton && (
         <button className="btn-text mb-3 text-sm" onClick={fetchComments}>
-          View Comments ({commentsCount})
+          View {commentsCount} Comment{commentsCount === 1 ? '' : 's'}
         </button>
       )}
 

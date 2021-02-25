@@ -1,3 +1,4 @@
+import { React } from '@ungap/global-this';
 import Header from 'components/Header';
 
 interface Props {

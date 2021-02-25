@@ -182,3 +182,16 @@ export const EntityFragments = {
     ${TagFragments.tag}
   `,
 };
+
+export const CollectionEntryFragments = {
+  collectionEntry: gql`
+    fragment CollectionEntry on CollectionEntry {
+      id
+      audioItem {
+        ...AudioItem
+      }
+      createdAt
+    }
+    ${EntityFragments.audioItem}
+  `,
+};

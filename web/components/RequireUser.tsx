@@ -1,19 +1,26 @@
 import { useRouter } from 'next/router';
 import useCurrentUser from 'hooks/useCurrentUser';
+import { React } from '@ungap/global-this';
 
 interface Props {
   children: React.ReactElement;
+  requireUserId?: string;
 }
 
-const RequireUser = ({ children }: Props): React.ReactElement | null => {
+const RequireUser = ({
+  children,
+  requireUserId,
+}: Props): React.ReactElement | null => {
   const router = useRouter();
 
   const [currentUser, { data, error }] = useCurrentUser();
 
-  if (currentUser) {
-    return children;
-  } else if (!data && !error) {
+  if (!data && !error) {
     return <div>Checking for logged-in user...</div>;
+  } else if (requireUserId && currentUser?.id !== requireUserId) {
+    return <div>You do not have access to this page</div>;
+  } else if (currentUser) {
+    return children;
   } else if (typeof window !== 'undefined') {
     router.push({
       pathname: '/login',

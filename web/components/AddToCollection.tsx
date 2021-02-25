@@ -1,9 +1,12 @@
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation, gql } from '@apollo/client';
+
 import useCurrentUser from 'hooks/useCurrentUser';
 import useAudioItem from 'hooks/useAudioItem';
+import useCollectionEntriesForUser from 'hooks/useCollectionEntriesForUser';
 import { AudioItem, CollectionEntry } from 'types';
+import { apolloClient } from 'apolloClient';
 
 const CREATE_COLLECTION_ENTRY_MUTATION = gql`
   mutation CreateCollectionEntry($input: CreateCollectionEntryInput!) {
@@ -12,11 +15,24 @@ const CREATE_COLLECTION_ENTRY_MUTATION = gql`
     }
   }
 `;
+const DELETE_COLLECTION_ENTRY_MUTATION = gql`
+  mutation DeleteCollectionEntry($input: DeleteCollectionEntryInput!) {
+    deleteCollectionEntry(input: $input)
+  }
+`;
 
-interface MutationData {
+interface CreateMutationData {
   createCollectionEntry: CollectionEntry;
 }
-interface MutationVariables {
+interface CreateMutationVariables {
+  input: {
+    audioItemId: string;
+  };
+}
+interface DeleteMutationData {
+  deleteCollectionEntry: boolean;
+}
+interface DeleteMutationVariables {
   input: {
     audioItemId: string;
   };
@@ -29,16 +45,20 @@ const AddToCollection = ({ audioItem }: Props) => {
 
   const router = useRouter();
   const [user] = useCurrentUser();
-  const [
-    _,
-    { refetch: refetchParentAudioItem, loading: parentAudioItemLoading },
-  ] = useAudioItem({ slug });
+  const [, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
 
   const [
     createCollectionEntry,
-    { loading: createLoading, data: createData, error: createError },
-  ] = useMutation<MutationData, MutationVariables>(
+    { data: createData, error: createError },
+  ] = useMutation<CreateMutationData, CreateMutationVariables>(
     CREATE_COLLECTION_ENTRY_MUTATION,
+    { errorPolicy: 'all' }
+  );
+  const [
+    deleteCollectionEntry,
+    { data: deleteData, error: deleteError },
+  ] = useMutation<DeleteMutationData, DeleteMutationVariables>(
+    DELETE_COLLECTION_ENTRY_MUTATION,
     { errorPolicy: 'all' }
   );
 
@@ -51,27 +71,58 @@ const AddToCollection = ({ audioItem }: Props) => {
         },
       });
     } else if (!isAddedToCollection) {
+      // Optimistically update to true, then create
+      apolloClient.cache.modify({
+        id: `AudioItem:${id}`,
+        fields: {
+          isAddedToCollection() {
+            return true;
+          },
+        },
+      });
       createCollectionEntry({
         variables: {
           input: { audioItemId: id },
         },
       });
     } else if (isAddedToCollection) {
-      // Delete collection entry
+      // Optimistically update to false, then delete
+      apolloClient.cache.modify({
+        id: `AudioItem:${id}`,
+        fields: {
+          isAddedToCollection() {
+            return false;
+          },
+        },
+      });
+      deleteCollectionEntry({
+        variables: {
+          input: { audioItemId: id },
+        },
+      });
     }
-  }, [user, router, audioItem, id, createCollectionEntry]);
-
-  useEffect(() => {
-    if (createData?.createCollectionEntry) {
-      refetchParentAudioItem();
-    }
-  }, [createData, refetchParentAudioItem]);
+  }, [
+    user,
+    router,
+    audioItem,
+    id,
+    createCollectionEntry,
+    deleteCollectionEntry,
+  ]);
 
   useEffect(() => {
     if (createError) {
+      refetchParentAudioItem();
       window.alert('Error adding to collection. Please try again.');
     }
   }, [createError]);
+
+  useEffect(() => {
+    if (deleteError) {
+      refetchParentAudioItem();
+      window.alert('Error removing from collection. Please try again.');
+    }
+  }, [deleteError]);
 
   return (
     <button
@@ -79,7 +130,6 @@ const AddToCollection = ({ audioItem }: Props) => {
         isAddedToCollection ? 'text-gray-800' : ''
       }`}
       onClick={onButtonClicked}
-      disabled={createLoading || parentAudioItemLoading}
     >
       {isAddedToCollection ? (
         <>

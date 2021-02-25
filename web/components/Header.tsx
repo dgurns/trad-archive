@@ -13,6 +13,11 @@ const Header = () => {
       return (
         <div className="flex flex-row">
           <div className="hidden sm:flex">Hello, {currentUser.username}</div>
+          <Link href={`/users/${currentUser.id}/collection`}>
+            <a className="btn-text text-current hover:text-gray-400 ml-4">
+              Your Collection
+            </a>
+          </Link>
           {UserService.isAdmin(currentUser) && (
             <Link href="/admin">
               <a className="btn-text text-current hover:text-gray-400 ml-4">

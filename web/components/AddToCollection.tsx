@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation, gql } from '@apollo/client';
 import useCurrentUser from 'hooks/useCurrentUser';
+import useAudioItem from 'hooks/useAudioItem';
 import { AudioItem, CollectionEntry } from 'types';
 
 const CREATE_COLLECTION_ENTRY_MUTATION = gql`
@@ -28,6 +29,10 @@ const AddToCollection = ({ audioItem }: Props) => {
 
   const router = useRouter();
   const [user] = useCurrentUser();
+  const [
+    _,
+    { refetch: refetchParentAudioItem, loading: parentAudioItemLoading },
+  ] = useAudioItem({ slug });
 
   const [
     createCollectionEntry,
@@ -37,24 +42,30 @@ const AddToCollection = ({ audioItem }: Props) => {
     { errorPolicy: 'all' }
   );
 
-  const onClick = useCallback(() => {
+  const onButtonClicked = useCallback(() => {
     if (!user) {
-      const redirectTo = `/entities/audio-items/${slug}`;
       router.push({
         pathname: '/login',
-        query: { redirectTo },
+        query: {
+          redirectTo: `/entities/audio-items/${slug}`,
+        },
       });
-    } else {
-      const input = {
-        audioItemId: id,
-      };
-      createCollectionEntry({ variables: { input } });
+    } else if (!isAddedToCollection) {
+      createCollectionEntry({
+        variables: {
+          input: { audioItemId: id },
+        },
+      });
+    } else if (isAddedToCollection) {
+      // Delete collection entry
     }
-  }, [user, router, audioItem, createCollectionEntry]);
+  }, [user, router, audioItem, id, createCollectionEntry]);
 
   useEffect(() => {
-    // Refetch parent AudioItem
-  }, [createData]);
+    if (createData?.createCollectionEntry) {
+      refetchParentAudioItem();
+    }
+  }, [createData, refetchParentAudioItem]);
 
   useEffect(() => {
     if (createError) {
@@ -67,8 +78,8 @@ const AddToCollection = ({ audioItem }: Props) => {
       className={`btn-secondary flex flex-row items-center ${
         isAddedToCollection ? 'text-gray-800' : ''
       }`}
-      onClick={onClick}
-      disabled={createLoading}
+      onClick={onButtonClicked}
+      disabled={createLoading || parentAudioItemLoading}
     >
       {isAddedToCollection ? (
         <>

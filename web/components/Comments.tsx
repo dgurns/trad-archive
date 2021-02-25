@@ -64,18 +64,22 @@ const Comments = ({ parentEntity }: Props) => {
 
       {error && <div className="text-red-600 mb-2">{error.message}</div>}
 
-      {comments.map(({ createdByUser, createdAt, text }, index) => (
-        <div className="mb-2 pl-2" key={index}>
-          <div className="text-gray-500 text-sm mb-1">
-            <Link href={`/users/${createdByUser.id}`}>
-              {createdByUser.username}
-            </Link>
-            {' commented '}
-            {DateTimeService.formatDateYearTime(createdAt)}
-          </div>
-          <div className="text-sm">{text}</div>
+      {comments.length > 0 && (
+        <div className="py-1">
+          {comments.map(({ createdByUser, createdAt, text }, index) => (
+            <div className="mb-2 pl-2" key={index}>
+              <div className="text-gray-500 text-sm mb-1">
+                <Link href={`/users/${createdByUser.id}`}>
+                  {createdByUser.username}
+                </Link>
+                {' commented '}
+                {DateTimeService.formatDateYearTime(createdAt)}
+              </div>
+              <div className="text-sm">{text}</div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
 
       {loading && <LoadingCircle className="mb-2" />}
 

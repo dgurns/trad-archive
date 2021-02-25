@@ -29,10 +29,10 @@ const createJwt = (user: User) => {
 };
 
 type JwtPayload = {
-  userId: number;
+  userId: string;
 };
 
-const extractUserIdFromJwt = (token: string): number | undefined => {
+const extractUserIdFromJwt = (token: string): string | undefined => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     if (!decoded || typeof decoded !== 'object') {

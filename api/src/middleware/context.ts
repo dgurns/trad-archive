@@ -4,7 +4,7 @@ import AuthService, { JwtCookie, COOKIE_NAME } from 'services/Auth';
 export interface CustomContext {
   event: APIGatewayProxyEvent;
   context: LambdaContext;
-  userId?: number;
+  userId?: string;
   setResponseJwtCookie?: JwtCookie;
 }
 
@@ -15,7 +15,7 @@ export const createCustomContext = (
   event: APIGatewayProxyEvent,
   context: LambdaContext
 ): CustomContext => {
-  let userId: number | undefined;
+  let userId: string | undefined;
   let setResponseJwtCookie: JwtCookie | undefined;
 
   const requestCookie = event.headers['Cookie'];

@@ -102,6 +102,7 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
             placeholder="Description"
             className="mb-2"
             value={description}
+            rows={5}
             onChange={(event) => setDescription(event.target.value)}
           />
           <input

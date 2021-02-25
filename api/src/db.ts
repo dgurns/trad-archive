@@ -1,12 +1,13 @@
 import { createConnection, getConnectionManager } from 'typeorm';
 import { User } from 'models/User';
 import { Tag } from 'models/Tag';
+import { Comment } from 'models/Comment';
+import { CollectionEntry } from 'models/CollectionEntry';
 import { Relationship } from 'models/Relationship';
 import { AudioItem } from 'models/entities/AudioItem';
 import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
-import { Comment } from 'models/Comment';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
@@ -30,6 +31,7 @@ export const connectToDatabase = async () => {
       Tag,
       Relationship,
       Comment,
+      CollectionEntry,
       AudioItem,
       Person,
       Instrument,

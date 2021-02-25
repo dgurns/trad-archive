@@ -97,3 +97,10 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CollectionEntry {
+  id: string;
+  audioItem?: AudioItem | null;
+  user?: User | null;
+  createdAt: string;
+}

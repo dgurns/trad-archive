@@ -1,5 +1,6 @@
 import { InputType, Field } from 'type-graphql';
 import { EntityType } from 'models/entities/base';
+
 @InputType()
 export class CommentsForParentEntityInput {
   @Field(() => EntityType)

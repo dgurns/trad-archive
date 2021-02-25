@@ -1,11 +1,11 @@
 import { Resolver, Query, Arg, createUnionType } from 'type-graphql';
 import { getManager } from 'typeorm';
 
-import { EntityType } from 'entities/entityHelpers';
-import { AudioItem } from 'entities/AudioItem';
-import { Person } from 'entities/Person';
-import { Instrument } from 'entities/Instrument';
-import { Place } from 'entities/Place';
+import { EntityType } from 'models/entities/base';
+import { AudioItem } from 'models/entities/AudioItem';
+import { Person } from 'models/entities/Person';
+import { Instrument } from 'models/entities/Instrument';
+import { Place } from 'models/entities/Place';
 import { SearchEntitiesInput } from 'resolvers/EntityResolverTypes';
 
 // Entity is a GraphQL union type returned by resolvers. It contains logic for

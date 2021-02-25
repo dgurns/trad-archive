@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from 'type-graphql';
-import { EntityType } from 'entities/entityHelpers';
+import { EntityType } from 'models/entities/base';
 
 @InputType()
 export class AudioItemsInput {

@@ -6,8 +6,8 @@ import {
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
-import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
-import { Tag } from 'entities/Tag';
+import { EntityBaseFields, EntityType } from 'models/entities/base';
+import { Tag } from 'models/Tag';
 
 // Person represents a unique human, for example Seamus Ennis
 @ObjectType()

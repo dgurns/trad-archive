@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
-import { User } from 'entities/User';
-import { AudioItem } from 'entities/AudioItem';
+import { User } from 'models/User';
+import { AudioItem } from 'models/entities/AudioItem';
 
 @ObjectType()
 @TypeOrmEntity()

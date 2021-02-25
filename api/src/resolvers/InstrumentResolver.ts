@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Instrument } from 'entities/Instrument';
-import { User } from 'entities/User';
+import { Instrument } from 'models/entities/Instrument';
+import { User } from 'models/User';
 import {
   CreateInstrumentInput,
   UpdateInstrumentInput,

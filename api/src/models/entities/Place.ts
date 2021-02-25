@@ -6,8 +6,8 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, Float } from 'type-graphql';
 
-import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
-import { Tag } from 'entities/Tag';
+import { EntityBaseFields, EntityType } from 'models/entities/base';
+import { Tag } from 'models/Tag';
 
 // Place represents a unique location, for example "Cahersiveen". A town and its
 // parent county would be two different Places.

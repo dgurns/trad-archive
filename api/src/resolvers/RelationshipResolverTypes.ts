@@ -1,5 +1,5 @@
 import { InputType, Field, ArgsType } from 'type-graphql';
-import { EntityType } from 'entities/entityHelpers';
+import { EntityType } from 'models/entities/base';
 
 @ArgsType()
 export class SearchRelationshipsArgs {

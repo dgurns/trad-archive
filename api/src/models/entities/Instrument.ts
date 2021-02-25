@@ -6,8 +6,8 @@ import {
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
-import { EntityBaseFields, EntityType } from 'entities/entityHelpers';
-import { Tag } from 'entities/Tag';
+import { EntityBaseFields, EntityType } from 'models/entities/base';
+import { Tag } from 'models/Tag';
 
 // Instrument represents a unique instrument like Fiddle or Button Accordion
 @ObjectType()

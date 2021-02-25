@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Person } from 'entities/Person';
-import { User } from 'entities/User';
+import { Person } from 'models/entities/Person';
+import { User } from 'models/User';
 import {
   CreatePersonInput,
   UpdatePersonInput,

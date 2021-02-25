@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { CookieSerializeOptions } from 'cookie';
 import addDays from 'date-fns/addDays';
 import subYears from 'date-fns/subYears';
-import { User } from 'entities/User';
+import { User } from 'models/User';
 
 const { NODE_ENV } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? 'my-jwt-secret-key';

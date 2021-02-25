@@ -1,7 +1,7 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { CustomContext } from 'middleware/context';
-import { Place } from 'entities/Place';
-import { User } from 'entities/User';
+import { Place } from 'models/entities/Place';
+import { User } from 'models/User';
 import {
   CreatePlaceInput,
   UpdatePlaceInput,

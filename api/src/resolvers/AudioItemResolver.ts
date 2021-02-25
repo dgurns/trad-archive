@@ -12,9 +12,9 @@ import {
 import { getManager, getRepository } from 'typeorm';
 
 import { CustomContext } from 'middleware/context';
-import { AudioItem } from 'entities/AudioItem';
-import { Comment } from 'entities/Comment';
-import { User, UserPermission } from 'entities/User';
+import { AudioItem } from 'models/entities/AudioItem';
+import { Comment } from 'models/Comment';
+import { User, UserPermission } from 'models/User';
 import {
   AudioItemsInput,
   AudioItemsTaggedWithEntityInput,

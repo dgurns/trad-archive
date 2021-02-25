@@ -3,7 +3,7 @@ import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { UserInputError, AuthenticationError } from 'apollo-server-lambda';
 
-import { User } from 'entities/User';
+import { User } from 'models/User';
 import AuthService from 'services/Auth';
 import { CustomContext } from 'middleware/context';
 

@@ -1,13 +1,13 @@
 import { Resolver, Mutation, Ctx, Arg, Args, Query } from 'type-graphql';
 import { ObjectLiteral } from 'typeorm';
 import { CustomContext } from 'middleware/context';
-import { User } from 'entities/User';
+import { User } from 'models/User';
 import {
   CreateRelationshipInput,
   SearchRelationshipsArgs,
 } from 'resolvers/RelationshipResolverTypes';
-import { Relationship } from 'entities/Relationship';
-import { EntityType } from 'entities/entityHelpers';
+import { Relationship } from 'models/Relationship';
+import { EntityType } from 'models/entities/base';
 import RelationshipService from 'services/Relationship';
 
 @Resolver()

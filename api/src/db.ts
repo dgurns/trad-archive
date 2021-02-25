@@ -1,12 +1,12 @@
 import { createConnection, getConnectionManager } from 'typeorm';
-import { User } from 'entities/User';
-import { Tag } from 'entities/Tag';
-import { Relationship } from 'entities/Relationship';
-import { AudioItem } from 'entities/AudioItem';
-import { Person } from 'entities/Person';
-import { Instrument } from 'entities/Instrument';
-import { Place } from 'entities/Place';
-import { Comment } from 'entities/Comment';
+import { User } from 'models/User';
+import { Tag } from 'models/Tag';
+import { Relationship } from 'models/Relationship';
+import { AudioItem } from 'models/entities/AudioItem';
+import { Person } from 'models/entities/Person';
+import { Instrument } from 'models/entities/Instrument';
+import { Place } from 'models/entities/Place';
+import { Comment } from 'models/Comment';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 

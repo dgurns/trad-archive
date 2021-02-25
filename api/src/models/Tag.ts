@@ -8,12 +8,12 @@ import {
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
-import { User } from 'entities/User';
-import { AudioItem } from 'entities/AudioItem';
-import { Person } from 'entities/Person';
-import { Instrument } from 'entities/Instrument';
-import { Place } from 'entities/Place';
-import { Relationship } from 'entities/Relationship';
+import { User } from 'models/User';
+import { AudioItem } from 'models/entities/AudioItem';
+import { Person } from 'models/entities/Person';
+import { Instrument } from 'models/entities/Instrument';
+import { Place } from 'models/entities/Place';
+import { Relationship } from 'models/Relationship';
 
 // Tag represents a connection between two entities and specifies the
 // relationship between them.

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { useRouter } from 'next/router';
 import { Place } from 'types';
 import { EntityFragments } from 'fragments';
 
@@ -23,8 +22,6 @@ interface Props {
   onSuccess?: (place: Place) => void;
 }
 const CreatePlaceForm = ({ onSuccess }: Props) => {
-  const router = useRouter();
-
   const [createPlace, { loading, error, data }] = useMutation<
     { createPlace: Place },
     { input: CreatePlaceInput }
@@ -67,7 +64,7 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
       setLongitude('');
       setDescription('');
     }
-  }, [data, router]);
+  }, [data]);
 
   return (
     <>

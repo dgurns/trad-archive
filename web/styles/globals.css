@@ -22,29 +22,28 @@
   }
   button:disabled,
   input[type='submit']:disabled {
-    @apply cursor-not-allowed hover:no-underline;
+    @apply cursor-not-allowed opacity-50 hover:no-underline;
   }
 
-  /* Primary buttons */
+  /* Primary buttons (for example the "Save" button on a form) */
   .btn,
   input[type='submit'] {
     @apply bg-teal-600 text-white rounded p-2 px-3 cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
   }
 
-  /* Text buttons */
+  /* Text buttons (look like links but have no underline, for example "Add Tag") */
   .btn-text {
     @apply text-teal-600 no-underline hover:no-underline hover:text-teal-800;
   }
-  .btn-text:disabled {
-    @apply opacity-50;
-  }
 
-  /* Icon buttons */
+  /* Icon buttons (for example, the "X" on a modal) */
   .btn-icon {
     @apply text-gray-500 no-underline hover:no-underline hover:text-gray-800;
   }
-  .btn-icon:disabled {
-    @apply opacity-50;
+
+  /* Secondary buttons (with an icon and small bold text, for example "+ Add to Collection") */
+  .btn-secondary {
+    @apply text-gray-500 text-sm font-bold no-underline hover:no-underline hover:text-gray-800;
   }
 
   input,

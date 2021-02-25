@@ -5,6 +5,7 @@ import usePlayer from 'hooks/usePlayer';
 
 import Tags from 'components/Tags';
 import Comments from 'components/Comments';
+import AddToCollection from 'components/AddToCollection';
 
 interface Props {
   audioItem: AudioItem;
@@ -25,7 +26,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
         <Tags entity={audioItem} />
       </div>
 
-      <div className="flex flex-row w-full justify-start items-center mb-5 h-14 border border-gray-200 rounded">
+      <div className="flex flex-row w-full justify-start items-center mb-2 h-14 border border-gray-200 rounded">
         {audioItemIsInPlayer ? (
           <div className="pl-3 text-gray-500">Playing</div>
         ) : (
@@ -38,6 +39,9 @@ const AudioItemComponent = ({ audioItem }: Props) => {
             </i>
           </button>
         )}
+      </div>
+      <div className="flex flex-row justify-start items-center mb-5">
+        <AddToCollection />
       </div>
 
       <div className="text-gray-500 text-sm mb-1">

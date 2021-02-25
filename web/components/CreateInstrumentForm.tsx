@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { useRouter } from 'next/router';
 import { Instrument } from 'types';
 import { EntityFragments } from 'fragments';
 
@@ -22,8 +21,6 @@ interface Props {
   onSuccess?: (instrument: Instrument) => void;
 }
 const CreateInstrumentForm = ({ onSuccess }: Props) => {
-  const router = useRouter();
-
   const [createInstrument, { loading, error, data }] = useMutation<
     { createInstrument: Instrument },
     { input: CreateInstrumentInput }
@@ -58,7 +55,7 @@ const CreateInstrumentForm = ({ onSuccess }: Props) => {
       setAliases('');
       setDescription('');
     }
-  }, [data, router]);
+  }, [data]);
 
   return (
     <>

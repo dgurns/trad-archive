@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
-import { useRouter } from 'next/router';
 import { AudioItem } from 'types';
 import { EntityFragments } from 'fragments';
 
@@ -25,8 +24,6 @@ interface CreateAudioItemInput {
 }
 
 const CreateAudioItemForm = ({ onSuccess }: Props) => {
-  const router = useRouter();
-
   const [createAudioItem, { loading, error, data }] = useMutation<
     { createAudioItem: AudioItem },
     { input: CreateAudioItemInput }
@@ -57,7 +54,7 @@ const CreateAudioItemForm = ({ onSuccess }: Props) => {
       setAliases('');
       setDescription('');
     }
-  }, [data, router]);
+  }, [data]);
 
   return (
     <>

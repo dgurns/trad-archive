@@ -69,7 +69,8 @@ const Comments = ({ parentEntity }: Props) => {
           <div className="text-gray-500 text-sm mb-1">
             <Link href={`/users/${createdByUser.id}`}>
               {createdByUser.username}
-            </Link>{' '}
+            </Link>
+            {' commented '}
             {DateTimeService.formatDateYearTime(createdAt)}
           </div>
           <div className="text-sm">{text}</div>

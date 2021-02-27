@@ -13,12 +13,10 @@ functions:
       - http:
           path: graphql
           method: post
-          # TODO: Set allowed origins
           cors: true
       - http:
           path: graphql
           method: get
-          # TODO: Set allowed origins
           cors: true
 plugins:
   - serverless-webpack

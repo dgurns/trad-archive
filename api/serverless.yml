@@ -23,7 +23,7 @@ functions:
           path: graphql
           method: get
           cors:
-            origin: '*'
+            origin: 'http://localhost:3000'
             allowCredentials: true
 
 plugins:

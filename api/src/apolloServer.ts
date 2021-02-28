@@ -63,7 +63,7 @@ export const graphqlHandler = (
     const handler = server.createHandler({
       cors: {
         // TODO: Set allowed origins
-        origin: '*',
+        origin: 'http://localhost:3000',
         credentials: true,
       },
     });

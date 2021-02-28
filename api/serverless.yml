@@ -1,5 +1,8 @@
 service: trad-archive-api
 
+package:
+  individually: true
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -32,5 +35,8 @@ custom:
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:
-      packagePath: './package.json'
+      forceInclude:
+        - pg
     packager: yarn
+    packagerOptions:
+      noFrozenLockfile: true

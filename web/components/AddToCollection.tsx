@@ -6,7 +6,6 @@ import useCurrentUser from 'hooks/useCurrentUser';
 import useAudioItem from 'hooks/useAudioItem';
 import useCollectionEntriesForUser from 'hooks/useCollectionEntriesForUser';
 import { AudioItem, CollectionEntry } from 'types';
-import { apolloClient } from 'apolloClient';
 
 const CREATE_COLLECTION_ENTRY_MUTATION = gql`
   mutation CreateCollectionEntry($input: CreateCollectionEntryInput!) {
@@ -53,14 +52,14 @@ const AddToCollection = ({ audioItem }: Props) => {
 
   const [
     createCollectionEntry,
-    { data: createData, error: createError },
+    { loading: createLoading, data: createData, error: createError },
   ] = useMutation<CreateMutationData, CreateMutationVariables>(
     CREATE_COLLECTION_ENTRY_MUTATION,
     { errorPolicy: 'all' }
   );
   const [
     deleteCollectionEntry,
-    { data: deleteData, error: deleteError },
+    { loading: deleteLoading, data: deleteData, error: deleteError },
   ] = useMutation<DeleteMutationData, DeleteMutationVariables>(
     DELETE_COLLECTION_ENTRY_MUTATION,
     { errorPolicy: 'all' }
@@ -75,30 +74,12 @@ const AddToCollection = ({ audioItem }: Props) => {
         },
       });
     } else if (!isAddedToCollection) {
-      // Optimistically update to true, then create
-      apolloClient.cache.modify({
-        id: `AudioItem:${id}`,
-        fields: {
-          isAddedToCollection() {
-            return true;
-          },
-        },
-      });
       createCollectionEntry({
         variables: {
           input: { audioItemId: id },
         },
       });
     } else if (isAddedToCollection) {
-      // Optimistically update to false, then delete
-      apolloClient.cache.modify({
-        id: `AudioItem:${id}`,
-        fields: {
-          isAddedToCollection() {
-            return false;
-          },
-        },
-      });
       deleteCollectionEntry({
         variables: {
           input: { audioItemId: id },
@@ -116,24 +97,24 @@ const AddToCollection = ({ audioItem }: Props) => {
 
   useEffect(() => {
     if (createData) {
+      refetchParentAudioItem();
       refetchCollectionEntriesForUser();
     }
-  }, [createData]);
+  }, [createData, refetchParentAudioItem, refetchCollectionEntriesForUser]);
   useEffect(() => {
     if (createError) {
-      refetchParentAudioItem();
       window.alert('Error adding to collection. Please try again.');
     }
   }, [createError]);
 
   useEffect(() => {
     if (deleteData) {
+      refetchParentAudioItem();
       refetchCollectionEntriesForUser();
     }
-  }, [deleteData]);
+  }, [deleteData, refetchParentAudioItem, refetchCollectionEntriesForUser]);
   useEffect(() => {
     if (deleteError) {
-      refetchParentAudioItem();
       window.alert('Error removing from collection. Please try again.');
     }
   }, [deleteError]);
@@ -144,6 +125,7 @@ const AddToCollection = ({ audioItem }: Props) => {
         isAddedToCollection ? 'text-gray-800' : ''
       }`}
       onClick={onButtonClicked}
+      disabled={createLoading || deleteLoading}
     >
       {isAddedToCollection ? (
         <>

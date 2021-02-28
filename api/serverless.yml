@@ -1,4 +1,5 @@
 service: trad-archive-api
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -6,6 +7,7 @@ provider:
   apiGateway:
     shouldStartNameWithService: true
   lambdaHashingVersion: '20201221'
+
 functions:
   graphql:
     handler: src/apolloServer.graphqlHandler
@@ -18,14 +20,17 @@ functions:
           path: graphql
           method: get
           cors: true
+
 plugins:
   - serverless-webpack
   - serverless-offline
+
 custom:
   serverless-offline:
     httpPort: 4000
     noPrependStageInUrl: true
-    useChildProcesses: true
   webpack:
     webpackConfig: 'webpack.config.js'
-    includeModules: true
+    includeModules:
+      packagePath: './package.json'
+    packager: yarn

@@ -22,7 +22,9 @@ functions:
       - http:
           path: graphql
           method: get
-          cors: true
+          cors:
+            origin: '*'
+            allowCredentials: true
 
 plugins:
   - serverless-webpack

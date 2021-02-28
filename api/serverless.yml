@@ -38,5 +38,3 @@ custom:
       forceInclude:
         - pg
     packager: yarn
-    packagerOptions:
-      noFrozenLockfile: true

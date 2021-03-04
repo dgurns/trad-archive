@@ -44,7 +44,6 @@ custom:
     createRoute53Record: true
     endpointType: 'regional'
     securityPolicy: tls_1_2
-    apiType: http
     autoDomain: true
   serverless-offline:
     httpPort: 4000

@@ -28,15 +28,24 @@ functions:
 
 plugins:
   - serverless-webpack
+  - serverless-domain-manager
   - serverless-offline
 
 custom:
-  serverless-offline:
-    httpPort: 4000
-    noPrependStageInUrl: true
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:
       forceInclude:
         - pg
     packager: yarn
+  customDomain:
+    domainName: api.${opt:stage}.tradarchive.com
+    certificateName: '*.tradarchive.com'
+    createRoute53Record: true
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    apiType: http
+    autoDomain: true
+  serverless-offline:
+    httpPort: 4000
+    noPrependStageInUrl: true

@@ -1,4 +1,4 @@
-service: trad-archive-api
+service: api
 
 package:
   individually: true
@@ -39,7 +39,7 @@ custom:
         - pg
     packager: yarn
   customDomain:
-    domainName: api-test-serverless-domain-manager.tradarchive.com
+    domainName: api-${opt.stage}.tradarchive.com
     certificateArn: arn:aws:acm:us-east-1:727441280422:certificate/2e5a0bc4-0c2b-43d4-a7a6-58eab5e3ea2b
     createRoute53Record: true
     endpointType: 'regional'

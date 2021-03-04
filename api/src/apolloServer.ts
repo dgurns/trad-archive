@@ -62,23 +62,20 @@ export const graphqlHandler = (
   callback: APIGatewayProxyCallback
 ) => {
   createServer().then((server) => {
-    const requestOrigin = event.headers?.Origin;
-    console.log('requestOrigin', requestOrigin);
-    let origin;
+    let allowedOrigin;
     switch (SERVERLESS_STAGE) {
       case 'dev':
-        origin = 'http://localhost:3000';
+        allowedOrigin = 'http://localhost:3000';
         break;
       case 'prod':
-        origin = 'https://www.tradarchive.com';
+        allowedOrigin = 'https://www.tradarchive.com';
         break;
       default:
-        origin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
+        allowedOrigin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
     }
-    console.log('allowed origin', origin);
     const handler = server.createHandler({
       cors: {
-        origin,
+        origin: allowedOrigin,
         credentials: true,
       },
     });

@@ -36,7 +36,7 @@ plugins:
 custom:
   allowedOrigin:
     dev: http://localhost:3000
-    preview: https://api-${opt:stage}.tradarchive.com
+    preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
     prod: https://www.tradarchive.com
   webpack:
     webpackConfig: 'webpack.config.js'

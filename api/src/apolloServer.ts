@@ -69,6 +69,8 @@ export const graphqlHandler = (
     if (typeof requestOrigin === 'string' && regex.test(requestOrigin)) {
       allowedOrigins.push(requestOrigin);
     }
+    console.log('NODE_ENV', process.env.NODE_ENV);
+    console.log('Allowed origins:', allowedOrigins);
     const handler = server.createHandler({
       cors: {
         origin: allowedOrigins,

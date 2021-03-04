@@ -19,13 +19,13 @@ functions:
           path: graphql
           method: post
           cors:
-            origin: '*-dangurney.vercel.app'
+            origin: ${self:custom.allowedOrigin.${opt:stage}}
             allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: '*-dangurney.vercel.app'
+            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
             allowCredentials: true
 
 plugins:
@@ -34,6 +34,10 @@ plugins:
   - serverless-offline
 
 custom:
+  allowedOrigin:
+    dev: http://localhost:3000
+    preview: https://api-${opt:stage}.tradarchive.com
+    prod: https://www.tradarchive.com
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:

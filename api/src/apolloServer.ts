@@ -62,12 +62,6 @@ export const graphqlHandler = (
   createServer().then((server) => {
     const requestOrigin = event.headers?.Origin;
     console.log('requestOrigin', requestOrigin);
-    if (!requestOrigin) {
-      return {
-        statusCode: 403,
-        body: JSON.stringify({ message: 'Request origin cannot be undefined' }),
-      };
-    }
     let origin = 'https://www.tradarchive.com';
     if (
       process.env.NODE_ENV === 'development' &&
@@ -76,7 +70,7 @@ export const graphqlHandler = (
       origin = 'http://localhost:3000';
     }
     const regex = /(.*)(dangurney\.vercel\.app)/;
-    if (regex.test(requestOrigin)) {
+    if (typeof requestOrigin !== 'undefined' && regex.test(requestOrigin)) {
       origin = requestOrigin;
     }
     console.log('allowed origin', origin);

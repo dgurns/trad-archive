@@ -63,10 +63,10 @@ export const graphqlHandler = (
     const requestOrigin = event.headers?.Origin;
     console.log('requestOrigin', requestOrigin);
     if (!requestOrigin) {
-      return callback(null, {
+      return {
         statusCode: 403,
-        body: 'Request origin cannot be undefined',
-      });
+        body: JSON.stringify({ message: 'Request origin cannot be undefined' }),
+      };
     }
     let origin = 'https://www.tradarchive.com';
     if (

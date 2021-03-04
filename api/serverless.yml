@@ -19,39 +19,30 @@ functions:
           path: graphql
           method: post
           cors:
+            origin: '*'
             headers:
               - Content-Type
-              - Access-Control-Allow-Origin
-              - Access-Control-Allow-Credentials
               - X-Amz-Date
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
-            origins:
-              # More specific CORS checks are done in the Apollo Server
-              - https://www.tradarchive.com
-              - https://*.vercel.app
-              - http://localhost:3000
-            allowCredentials: true
+              - Access-Control-Allow-Origin
+              - Access-Control-Allow-Credentials
       - http:
           path: graphql
           method: get
           cors:
+            origin: '*'
             headers:
               - Content-Type
-              - Access-Control-Allow-Origin
-              - Access-Control-Allow-Credentials
               - X-Amz-Date
               - Authorization
               - X-Api-Key
               - X-Amz-Security-Token
               - X-Amz-User-Agent
-            origins:
-              - http://www.tradarchive.com
-              - https://*.vercel.app
-              - http://localhost:3000
-            allowCredentials: true
+              - Access-Control-Allow-Origin
+              - Access-Control-Allow-Credentials
 
 plugins:
   - serverless-webpack

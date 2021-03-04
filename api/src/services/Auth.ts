@@ -4,7 +4,7 @@ import addDays from 'date-fns/addDays';
 import subYears from 'date-fns/subYears';
 import { User } from 'models/User';
 
-const { NODE_ENV } = process.env;
+const { SERVERLESS_STAGE } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? 'my-jwt-secret-key';
 
 const isValidEmail = (email?: string) => {
@@ -60,8 +60,8 @@ const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
       path: '/',
       expires: expirationDate,
       httpOnly: true,
-      sameSite: NODE_ENV === 'development' ? 'lax' : 'none',
-      secure: NODE_ENV === 'development' ? false : true,
+      sameSite: SERVERLESS_STAGE === 'prod' ? 'none' : 'lax',
+      secure: SERVERLESS_STAGE === 'prod' ? true : false,
     },
   };
 };

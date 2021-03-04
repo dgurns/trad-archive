@@ -63,20 +63,26 @@ export const graphqlHandler = (
     const requestOrigin = event.headers?.Origin;
     console.log('requestOrigin', requestOrigin);
     if (!requestOrigin) {
-      callback(new Error('Request origin cannot be null or undefined'));
+      return callback(null, {
+        statusCode: 403,
+        body: 'Request origin cannot be undefined',
+      });
     }
-    const allowedOrigins = ['https://www.tradarchive.com'];
-    if (process.env.NODE_ENV === 'development') {
-      allowedOrigins.push('http://localhost:3000');
+    let origin = 'https://www.tradarchive.com';
+    if (
+      process.env.NODE_ENV === 'development' &&
+      requestOrigin === 'http://localhost:3000'
+    ) {
+      origin = 'http://localhost:3000';
     }
     const regex = /(.*)(dangurney\.vercel\.app)/;
-    if (typeof requestOrigin === 'string' && regex.test(requestOrigin)) {
-      allowedOrigins.push(requestOrigin);
+    if (regex.test(requestOrigin)) {
+      origin = requestOrigin;
     }
-    console.log('allowedOrigins', allowedOrigins);
+    console.log('allowed origin', origin);
     const handler = server.createHandler({
       cors: {
-        origin: allowedOrigins,
+        origin,
         credentials: true,
       },
     });

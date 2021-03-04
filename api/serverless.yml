@@ -18,12 +18,14 @@ functions:
       - http:
           path: graphql
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: 'http://localhost:3000'
+            origin: '*'
             allowCredentials: true
 
 plugins:

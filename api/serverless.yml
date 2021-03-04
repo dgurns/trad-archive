@@ -19,6 +19,7 @@ functions:
           path: graphql
           method: post
           cors:
+            headers: '*'
             origins:
               # More specific CORS checks are done in the Apollo Server
               - https://www.tradarchive.com
@@ -29,6 +30,7 @@ functions:
           path: graphql
           method: get
           cors:
+            headers: '*'
             origins:
               - http://www.tradarchive.com
               - https://*.vercel.app

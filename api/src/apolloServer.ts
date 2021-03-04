@@ -62,6 +62,9 @@ export const graphqlHandler = (
   createServer().then((server) => {
     const requestOrigin = event.headers?.Origin;
     console.log('requestOrigin', requestOrigin);
+    if (!requestOrigin) {
+      callback(new Error('Request origin cannot be null or undefined'));
+    }
     const allowedOrigins = ['https://www.tradarchive.com'];
     if (process.env.NODE_ENV === 'development') {
       allowedOrigins.push('http://localhost:3000');

@@ -31,12 +31,12 @@ plugins:
   - serverless-offline
 
 custom:
-  serverless-offline:
-    httpPort: 4000
-    noPrependStageInUrl: true
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:
       forceInclude:
         - pg
     packager: yarn
+  serverless-offline:
+    httpPort: 4000
+    noPrependStageInUrl: true

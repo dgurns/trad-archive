@@ -27,6 +27,7 @@
     "@types/jsonwebtoken": "^8.5.0",
     "apollo-server-plugin-base": "^0.10.3",
     "aws-lambda": "^1.0.6",
+    "serverless-domain-manager": "^5.1.0",
     "serverless-offline": "6.5.0",
     "serverless-webpack": "^5.3.5",
     "ts-loader": "^8.0.13",

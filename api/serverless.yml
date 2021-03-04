@@ -1,4 +1,4 @@
-service: trad-archive-api
+service: api
 
 package:
   individually: true
@@ -28,15 +28,24 @@ functions:
 
 plugins:
   - serverless-webpack
+  - serverless-domain-manager
   - serverless-offline
 
 custom:
-  serverless-offline:
-    httpPort: 4000
-    noPrependStageInUrl: true
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:
       forceInclude:
         - pg
     packager: yarn
+  customDomain:
+    domainName: api-${opt.stage}.tradarchive.com
+    certificateArn: arn:aws:acm:us-east-1:727441280422:certificate/2e5a0bc4-0c2b-43d4-a7a6-58eab5e3ea2b
+    createRoute53Record: true
+    endpointType: 'regional'
+    securityPolicy: tls_1_2
+    apiType: http
+    autoDomain: true
+  serverless-offline:
+    httpPort: 4000
+    noPrependStageInUrl: true

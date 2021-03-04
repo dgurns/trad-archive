@@ -61,8 +61,7 @@ export const graphqlHandler = (
 ) => {
   createServer().then((server) => {
     const requestOrigin = event.headers?.Origin;
-    console.log('request headers', event.headers);
-    console.log('context', context);
+    console.log('requestOrigin', requestOrigin);
     let origin = 'https://www.tradarchive.com';
     if (
       process.env.NODE_ENV === 'development' &&

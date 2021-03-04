@@ -19,13 +19,13 @@ functions:
           path: graphql
           method: post
           cors:
-            origin: 'https://trad-archive-git-cors-for-serverless-dangurney.vercel.app'
+            origin: '*-dangurney.vercel.app'
             allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: 'https://trad-archive-git-cors-for-serverless-dangurney.vercel.app'
+            origin: '*-dangurney.vercel.app'
             allowCredentials: true
 
 plugins:

@@ -1,6 +1,7 @@
 import {
   BaseEntity as TypeOrmBaseEntity,
   PrimaryGeneratedColumn,
+  Index,
   Column,
   ManyToOne,
   CreateDateColumn,
@@ -30,14 +31,17 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
   @Field(() => String)
   @Column()
+  @Index()
   name!: string;
 
   @Field(() => String)
   @Column({ unique: true })
+  @Index()
   slug!: string;
 
   @Field(() => String, { nullable: true })
   @Column({ nullable: true, default: null })
+  @Index()
   aliases!: string;
 
   @Field(() => String, { nullable: true })

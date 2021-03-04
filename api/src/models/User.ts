@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  Index,
 } from 'typeorm';
 import { ObjectType, Authorized, Field, registerEnumType } from 'type-graphql';
 
@@ -40,6 +41,7 @@ export class User extends TypeOrmBaseEntity {
 
   @Field(() => String)
   @Column({ unique: true })
+  @Index()
   username!: string;
 
   @Column()

@@ -61,7 +61,8 @@ export const graphqlHandler = (
 ) => {
   createServer().then((server) => {
     const requestOrigin = event.headers?.Origin;
-    console.log('requestOrigin', requestOrigin);
+    console.log('request headers', event.headers);
+    console.log('context', context);
     let origin = 'https://www.tradarchive.com';
     if (
       process.env.NODE_ENV === 'development' &&
@@ -73,6 +74,8 @@ export const graphqlHandler = (
     if (typeof requestOrigin !== 'undefined' && regex.test(requestOrigin)) {
       origin = requestOrigin;
     }
+    origin =
+      'https://trad-archive-git-cors-for-serverless-dangurney.vercel.app';
     console.log('allowed origin', origin);
     const handler = server.createHandler({
       cors: {

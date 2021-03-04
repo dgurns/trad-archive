@@ -19,7 +19,7 @@ functions:
           path: graphql
           method: post
           cors:
-            origin: ${self:custom.allowedOrigin.${opt:stage}}
+            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
             allowCredentials: true
       - http:
           path: graphql

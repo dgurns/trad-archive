@@ -19,13 +19,20 @@ functions:
           path: graphql
           method: post
           cors:
-            origin: '*'
+            origins:
+              # More specific CORS checks are done in the Apollo Server
+              - https://www.tradarchive.com
+              - https://*.vercel.app
+              - http://localhost:3000
             allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: '*'
+            origins:
+              - http://www.tradarchive.com
+              - https://*.vercel.app
+              - http://localhost:3000
             allowCredentials: true
 
 plugins:

@@ -61,6 +61,17 @@ export const graphqlHandler = (
 ) => {
   createServer().then((server) => {
     const requestOrigin = event.headers?.Origin;
+    if (!requestOrigin) {
+      return {
+        statusCode: '401',
+        body: JSON.stringify({
+          error: 'Error: Null or undefined origin',
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    }
     const allowedOrigins = ['https://www.tradarchive.com'];
     if (process.env.NODE_ENV === 'development') {
       allowedOrigins.push('http://localhost:3000');
@@ -69,9 +80,6 @@ export const graphqlHandler = (
     if (typeof requestOrigin === 'string' && regex.test(requestOrigin)) {
       allowedOrigins.push(requestOrigin);
     }
-    console.log('requestOrigin', requestOrigin);
-    console.log('NODE_ENV', process.env.NODE_ENV);
-    console.log('Allowed origins:', allowedOrigins);
     const handler = server.createHandler({
       cors: {
         origin: allowedOrigins,

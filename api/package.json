@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "NODE_ENV=development sls offline start"
+    "dev": "NODE_ENV=development sls offline start --stage dev"
   },
   "author": "",
   "license": "ISC",

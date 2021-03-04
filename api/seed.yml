@@ -1,5 +1,0 @@
-before_build:
-  - serverless create_domain --stage $SEED_STAGE_NAME
-
-after_remove:
-  - serverless delete_domain --stage $SEED_STAGE_NAME

@@ -60,10 +60,18 @@ export const graphqlHandler = (
   callback: APIGatewayProxyCallback
 ) => {
   createServer().then((server) => {
+    const requestOrigin = event.headers?.Origin;
+    const allowedOrigins = ['https://www.tradarchive.com'];
+    if (process.env.NODE_ENV === 'development') {
+      allowedOrigins.push('http://localhost:3000');
+    }
+    const regex = /(.*)(dangurney\.vercel\.app)/;
+    if (typeof requestOrigin === 'string' && regex.test(requestOrigin)) {
+      allowedOrigins.push(requestOrigin);
+    }
     const handler = server.createHandler({
       cors: {
-        // TODO: Set allowed origins
-        origin: 'http://localhost:3000',
+        origin: allowedOrigins,
         credentials: true,
       },
     });

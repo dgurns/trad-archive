@@ -53,6 +53,12 @@ export interface JwtCookie {
 export const COOKIE_NAME = 'jwt';
 
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
+  let sameSite: 'none' | 'lax' | 'strict' = 'none';
+  if (SERVERLESS_STAGE === 'dev') {
+    sameSite = 'lax';
+  } else if (SERVERLESS_STAGE === 'prod') {
+    sameSite = 'strict';
+  }
   return {
     name: COOKIE_NAME,
     value: token,
@@ -60,8 +66,8 @@ const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
       path: '/',
       expires: expirationDate,
       httpOnly: true,
-      sameSite: SERVERLESS_STAGE === 'prod' ? 'none' : 'lax',
-      secure: SERVERLESS_STAGE === 'prod' ? true : false,
+      sameSite,
+      secure: SERVERLESS_STAGE === 'dev' ? false : true,
     },
   };
 };

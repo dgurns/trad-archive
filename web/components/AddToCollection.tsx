@@ -121,21 +121,21 @@ const AddToCollection = ({ audioItem }: Props) => {
 
   return (
     <button
-      className={`btn-secondary flex flex-row items-center ${
-        isAddedToCollection ? 'text-gray-800' : ''
-      }`}
+      className={`btn-secondary ${
+        isAddedToCollection ? 'btn-secondary-active' : ''
+      } pl-0.5`}
       onClick={onButtonClicked}
       disabled={createLoading || deleteLoading}
     >
       {isAddedToCollection ? (
         <>
-          <i className="material-icons mb-0.5">bookmark</i>
-          Added to Collection
+          <i className="material-icons">bookmark</i>
+          Added<span className="hidden md:block md:pl-1">to Collection</span>
         </>
       ) : (
         <>
-          <i className="material-icons mb-0.5">bookmark_border</i>
-          Add to Collection
+          <i className="material-icons">bookmark_border</i>
+          Add<span className="hidden md:block md:pl-1">to Collection</span>
         </>
       )}
     </button>

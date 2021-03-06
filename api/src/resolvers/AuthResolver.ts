@@ -14,7 +14,7 @@ export class AuthResolver {
     if (!ctx.userId) {
       return null;
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     return user;
   }
 

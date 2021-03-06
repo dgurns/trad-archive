@@ -14,7 +14,10 @@ import RelationshipService from 'services/Relationship';
 export class RelationshipResolver {
   @Query(() => Relationship)
   relationship(@Arg('id') id: string) {
-    return Relationship.findOne(id, { relations: ['createdByUser'] });
+    return Relationship.findOne({
+      where: { id },
+      relations: ['createdByUser'],
+    });
   }
 
   @Query(() => [Relationship])
@@ -44,7 +47,7 @@ export class RelationshipResolver {
         'Must provide a Relationship name, subject entity name, and object entity name'
       );
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('Must be logged in to create a Relationship');
     }

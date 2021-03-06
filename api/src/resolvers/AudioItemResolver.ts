@@ -174,7 +174,7 @@ export class AudioItemResolver {
     if (!urlSource.includes('http')) {
       throw new Error('The source URL is invalid');
     }
-    const createdByUser = await User.findOne(ctx.userId);
+    const createdByUser = await User.findOne({ where: { id: ctx.userId } });
     if (!createdByUser) {
       throw new Error('Error fetching the user who is adding the AudioItem');
     }
@@ -209,7 +209,7 @@ export class AudioItemResolver {
   ) {
     const { name, aliases, description } = input;
 
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to update an AudioItem');
     }

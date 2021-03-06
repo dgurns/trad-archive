@@ -14,16 +14,20 @@ provider:
 functions:
   graphql:
     handler: src/apolloServer.graphqlHandler
+    environment:
+      SERVERLESS_STAGE: ${opt:stage}
     events:
       - http:
           path: graphql
           method: post
-          cors: true
+          cors:
+            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
+            allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: 'http://localhost:3000'
+            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
             allowCredentials: true
 
 plugins:
@@ -32,6 +36,10 @@ plugins:
   - serverless-offline
 
 custom:
+  allowedOrigin:
+    dev: http://localhost:3000
+    preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
+    prod: https://www.tradarchive.com
   webpack:
     webpackConfig: 'webpack.config.js'
     includeModules:

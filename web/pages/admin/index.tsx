@@ -7,6 +7,7 @@ const AdminHome = () => {
     <Layout>
       <RequireAdmin>
         <>
+          <h1 className="mb-4">Admin</h1>
           <Link href="/entities/audio-items/new">
             <a className="block mb-2">Create Audio Item</a>
           </Link>

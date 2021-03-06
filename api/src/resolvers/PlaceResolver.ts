@@ -62,7 +62,7 @@ export class PlaceResolver {
         'A new Place must have at least a name, slug, latitude, and longitude'
       );
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to create a Place');
     }
@@ -99,7 +99,7 @@ export class PlaceResolver {
   ) {
     const { name, aliases, description, latitude, longitude } = input;
 
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to update a Place');
     }

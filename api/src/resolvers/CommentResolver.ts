@@ -35,11 +35,13 @@ export class CommentResolver {
     if (!text) {
       throw new Error('Comment text cannot be empty');
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('Must be logged in to create a Comment');
     }
-    const parentAudioItem = await AudioItem.findOne(parentAudioItemId);
+    const parentAudioItem = await AudioItem.findOne({
+      where: { id: parentAudioItemId },
+    });
     if (!parentAudioItem) {
       throw new Error('Could not find an AudioItem with that ID');
     }

@@ -69,7 +69,7 @@ export class PersonResolver {
         'A new Person must have at least a firstName, lastName, and slug'
       );
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to create a Person');
     }
@@ -113,7 +113,7 @@ export class PersonResolver {
     if (!firstName || !lastName) {
       throw new Error('A Person must always have a firstName and lastName');
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to update a Person');
     }

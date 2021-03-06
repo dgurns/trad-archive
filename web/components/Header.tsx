@@ -7,26 +7,27 @@ const Header = () => {
   const [currentUser, { loading }] = useCurrentUser();
 
   const userActions = useMemo(() => {
-    if (loading) {
+    if (loading || typeof currentUser === 'undefined') {
       return null;
     } else if (currentUser) {
       return (
-        <div className="flex flex-row">
-          <div className="hidden sm:flex">Hello, {currentUser.username}</div>
+        <div className="flex flex-row items-center">
           <Link href={`/users/${currentUser.id}/collection`}>
-            <a className="btn-text text-current hover:text-gray-400 ml-4">
-              Your Collection
+            <a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
+              <i className="material-icons">bookmark</i>
+              <span className="hidden md:block md:pl-1">Your Collection</span>
             </a>
           </Link>
           {UserService.isAdmin(currentUser) && (
             <Link href="/admin">
-              <a className="btn-text text-current hover:text-gray-400 ml-4">
-                Admin
+              <a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
+                <i className="material-icons">manage_accounts</i>
+                <span className="hidden md:block md:pl-1">Admin</span>
               </a>
             </Link>
           )}
           <Link href="/logout">
-            <a className="btn-text text-current hover:text-gray-400 ml-4">
+            <a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
               Log out
             </a>
           </Link>
@@ -36,12 +37,12 @@ const Header = () => {
       return (
         <div>
           <Link href="/login">
-            <a className="btn-text text-current hover:text-gray-400 ml-4">
+            <a className="btn-text text-current whitespace-nowrap hover:text-gray-400 ml-4">
               Log In
             </a>
           </Link>
           <Link href="/signup">
-            <a className="btn text-current no-underline hover:text-current ml-4">
+            <a className="btn text-current no-underline whitespace-nowrap hover:text-current ml-4">
               Sign Up
             </a>
           </Link>
@@ -56,7 +57,7 @@ const Header = () => {
       suppressHydrationWarning
     >
       <Link href="/">
-        <a className="btn-text text-current hover:text-gray-400">
+        <a className="btn-text text-current whitespace-nowrap hover:text-gray-400">
           Trad Archive
         </a>
       </Link>

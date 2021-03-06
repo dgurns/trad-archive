@@ -60,7 +60,7 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
       <input
         type="text"
         placeholder="Add a comment..."
-        autoFocus={false}
+        autoFocus
         value={text}
         onChange={(event) => setText(event.target.value)}
       />

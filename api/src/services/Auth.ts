@@ -3,8 +3,9 @@ import { CookieSerializeOptions } from 'cookie';
 import addDays from 'date-fns/addDays';
 import subYears from 'date-fns/subYears';
 import { User } from 'models/User';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
-const { NODE_ENV } = process.env;
+const { SERVERLESS_STAGE } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? 'my-jwt-secret-key';
 
 const isValidEmail = (email?: string) => {
@@ -50,9 +51,15 @@ export interface JwtCookie {
   options: CookieSerializeOptions;
 }
 
-export const COOKIE_NAME = 'jwt';
+const COOKIE_NAME = 'jwt';
 
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
+  let sameSite: 'none' | 'lax' | 'strict' = 'none';
+  if (SERVERLESS_STAGE === 'dev') {
+    sameSite = 'lax';
+  } else if (SERVERLESS_STAGE === 'prod') {
+    sameSite = 'strict';
+  }
   return {
     name: COOKIE_NAME,
     value: token,
@@ -60,8 +67,8 @@ const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
       path: '/',
       expires: expirationDate,
       httpOnly: true,
-      sameSite: NODE_ENV === 'development' ? 'lax' : 'none',
-      secure: NODE_ENV === 'development' ? false : true,
+      sameSite,
+      secure: SERVERLESS_STAGE === 'dev' ? false : true,
     },
   };
 };
@@ -81,6 +88,7 @@ export default {
   isSecurePassword,
   createJwt,
   extractUserIdFromJwt,
+  COOKIE_NAME,
   makeValidJwtCookie,
   makeInvalidJwtCookie,
 };

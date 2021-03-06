@@ -23,6 +23,8 @@ import { PersonResolver } from 'resolvers/PersonResolver';
 import { InstrumentResolver } from 'resolvers/InstrumentResolver';
 import { PlaceResolver } from 'resolvers/PlaceResolver';
 
+const { SERVERLESS_STAGE } = process.env;
+
 const createServer = async () => {
   await connectToDatabase();
 
@@ -60,10 +62,20 @@ export const graphqlHandler = (
   callback: APIGatewayProxyCallback
 ) => {
   createServer().then((server) => {
+    let allowedOrigin;
+    switch (SERVERLESS_STAGE) {
+      case 'dev':
+        allowedOrigin = 'http://localhost:3000';
+        break;
+      case 'prod':
+        allowedOrigin = 'https://www.tradarchive.com';
+        break;
+      default:
+        allowedOrigin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
+    }
     const handler = server.createHandler({
       cors: {
-        // TODO: Set allowed origins
-        origin: 'http://localhost:3000',
+        origin: allowedOrigin,
         credentials: true,
       },
     });

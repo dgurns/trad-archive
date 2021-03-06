@@ -9,7 +9,7 @@ export const authChecker: AuthChecker<CustomContext> = async (
   requiredRoles
 ) => {
   const { userId } = context;
-  const user = await User.findOne(userId);
+  const user = await User.findOne({ where: { id: userId } });
 
   // If there is no user in context, the request is not authorized
   if (!user) {

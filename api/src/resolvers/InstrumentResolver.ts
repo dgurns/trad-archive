@@ -60,7 +60,7 @@ export class InstrumentResolver {
     if (!name || !slug) {
       throw new Error('A new Instrument must have at least a name and slug');
     }
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to create an Instrument');
     }
@@ -95,7 +95,7 @@ export class InstrumentResolver {
   ) {
     const { name, aliases, description } = input;
 
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('You must be logged in to update an Instrument');
     }

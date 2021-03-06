@@ -15,7 +15,8 @@ import { Relationship } from 'models/Relationship';
 export class TagResolver {
   @Query(() => Tag)
   tag(@Arg('id') id: string) {
-    return Tag.findOne(id, {
+    return Tag.findOne({
+      where: { id },
       relations: [
         'subjectAudioItem',
         'subjectPerson',
@@ -65,7 +66,7 @@ export class TagResolver {
       objectEntityId,
     } = input;
 
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('Must be logged in to create a Tag');
     }
@@ -86,7 +87,9 @@ export class TagResolver {
       throw new Error('This Tag has already been added');
     }
 
-    const relationship = await Relationship.findOne(relationshipId);
+    const relationship = await Relationship.findOne({
+      where: { id: relationshipId },
+    });
     if (!relationship) {
       throw new Error('Could not find a Relationship with that ID');
     }
@@ -95,25 +98,29 @@ export class TagResolver {
 
     switch (subjectEntityType) {
       case EntityType.AudioItem:
-        const audioItem = await AudioItem.findOne(subjectEntityId);
+        const audioItem = await AudioItem.findOne({
+          where: { id: subjectEntityId },
+        });
         if (audioItem) {
           tag.subjectAudioItem = audioItem;
           break;
         }
       case EntityType.Person:
-        const person = await Person.findOne(subjectEntityId);
+        const person = await Person.findOne({ where: { id: subjectEntityId } });
         if (person) {
           tag.subjectPerson = person;
           break;
         }
       case EntityType.Instrument:
-        const instrument = await Instrument.findOne(subjectEntityId);
+        const instrument = await Instrument.findOne({
+          where: { id: subjectEntityId },
+        });
         if (instrument) {
           tag.subjectInstrument = instrument;
           break;
         }
       case EntityType.Place:
-        const place = await Place.findOne(subjectEntityId);
+        const place = await Place.findOne({ where: { id: subjectEntityId } });
         if (place) {
           tag.subjectPlace = place;
           break;
@@ -126,25 +133,29 @@ export class TagResolver {
 
     switch (objectEntityType) {
       case EntityType.AudioItem:
-        const audioItem = await AudioItem.findOne(objectEntityId);
+        const audioItem = await AudioItem.findOne({
+          where: { id: objectEntityId },
+        });
         if (audioItem) {
           tag.objectAudioItem = audioItem;
           break;
         }
       case EntityType.Person:
-        const person = await Person.findOne(objectEntityId);
+        const person = await Person.findOne({ where: { id: objectEntityId } });
         if (person) {
           tag.objectPerson = person;
           break;
         }
       case EntityType.Instrument:
-        const instrument = await Instrument.findOne(objectEntityId);
+        const instrument = await Instrument.findOne({
+          where: { id: objectEntityId },
+        });
         if (instrument) {
           tag.objectInstrument = instrument;
           break;
         }
       case EntityType.Place:
-        const place = await Place.findOne(objectEntityId);
+        const place = await Place.findOne({ where: { id: objectEntityId } });
         if (place) {
           tag.objectPlace = place;
           break;
@@ -161,7 +172,7 @@ export class TagResolver {
 
   @Mutation(() => Boolean)
   async deleteTag(@Arg('id') id: string, @Ctx() ctx: CustomContext) {
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('Must be logged in to delete a Tag');
     }

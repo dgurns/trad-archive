@@ -48,8 +48,9 @@ export const connectToDatabase = async () => {
 
   // Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
   // for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"
-  const queryRunner = connection.createQueryRunner();
-  await queryRunner.connect();
-  await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
-  await queryRunner.release();
+  //
+  // const queryRunner = connection.createQueryRunner();
+  // await queryRunner.connect();
+  // await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
+  // await queryRunner.release();
 };

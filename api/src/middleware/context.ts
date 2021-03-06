@@ -18,8 +18,6 @@ export const createCustomContext = (
   let userId: string | undefined;
   let setResponseJwtCookie: JwtCookie | undefined;
 
-  console.log('EVENT', event);
-
   const requestCookie = event.headers['Cookie'];
   if (requestCookie) {
     const parsedCookie = cookie.parse(requestCookie);

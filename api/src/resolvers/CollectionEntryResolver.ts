@@ -38,11 +38,11 @@ export class CollectionEntryResolver {
   ) {
     const { audioItemId } = input;
 
-    const user = await User.findOne(ctx.userId);
+    const user = await User.findOne({ where: { id: ctx.userId } });
     if (!user) {
       throw new Error('Must be logged in to create a CollectionEntry');
     }
-    const audioItem = await AudioItem.findOne(audioItemId);
+    const audioItem = await AudioItem.findOne({ where: { id: audioItemId } });
     if (!audioItem) {
       throw new Error('Could not find an AudioItem with that ID');
     }
@@ -72,7 +72,8 @@ export class CollectionEntryResolver {
     }
     let collectionEntry: CollectionEntry | undefined;
     if (id) {
-      collectionEntry = await CollectionEntry.findOne(id, {
+      collectionEntry = await CollectionEntry.findOne({
+        where: { id },
         relations: ['user'],
       });
     } else if (audioItemId) {

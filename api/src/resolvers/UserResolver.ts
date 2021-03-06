@@ -5,6 +5,6 @@ import { User } from 'models/User';
 export class UserResolver {
   @Query(() => User)
   user(@Arg('id') id: string) {
-    return User.findOne(id);
+    return User.findOne({ where: { id } });
   }
 }

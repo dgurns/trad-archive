@@ -129,12 +129,12 @@ const AddToCollection = ({ audioItem }: Props) => {
     >
       {isAddedToCollection ? (
         <>
-          <i className="material-icons mb-1">done</i>
+          <i className="material-icons mb-0.5">bookmark</i>
           Added to Collection
         </>
       ) : (
         <>
-          <i className="material-icons mb-0.5">add</i>
+          <i className="material-icons mb-0.5">bookmark_border</i>
           Add to Collection
         </>
       )}

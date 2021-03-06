@@ -59,11 +59,11 @@ const UserIdCollection = () => {
               activePlayerAudioItem?.id === audioItem.id;
 
             return (
-              <div className="mb-4" key={index}>
+              <div className="mb-4 text-gray-500" key={index}>
                 <Link href={`/entities/audio-items/${audioItem.slug}`}>
                   {audioItem.name}
                 </Link>
-                <div className="text-gray-500">
+                <div>
                   Tags:{' '}
                   {audioItem.tags.map((tag, index) => (
                     <span key={index}>
@@ -73,7 +73,7 @@ const UserIdCollection = () => {
                   ))}
                 </div>
                 {audioItemIsInPlayer ? (
-                  <div className="text-gray-500">Playing</div>
+                  'Playing'
                 ) : (
                   <button
                     className="btn-text flex flex-row items-center"

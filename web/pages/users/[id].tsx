@@ -51,8 +51,8 @@ const ViewUserById = () => {
 
   return (
     <Layout>
-      <div className="flex flex-row">
-        <div className="flex flex-1 flex-col">
+      <div className="flex flex-col-reverse md:flex-row">
+        <div className="flex flex-1 flex-col pb-8">
           <h1 className="mb-4">Audio Items Added by "{username}"</h1>
           {audioItemsLoading && <LoadingBlock />}
           {audioItemsError && (
@@ -62,7 +62,7 @@ const ViewUserById = () => {
             <AudioItemComponent audioItem={audioItem} key={index} />
           ))}
         </div>
-        <div className="flex flex-col ml-8 pl-8 w-1/4 border-l border-gray-300">
+        <div className="flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
           <h1 className="mb-4">About {username}</h1>
           <div className="mb-4">
             Account Created:

@@ -18,9 +18,7 @@ export const createCustomContext = (
   let userId: string | undefined;
   let setResponseJwtCookie: JwtCookie | undefined;
 
-  console.log('HEADERS', event.headers);
   const requestCookie = event.headers['Cookie'] ?? event.headers['cookie'];
-  console.log('COOKIE', requestCookie);
   if (requestCookie) {
     const parsedCookie = cookie.parse(requestCookie);
     const userIdFromCookie = AuthService.extractUserIdFromJwt(

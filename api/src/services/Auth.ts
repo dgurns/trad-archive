@@ -3,6 +3,7 @@ import { CookieSerializeOptions } from 'cookie';
 import addDays from 'date-fns/addDays';
 import subYears from 'date-fns/subYears';
 import { User } from 'models/User';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
 const { SERVERLESS_STAGE } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? 'my-jwt-secret-key';
@@ -50,7 +51,7 @@ export interface JwtCookie {
   options: CookieSerializeOptions;
 }
 
-export const COOKIE_NAME = 'jwt';
+const COOKIE_NAME = 'jwt';
 
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
   let sameSite: 'none' | 'lax' | 'strict' = 'none';
@@ -87,6 +88,7 @@ export default {
   isSecurePassword,
   createJwt,
   extractUserIdFromJwt,
+  COOKIE_NAME,
   makeValidJwtCookie,
   makeInvalidJwtCookie,
 };

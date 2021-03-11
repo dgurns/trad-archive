@@ -85,6 +85,11 @@ const ViewComments = ({ audioItem }: Props) => {
     }
   }, [comments, modalIsVisible]);
 
+  const modalTitle =
+    commentsCount > 0
+      ? `${commentsCount} Comment${commentsCount === 1 ? '' : 's'}`
+      : 'No Comments';
+
   return (
     <>
       <button className="btn-secondary" onClick={onViewCommentsClicked}>
@@ -104,7 +109,11 @@ const ViewComments = ({ audioItem }: Props) => {
         )}
       </button>
 
-      <Modal title="Comments" isVisible={modalIsVisible} onClose={onCloseModal}>
+      <Modal
+        title={modalTitle}
+        isVisible={modalIsVisible}
+        onClose={onCloseModal}
+      >
         {error && <div className="text-red-600 mb-2">{error.message}</div>}
 
         <div className="max-h-1/2 overflow-auto" ref={commentsRef}>

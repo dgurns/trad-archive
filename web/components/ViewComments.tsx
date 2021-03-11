@@ -36,7 +36,6 @@ const ViewComments = ({ audioItem }: Props) => {
   const { id, slug, entityType, commentsCount } = audioItem;
 
   const commentsRef = useRef<HTMLDivElement>();
-  const commentsHeight = commentsRef.current?.scrollHeight ?? 0;
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
@@ -59,9 +58,11 @@ const ViewComments = ({ audioItem }: Props) => {
   }, [getComments]);
 
   const onViewCommentsClicked = useCallback(() => {
-    fetchComments();
+    if (commentsCount > 0) {
+      fetchComments();
+    }
     setModalIsVisible(true);
-  }, [fetchComments]);
+  }, [fetchComments, commentsCount]);
 
   const onCreateCommentSuccess = useCallback(async () => {
     await fetchComments();
@@ -71,13 +72,19 @@ const ViewComments = ({ audioItem }: Props) => {
   const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 
   useEffect(() => {
-    if (commentsRef.current) {
+    // If comments have loaded, scroll to the bottom
+    if (!commentsRef.current) {
+      return;
+    }
+    const commentsHeight = commentsRef.current?.scrollHeight ?? 0;
+    if (modalIsVisible && commentsHeight > 0 && comments.length > 0) {
+      console.log('scroll!', commentsHeight);
       commentsRef.current.scrollTo({
         top: commentsHeight,
         behavior: 'smooth',
       });
     }
-  }, [commentsHeight]);
+  }, [comments, modalIsVisible]);
 
   return (
     <>

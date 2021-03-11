@@ -12,7 +12,7 @@ import { Place } from 'models/entities/Place';
 export const DB_CONNECTION_NAME = 'default';
 
 export const connectToDatabase = async () => {
-  await createConnection({
+  const dbConnection = await createConnection({
     name: DB_CONNECTION_NAME,
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',
@@ -40,6 +40,8 @@ export const connectToDatabase = async () => {
       migrationsDir: 'src/migrations',
     },
   });
+
+  return dbConnection;
 
   // Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
   // for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"

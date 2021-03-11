@@ -1,4 +1,4 @@
-import { createConnection, getConnectionManager } from 'typeorm';
+import { createConnection } from 'typeorm';
 import { User } from 'models/User';
 import { Tag } from 'models/Tag';
 import { Comment } from 'models/Comment';
@@ -9,21 +9,11 @@ import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 
-const DEFAULT_CONNECTION_NAME = 'default';
-
-const connectionManager = getConnectionManager();
-console.log('getting connection manager');
-const isConnected = connectionManager.has(DEFAULT_CONNECTION_NAME);
+export const DB_CONNECTION_NAME = 'default';
 
 export const connectToDatabase = async () => {
-  console.log('running connect function - db isConnected?', isConnected);
-  if (isConnected) {
-    console.log('yep it is');
-    return;
-  }
-  console.log('nope its not');
-
-  const connection = await createConnection({
+  await createConnection({
+    name: DB_CONNECTION_NAME,
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',
     port: parseInt(process.env.DATABASE_PORT ?? '5432'),

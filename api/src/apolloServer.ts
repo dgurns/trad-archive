@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-lambda';
+import { getConnectionManager } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import {
   APIGatewayProxyCallback,
@@ -7,7 +8,7 @@ import {
   Context as LambdaContext,
 } from 'aws-lambda';
 
-import { connectToDatabase } from 'db';
+import { connectToDatabase, DB_CONNECTION_NAME } from 'db';
 import { createCustomContext } from 'middleware/context';
 const apolloServerPlugins = require('middleware/plugins');
 import { authChecker } from 'middleware/authChecker';
@@ -25,10 +26,16 @@ import { PlaceResolver } from 'resolvers/PlaceResolver';
 
 const { SERVERLESS_STAGE } = process.env;
 
-console.log('running apolloServer file');
+const dbConnectionManager = getConnectionManager();
+const dbIsConnected = dbConnectionManager.has(DB_CONNECTION_NAME);
+console.log('starting up Lambda, dbIsConnected?', dbIsConnected);
 
 const createServer = async () => {
-  await connectToDatabase();
+  console.log('creating server, dbIsConnected?', dbIsConnected);
+  if (!dbIsConnected) {
+    console.log('not connected, connect');
+    await connectToDatabase();
+  }
 
   const schema = await buildSchema({
     resolvers: [

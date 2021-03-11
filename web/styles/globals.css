@@ -51,6 +51,7 @@
 
   input,
   input[type='text'],
+  input[type='password'],
   textarea {
     @apply w-full bg-white p-2 border border-gray-300 rounded appearance-none focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600;
   }

@@ -46,10 +46,13 @@ const CreateNewEntities = ({ onNewEntityCreated }: Props) => {
     setCreatePlaceModalIsVisible(true);
   }, [requireLogin, currentUser]);
 
-  const onNewPersonCreated = useCallback((person: Person) => {
-    setCreatePersonModalIsVisible(false);
-    onNewEntityCreated(person);
-  }, []);
+  const onNewPersonCreated = useCallback(
+    (person: Person) => {
+      setCreatePersonModalIsVisible(false);
+      onNewEntityCreated(person);
+    },
+    [onNewEntityCreated]
+  );
 
   const onNewInstrumentCreated = useCallback((instrument: Instrument) => {
     setCreateInstrumentModalIsVisible(false);

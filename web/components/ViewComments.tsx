@@ -58,11 +58,11 @@ const ViewComments = ({ audioItem }: Props) => {
   }, [getComments]);
 
   const onViewCommentsClicked = useCallback(() => {
-    if (commentsCount > 0) {
+    if (commentsCount !== comments.length) {
       fetchComments();
     }
     setModalIsVisible(true);
-  }, [fetchComments, commentsCount]);
+  }, [fetchComments, commentsCount, comments]);
 
   const onCreateCommentSuccess = useCallback(async () => {
     await fetchComments();
@@ -78,7 +78,6 @@ const ViewComments = ({ audioItem }: Props) => {
     }
     const commentsHeight = commentsRef.current?.scrollHeight ?? 0;
     if (modalIsVisible && commentsHeight > 0 && comments.length > 0) {
-      console.log('scroll!', commentsHeight);
       commentsRef.current.scrollTo({
         top: commentsHeight,
         behavior: 'smooth',

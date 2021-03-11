@@ -11,12 +11,17 @@ import { Place } from 'models/entities/Place';
 
 const DEFAULT_CONNECTION_NAME = 'default';
 
+const connectionManager = getConnectionManager();
+console.log('getting connection manager');
+const isConnected = connectionManager.has(DEFAULT_CONNECTION_NAME);
+
 export const connectToDatabase = async () => {
-  const connectionManager = getConnectionManager();
-  const isConnected = connectionManager.has(DEFAULT_CONNECTION_NAME);
+  console.log('running connect function - db isConnected?', isConnected);
   if (isConnected) {
+    console.log('yep it is');
     return;
   }
+  console.log('nope its not');
 
   const connection = await createConnection({
     type: 'postgres',

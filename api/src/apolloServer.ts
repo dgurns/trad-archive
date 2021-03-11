@@ -25,6 +25,8 @@ import { PlaceResolver } from 'resolvers/PlaceResolver';
 
 const { SERVERLESS_STAGE } = process.env;
 
+console.log('running apolloServer file');
+
 const createServer = async () => {
   await connectToDatabase();
 

@@ -30,21 +30,21 @@ const CreateNewEntities = ({ onNewEntityCreated }: Props) => {
       return await requireLogin();
     }
     setCreatePersonModalIsVisible(true);
-  }, [requireLogin]);
+  }, [requireLogin, currentUser]);
 
   const onCreateNewInstrumentClicked = useCallback(async () => {
     if (!currentUser) {
       return await requireLogin();
     }
     setCreateInstrumentModalIsVisible(true);
-  }, [requireLogin]);
+  }, [requireLogin, currentUser]);
 
   const onCreateNewPlaceClicked = useCallback(async () => {
     if (!currentUser) {
       return await requireLogin();
     }
     setCreatePlaceModalIsVisible(true);
-  }, [requireLogin]);
+  }, [requireLogin, currentUser]);
 
   const onNewPersonCreated = useCallback((person: Person) => {
     setCreatePersonModalIsVisible(false);

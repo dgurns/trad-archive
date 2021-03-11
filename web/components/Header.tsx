@@ -1,10 +1,36 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
+import { Entity } from 'types';
 import useCurrentUser from 'hooks/useCurrentUser';
 import UserService from 'services/User';
+import EntityService from 'services/Entity';
+
+import Modal from 'components/Modal';
+import SearchEntities from 'components/SearchEntities';
 
 const Header = () => {
+  const router = useRouter();
+
   const [currentUser, { loading }] = useCurrentUser();
+
+  const [searchModalIsVisible, setSearchModalIsVisible] = useState(false);
+
+  const onSelectSearchResult = useCallback(
+    (entity: Entity) => {
+      setSearchModalIsVisible(false);
+      router.push(EntityService.makeHrefForView(entity));
+    },
+    [router]
+  );
+
+  const onNewEntityCreated = useCallback(
+    (entity: Entity) => {
+      router.push(EntityService.makeHrefForView(entity));
+    },
+    [router]
+  );
 
   const userActions = useMemo(() => {
     if (loading || typeof currentUser === 'undefined') {
@@ -52,18 +78,40 @@ const Header = () => {
   }, [loading, currentUser]);
 
   return (
-    <div
-      className="flex flex-row p-4 justify-between text-white items-center bg-teal-900"
-      suppressHydrationWarning
-    >
-      <Link href="/">
-        <a className="btn-text text-current whitespace-nowrap hover:text-gray-400">
-          Trad Archive
-        </a>
-      </Link>
+    <>
+      <div
+        className="flex flex-row p-4 justify-between text-white items-center bg-teal-900"
+        suppressHydrationWarning
+      >
+        <div className="flex flex-row">
+          <Link href="/">
+            <a className="btn-text text-current whitespace-nowrap hover:text-gray-400">
+              Trad Archive
+            </a>
+          </Link>
+          <button
+            className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
+            onClick={() => setSearchModalIsVisible(true)}
+          >
+            <i className="material-icons">search</i>
+            <span className="hidden md:block md:pl-1">Search</span>
+          </button>
+        </div>
 
-      {userActions}
-    </div>
+        {userActions}
+      </div>
+
+      <Modal
+        title="Search"
+        isVisible={searchModalIsVisible}
+        onClose={() => setSearchModalIsVisible(false)}
+      >
+        <SearchEntities
+          onSelect={onSelectSearchResult}
+          onNewEntityCreated={onNewEntityCreated}
+        />
+      </Modal>
+    </>
   );
 };
 

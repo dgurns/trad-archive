@@ -1,14 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useMutation, gql } from '@apollo/client';
 
-import { Entity, EntityType, Person, Instrument, Place, Tag } from 'types';
+import { Entity, EntityType, Tag } from 'types';
 
 import SearchEntities from 'components/SearchEntities';
 import SelectRelationship from 'components/SelectRelationship';
-import Modal from 'components/Modal';
-import CreatePersonForm from 'components/CreatePersonForm';
-import CreateInstrumentForm from 'components/CreateInstrumentForm';
-import CreatePlaceForm from 'components/CreatePlaceForm';
 
 const CREATE_TAG_MUTATION = gql`
   mutation CreateTag($input: CreateTagInput!) {
@@ -29,9 +25,6 @@ interface Props {
   onSuccess: (tag: Tag) => void;
 }
 const CreateTagForm = ({ entity, onSuccess }: Props) => {
-  const [searchEntitiesResults, setSearchEntitiesResults] = useState<
-    Entity[] | undefined
-  >();
   const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
   const [selectedRelationshipId, setSelectedRelationshipId] = useState('');
   const [
@@ -42,17 +35,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     selectedInverseRelationshipId,
     setSelectedInverseRelationshipId,
   ] = useState('');
-
-  const [createPersonModalIsVisible, setCreatePersonModalIsVisible] = useState(
-    false
-  );
-  const [
-    createInstrumentModalIsVisible,
-    setCreateInstrumentModalIsVisible,
-  ] = useState(false);
-  const [createPlaceModalIsVisible, setCreatePlaceModalIsVisible] = useState(
-    false
-  );
 
   const [createTag, { loading, data, error }] = useMutation<
     { createTag: Tag },
@@ -68,10 +50,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     }
   }, [data]);
 
-  const onSearchEntitiesResults = useCallback((entities: Entity[]) => {
-    setSearchEntitiesResults(entities);
-  }, []);
-
   const onSelectEntity = useCallback(
     (selectedEntityFromResults: Entity) => {
       if (selectedEntityFromResults.id === entity.id) {
@@ -82,19 +60,8 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     [entity]
   );
 
-  const onNewPersonCreated = useCallback((person: Person) => {
-    setCreatePersonModalIsVisible(false);
-    setSelectedEntity(person);
-  }, []);
-
-  const onNewInstrumentCreated = useCallback((instrument: Instrument) => {
-    setCreateInstrumentModalIsVisible(false);
-    setSelectedEntity(instrument);
-  }, []);
-
-  const onNewPlaceCreated = useCallback((place: Place) => {
-    setCreatePlaceModalIsVisible(false);
-    setSelectedEntity(place);
+  const onNewEntityCreated = useCallback((entity: Entity) => {
+    setSelectedEntity(entity);
   }, []);
 
   const onSelectRelationship = useCallback(
@@ -139,41 +106,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
     createTag,
   ]);
 
-  const shouldShowCreateNewPrompt = Boolean(searchEntitiesResults);
-
   return (
     <>
       {!selectedEntity ? (
         <>
           <SearchEntities
-            onResults={onSearchEntitiesResults}
             onSelect={onSelectEntity}
+            onNewEntityCreated={onNewEntityCreated}
           />
-          {shouldShowCreateNewPrompt && (
-            <div className="mt-4 ml-2 text-gray-500">
-              Can't find it? Create new:{' '}
-              <button
-                className="btn-text"
-                onClick={() => setCreatePersonModalIsVisible(true)}
-              >
-                Person
-              </button>
-              {', '}
-              <button
-                className="btn-text"
-                onClick={() => setCreateInstrumentModalIsVisible(true)}
-              >
-                Instrument
-              </button>
-              {', '}
-              <button
-                className="btn-text"
-                onClick={() => setCreatePlaceModalIsVisible(true)}
-              >
-                Place
-              </button>
-            </div>
-          )}
         </>
       ) : (
         <>
@@ -222,30 +162,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
           {error && <div className="text-red-600 mt-4">{error.message}</div>}
         </>
       )}
-
-      <Modal
-        title="Create New Person"
-        isVisible={createPersonModalIsVisible}
-        onClose={() => setCreatePersonModalIsVisible(false)}
-      >
-        <CreatePersonForm onSuccess={onNewPersonCreated} />
-      </Modal>
-
-      <Modal
-        title="Create New Instrument"
-        isVisible={createInstrumentModalIsVisible}
-        onClose={() => setCreateInstrumentModalIsVisible(false)}
-      >
-        <CreateInstrumentForm onSuccess={onNewInstrumentCreated} />
-      </Modal>
-
-      <Modal
-        title="Create New Place"
-        isVisible={createPlaceModalIsVisible}
-        onClose={() => setCreatePlaceModalIsVisible(false)}
-      >
-        <CreatePlaceForm onSuccess={onNewPlaceCreated} />
-      </Modal>
     </>
   );
 };

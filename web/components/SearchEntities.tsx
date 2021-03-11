@@ -6,6 +6,7 @@ import { Entity } from 'types';
 import { EntityFragments } from 'fragments';
 
 import LoadingCircle from 'components/LoadingCircle';
+import CreateNewEntities from 'components/CreateNewEntities';
 
 const SEARCH_ENTITIES_QUERY = gql`
   query SearchEntities($input: SearchEntitiesInput!) {
@@ -32,50 +33,42 @@ interface QueryVariables {
   };
 }
 interface Props {
-  onResults?: (entities: Entity[]) => void;
   onSelect: (entity: Entity) => void;
+  onNewEntityCreated?: (entity: Entity) => void;
 }
-const SearchEntities = ({ onResults, onSelect }: Props) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState('');
+const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<Entity[] | undefined>();
 
   const onChangeSearchTerm = (event: ChangeEvent<HTMLInputElement>) => {
-    setError('');
     setSearchTerm(event.target.value);
   };
 
-  const [
-    searchEntities,
-    {
-      loading: searchEntitiesLoading,
-      data: searchEntitiesData,
-      error: searchEntitiesError,
-    },
-  ] = useLazyQuery<QueryData, QueryVariables>(SEARCH_ENTITIES_QUERY, {
+  const [searchEntities, { loading, data, error }] = useLazyQuery<
+    QueryData,
+    QueryVariables
+  >(SEARCH_ENTITIES_QUERY, {
     fetchPolicy: 'no-cache',
   });
   const debouncedSearchEntities = useCallback(
-    debounce(searchEntities, 500, { leading: true }),
+    debounce(searchEntities, 300, { trailing: true }),
     [searchEntities]
   );
 
   useEffect(() => {
-    if (onResults && searchEntitiesData?.searchEntities) {
-      onResults(searchEntitiesData.searchEntities);
-    }
-  }, [searchEntitiesData, onResults]);
-
-  useEffect(() => {
-    if (searchTerm && searchTerm.length >= 3) {
-      debouncedSearchEntities({ variables: { input: { searchTerm } } });
+    const cleanedSearchTerm = searchTerm?.trim() ?? '';
+    if (cleanedSearchTerm.length >= 3) {
+      debouncedSearchEntities({
+        variables: { input: { searchTerm: cleanedSearchTerm } },
+      });
     }
   }, [searchTerm]);
 
-  const shouldShowResults =
-    searchTerm.length >= 3 &&
-    !searchEntitiesLoading &&
-    searchEntitiesData &&
-    !searchEntitiesError;
+  useEffect(() => {
+    if (data?.searchEntities) {
+      setSearchResults(data.searchEntities);
+    }
+  }, [data]);
 
   return (
     <>
@@ -86,19 +79,21 @@ const SearchEntities = ({ onResults, onSelect }: Props) => {
           value={searchTerm}
           onChange={onChangeSearchTerm}
         />
-        {searchEntitiesLoading && (
+        {loading && (
           <div className="absolute top-2 right-2">
             <LoadingCircle />
           </div>
         )}
       </div>
 
-      {error && <div className="text-red-600 mt-4 ml-2">{error}</div>}
+      {error && (
+        <div className="text-red-600 mt-4 ml-2">Error fetching results</div>
+      )}
 
-      {shouldShowResults && (
-        <>
-          <ul className="mt-4 max-h-40">
-            {searchEntitiesData.searchEntities.map((entity, index) => (
+      {searchResults && (
+        <div className="mt-4">
+          <ul className="max-h-40">
+            {searchResults.map((entity, index) => (
               <li
                 className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
                 onClick={() => onSelect(entity)}
@@ -111,13 +106,17 @@ const SearchEntities = ({ onResults, onSelect }: Props) => {
               </li>
             ))}
           </ul>
-          {searchEntitiesData.searchEntities.length === 0 && (
-            <div className="block text-gray-500 m-2">No results</div>
+
+          {searchResults.length === 0 && (
+            <div className="p-2 block text-gray-500">No results</div>
           )}
-        </>
-      )}
-      {searchEntitiesError && (
-        <div className="text-red-600 m-2">Error fetching results</div>
+
+          {onNewEntityCreated && (
+            <div className="mt-2 ml-2 text-gray-500">
+              <CreateNewEntities onNewEntityCreated={onNewEntityCreated} />
+            </div>
+          )}
+        </div>
       )}
     </>
   );

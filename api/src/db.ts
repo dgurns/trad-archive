@@ -1,4 +1,4 @@
-import { createConnection } from 'typeorm';
+import { createConnection, getConnectionManager } from 'typeorm';
 import { User } from 'models/User';
 import { Tag } from 'models/Tag';
 import { Comment } from 'models/Comment';
@@ -9,7 +9,7 @@ import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 
-export const DB_CONNECTION_NAME = 'default';
+const DB_CONNECTION_NAME = 'default';
 
 export const connectToDatabase = async () => {
   const dbConnection = await createConnection({
@@ -50,4 +50,12 @@ export const connectToDatabase = async () => {
   // await queryRunner.connect();
   // await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
   // await queryRunner.release();
+};
+
+export const getDatabaseConnection = () => {
+  try {
+    return getConnectionManager().get(DB_CONNECTION_NAME);
+  } catch {
+    return undefined;
+  }
 };

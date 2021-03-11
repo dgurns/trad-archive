@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLazyQuery, useMutation, gql } from '@apollo/client';
 
-import { Entity, Tag } from 'types';
+import { Entity } from 'types';
 import { EntityFragments } from 'fragments';
+import useRequireLogin from 'hooks/useRequireLogin';
 
 import Modal from 'components/Modal';
 import LoadingBlock from 'components/LoadingBlock';
@@ -30,11 +31,12 @@ const DELETE_TAG_MUTATION = gql`
 
 interface Props {
   entity: Entity;
-  onSuccess?: (tag: Tag) => void;
   className?: string;
   children?: React.ReactChild | React.ReactChild[];
 }
-const EditTags = ({ entity, onSuccess, className, children }: Props) => {
+const EditTags = ({ entity, className, children }: Props) => {
+  const { currentUser, requireLogin } = useRequireLogin();
+
   const [editTagsModalIsVisible, setEditTagsModalIsVisible] = useState(false);
 
   const [getParentEntity, { loading: parentEntityLoading }] = useLazyQuery<{
@@ -50,12 +52,15 @@ const EditTags = ({ entity, onSuccess, className, children }: Props) => {
   ] = useMutation(DELETE_TAG_MUTATION, { errorPolicy: 'all' });
 
   const onDeleteTag = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      if (!currentUser) {
+        return await requireLogin();
+      }
       if (window.confirm('Are you sure you want to delete this Tag?')) {
         deleteTag({ variables: { id } });
       }
     },
-    [deleteTag]
+    [deleteTag, currentUser, requireLogin]
   );
 
   useEffect(() => {

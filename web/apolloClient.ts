@@ -41,6 +41,13 @@ export const apolloClient = new ApolloClient({
               return merged;
             },
           },
+          collectionEntriesForUser: {
+            keyArgs: false,
+            merge(_, incoming) {
+              // Just return incoming results until pagination is implemented
+              return incoming;
+            },
+          },
         },
       },
       Person: {

@@ -76,6 +76,7 @@ export const TagFragments = {
         name
         slug
       }
+      createdAt
     }
     ${RelationshipFragments.relationship}
   `,

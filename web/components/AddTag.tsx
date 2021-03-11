@@ -3,6 +3,8 @@ import { useLazyQuery, gql } from '@apollo/client';
 
 import { Entity, Tag } from 'types';
 import { EntityFragments } from 'fragments';
+import useRequireLogin from 'hooks/useRequireLogin';
+import EntityService from 'services/Entity';
 
 import Modal from 'components/Modal';
 import LoadingBlock from 'components/LoadingBlock';
@@ -30,6 +32,8 @@ interface Props {
   children?: React.ReactChild | React.ReactChild[];
 }
 const AddTag = ({ entity, onSuccess, className, children }: Props) => {
+  const { currentUser, requireLogin } = useRequireLogin();
+
   const [addTagModalIsVisible, setAddTagModalIsVisible] = useState(false);
 
   const [getParentEntity, { loading: parentEntityLoading }] = useLazyQuery<{
@@ -50,11 +54,19 @@ const AddTag = ({ entity, onSuccess, className, children }: Props) => {
     [getParentEntity, setAddTagModalIsVisible, entity]
   );
 
+  const onAddTagClicked = useCallback(async () => {
+    if (!currentUser) {
+      const redirectTo = EntityService.makeHrefForView(entity);
+      return await requireLogin({ redirectTo });
+    }
+    setAddTagModalIsVisible(true);
+  }, [currentUser, requireLogin, entity]);
+
   return (
     <>
       <button
         className={`btn-text ${className ?? ''}`}
-        onClick={() => setAddTagModalIsVisible(true)}
+        onClick={onAddTagClicked}
       >
         {children ?? '+ Add Tag'}
       </button>

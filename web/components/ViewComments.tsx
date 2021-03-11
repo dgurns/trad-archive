@@ -116,19 +116,21 @@ const ViewComments = ({ audioItem }: Props) => {
       >
         {error && <div className="text-red-600 mb-2">{error.message}</div>}
 
-        <div className="max-h-1/2 overflow-auto" ref={commentsRef}>
-          {comments.map(({ createdByUser, createdAt, text }, index) => (
-            <div className="mb-2" key={index}>
-              <div className="text-gray-500 text-sm mb-1">
-                <Link href={`/users/${createdByUser.id}`}>
-                  {createdByUser.username}
-                </Link>{' '}
-                {DateTimeService.formatDateYearTime(createdAt)}
+        {comments.length > 0 && (
+          <div className="max-h-1/2 overflow-auto" ref={commentsRef}>
+            {comments.map(({ createdByUser, createdAt, text }, index) => (
+              <div className="mb-2" key={index}>
+                <div className="text-gray-500 text-sm mb-1">
+                  <Link href={`/users/${createdByUser.id}`}>
+                    {createdByUser.username}
+                  </Link>{' '}
+                  {DateTimeService.formatDateYearTime(createdAt)}
+                </div>
+                <div className="text-sm">{text}</div>
               </div>
-              <div className="text-sm">{text}</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {loading && <LoadingCircle />}
 

@@ -26,7 +26,11 @@ const LogOut = () => {
     }
   }, [logOutData]);
 
-  return <Layout>Logging out...</Layout>;
+  return (
+    <Layout>
+      <span className="text-gray-500">Logging out...</span>
+    </Layout>
+  );
 };
 
 export default LogOut;

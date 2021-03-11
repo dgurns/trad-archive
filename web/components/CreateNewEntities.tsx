@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/router';
 
 import { Entity, Person, Instrument, Place } from 'types';
-import useCurrentUser from 'hooks/useCurrentUser';
+import useRequireLogin from 'hooks/useRequireLogin';
 
 import Modal from 'components/Modal';
 import CreatePersonForm from 'components/CreatePersonForm';
@@ -13,8 +12,7 @@ interface Props {
   onNewEntityCreated: (entity: Entity) => void;
 }
 const CreateNewEntities = ({ onNewEntityCreated }: Props) => {
-  const [currentUser] = useCurrentUser();
-  const router = useRouter();
+  const { currentUser, requireLogin } = useRequireLogin();
 
   const [createPersonModalIsVisible, setCreatePersonModalIsVisible] = useState(
     false
@@ -27,35 +25,26 @@ const CreateNewEntities = ({ onNewEntityCreated }: Props) => {
     false
   );
 
-  const redirectToLogin = useCallback(() => {
-    router.push({
-      pathname: '/login',
-      query: {
-        redirectTo: window.location.pathname,
-      },
-    });
-  }, [router]);
-
-  const onCreateNewPersonClicked = useCallback(() => {
+  const onCreateNewPersonClicked = useCallback(async () => {
     if (!currentUser) {
-      return redirectToLogin();
+      return await requireLogin();
     }
     setCreatePersonModalIsVisible(true);
-  }, [currentUser]);
+  }, [requireLogin]);
 
-  const onCreateNewInstrumentClicked = useCallback(() => {
+  const onCreateNewInstrumentClicked = useCallback(async () => {
     if (!currentUser) {
-      return redirectToLogin();
+      return await requireLogin();
     }
     setCreateInstrumentModalIsVisible(true);
-  }, [currentUser]);
+  }, [requireLogin]);
 
-  const onCreateNewPlaceClicked = useCallback(() => {
+  const onCreateNewPlaceClicked = useCallback(async () => {
     if (!currentUser) {
-      return redirectToLogin();
+      return await requireLogin();
     }
     setCreatePlaceModalIsVisible(true);
-  }, [currentUser]);
+  }, [requireLogin]);
 
   const onNewPersonCreated = useCallback((person: Person) => {
     setCreatePersonModalIsVisible(false);

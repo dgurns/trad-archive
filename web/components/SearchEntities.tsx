@@ -112,7 +112,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
           )}
 
           {onNewEntityCreated && (
-            <div className="mt-2 ml-2 text-gray-500">
+            <div className="mt-2 ml-2">
               <CreateNewEntities onNewEntityCreated={onNewEntityCreated} />
             </div>
           )}

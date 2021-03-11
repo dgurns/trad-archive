@@ -80,14 +80,12 @@ export class CollectionEntryResolver {
       collectionEntry = await getManager()
         .createQueryBuilder(CollectionEntry, 'collectionEntry')
         .where('collectionEntry.audioItemId = :audioItemId', { audioItemId })
+        .andWhere('collectionEntry.userId = :userId', { userId: ctx.userId })
         .leftJoinAndSelect('collectionEntry.user', 'user')
         .getOne();
     }
     if (!collectionEntry) {
       throw new Error('Could not find CollectionEntry');
-    }
-    if (ctx.userId !== collectionEntry.user.id) {
-      throw new Error('A CollectionEntry can only be deleted by its own user');
     }
 
     await collectionEntry.remove();

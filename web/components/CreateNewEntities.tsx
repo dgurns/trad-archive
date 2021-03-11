@@ -66,7 +66,7 @@ const CreateNewEntities = ({ onNewEntityCreated }: Props) => {
 
   return (
     <>
-      <div>
+      <div className="text-gray-500">
         Can't find it? Create new:{' '}
         <button className="btn-text" onClick={onCreateNewPersonClicked}>
           Person

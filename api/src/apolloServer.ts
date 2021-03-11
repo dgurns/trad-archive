@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ApolloServer } from 'apollo-server-lambda';
+import { Connection } from 'typeorm';
 import { buildSchema } from 'type-graphql';
 import {
   APIGatewayProxyCallback,
@@ -25,33 +26,42 @@ import { PlaceResolver } from 'resolvers/PlaceResolver';
 
 const { SERVERLESS_STAGE } = process.env;
 
-const createServer = async () => {
-  await connectToDatabase();
+// Store the DB and server outside of the Lambda handler so they can persist
+// between invocations once they are created.
+let dbConnection: Connection | undefined;
+let apolloServer: ApolloServer | undefined;
 
-  const schema = await buildSchema({
-    resolvers: [
-      AuthResolver,
-      UserResolver,
-      TagResolver,
-      RelationshipResolver,
-      CommentResolver,
-      CollectionEntryResolver,
-      EntityResolver,
-      AudioItemResolver,
-      PersonResolver,
-      InstrumentResolver,
-      PlaceResolver,
-    ],
-    dateScalarMode: 'isoDate',
-    authChecker,
-    authMode: 'null',
-  });
+const initializeServer = async () => {
+  if (typeof dbConnection === 'undefined') {
+    dbConnection = await connectToDatabase();
+  }
 
-  const apolloServer = new ApolloServer({
-    schema,
-    plugins: apolloServerPlugins,
-    context: ({ event, context }) => createCustomContext(event, context),
-  });
+  if (typeof apolloServer === 'undefined') {
+    const schema = await buildSchema({
+      resolvers: [
+        AuthResolver,
+        UserResolver,
+        TagResolver,
+        RelationshipResolver,
+        CommentResolver,
+        CollectionEntryResolver,
+        EntityResolver,
+        AudioItemResolver,
+        PersonResolver,
+        InstrumentResolver,
+        PlaceResolver,
+      ],
+      dateScalarMode: 'isoDate',
+      authChecker,
+      authMode: 'null',
+    });
+
+    apolloServer = new ApolloServer({
+      schema,
+      plugins: apolloServerPlugins,
+      context: ({ event, context }) => createCustomContext(event, context),
+    });
+  }
 
   return apolloServer;
 };
@@ -61,19 +71,22 @@ export const graphqlHandler = (
   context: LambdaContext,
   callback: APIGatewayProxyCallback
 ) => {
-  createServer().then((server) => {
-    let allowedOrigin;
-    switch (SERVERLESS_STAGE) {
-      case 'dev':
-        allowedOrigin = 'http://localhost:3000';
-        break;
-      case 'prod':
-        allowedOrigin = 'https://www.tradarchive.com';
-        break;
-      default:
-        allowedOrigin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
-    }
-    const handler = server.createHandler({
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  let allowedOrigin: string | undefined;
+  switch (SERVERLESS_STAGE) {
+    case 'dev':
+      allowedOrigin = 'http://localhost:3000';
+      break;
+    case 'prod':
+      allowedOrigin = 'https://www.tradarchive.com';
+      break;
+    default:
+      allowedOrigin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
+  }
+
+  initializeServer().then((apolloServer) => {
+    const handler = apolloServer.createHandler({
       cors: {
         origin: allowedOrigin,
         credentials: true,

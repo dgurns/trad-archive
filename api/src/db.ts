@@ -9,16 +9,11 @@ import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 
-const DEFAULT_CONNECTION_NAME = 'default';
+const DB_CONNECTION_NAME = 'default';
 
 export const connectToDatabase = async () => {
-  const connectionManager = getConnectionManager();
-  const isConnected = connectionManager.has(DEFAULT_CONNECTION_NAME);
-  if (isConnected) {
-    return;
-  }
-
-  const connection = await createConnection({
+  const dbConnection = await createConnection({
+    name: DB_CONNECTION_NAME,
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',
     port: parseInt(process.env.DATABASE_PORT ?? '5432'),
@@ -46,6 +41,8 @@ export const connectToDatabase = async () => {
     },
   });
 
+  return dbConnection;
+
   // Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
   // for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"
   //
@@ -53,4 +50,12 @@ export const connectToDatabase = async () => {
   // await queryRunner.connect();
   // await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
   // await queryRunner.release();
+};
+
+export const getDatabaseConnection = () => {
+  try {
+    return getConnectionManager().get(DB_CONNECTION_NAME);
+  } catch {
+    return undefined;
+  }
 };

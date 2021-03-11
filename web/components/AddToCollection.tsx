@@ -2,10 +2,11 @@ import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useMutation, gql } from '@apollo/client';
 
-import useCurrentUser from 'hooks/useCurrentUser';
 import useAudioItem from 'hooks/useAudioItem';
+import useRequireLogin from 'hooks/useRequireLogin';
 import useCollectionEntriesForUser from 'hooks/useCollectionEntriesForUser';
 import { AudioItem, CollectionEntry } from 'types';
+import EntityService from 'services/Entity';
 
 const CREATE_COLLECTION_ENTRY_MUTATION = gql`
   mutation CreateCollectionEntry($input: CreateCollectionEntryInput!) {
@@ -43,7 +44,7 @@ const AddToCollection = ({ audioItem }: Props) => {
   const { id, slug, isAddedToCollection } = audioItem;
 
   const router = useRouter();
-  const [user] = useCurrentUser();
+  const { currentUser, requireLogin } = useRequireLogin();
   const [, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
   const [
     ,
@@ -65,14 +66,10 @@ const AddToCollection = ({ audioItem }: Props) => {
     { errorPolicy: 'all' }
   );
 
-  const onButtonClicked = useCallback(() => {
-    if (!user) {
-      router.push({
-        pathname: '/login',
-        query: {
-          redirectTo: `/entities/audio-items/${slug}`,
-        },
-      });
+  const onButtonClicked = useCallback(async () => {
+    if (!currentUser) {
+      const redirectTo = EntityService.makeHrefForView(audioItem);
+      return await requireLogin({ redirectTo });
     } else if (!isAddedToCollection) {
       createCollectionEntry({
         variables: {
@@ -87,7 +84,7 @@ const AddToCollection = ({ audioItem }: Props) => {
       });
     }
   }, [
-    user,
+    currentUser,
     router,
     audioItem,
     id,

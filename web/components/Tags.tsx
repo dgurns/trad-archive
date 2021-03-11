@@ -1,5 +1,9 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
+import compareAsc from 'date-fns/compareAsc';
+
 import { Tag, Entity } from 'types';
+
 import AddTag from 'components/AddTag';
 
 interface TagProps {
@@ -37,9 +41,18 @@ interface TagsProps {
 const Tags = ({ entity }: TagsProps) => {
   const { tags } = entity;
 
+  const sortedTags = useMemo(() => {
+    if (!Array.isArray(tags)) {
+      return [];
+    }
+    return [...tags].sort((tagA, tagB) =>
+      compareAsc(new Date(tagA.createdAt), new Date(tagB.createdAt))
+    );
+  }, [tags]);
+
   return (
     <div className="flex flex-row items-center flex-wrap">
-      {tags?.map((tag, index) => (
+      {sortedTags.map((tag, index) => (
         <div className="mr-2" key={index}>
           <TagLink tag={tag} />
         </div>

@@ -29,7 +29,9 @@ const useCurrentUser = (): [
     getCurrentUser();
   }, [getCurrentUser]);
 
-  return [currentUserQuery.data?.currentUser, currentUserQuery];
+  const currentUser = currentUserQuery.data?.currentUser;
+
+  return [currentUser, currentUserQuery];
 };
 
 export default useCurrentUser;

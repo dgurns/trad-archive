@@ -36,7 +36,6 @@ const ViewComments = ({ audioItem }: Props) => {
   const { id, slug, entityType, commentsCount } = audioItem;
 
   const commentsRef = useRef<HTMLDivElement>();
-  const commentsHeight = commentsRef.current?.scrollHeight ?? 0;
 
   const [modalIsVisible, setModalIsVisible] = useState(false);
 
@@ -59,9 +58,11 @@ const ViewComments = ({ audioItem }: Props) => {
   }, [getComments]);
 
   const onViewCommentsClicked = useCallback(() => {
-    fetchComments();
+    if (commentsCount !== comments.length) {
+      fetchComments();
+    }
     setModalIsVisible(true);
-  }, [fetchComments]);
+  }, [fetchComments, commentsCount, comments]);
 
   const onCreateCommentSuccess = useCallback(async () => {
     await fetchComments();
@@ -71,13 +72,23 @@ const ViewComments = ({ audioItem }: Props) => {
   const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 
   useEffect(() => {
-    if (commentsRef.current) {
+    // If comments have loaded, scroll to the bottom
+    if (!commentsRef.current) {
+      return;
+    }
+    const commentsHeight = commentsRef.current?.scrollHeight ?? 0;
+    if (modalIsVisible && commentsHeight > 0 && comments.length > 0) {
       commentsRef.current.scrollTo({
         top: commentsHeight,
         behavior: 'smooth',
       });
     }
-  }, [commentsHeight]);
+  }, [comments, modalIsVisible]);
+
+  const modalTitle =
+    commentsCount > 0
+      ? `${commentsCount} Comment${commentsCount === 1 ? '' : 's'}`
+      : 'No Comments';
 
   return (
     <>
@@ -98,22 +109,28 @@ const ViewComments = ({ audioItem }: Props) => {
         )}
       </button>
 
-      <Modal title="Comments" isVisible={modalIsVisible} onClose={onCloseModal}>
+      <Modal
+        title={modalTitle}
+        isVisible={modalIsVisible}
+        onClose={onCloseModal}
+      >
         {error && <div className="text-red-600 mb-2">{error.message}</div>}
 
-        <div className="max-h-1/2 overflow-auto" ref={commentsRef}>
-          {comments.map(({ createdByUser, createdAt, text }, index) => (
-            <div className="mb-2" key={index}>
-              <div className="text-gray-500 text-sm mb-1">
-                <Link href={`/users/${createdByUser.id}`}>
-                  {createdByUser.username}
-                </Link>{' '}
-                {DateTimeService.formatDateYearTime(createdAt)}
+        {comments.length > 0 && (
+          <div className="max-h-1/2 overflow-auto" ref={commentsRef}>
+            {comments.map(({ createdByUser, createdAt, text }, index) => (
+              <div className="mb-2" key={index}>
+                <div className="text-gray-500 text-sm mb-1">
+                  <Link href={`/users/${createdByUser.id}`}>
+                    {createdByUser.username}
+                  </Link>{' '}
+                  {DateTimeService.formatDateYearTime(createdAt)}
+                </div>
+                <div className="text-sm">{text}</div>
               </div>
-              <div className="text-sm">{text}</div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {loading && <LoadingCircle />}
 

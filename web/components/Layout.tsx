@@ -9,18 +9,17 @@ interface Props {
 const Layout = ({ children }: Props) => {
   const shouldShowPreviewWarning =
     NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF !== 'master';
-  const branchName = NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF
-    ? `Branch name: ${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}`
-    : undefined;
 
   return (
-    <div>
-      {shouldShowPreviewWarning && (
-        <div className="flex flex-row items-center justify-center p-1 bg-black text-white">
-          This is a preview version of the site with fake data. {branchName}
-        </div>
-      )}
-      <Header />
+    <div className={shouldShowPreviewWarning ? 'pt-20' : 'pt-12'}>
+      <div className="fixed top-0 right-0 left-0">
+        {shouldShowPreviewWarning && (
+          <div className="flex flex-row items-center justify-center p-1 bg-black text-white text-sm text-center">
+            This is a preview version of the site with fake data.
+          </div>
+        )}
+        <Header />
+      </div>
       <div className="flex flex-col justify-start items-center">
         <div className="w-full lg:max-w-5xl py-6 px-4 pb-44">{children}</div>
       </div>

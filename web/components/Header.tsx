@@ -80,12 +80,12 @@ const Header = () => {
   return (
     <>
       <div
-        className="flex flex-row p-4 justify-between text-white items-center bg-teal-900"
+        className="flex flex-row px-4 py-3 justify-between text-white items-center bg-teal-700"
         suppressHydrationWarning
       >
         <div className="flex flex-row">
           <Link href="/">
-            <a className="btn-text text-current whitespace-nowrap hover:text-gray-400">
+            <a className="btn-text text-current whitespace-nowrap text-yellow-200 hover:text-gray-400">
               Trad Archive
             </a>
           </Link>

@@ -8,10 +8,11 @@ module.exports = {
       transparent: 'transparent',
       current: 'currentColor',
       black: colors.black,
-      white: colors.white,
       gray: colors.gray,
-      teal: colors.teal,
       red: colors.red,
+      teal: colors.teal,
+      white: colors.white,
+      yellow: colors.yellow,
     },
     fontFamily: {
       sans: ['Karla', 'sans-serif'],

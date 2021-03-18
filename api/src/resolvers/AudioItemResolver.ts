@@ -23,6 +23,7 @@ import {
   CreateAudioItemInput,
   UpdateAudioItemInput,
 } from 'resolvers/AudioItemResolverTypes';
+import { entityRelationsForFind } from 'resolvers/EntityResolver';
 import EntityService from 'services/Entity';
 
 @Resolver(() => AudioItem)
@@ -67,31 +68,20 @@ export class AudioItemResolver {
     const whereOptions = id ? { id } : { slug };
     return AudioItem.findOne({
       where: whereOptions,
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
   @Query(() => [AudioItem])
   async audioItems(@Arg('input') input: AudioItemsInput) {
     const { take, skip } = input;
-    return AudioItem.find({
+    const audioItems = await AudioItem.find({
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
+    return audioItems;
   }
 
   @Query(() => [AudioItem])
@@ -216,15 +206,7 @@ export class AudioItemResolver {
 
     const audioItem = await AudioItem.findOne(
       { slug },
-      {
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
-      }
+      { relations: entityRelationsForFind }
     );
     if (!audioItem) {
       throw new Error('Could not find an AudioItem with that slug');

@@ -6,6 +6,7 @@ import {
   CreateInstrumentInput,
   UpdateInstrumentInput,
 } from 'resolvers/InstrumentResolverTypes';
+import { entityRelationsForFind } from 'resolvers/EntityResolver';
 import EntityService from 'services/Entity';
 
 @Resolver()
@@ -21,13 +22,7 @@ export class InstrumentResolver {
     const whereOptions = id ? { id } : { slug };
     return Instrument.findOne({
       where: whereOptions,
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -40,13 +35,7 @@ export class InstrumentResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -103,13 +92,7 @@ export class InstrumentResolver {
     const instrument = await Instrument.findOne(
       { slug },
       {
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
+        relations: entityRelationsForFind,
       }
     );
     if (!instrument) {

@@ -21,6 +21,41 @@ export const RelationshipFragments = {
   `,
 };
 
+export const TagEntityFragments = {
+  tagAudioItem: gql`
+    fragment TagAudioItem on AudioItem {
+      id
+      entityType
+      name
+      slug
+    }
+  `,
+  tagInstrument: gql`
+    fragment TagInstrument on Instrument {
+      id
+      entityType
+      name
+      slug
+    }
+  `,
+  tagPerson: gql`
+    fragment TagPerson on Person {
+      id
+      entityType
+      name
+      slug
+    }
+  `,
+  tagPlace: gql`
+    fragment TagPlace on Place {
+      id
+      entityType
+      name
+      slug
+    }
+  `,
+};
+
 export const TagFragments = {
   tag: gql`
     fragment Tag on Tag {
@@ -28,57 +63,25 @@ export const TagFragments = {
       relationship {
         ...Relationship
       }
-      subjectAudioItem {
-        id
-        entityType
-        name
-        slug
+      subjectEntity {
+        ...TagAudioItem
+        ...TagInstrument
+        ...TagPerson
+        ...TagPlace
       }
-      subjectPerson {
-        entityType
-        id
-        name
-        slug
-      }
-      subjectInstrument {
-        id
-        entityType
-        name
-        slug
-      }
-      subjectPlace {
-        id
-        entityType
-        name
-        slug
-      }
-      objectAudioItem {
-        id
-        entityType
-        name
-        slug
-      }
-      objectPerson {
-        id
-        entityType
-        name
-        slug
-      }
-      objectInstrument {
-        id
-        entityType
-        name
-        slug
-      }
-      objectPlace {
-        id
-        entityType
-        name
-        slug
+      objectEntity {
+        ...TagAudioItem
+        ...TagInstrument
+        ...TagPerson
+        ...TagPlace
       }
       createdAt
     }
     ${RelationshipFragments.relationship}
+    ${TagEntityFragments.tagAudioItem}
+    ${TagEntityFragments.tagInstrument}
+    ${TagEntityFragments.tagPerson}
+    ${TagEntityFragments.tagPlace}
   `,
 };
 

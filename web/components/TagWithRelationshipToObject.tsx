@@ -12,16 +12,7 @@ interface Props {
 // McComiskey", displaying the relationship from the subject entity to an object
 // entity.
 const TagWithRelationshipToObject = ({ tag, className }: Props) => {
-  const {
-    relationship,
-    objectAudioItem,
-    objectInstrument,
-    objectPerson,
-    objectPlace,
-  } = tag;
-
-  const objectEntity: Entity =
-    objectAudioItem ?? objectInstrument ?? objectPerson ?? objectPlace;
+  const { relationship, objectEntity } = tag;
 
   if (!objectEntity) {
     return null;

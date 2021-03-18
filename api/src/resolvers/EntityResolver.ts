@@ -1,16 +1,21 @@
 import { Resolver, Query, Arg, createUnionType } from 'type-graphql';
-import { getManager } from 'typeorm';
+import { getManager, SelectQueryBuilder } from 'typeorm';
 
 import { EntityType } from 'models/entities/base';
+import { Tag } from 'models/Tag';
 import { AudioItem } from 'models/entities/AudioItem';
 import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 import { SearchEntitiesInput } from 'resolvers/EntityResolverTypes';
 
-// Entity is a GraphQL union type returned by resolvers. It contains logic for
-// GraphQL clients to distinguish the entity type represented by a value.
-export const Entity = createUnionType({
+// Entity is a type for representing any entity
+export type Entity = AudioItem | Person | Instrument | Place;
+
+// EntityUnionType is a GraphQL union type returned by resolvers. It contains
+// logic for GraphQL clients to distinguish the entity type represented by a
+// value.
+export const EntityUnion = createUnionType({
   name: 'Entity',
   types: () => [AudioItem, Person, Instrument, Place],
   resolveType: (value) => {
@@ -29,10 +34,21 @@ export const Entity = createUnionType({
   },
 });
 
+// entityRelationsForFind contains the necessary relations needed when querying
+// for an Entity via `find()`, `findOne()`, etc. It does not fetch Tag relations
+// for the subjectEntity since that is just the root Entity itself.
+export const entityRelationsForFind = [
+  'tags',
+  'tags.objectAudioItem',
+  'tags.objectPerson',
+  'tags.objectInstrument',
+  'tags.objectPlace',
+];
+
 // EntityResolver contains resolvers for querying across all entity types
 @Resolver()
 export class EntityResolver {
-  @Query(() => Entity, { nullable: true })
+  @Query(() => EntityUnion, { nullable: true })
   async entity(
     @Arg('id', { nullable: true }) id?: string,
     @Arg('slug', { nullable: true }) slug?: string
@@ -43,43 +59,19 @@ export class EntityResolver {
     const results = await Promise.all([
       AudioItem.findOne({
         where: [{ id }, { slug }],
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
+        relations: entityRelationsForFind,
       }),
       Person.findOne({
         where: [{ id }, { slug }],
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
+        relations: entityRelationsForFind,
       }),
       Instrument.findOne({
         where: [{ id }, { slug }],
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
+        relations: entityRelationsForFind,
       }),
       Place.findOne({
         where: [{ id }, { slug }],
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
+        relations: entityRelationsForFind,
       }),
     ]);
     let entity;
@@ -91,7 +83,7 @@ export class EntityResolver {
     return entity;
   }
 
-  @Query(() => [Entity])
+  @Query(() => [EntityUnion])
   async searchEntities(@Arg('input') input: SearchEntitiesInput) {
     const { searchTerm, take } = input;
 
@@ -148,7 +140,7 @@ export class EntityResolver {
         .take(takeFromEach)
         .getMany(),
     ]);
-    const output: Array<typeof Entity> = [];
+    const output: Entity[] = [];
     results.forEach((resultArray) => output.push(...resultArray));
     return output;
   }

@@ -6,6 +6,7 @@ import {
   CreatePersonInput,
   UpdatePersonInput,
 } from 'resolvers/PersonResolverTypes';
+import { entityRelationsForFind } from 'resolvers/EntityResolver';
 import EntityService from 'services/Entity';
 
 @Resolver()
@@ -21,13 +22,7 @@ export class PersonResolver {
     const whereOptions = id ? { id } : { slug };
     return Person.findOne({
       where: whereOptions,
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -40,13 +35,7 @@ export class PersonResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -120,15 +109,7 @@ export class PersonResolver {
 
     const person = await Person.findOne(
       { slug },
-      {
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
-      }
+      { relations: entityRelationsForFind }
     );
     if (!person) {
       throw new Error('Could not find a Person with that slug');

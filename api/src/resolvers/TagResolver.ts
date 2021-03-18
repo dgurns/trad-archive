@@ -1,5 +1,5 @@
-import { Resolver, Mutation, Ctx, Arg, Args, Query } from 'type-graphql';
-import { getManager } from 'typeorm';
+import { Resolver, Mutation, Ctx, Arg, Query } from 'type-graphql';
+import { getManager, SelectQueryBuilder } from 'typeorm';
 import { CustomContext } from 'middleware/context';
 import { Tag } from 'models/Tag';
 import { User } from 'models/User';
@@ -11,22 +11,39 @@ import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 import { Relationship } from 'models/Relationship';
 
+const tagRelationsForFind = [
+  'subjectAudioItem',
+  'subjectPerson',
+  'subjectInstrument',
+  'subjectPlace',
+  'objectAudioItem',
+  'objectPerson',
+  'objectInstrument',
+  'objectPlace',
+];
+
+const addTagRelationsToQueryBuilder = (
+  query: SelectQueryBuilder<Tag>
+): SelectQueryBuilder<Tag> => {
+  return query
+    .leftJoinAndSelect('tag.relationship', 'relationship')
+    .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
+    .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
+    .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
+    .leftJoinAndSelect('tag.subjectPlace', 'subjectPlace')
+    .leftJoinAndSelect('tag.objectAudioItem', 'objectAudioItem')
+    .leftJoinAndSelect('tag.objectPerson', 'objectPerson')
+    .leftJoinAndSelect('tag.objectInstrument', 'objectInstrument')
+    .leftJoinAndSelect('tag.objectPlace', 'objectPlace');
+};
+
 @Resolver()
 export class TagResolver {
   @Query(() => Tag)
   tag(@Arg('id') id: string) {
     return Tag.findOne({
       where: { id },
-      relations: [
-        'subjectAudioItem',
-        'subjectPerson',
-        'subjectInstrument',
-        'subjectPlace',
-        'objectAudioItem',
-        'objectPerson',
-        'objectInstrument',
-        'objectPlace',
-      ],
+      relations: tagRelationsForFind,
     });
   }
 
@@ -37,17 +54,13 @@ export class TagResolver {
   async tagsToEntity(@Arg('input') input: TagsToEntityInput) {
     const { entityType, entityId } = input;
 
-    const tags = await getManager()
+    const tagsQuery = await getManager()
       .createQueryBuilder(Tag, 'tag')
       .where(`tag.object${entityType}Id = :entityId`, {
         entityId,
-      })
-      .leftJoinAndSelect('tag.relationship', 'relationship')
-      .leftJoinAndSelect(`tag.object${entityType}`, `object${entityType}`)
-      .leftJoinAndSelect('tag.subjectPerson', 'subjectPerson')
-      .leftJoinAndSelect('tag.subjectInstrument', 'subjectInstrument')
-      .leftJoinAndSelect('tag.subjectAudioItem', 'subjectAudioItem')
-      .leftJoinAndSelect('tag.subjectPlace', 'subjectPlace')
+      });
+    const tagsQueryWithRelations = addTagRelationsToQueryBuilder(tagsQuery);
+    const tags = tagsQueryWithRelations
       .orderBy('tag.createdAt', 'DESC')
       .getMany();
     return tags;

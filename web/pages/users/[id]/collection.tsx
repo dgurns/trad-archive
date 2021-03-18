@@ -4,6 +4,7 @@ import Link from 'next/link';
 import useCollectionEntriesForUser from 'hooks/useCollectionEntriesForUser';
 import usePlayer from 'hooks/usePlayer';
 import { Tag } from 'types';
+import EntityService from 'services/Entity';
 
 import Layout from 'components/Layout';
 import RequireUser from 'components/RequireUser';
@@ -13,23 +14,10 @@ interface TagLinkProps {
   tag: Tag;
 }
 const TagLink = ({ tag }: TagLinkProps) => {
-  const { objectAudioItem, objectPerson, objectInstrument, objectPlace } = tag;
-  let href = '';
-  if (objectAudioItem) {
-    href = `/entities/audio-items/${objectAudioItem.slug}`;
-  } else if (objectPerson) {
-    href = `/entities/people/${objectPerson.slug}`;
-  } else if (objectInstrument) {
-    href = `/entities/instruments/${objectInstrument.slug}`;
-  } else if (objectPlace) {
-    href = `/entities/places/${objectPlace.slug}`;
-  }
-  const text =
-    objectAudioItem?.name ??
-    objectPerson?.name ??
-    objectInstrument?.name ??
-    objectPlace?.name;
-  return <Link href={href}>{text}</Link>;
+  const { objectEntity } = tag;
+  const href = EntityService.makeHrefForView(objectEntity);
+
+  return <Link href={href}>{objectEntity.name}</Link>;
 };
 
 const UserIdCollection = () => {

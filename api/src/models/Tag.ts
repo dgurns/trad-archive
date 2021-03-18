@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  AfterLoad,
 } from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
@@ -14,6 +15,7 @@ import { Person } from 'models/entities/Person';
 import { Instrument } from 'models/entities/Instrument';
 import { Place } from 'models/entities/Place';
 import { Relationship } from 'models/Relationship';
+import { EntityUnion, Entity } from 'resolvers/EntityResolver';
 
 // Tag represents a connection between two entities and specifies the
 // relationship between them.
@@ -28,35 +30,27 @@ export class Tag extends TypeOrmBaseEntity {
   @ManyToOne(() => Relationship, { eager: true })
   relationship!: Relationship;
 
-  @Field(() => AudioItem, { nullable: true })
   @ManyToOne(() => AudioItem, { nullable: true })
   subjectAudioItem!: AudioItem;
 
-  @Field(() => Person, { nullable: true })
   @ManyToOne(() => Person, { nullable: true })
   subjectPerson!: Person;
 
-  @Field(() => Instrument, { nullable: true })
   @ManyToOne(() => Instrument, { nullable: true })
   subjectInstrument!: Instrument;
 
-  @Field(() => Place, { nullable: true })
   @ManyToOne(() => Place, { nullable: true })
   subjectPlace!: Place;
 
-  @Field(() => AudioItem, { nullable: true })
   @ManyToOne(() => AudioItem, { nullable: true })
   objectAudioItem!: AudioItem;
 
-  @Field(() => Person, { nullable: true })
   @ManyToOne(() => Person, { nullable: true })
   objectPerson!: Person;
 
-  @Field(() => Instrument, { nullable: true })
   @ManyToOne(() => Instrument, { nullable: true })
   objectInstrument!: Instrument;
 
-  @Field(() => Place, { nullable: true })
   @ManyToOne(() => Place, { nullable: true })
   objectPlace!: Place;
 
@@ -71,4 +65,30 @@ export class Tag extends TypeOrmBaseEntity {
   @Field()
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
+
+  // Field resolvers make this model easier to consume via the GraphQL API.
+  // These fields are not saved in the database and are generated at runtime.
+  // `subjectEntity` is nullable because if you're getting tags for an entity,
+  // you wouldn't need to return the subject entity itself.
+  @Field(() => EntityUnion, { nullable: true })
+  subjectEntity!: Entity;
+  @AfterLoad()
+  setSubjectEntity() {
+    this.subjectEntity =
+      this.subjectAudioItem ??
+      this.subjectPerson ??
+      this.subjectInstrument ??
+      this.subjectPlace;
+  }
+
+  @Field(() => EntityUnion)
+  objectEntity!: Entity;
+  @AfterLoad()
+  setObjectEntity() {
+    this.objectEntity =
+      this.objectAudioItem ??
+      this.objectPerson ??
+      this.objectInstrument ??
+      this.objectPlace;
+  }
 }

@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
+
 import { CustomContext } from 'middleware/context';
 import { Place } from 'models/entities/Place';
 import { User } from 'models/User';
@@ -6,6 +7,7 @@ import {
   CreatePlaceInput,
   UpdatePlaceInput,
 } from 'resolvers/PlaceResolverTypes';
+import { entityRelationsForFind } from 'resolvers/EntityResolver';
 import EntityService from 'services/Entity';
 
 @Resolver()
@@ -21,13 +23,7 @@ export class PlaceResolver {
     const whereOptions = id ? { id } : { slug };
     return Place.findOne({
       where: whereOptions,
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -40,13 +36,7 @@ export class PlaceResolver {
       take,
       skip,
       order: { createdAt: 'DESC' },
-      relations: [
-        'tags',
-        'tags.objectAudioItem',
-        'tags.objectPerson',
-        'tags.objectInstrument',
-        'tags.objectPlace',
-      ],
+      relations: entityRelationsForFind,
     });
   }
 
@@ -106,15 +96,7 @@ export class PlaceResolver {
 
     const place = await Place.findOne(
       { slug },
-      {
-        relations: [
-          'tags',
-          'tags.objectAudioItem',
-          'tags.objectPerson',
-          'tags.objectInstrument',
-          'tags.objectPlace',
-        ],
-      }
+      { relations: entityRelationsForFind }
     );
     if (!place) {
       throw new Error('Could not find a Place with that slug');

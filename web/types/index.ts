@@ -25,6 +25,15 @@ export enum EntityType {
 export function isAudioItem(entity: Entity): entity is AudioItem {
   return (entity as AudioItem).entityType === EntityType.AudioItem;
 }
+export function isPerson(entity: Entity): entity is Person {
+  return (entity as Person).entityType === EntityType.Person;
+}
+export function isInstrument(entity: Entity): entity is Instrument {
+  return (entity as Instrument).entityType === EntityType.Instrument;
+}
+export function isPlace(entity: Entity): entity is Place {
+  return (entity as Place).entityType === EntityType.Place;
+}
 
 interface BaseEntity {
   id: string;
@@ -77,14 +86,8 @@ export interface Relationship {
 export interface Tag {
   id: string;
   relationship: Relationship;
-  subjectAudioItem: AudioItem | null;
-  subjectPerson: Person | null;
-  subjectInstrument: Instrument | null;
-  subjectPlace: Place | null;
-  objectAudioItem: AudioItem | null;
-  objectPerson: Person | null;
-  objectInstrument: Instrument | null;
-  objectPlace: Place | null;
+  subjectEntity: Entity;
+  objectEntity: Entity;
   createdByUser: User;
   createdAt: string;
   updatedAt: string;

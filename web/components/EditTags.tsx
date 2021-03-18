@@ -99,19 +99,7 @@ const EditTags = ({ entity, className, children }: Props) => {
           <LoadingBlock />
         ) : (
           tags.map((tag, index) => {
-            const {
-              id,
-              relationship,
-              objectPerson,
-              objectInstrument,
-              objectAudioItem,
-              objectPlace,
-            } = tag;
-            const objectEntity: Entity =
-              objectPerson ??
-              objectInstrument ??
-              objectAudioItem ??
-              objectPlace;
+            const { id, relationship, objectEntity } = tag;
             return (
               <div
                 className="flex flex-row items-start justify-start"

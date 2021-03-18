@@ -66,7 +66,7 @@ export class Tag extends TypeOrmBaseEntity {
   @UpdateDateColumn({ type: 'timestamptz' })
   updatedAt!: Date;
 
-  // Field resolvers make this model easier to consume via the GraphQL API.
+  // Generated fields make this model easier to consume via the GraphQL API.
   // These fields are not saved in the database and are generated at runtime.
   // `subjectEntity` is nullable because if you're getting tags for an entity,
   // you wouldn't need to return the subject entity itself.

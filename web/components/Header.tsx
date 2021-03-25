@@ -80,7 +80,7 @@ const Header = () => {
   return (
     <>
       <div
-        className="flex flex-row px-4 py-3 justify-between text-white items-center bg-teal-700"
+        className="flex flex-row py-3 px-4 justify-between text-white items-center bg-teal-700"
         suppressHydrationWarning
       >
         <div className="flex flex-row">

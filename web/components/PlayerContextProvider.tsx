@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Player from "components/Player";
 import { AudioItem } from "types";
 
 interface PlayerContextValue {
 	activePlayerAudioItem: AudioItem | null;
 	setActivePlayerAudioItem: React.Dispatch<React.SetStateAction<AudioItem>>;
+	activeItemDurationSeconds: number | undefined;
+	setActiveItemDurationSeconds: React.Dispatch<
+		React.SetStateAction<number | undefined>
+	>;
 	playbackPositionSeconds: number | undefined;
 	setPlaybackPositionSeconds: React.Dispatch<
 		React.SetStateAction<number | undefined>
@@ -25,6 +29,9 @@ function PlayerContextProvider({ children }: PlayerContextProviderProps) {
 	const [activePlayerAudioItem, setActivePlayerAudioItem] = useState<AudioItem>(
 		null
 	);
+	const [activeItemDurationSeconds, setActiveItemDurationSeconds] = useState<
+		number | undefined
+	>(undefined);
 	const [playbackPositionSeconds, setPlaybackPositionSeconds] = useState<
 		number | undefined
 	>(undefined);
@@ -32,11 +39,25 @@ function PlayerContextProvider({ children }: PlayerContextProviderProps) {
 		number | undefined
 	>(undefined);
 
+	// Reset PlayerContext whenever there is no active item
+	useEffect(() => {
+		const resetPlayerContext = () => {
+			setActiveItemDurationSeconds(undefined);
+			setPlaybackPositionSeconds(undefined);
+			setSeekPositionSeconds(undefined);
+		};
+		if (!activePlayerAudioItem) {
+			resetPlayerContext();
+		}
+	}, [activePlayerAudioItem]);
+
 	return (
 		<PlayerContext.Provider
 			value={{
 				activePlayerAudioItem,
 				setActivePlayerAudioItem,
+				activeItemDurationSeconds,
+				setActiveItemDurationSeconds,
 				playbackPositionSeconds,
 				setPlaybackPositionSeconds,
 				seekPositionSeconds,

@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 import { AudioItem } from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
@@ -16,9 +17,18 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 	const {
 		activePlayerAudioItem,
 		setActivePlayerAudioItem,
+		activeItemDurationSeconds,
+		playbackPositionSeconds,
 	} = usePlayerContext();
 
 	const audioItemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
+
+	const shouldShowPositionAndDuration =
+		typeof playbackPositionSeconds === "number" &&
+		typeof activeItemDurationSeconds === "number";
+	const positionAndDuration = `${DateTime.formatSecondsAsDuration(
+		playbackPositionSeconds
+	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds)}`;
 
 	return (
 		<div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 mb-8">
@@ -32,7 +42,12 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 			<div className="flex flex-row w-full justify-start items-center mb-2 h-16 border border-gray-200 rounded">
 				{audioItemIsInPlayer ? (
-					<div className="pl-4 text-gray-500">Playing</div>
+					<div className="pl-4 text-gray-500">
+						Playing
+						{shouldShowPositionAndDuration && (
+							<span className="ml-4">{positionAndDuration}</span>
+						)}
+					</div>
 				) : (
 					<button
 						style={{ lineHeight: 0 }}

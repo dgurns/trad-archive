@@ -88,7 +88,7 @@ export interface Tag {
 	relationship: Relationship;
 	subjectEntity?: Entity;
 	objectEntity: Entity;
-	subjectTimeMarkerSeconds?: number;
+	subjectTimeMarkerSeconds?: number | null;
 	createdByUser: User;
 	createdAt: string;
 	updatedAt: string;

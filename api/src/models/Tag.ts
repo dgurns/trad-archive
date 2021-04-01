@@ -6,6 +6,7 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	AfterLoad,
+	Column,
 } from "typeorm";
 import { ObjectType, Field, Int } from "type-graphql";
 
@@ -55,6 +56,7 @@ export class Tag extends TypeOrmBaseEntity {
 	objectPlace!: Place;
 
 	@Field(() => Int, { nullable: true })
+	@Column({ nullable: true, default: null })
 	subjectTimeMarkerSeconds!: number;
 
 	@Field(() => User)

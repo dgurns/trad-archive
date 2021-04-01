@@ -1,17 +1,24 @@
-import React, { useContext } from 'react';
-import { AudioItem } from 'types';
-
-interface PlayerContextValue {
-  activePlayerAudioItem: AudioItem | null;
-  setActivePlayerAudioItem: React.Dispatch<React.SetStateAction<AudioItem>>;
-}
-export const PlayerContext = React.createContext<PlayerContextValue>(null);
+import { useContext } from "react";
+import { PlayerContext } from "components/PlayerContextProvider";
 
 const usePlayer = () => {
-  const { activePlayerAudioItem, setActivePlayerAudioItem } = useContext(
-    PlayerContext
-  );
-  return { activePlayerAudioItem, setActivePlayerAudioItem };
+	const {
+		activePlayerAudioItem,
+		setActivePlayerAudioItem,
+		playbackPositionSeconds,
+		setPlaybackPositionSeconds,
+		seekPositionSeconds,
+		setSeekPositionSeconds,
+	} = useContext(PlayerContext);
+
+	return {
+		activePlayerAudioItem,
+		setActivePlayerAudioItem,
+		playbackPositionSeconds,
+		setPlaybackPositionSeconds,
+		seekPositionSeconds,
+		setSeekPositionSeconds,
+	};
 };
 
 export default usePlayer;

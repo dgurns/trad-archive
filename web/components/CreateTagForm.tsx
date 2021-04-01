@@ -161,7 +161,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		<>
 			<div>What is the relationship between these two entities?</div>
 
-			<div className="mt-3 pl-6">
+			<div className="mt-3">
 				<SelectRelationship
 					subjectEntity={entity}
 					objectEntity={selectedEntity}
@@ -170,7 +170,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			</div>
 
 			{selectedRelationshipId && (
-				<div className="mt-4 flex flex-row items-center justify-start">
+				<div className="mt-6 flex flex-row items-center justify-start">
 					<input
 						type="checkbox"
 						id="reverse-relationship"
@@ -186,7 +186,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			)}
 
 			{shouldCreateInverseRelationship && (
-				<div className="mt-3 pl-6">
+				<div className="mt-3">
 					<SelectRelationship
 						subjectEntity={selectedEntity}
 						objectEntity={entity}
@@ -196,7 +196,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			)}
 
 			{shouldShowTimeMarkerCheckbox && (
-				<div className="mt-2 flex flex-row items-center justify-start">
+				<div className="mt-4 flex flex-row items-center justify-start">
 					<input
 						type="checkbox"
 						id="time-marker"
@@ -220,7 +220,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			)}
 
 			<button
-				className="btn mt-4"
+				className="btn mt-6"
 				onClick={onCreateTagClicked}
 				disabled={loading || !selectedRelationshipId}
 			>

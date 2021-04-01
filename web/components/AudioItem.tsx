@@ -1,19 +1,20 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import { AudioItem } from "types";
+import { AudioItem, Tag } from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
 
 import Tags from "components/Tags";
 import AddToCollection from "components/AddToCollection";
 import ViewComments from "components/ViewComments";
+import TimeMarkers from "components/TimeMarkers";
 
 interface Props {
 	audioItem: AudioItem;
 }
 const AudioItemComponent = ({ audioItem }: Props) => {
-	const { name, slug, description, createdByUser, createdAt } = audioItem;
+	const { name, slug, description, tags, createdByUser, createdAt } = audioItem;
 
 	const {
 		activeAudioItem,
@@ -22,11 +23,30 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 		playbackPositionSeconds,
 	} = usePlayerContext();
 
+	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
+	const tagsWithTimeMarkers: Tag[] = useMemo(
+		() =>
+			tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds === "number"),
+		[tags]
+	);
+	const shouldShowTimeMarkersIcon = tagsWithTimeMarkers.length > 0;
+
+	const [shouldShowTimeMarkers, setShouldShowTimeMarkers] = useState(false);
+
 	const onPlayPressed = useCallback(() => {
 		setActiveAudioItem(audioItem);
 	}, [audioItem]);
 
-	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
+	const onTimeMarkersIconClicked = useCallback(() => {
+		setShouldShowTimeMarkers(!shouldShowTimeMarkers);
+	}, [shouldShowTimeMarkers]);
+
+	// Show time markers if they exist and the AudioItem is in the player
+	useEffect(() => {
+		if (audioItemIsInPlayer && tagsWithTimeMarkers.length > 0) {
+			setShouldShowTimeMarkers(true);
+		}
+	}, [audioItemIsInPlayer, tagsWithTimeMarkers]);
 
 	const shouldShowPositionAndDuration =
 		audioItemIsInPlayer &&
@@ -46,26 +66,45 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 				<Tags entity={audioItem} />
 			</div>
 
-			<div className="flex flex-row w-full justify-start items-center mb-2 h-16 border border-gray-200 rounded">
-				{audioItemIsInPlayer ? (
-					<div className="pl-4 text-gray-500">Playing</div>
-				) : (
-					<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
-						<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
-							play_arrow
-						</i>
-					</button>
-				)}
+			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
+				<div className="flex flex-row justify-start items-center pr-4 h-16">
+					<div className="flex flex-1">
+						{audioItemIsInPlayer ? (
+							<div className="pl-4 text-gray-500">Playing</div>
+						) : (
+							<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
+								<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
+									play_arrow
+								</i>
+							</button>
+						)}
 
-				<div
-					className={`ml-4 text-gray-500 opacity-0 ${
-						shouldShowPositionAndDuration
-							? "opacity-100 transition-opacity delay-500 duration-400"
-							: ""
-					}`}
-				>
-					{positionAndDuration}
+						<div
+							className={`ml-4 text-gray-500 opacity-0 ${
+								shouldShowPositionAndDuration
+									? "opacity-100 transition-opacity delay-500 duration-400"
+									: ""
+							}`}
+						>
+							{positionAndDuration}
+						</div>
+					</div>
+
+					{shouldShowTimeMarkersIcon && (
+						<button
+							className="btn-icon flex flex-row items-center"
+							onClick={onTimeMarkersIconClicked}
+						>
+							<i className="material-icons">format_list_bulleted</i>
+						</button>
+					)}
 				</div>
+
+				{shouldShowTimeMarkers && (
+					<div className="mx-4 mb-3 pt-3 border-t border-gray-200">
+						<TimeMarkers audioItem={audioItem} />
+					</div>
+				)}
 			</div>
 
 			<div className="mt-4">

@@ -85,21 +85,18 @@ const TimeMarkers = ({ audioItem }: Props) => {
 							key={index}
 							onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
 						>
-							<span className="mr-4">
+							<div className="w-14">
 								{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}{" "}
-							</span>
+							</div>
 							{tagsAtTimeMarker.map((tag, index) => (
-								<>
-									<Link
-										href={Entity.makeHrefForView(tag.objectEntity)}
-										key={index}
-									>
+								<span key={index}>
+									<Link href={Entity.makeHrefForView(tag.objectEntity)}>
 										{tag.objectEntity.name}
 									</Link>
 									{index !== tagsAtTimeMarker.length - 1 && (
 										<span className="mr-1">,</span>
 									)}
-								</>
+								</span>
 							))}
 						</div>
 					);

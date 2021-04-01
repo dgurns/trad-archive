@@ -40,7 +40,7 @@ const AudioPlayer = ({ item }: AudioPlayerProps) => {
 	// position to match and ensure audio is playing
 	useEffect(() => {
 		const audioPlayer = audioPlayerRef.current;
-		if (audioPlayer && seekPositionSeconds) {
+		if (audioPlayer && typeof seekPositionSeconds === "number") {
 			audioPlayer.currentTime = seekPositionSeconds;
 			setSeekPositionSeconds(undefined);
 			if (audioPlayer.paused) {

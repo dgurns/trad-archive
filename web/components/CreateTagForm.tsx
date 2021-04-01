@@ -33,9 +33,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		activeItemDurationSeconds,
 	} = usePlayerContext();
 
+	const isActiveAudioItem = activeAudioItem?.id === entity.id;
+	const defaultTimeMarkerValue = isActiveAudioItem
+		? playbackPositionSeconds
+		: undefined;
+
 	const [shouldAddTimeMarker, setShouldAddTimeMarker] = useState(false);
-	const [timeMarkerValue, setTimeMarkerValue] = useState(
-		playbackPositionSeconds
+	const [timeMarkerValue, setTimeMarkerValue] = useState<number | undefined>(
+		defaultTimeMarkerValue
 	);
 
 	const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
@@ -155,8 +160,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		);
 	}
 
-	const shouldShowTimeMarkerCheckbox = activeAudioItem?.id === entity.id;
-
 	return (
 		<>
 			<div>What is the relationship between these two entities?</div>
@@ -195,29 +198,27 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				</div>
 			)}
 
-			{shouldShowTimeMarkerCheckbox && (
-				<div className="mt-4 flex flex-row items-center justify-start">
-					<input
-						type="checkbox"
-						id="time-marker"
-						checked={shouldAddTimeMarker}
-						onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
-					/>
-					<label htmlFor="time-marker" className="ml-2">
-						<div className="flex flex-row items-center">
-							Mark this tag at time{" "}
-							<div className="w-16 mx-2">
-								<input
-									type="number"
-									value={timeMarkerValue}
-									onChange={onTimeMarkerValueChanged}
-								/>{" "}
-							</div>
-							second{timeMarkerValue === 1 ? "" : "s"}
+			<div className="mt-4 flex flex-row items-center justify-start">
+				<input
+					type="checkbox"
+					id="time-marker"
+					checked={shouldAddTimeMarker}
+					onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
+				/>
+				<label htmlFor="time-marker" className="ml-2">
+					<div className="flex flex-row items-center">
+						Mark this tag at time{" "}
+						<div className="w-16 mx-2">
+							<input
+								type="number"
+								value={timeMarkerValue}
+								onChange={onTimeMarkerValueChanged}
+							/>{" "}
 						</div>
-					</label>
-				</div>
-			)}
+						second{timeMarkerValue === 1 ? "" : "s"}
+					</div>
+				</label>
+			</div>
 
 			<button
 				className="btn mt-6"

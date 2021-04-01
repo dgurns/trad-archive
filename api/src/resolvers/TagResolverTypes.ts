@@ -1,29 +1,32 @@
-import { InputType, Field } from 'type-graphql';
-import { EntityType } from 'models/entities/base';
+import { InputType, Field, Int } from "type-graphql";
+import { EntityType } from "models/entities/base";
 
 @InputType()
 export class TagsToEntityInput {
-  @Field(() => EntityType)
-  entityType!: EntityType;
+	@Field(() => EntityType)
+	entityType!: EntityType;
 
-  @Field()
-  entityId!: string;
+	@Field()
+	entityId!: string;
 }
 
 @InputType()
 export class CreateTagInput {
-  @Field(() => String)
-  relationshipId!: string;
+	@Field(() => String)
+	relationshipId!: string;
 
-  @Field(() => EntityType)
-  subjectEntityType!: EntityType;
+	@Field(() => EntityType)
+	subjectEntityType!: EntityType;
 
-  @Field()
-  subjectEntityId!: string;
+	@Field()
+	subjectEntityId!: string;
 
-  @Field(() => EntityType)
-  objectEntityType!: EntityType;
+	@Field(() => EntityType)
+	objectEntityType!: EntityType;
 
-  @Field()
-  objectEntityId!: string;
+	@Field()
+	objectEntityId!: string;
+
+	@Field(() => Int, { nullable: true })
+	subjectTimeMarkerSeconds!: number;
 }

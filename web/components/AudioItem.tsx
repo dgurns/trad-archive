@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import { AudioItem } from 'types';
-import DateTime from 'services/DateTime';
-import usePlayer from 'hooks/usePlayer';
+import Link from "next/link";
+import { AudioItem } from "types";
+import DateTime from "services/DateTime";
+import usePlayerContext from "hooks/usePlayerContext";
 
-import Tags from 'components/Tags';
-import AddToCollection from 'components/AddToCollection';
-import ViewComments from 'components/ViewComments';
+import Tags from "components/Tags";
+import AddToCollection from "components/AddToCollection";
+import ViewComments from "components/ViewComments";
 
 interface Props {
 	audioItem: AudioItem;
@@ -13,7 +13,11 @@ interface Props {
 const AudioItemComponent = ({ audioItem }: Props) => {
 	const { name, slug, description, createdByUser, createdAt } = audioItem;
 
-	const { activePlayerAudioItem, setActivePlayerAudioItem } = usePlayer();
+	const {
+		activePlayerAudioItem,
+		setActivePlayerAudioItem,
+	} = usePlayerContext();
+
 	const audioItemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
 
 	return (
@@ -43,10 +47,10 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 			<div className="mt-4">
 				<div className="text-gray-500 text-sm">
-					Added by{' '}
+					Added by{" "}
 					<Link href={`/users/${createdByUser.id}`}>
 						{createdByUser.username}
-					</Link>{' '}
+					</Link>{" "}
 					{DateTime.formatDateYearTime(createdAt)}
 				</div>
 				<div className="text-sm mt-1">{description}</div>

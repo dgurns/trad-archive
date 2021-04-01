@@ -29,6 +29,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
 
 	const shouldShowPositionAndDuration =
+		audioItemIsInPlayer &&
 		typeof playbackPositionSeconds === "number" &&
 		typeof activeItemDurationSeconds === "number";
 	const positionAndDuration = `${DateTime.formatSecondsAsDuration(
@@ -47,12 +48,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 			<div className="flex flex-row w-full justify-start items-center mb-2 h-16 border border-gray-200 rounded">
 				{audioItemIsInPlayer ? (
-					<div className="pl-4 text-gray-500">
-						Playing
-						{shouldShowPositionAndDuration && (
-							<span className="ml-4">{positionAndDuration}</span>
-						)}
-					</div>
+					<div className="pl-4 text-gray-500">Playing</div>
 				) : (
 					<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
 						<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
@@ -60,6 +56,16 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 						</i>
 					</button>
 				)}
+
+				<div
+					className={`ml-4 text-gray-500 opacity-0 ${
+						shouldShowPositionAndDuration
+							? "opacity-100 transition-opacity delay-500 duration-400"
+							: ""
+					}`}
+				>
+					{positionAndDuration}
+				</div>
 			</div>
 
 			<div className="mt-4">

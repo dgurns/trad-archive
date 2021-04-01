@@ -27,10 +27,7 @@ const UserIdCollection = () => {
 
 	const [collectionEntries, { loading, error }] = useCollectionEntriesForUser();
 
-	const {
-		activePlayerAudioItem,
-		setActivePlayerAudioItem,
-	} = usePlayerContext();
+	const { activeAudioItem, setActiveAudioItem } = usePlayerContext();
 
 	return (
 		<Layout>
@@ -46,8 +43,7 @@ const UserIdCollection = () => {
 						</div>
 					)}
 					{collectionEntries?.map(({ audioItem }, index) => {
-						const audioItemIsInPlayer =
-							activePlayerAudioItem?.id === audioItem.id;
+						const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
 
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
@@ -68,7 +64,7 @@ const UserIdCollection = () => {
 								) : (
 									<button
 										className="btn-text flex flex-row items-center"
-										onClick={() => setActivePlayerAudioItem(audioItem)}
+										onClick={() => setActiveAudioItem(audioItem)}
 									>
 										<i className="material-icons mb-0.5">play_arrow</i>
 										Play

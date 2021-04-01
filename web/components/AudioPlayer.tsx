@@ -15,10 +15,11 @@ const AudioPlayer = ({ item }: AudioPlayerProps) => {
 		setSeekPositionSeconds,
 	} = usePlayerContext();
 
-	// When the audio item's duration changes, update PlayerContext
+	// Set up event callbacks on the audio tag
 	useEffect(() => {
 		const audioPlayer = audioPlayerRef.current;
 		if (audioPlayer) {
+			// When the audio item's duration changes, update PlayerContext
 			audioPlayer.ondurationchange = () => {
 				const duration = audioPlayer.duration;
 				if (typeof duration === "number") {
@@ -26,14 +27,8 @@ const AudioPlayer = ({ item }: AudioPlayerProps) => {
 					setActiveItemDurationSeconds(durationSeconds);
 				}
 			};
-		}
-	}, []);
-
-	// As the audio tag's playback position changes, update PlayerContext with the
-	// new value
-	useEffect(() => {
-		const audioPlayer = audioPlayerRef.current;
-		if (audioPlayer) {
+			// As the audio tag's playback position changes, update PlayerContext with the
+			// new value
 			audioPlayer.ontimeupdate = () => {
 				const playbackPositionSeconds = Math.floor(audioPlayer.currentTime);
 				setPlaybackPositionSeconds(playbackPositionSeconds);

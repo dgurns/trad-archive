@@ -3,8 +3,8 @@ import Player from "components/Player";
 import { AudioItem } from "types";
 
 interface PlayerContextValue {
-	activePlayerAudioItem: AudioItem | null;
-	setActivePlayerAudioItem: React.Dispatch<React.SetStateAction<AudioItem>>;
+	activeAudioItem: AudioItem | null;
+	setActiveAudioItem: React.Dispatch<React.SetStateAction<AudioItem>>;
 	activeItemDurationSeconds: number | undefined;
 	setActiveItemDurationSeconds: React.Dispatch<
 		React.SetStateAction<number | undefined>
@@ -26,9 +26,7 @@ interface PlayerContextProviderProps {
 }
 
 function PlayerContextProvider({ children }: PlayerContextProviderProps) {
-	const [activePlayerAudioItem, setActivePlayerAudioItem] = useState<AudioItem>(
-		null
-	);
+	const [activeAudioItem, setActiveAudioItem] = useState<AudioItem>(null);
 	const [activeItemDurationSeconds, setActiveItemDurationSeconds] = useState<
 		number | undefined
 	>(undefined);
@@ -39,23 +37,20 @@ function PlayerContextProvider({ children }: PlayerContextProviderProps) {
 		number | undefined
 	>(undefined);
 
-	// Reset PlayerContext whenever there is no active item
+	// Reset PlayerContext when there is no active item
 	useEffect(() => {
-		const resetPlayerContext = () => {
+		if (!activeAudioItem) {
 			setActiveItemDurationSeconds(undefined);
 			setPlaybackPositionSeconds(undefined);
 			setSeekPositionSeconds(undefined);
-		};
-		if (!activePlayerAudioItem) {
-			resetPlayerContext();
 		}
-	}, [activePlayerAudioItem]);
+	}, [activeAudioItem]);
 
 	return (
 		<PlayerContext.Provider
 			value={{
-				activePlayerAudioItem,
-				setActivePlayerAudioItem,
+				activeAudioItem,
+				setActiveAudioItem,
 				activeItemDurationSeconds,
 				setActiveItemDurationSeconds,
 				playbackPositionSeconds,
@@ -67,7 +62,7 @@ function PlayerContextProvider({ children }: PlayerContextProviderProps) {
 			{children}
 
 			{/* Player is rendered here so it is persistent across all routes */}
-			{activePlayerAudioItem && (
+			{activeAudioItem && (
 				<div
 					className="fixed bottom-0 left-0 right-0"
 					style={{

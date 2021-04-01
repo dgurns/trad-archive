@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import Link from "next/link";
 
 import { AudioItem } from "types";
@@ -15,13 +16,17 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 	const { name, slug, description, createdByUser, createdAt } = audioItem;
 
 	const {
-		activePlayerAudioItem,
-		setActivePlayerAudioItem,
+		activeAudioItem,
+		setActiveAudioItem,
 		activeItemDurationSeconds,
 		playbackPositionSeconds,
 	} = usePlayerContext();
 
-	const audioItemIsInPlayer = activePlayerAudioItem?.id === audioItem.id;
+	const onPlayPressed = useCallback(() => {
+		setActiveAudioItem(audioItem);
+	}, [audioItem]);
+
+	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
 
 	const shouldShowPositionAndDuration =
 		typeof playbackPositionSeconds === "number" &&
@@ -49,10 +54,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 						)}
 					</div>
 				) : (
-					<button
-						style={{ lineHeight: 0 }}
-						onClick={() => setActivePlayerAudioItem(audioItem)}
-					>
+					<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
 						<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
 							play_arrow
 						</i>

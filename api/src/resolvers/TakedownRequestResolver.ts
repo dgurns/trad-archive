@@ -7,8 +7,9 @@ import {
 	CreateTakedownRequestInput,
 	UpdateTakedownRequestStatusInput,
 } from "resolvers/TakedownRequestResolverTypes";
-import { TakedownRequest } from "models/TakedownRequest";
+import { TakedownRequest, TakedownRequestStatus } from "models/TakedownRequest";
 import { User, UserPermission } from "models/User";
+import { EntityStatus, EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";
 
 @Resolver()
@@ -25,7 +26,7 @@ export class TakedownRequestResolver {
 	) {
 		const { entityId, entityType } = input;
 
-		const tagsQuery = await getManager()
+		const takedownRequestsForEntity = await getManager()
 			.createQueryBuilder(TakedownRequest, "takedownRequest")
 			.where(`takedownRequest.${entityType}Id = :entityId`, {
 				entityId,
@@ -33,7 +34,9 @@ export class TakedownRequestResolver {
 			.leftJoinAndSelect("takedownRequest.audioItem", "audioItem")
 			.leftJoinAndSelect("takedownRequest.createdByUser", "createdByUser")
 			.leftJoinAndSelect("takedownRequest.updatedByUser", "updatedByUser")
-			.orderBy("takedownRequest.createdAt", "ASC");
+			.orderBy("takedownRequest.createdAt", "ASC")
+			.getMany();
+		return takedownRequestsForEntity;
 	}
 
 	@Mutation(() => TakedownRequest)
@@ -41,15 +44,16 @@ export class TakedownRequestResolver {
 		@Arg("input") input: CreateTakedownRequestInput,
 		@Ctx() ctx: CustomContext
 	) {
-		const { audioItemId, type, message } = input;
+		const { entityType, entityId, type, message } = input;
 
 		const user = await User.findOne({ where: { id: ctx.userId } });
 		if (!user) {
 			throw new Error("You must be logged in to create a TakedownRequest");
 		}
-		const audioItem = await AudioItem.findOne({ where: { id: audioItemId } });
-		if (!audioItem) {
-			throw new Error("Could not find an AudioItem with that ID");
+		// For now we only support creating a TakedownRequest for an AudioItem
+		let audioItem;
+		if (entityType === EntityType.AudioItem) {
+			audioItem = await AudioItem.findOne({ where: { id: entityId } });
 		}
 
 		const takedownRequest = TakedownRequest.create({
@@ -82,6 +86,21 @@ export class TakedownRequestResolver {
 		takedownRequest.status = status;
 		takedownRequest.updatedByUser = user;
 		await takedownRequest.save();
+
+		// Get the affected Entity and update its status
+		const entityIsTakenDown = status === TakedownRequestStatus.Approved;
+		if (Boolean(takedownRequest.audioItem)) {
+			const audioItem = await AudioItem.findOne({
+				where: { id: takedownRequest.audioItem.id },
+			});
+			if (audioItem) {
+				audioItem.status = entityIsTakenDown
+					? EntityStatus.TakenDown
+					: EntityStatus.Published;
+				await audioItem.save();
+			}
+		}
+
 		return takedownRequest;
 	}
 }

@@ -25,8 +25,11 @@ export class TakedownRequestsForEntityInput {
 
 @InputType()
 export class CreateTakedownRequestInput {
+	@Field(() => EntityType)
+	entityType!: EntityType;
+
 	@Field(() => String)
-	audioItemId!: string;
+	entityId!: string;
 
 	@Field(() => TakedownRequestType)
 	type!: TakedownRequestType;

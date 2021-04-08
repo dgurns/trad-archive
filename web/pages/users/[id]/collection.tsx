@@ -1,10 +1,11 @@
-import { useRouter } from "next/router";
+import { useRouter, useMemo } from "next/router";
 import Link from "next/link";
 
 import useCollectionEntriesForUser from "hooks/useCollectionEntriesForUser";
 import usePlayerContext from "hooks/usePlayerContext";
 import { Tag } from "types";
 import EntityService from "services/Entity";
+import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
@@ -44,6 +45,7 @@ const UserIdCollection = () => {
 					)}
 					{collectionEntries?.map(({ audioItem }, index) => {
 						const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
+						const sortedTags = TagService.sort(audioItem.tags);
 
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
@@ -52,10 +54,10 @@ const UserIdCollection = () => {
 								</Link>
 								<div>
 									Tags:{" "}
-									{audioItem.tags.map((tag, index) => (
+									{sortedTags.map((tag, index) => (
 										<span key={index}>
 											<TagLink tag={tag} />
-											{index !== audioItem.tags.length - 1 && ", "}
+											{index !== sortedTags.length - 1 && ", "}
 										</span>
 									))}
 								</div>

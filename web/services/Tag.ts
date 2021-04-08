@@ -1,15 +1,16 @@
 import compareAsc from "date-fns/compareAsc";
 import { Tag } from "types";
 
+enum SORT_STRATEGY {
+	CREATED_AT_THEN_TIME_MARKER = "created-at-then-time-marker",
+}
+
 /**
- * @param {Array<Tag>} tags
- * 	- The Tags you want to sort
- * @returns {Array<Tag>}
- * 	- The Tags sorted in the following order:
- * 		1) Tags without time markers, sorted by `createdAt` ASC
- * 		2) Tags with time markers, sorted by time marker ASC
+ * Sort with the following logic:
+ *   1) Tags without time markers, sorted by `createdAt` ASC
+ *   2) Tags with time markers, sorted by time marker ASC
  */
-const sort = (tags: Tag[]) => {
+const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
 	const sortedTags = [...tags];
 	sortedTags.sort((a, b) => {
 		if (
@@ -27,6 +28,27 @@ const sort = (tags: Tag[]) => {
 		return a.subjectTimeMarkerSeconds - b.subjectTimeMarkerSeconds;
 	});
 	return sortedTags;
+};
+
+/**
+ * @param {Array<Tag>} tags
+ * 	- The Tags you want to sort
+ * @param {Enum} sortStrategy
+ * 	- The sort strategy you want to apply. Default is
+ *    'created-at-then-time-marker'
+ * @returns {Array<Tag>}
+ * 	- The sorted Tags
+ */
+const sort = (
+	tags: Tag[],
+	sortStrategy = SORT_STRATEGY.CREATED_AT_THEN_TIME_MARKER
+) => {
+	switch (sortStrategy) {
+		case SORT_STRATEGY.CREATED_AT_THEN_TIME_MARKER:
+			return sortByCreatedAtThenTimeMarker(tags);
+		default:
+			return tags;
+	}
 };
 
 export default {

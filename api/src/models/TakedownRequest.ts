@@ -38,19 +38,24 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 
 	@Field(() => AudioItem)
 	@Index()
-	@ManyToOne(() => AudioItem)
+	@ManyToOne(() => AudioItem, { eager: true })
 	audioItem!: AudioItem;
 
 	@Field(() => TakedownRequestType)
 	@Column({ type: "enum", enum: TakedownRequestType })
 	type!: TakedownRequestType;
 
-	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
+	@Field(() => String)
+	@Column()
 	message!: string;
 
-	@Field(() => TakedownRequestStatus)
-	@Column({ type: "enum", enum: TakedownRequestStatus })
+	@Field(() => TakedownRequestStatus, { nullable: true })
+	@Column({
+		type: "enum",
+		enum: TakedownRequestStatus,
+		nullable: true,
+		default: TakedownRequestStatus.Pending,
+	})
 	status!: TakedownRequestStatus;
 
 	@Field(() => User)

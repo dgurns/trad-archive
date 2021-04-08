@@ -21,10 +21,10 @@ const Layout = ({ children }: Props) => {
 	}, []);
 
 	return (
-		<div className="px-4" style={{ paddingTop: fixedHeaderHeight }}>
+		<div style={{ paddingTop: fixedHeaderHeight }}>
 			<div className="fixed top-0 right-0 left-0" ref={fixedHeaderRef}>
 				{shouldShowPreviewWarning && (
-					<div className="flex flex-row items-center justify-center p-1 bg-black text-white text-sm text-center">
+					<div className="flex flex-row items-center justify-center py-1 px-4 bg-black text-white text-sm text-center">
 						This is a preview version of the site with fake data.
 					</div>
 				)}

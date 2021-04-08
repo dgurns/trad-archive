@@ -1,8 +1,8 @@
 import compareAsc from "date-fns/compareAsc";
 import { Tag } from "types";
 
-enum SORT_STRATEGY {
-	CREATED_AT_THEN_TIME_MARKER = "created-at-then-time-marker",
+enum SortStrategy {
+	CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER",
 }
 
 /**
@@ -41,10 +41,10 @@ const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
  */
 const sort = (
 	tags: Tag[],
-	sortStrategy = SORT_STRATEGY.CREATED_AT_THEN_TIME_MARKER
+	sortStrategy = SortStrategy.CreatedAtThenTimeMarker
 ) => {
 	switch (sortStrategy) {
-		case SORT_STRATEGY.CREATED_AT_THEN_TIME_MARKER:
+		case SortStrategy.CreatedAtThenTimeMarker:
 			return sortByCreatedAtThenTimeMarker(tags);
 		default:
 			return tags;

@@ -101,7 +101,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 				</div>
 
 				{shouldShowTimeMarkers && (
-					<div className="mx-4 mb-3 pt-3 border-t border-gray-200">
+					<div className="mx-4 mb-4 pt-4 border-t border-gray-200">
 						<TimeMarkers audioItem={audioItem} />
 					</div>
 				)}

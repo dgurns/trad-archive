@@ -160,6 +160,10 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		);
 	}
 
+	// Only show the time marker option if the subject entity is an AudioItem
+	const shouldShowTimeMarkerCheckbox =
+		entity.entityType === EntityType.AudioItem;
+
 	return (
 		<>
 			<div>What is the relationship between these two entities?</div>
@@ -198,27 +202,29 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				</div>
 			)}
 
-			<div className="mt-4 flex flex-row items-center justify-start">
-				<input
-					type="checkbox"
-					id="time-marker"
-					checked={shouldAddTimeMarker}
-					onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
-				/>
-				<label htmlFor="time-marker" className="ml-2">
-					<div className="flex flex-row items-center">
-						Mark this tag at time{" "}
-						<div className="w-16 mx-2">
-							<input
-								type="number"
-								value={timeMarkerValue}
-								onChange={onTimeMarkerValueChanged}
-							/>{" "}
+			{shouldShowTimeMarkerCheckbox && (
+				<div className="mt-4 flex flex-row items-center justify-start">
+					<input
+						type="checkbox"
+						id="time-marker"
+						checked={shouldAddTimeMarker}
+						onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
+					/>
+					<label htmlFor="time-marker" className="ml-2">
+						<div className="flex flex-row items-center">
+							Mark this tag at time{" "}
+							<div className="w-16 mx-2">
+								<input
+									type="number"
+									value={timeMarkerValue}
+									onChange={onTimeMarkerValueChanged}
+								/>{" "}
+							</div>
+							second{timeMarkerValue === 1 ? "" : "s"}
 						</div>
-						second{timeMarkerValue === 1 ? "" : "s"}
-					</div>
-				</label>
-			</div>
+					</label>
+				</div>
+			)}
 
 			<button
 				className="btn mt-6"

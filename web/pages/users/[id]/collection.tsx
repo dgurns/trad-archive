@@ -1,4 +1,4 @@
-import { useRouter, useMemo } from "next/router";
+import { useRouter } from "next/router";
 import Link from "next/link";
 
 import useCollectionEntriesForUser from "hooks/useCollectionEntriesForUser";

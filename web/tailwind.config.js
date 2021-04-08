@@ -1,6 +1,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
+	mode: "jit",
 	purge: ["./components/**/*.{js,ts,jsx,tsx}", "./pages/**/*.{js,ts,jsx,tsx}"],
 	darkMode: "media",
 	theme: {
@@ -22,15 +23,6 @@ module.exports = {
 			"1/2": "50vh",
 			"9/10": "90vh",
 			full: "100%",
-		},
-	},
-	variants: {
-		extend: {
-			backgroundColor: ["disabled", "checked"],
-			borderColor: ["checked"],
-			borderRadius: ["first", "last"],
-			cursor: ["disabled"],
-			margin: ["last"],
 		},
 	},
 	plugins: [require("@tailwindcss/forms")],

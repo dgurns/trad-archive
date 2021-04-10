@@ -54,19 +54,19 @@ const Menu = ({ children }: Props) => {
 			{isOpen && (
 				<>
 					<div
-						className="fixed top-0 right-0 bottom-0 left-0 z-40"
+						className="fixed top-0 right-0 bottom-0 left-0"
 						onClick={onBackgroundClicked}
 					/>
 
 					<div
 						className={`absolute top-8 ${
 							shouldOpenLeft ? "right-0 text-right" : "left-0 text-left"
-						} flex flex-col bg-white rounded shadow-xl z-50`}
+						} flex flex-col bg-white rounded shadow-xl`}
 						onClick={onMenuClicked}
 					>
 						{childrenAsArray.map((child, index) => (
 							<div
-								className="cursor-pointer p-2 first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-pre-line md:whitespace-nowrap hover:bg-gray-200"
+								className="cursor-pointer p-2 first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200"
 								key={index}
 							>
 								{child}

@@ -38,11 +38,6 @@ const Menu = ({ children }: Props) => {
 		setIsOpen(false);
 	}, []);
 
-	const onMenuClicked = useCallback((event) => {
-		event.stopPropagation();
-		setIsOpen(false);
-	}, []);
-
 	const childrenAsArray = Array.isArray(children) ? children : [children];
 
 	return (
@@ -62,7 +57,6 @@ const Menu = ({ children }: Props) => {
 						className={`absolute top-8 ${
 							shouldOpenLeft ? "right-0 text-right" : "left-0 text-left"
 						} flex flex-col bg-white rounded shadow-xl`}
-						onClick={onMenuClicked}
 					>
 						{childrenAsArray.map((child, index) => (
 							<div

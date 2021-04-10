@@ -11,8 +11,8 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItemComponent from "components/AudioItem";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
-import AddTag from "components/AddTag";
-import EditTags from "components/EditTags";
+import AddTagButton from "components/AddTagButton";
+import EditTagsButton from "components/EditTagsButton";
 
 const PERSON_QUERY = gql`
 	query Person($slug: String!) {
@@ -114,11 +114,11 @@ const ViewPersonBySlug = () => {
 						/>
 					))}
 					<div>
-						<AddTag entity={person} />
+						<AddTagButton entity={person} />
 						{tags.length > 0 && (
 							<>
 								<span className="text-gray-500 px-2">/</span>
-								<EditTags entity={person} />
+								<EditTagsButton entity={person} />
 							</>
 						)}
 					</div>

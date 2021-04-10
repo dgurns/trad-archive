@@ -32,7 +32,7 @@ interface QueryVariables {
 interface Props {
 	audioItem: AudioItem;
 }
-const ViewComments = ({ audioItem }: Props) => {
+const ViewCommentsButton = ({ audioItem }: Props) => {
 	const { id, slug, entityType, commentsCount } = audioItem;
 
 	const commentsRef = useRef<HTMLDivElement>();
@@ -57,7 +57,7 @@ const ViewComments = ({ audioItem }: Props) => {
 		});
 	}, [getComments]);
 
-	const onViewCommentsClicked = useCallback(() => {
+	const onViewCommentsButtonClicked = useCallback(() => {
 		if (commentsCount !== comments.length) {
 			fetchComments();
 		}
@@ -92,7 +92,7 @@ const ViewComments = ({ audioItem }: Props) => {
 
 	return (
 		<>
-			<button className="btn-secondary" onClick={onViewCommentsClicked}>
+			<button className="btn-secondary" onClick={onViewCommentsButtonClicked}>
 				<i className="material-icons mr-0.5">chat_bubble_outline</i>
 				{commentsCount > 0 ? (
 					<>
@@ -145,4 +145,4 @@ const ViewComments = ({ audioItem }: Props) => {
 	);
 };
 
-export default ViewComments;
+export default ViewCommentsButton;

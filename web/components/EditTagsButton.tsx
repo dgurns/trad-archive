@@ -36,7 +36,7 @@ interface Props {
 	className?: string;
 	children?: React.ReactChild | React.ReactChild[];
 }
-const EditTags = ({ entity, className, children }: Props) => {
+const EditTagsButton = ({ entity, className, children }: Props) => {
 	const { currentUser, requireLogin } = useRequireLogin();
 
 	const [editTagsModalIsVisible, setEditTagsModalIsVisible] = useState(false);
@@ -147,4 +147,4 @@ const EditTags = ({ entity, className, children }: Props) => {
 	);
 };
 
-export default EditTags;
+export default EditTagsButton;

@@ -4,7 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { Entity, EntityType, Tag } from "types";
 import usePlayerContext from "hooks/usePlayerContext";
 
-import SearchEntities from "components/SearchEntities";
+import SearchBox from "components/SearchBox";
 import SelectRelationship from "components/SelectRelationship";
 
 const CREATE_TAG_MUTATION = gql`
@@ -153,7 +153,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	if (!selectedEntity) {
 		return (
-			<SearchEntities
+			<SearchBox
 				onSelect={onSelectEntity}
 				onNewEntityCreated={onNewEntityCreated}
 			/>

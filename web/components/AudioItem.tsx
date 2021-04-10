@@ -7,9 +7,10 @@ import usePlayerContext from "hooks/usePlayerContext";
 
 import Tags from "components/Tags";
 import Menu from "components/Menu";
-import AddToCollection from "components/AddToCollection";
-import ViewComments from "components/ViewComments";
+import AddToCollectionButton from "components/AddToCollectionButton";
+import ViewCommentsButton from "components/ViewCommentsButton";
 import TimeMarkers from "components/TimeMarkers";
+import RequestTakedownButton from "components/RequestTakedownButton";
 
 interface Props {
 	audioItem: AudioItem;
@@ -121,17 +122,14 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 			<div className="border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center">
 				<div className="flex flex-row items-center">
-					<ViewComments audioItem={audioItem} />
+					<ViewCommentsButton audioItem={audioItem} />
 					<div className="ml-2">
-						<AddToCollection audioItem={audioItem} />
+						<AddToCollectionButton audioItem={audioItem} />
 					</div>
 				</div>
 
 				<Menu>
-					<span className="flex flex-row items-center">
-						<i className="material-icons-outlined mr-0.5">report_problem</i>
-						Request Takedown
-					</span>
+					<RequestTakedownButton entity={audioItem} />
 				</Menu>
 			</div>
 		</div>

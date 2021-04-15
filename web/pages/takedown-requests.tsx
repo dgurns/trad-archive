@@ -64,6 +64,7 @@ const TakedownRequests = () => {
 	} = useQuery<QueryData, QueryVariables>(TAKEDOWN_REQUESTS, {
 		// Take a high number until we implement pagination
 		variables: { input: { take: 200, skip: 0 } },
+		fetchPolicy: "network-only",
 	});
 
 	const takedownRequests = useMemo(() => {

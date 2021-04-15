@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
-import { getManager } from "typeorm";
+import { getManager, SelectQueryBuilder } from "typeorm";
 import { CustomContext } from "middleware/context";
 import {
 	TakedownRequestsInput,
@@ -12,12 +12,39 @@ import { User, UserPermission } from "models/User";
 import { EntityStatus, EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";
 
+const addRelationsToQueryBuilder = (
+	query: SelectQueryBuilder<TakedownRequest>
+): SelectQueryBuilder<TakedownRequest> => {
+	return query
+		.leftJoinAndSelect("takedownRequest.audioItem", "audioItem")
+		.leftJoinAndSelect("audioItem.createdByUser", "audioItemCreatedByUser")
+		.leftJoinAndSelect("audioItem.tags", "tag")
+		.leftJoinAndSelect("tag.relationship", "tagRelationship")
+		.leftJoinAndSelect("tag.subjectAudioItem", "tagAudioItem")
+		.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
+		.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
+		.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
+		.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
+		.leftJoinAndSelect("takedownRequest.createdByUser", "createdByUser")
+		.leftJoinAndSelect("takedownRequest.updatedByUser", "updatedByUser");
+};
+
 @Resolver()
 export class TakedownRequestResolver {
 	@Query(() => [TakedownRequest])
-	takedownRequests(@Arg("input") input: TakedownRequestsInput) {
+	async takedownRequests(@Arg("input") input: TakedownRequestsInput) {
 		const { take, skip } = input;
-		return TakedownRequest.find({ take, skip, order: { createdAt: "DESC" } });
+		const query = await getManager().createQueryBuilder(
+			TakedownRequest,
+			"takedownRequest"
+		);
+		const queryWithRelations = addRelationsToQueryBuilder(query);
+		const takedownRequests = await queryWithRelations
+			.take(take)
+			.skip(skip)
+			.orderBy("takedownRequest.createdAt", "DESC")
+			.getMany();
+		return takedownRequests;
 	}
 
 	@Query(() => [TakedownRequest])
@@ -28,14 +55,13 @@ export class TakedownRequestResolver {
 		const lowercasedEntityType =
 			entityType[0].toLowerCase() + entityType.slice(1);
 
-		const takedownRequestsForEntity = await getManager()
+		const query = await getManager()
 			.createQueryBuilder(TakedownRequest, "takedownRequest")
 			.where(`takedownRequest.${lowercasedEntityType}Id = :entityId`, {
 				entityId,
-			})
-			.leftJoinAndSelect("takedownRequest.audioItem", "audioItem")
-			.leftJoinAndSelect("takedownRequest.createdByUser", "createdByUser")
-			.leftJoinAndSelect("takedownRequest.updatedByUser", "updatedByUser")
+			});
+		const queryWithRelations = addRelationsToQueryBuilder(query);
+		const takedownRequestsForEntity = await queryWithRelations
 			.orderBy("takedownRequest.createdAt", "ASC")
 			.getMany();
 		return takedownRequestsForEntity;
@@ -55,7 +81,10 @@ export class TakedownRequestResolver {
 		// For now we only support creating a TakedownRequest for an AudioItem
 		let audioItem;
 		if (entityType === EntityType.AudioItem) {
-			audioItem = await AudioItem.findOne({ where: { id: entityId } });
+			audioItem = await AudioItem.findOne({
+				where: { id: entityId },
+				relations: ["tags"],
+			});
 		}
 
 		const takedownRequest = TakedownRequest.create({
@@ -81,8 +110,12 @@ export class TakedownRequestResolver {
 		if (!user) {
 			throw new Error("You must be logged in to update a TakedownRequest");
 		}
-		const takedownRequest = await TakedownRequest.findOne({ where: { id } });
-		if (!takedownRequest) {
+		const query = await getManager()
+			.createQueryBuilder(TakedownRequest, "takedownRequest")
+			.where(`takedownRequest.id = :id`, { id });
+		const queryWithRelations = addRelationsToQueryBuilder(query);
+		const takedownRequest = await queryWithRelations.getOne();
+		if (typeof takedownRequest === "undefined") {
 			throw new Error("Could not find a TakedownRequest with that ID");
 		}
 

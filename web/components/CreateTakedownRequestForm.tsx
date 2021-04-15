@@ -12,10 +12,10 @@ import { TakedownRequestFragments } from "fragments";
 const CREATE_TAKEDOWN_REQUEST = gql`
 	mutation CreateTakedownRequest($input: CreateTakedownRequestInput!) {
 		createTakedownRequest(input: $input) {
-			...TakedownRequest
+			...TakedownRequestWithoutEntity
 		}
 	}
-	${TakedownRequestFragments.takedownRequest}
+	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `;
 
 interface MutationData {

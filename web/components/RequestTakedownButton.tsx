@@ -100,7 +100,7 @@ const RequestTakedownButton = ({ entity }: Props) => {
 				<div className="text-gray-500 mb-5">
 					We exist as a community resource, and as such we place the foremost
 					importance on performers' rights and copyright. You can request a
-					takedown using this form. We will be in touch to verify your identity.
+					takedown using this form. We will be in touch to verify details.
 				</div>
 
 				<CreateTakedownRequestForm

@@ -20,15 +20,17 @@ export class TakedownRequestResolver {
 		return TakedownRequest.find({ take, skip, order: { createdAt: "DESC" } });
 	}
 
-	@Query(() => TakedownRequest)
+	@Query(() => [TakedownRequest])
 	async takedownRequestsForEntity(
 		@Arg("input") input: TakedownRequestsForEntityInput
 	) {
 		const { entityId, entityType } = input;
+		const lowercasedEntityType =
+			entityType[0].toLowerCase() + entityType.slice(1);
 
 		const takedownRequestsForEntity = await getManager()
 			.createQueryBuilder(TakedownRequest, "takedownRequest")
-			.where(`takedownRequest.${entityType}Id = :entityId`, {
+			.where(`takedownRequest.${lowercasedEntityType}Id = :entityId`, {
 				entityId,
 			})
 			.leftJoinAndSelect("takedownRequest.audioItem", "audioItem")
@@ -61,6 +63,7 @@ export class TakedownRequestResolver {
 			type,
 			message,
 			createdByUser: user,
+			updatedByUser: user,
 		});
 		await takedownRequest.save();
 		return takedownRequest;

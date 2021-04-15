@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import { AudioItem, Tag } from "types";
+import { AudioItem, EntityStatus, Tag } from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
 
@@ -16,7 +16,15 @@ interface Props {
 	audioItem: AudioItem;
 }
 const AudioItemComponent = ({ audioItem }: Props) => {
-	const { name, slug, description, tags, createdByUser, createdAt } = audioItem;
+	const {
+		name,
+		slug,
+		description,
+		tags,
+		status,
+		createdByUser,
+		createdAt,
+	} = audioItem;
 
 	const {
 		activeAudioItem,
@@ -69,43 +77,52 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 			</div>
 
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
-				<div className="flex flex-row justify-start items-center pr-4 h-16">
-					<div className="flex flex-1">
-						{audioItemIsInPlayer ? (
-							<div className="pl-4 text-gray-500">Playing</div>
-						) : (
-							<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
-								<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
-									play_arrow
-								</i>
-							</button>
-						)}
+				{status === EntityStatus.TakenDown ? (
+					<div className="flex flex-row items-center px-4 py-6 text-gray-500">
+						This AudioItem received a [Copyright/Performer] Takedown Request on
+						XX-XX-XXXX
+					</div>
+				) : (
+					<>
+						<div className="flex flex-row justify-start items-center pr-4 h-16">
+							<div className="flex flex-1">
+								{audioItemIsInPlayer ? (
+									<div className="pl-4 text-gray-500">Playing</div>
+								) : (
+									<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
+										<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
+											play_arrow
+										</i>
+									</button>
+								)}
 
-						<div
-							className={`ml-4 text-gray-500 opacity-0 ${
-								shouldShowPositionAndDuration
-									? "opacity-100 transition-opacity delay-500 duration-400"
-									: ""
-							}`}
-						>
-							{positionAndDuration}
+								<div
+									className={`ml-4 text-gray-500 opacity-0 ${
+										shouldShowPositionAndDuration
+											? "opacity-100 transition-opacity delay-500 duration-400"
+											: ""
+									}`}
+								>
+									{positionAndDuration}
+								</div>
+							</div>
+
+							{shouldShowTimeMarkersIcon && (
+								<button
+									className="btn-secondary flex flex-row items-center"
+									onClick={onTimeMarkersIconClicked}
+								>
+									<i className="material-icons">format_list_bulleted</i>
+								</button>
+							)}
 						</div>
-					</div>
 
-					{shouldShowTimeMarkersIcon && (
-						<button
-							className="btn-secondary flex flex-row items-center"
-							onClick={onTimeMarkersIconClicked}
-						>
-							<i className="material-icons">format_list_bulleted</i>
-						</button>
-					)}
-				</div>
-
-				{shouldShowTimeMarkers && (
-					<div className="mx-4 mb-4 pt-4 border-t border-gray-200">
-						<TimeMarkers audioItem={audioItem} />
-					</div>
+						{shouldShowTimeMarkers && (
+							<div className="mx-4 mb-4 pt-4 border-t border-gray-200">
+								<TimeMarkers audioItem={audioItem} />
+							</div>
+						)}
+					</>
 				)}
 			</div>
 

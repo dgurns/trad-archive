@@ -200,3 +200,23 @@ export const CollectionEntryFragments = {
 		${EntityFragments.audioItem}
 	`,
 };
+
+export const TakedownRequestFragments = {
+	takedownRequest: gql`
+		fragment TakedownRequest on TakedownRequest {
+			id
+			type
+			message
+			status
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedByUser {
+				...User
+			}
+			updatedAt
+		}
+		${UserFragments.user}
+	`,
+};

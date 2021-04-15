@@ -117,8 +117,8 @@ export interface CollectionEntry {
 }
 
 export enum TakedownRequestType {
-	Copyright = "COPYRIGHT",
 	Performer = "PERFORMER",
+	Copyright = "COPYRIGHT",
 }
 
 export enum TakedownRequestStatus {
@@ -129,7 +129,7 @@ export enum TakedownRequestStatus {
 
 export interface TakedownRequest {
 	id: string;
-	audioItem: AudioItem;
+	entity?: Entity;
 	type: TakedownRequestType;
 	message: string | null;
 	status: TakedownRequestStatus;

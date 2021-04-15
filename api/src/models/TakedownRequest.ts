@@ -7,10 +7,12 @@ import {
 	UpdateDateColumn,
 	ManyToOne,
 	Index,
+	AfterLoad,
 } from "typeorm";
 import { ObjectType, Field, registerEnumType } from "type-graphql";
 import { AudioItem } from "models/entities/AudioItem";
 import { User } from "models/User";
+import { Entity, EntityUnion } from "resolvers/EntityResolver";
 
 export enum TakedownRequestType {
 	Copyright = "COPYRIGHT",
@@ -73,4 +75,15 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	@Field()
 	@UpdateDateColumn({ type: "timestamptz" })
 	updatedAt!: Date;
+
+	// Generated fields make this model easier to consume via the GraphQL API.
+	// These fields are not saved in the database and are generated at runtime.
+	// The Entity is what the TakedownRequest refers to.
+	@Field(() => EntityUnion)
+	entity!: Entity;
+	@AfterLoad()
+	setEntity() {
+		console.log("setting in resolver", this.audioItem);
+		this.entity = this.audioItem;
+	}
 }

@@ -23,8 +23,8 @@ export enum EntityType {
 }
 
 export enum EntityStatus {
-	Published = "PUBLISHED",
-	TakenDown = "TAKEN_DOWN",
+	Published = "Published",
+	TakenDown = "TakenDown",
 }
 
 export function isAudioItem(entity: Entity): entity is AudioItem {
@@ -117,14 +117,14 @@ export interface CollectionEntry {
 }
 
 export enum TakedownRequestType {
-	Performer = "PERFORMER",
-	Copyright = "COPYRIGHT",
+	Performer = "Performer",
+	Copyright = "Copyright",
 }
 
 export enum TakedownRequestStatus {
-	Pending = "PENDING",
-	Approved = "APPROVED",
-	Denied = "DENIED",
+	Pending = "Pending",
+	Approved = "Approved",
+	Denied = "Denied",
 }
 
 export interface TakedownRequest {
@@ -144,3 +144,6 @@ export const isPendingTakedownRequest = (takedownRequest: TakedownRequest) =>
 
 export const isApprovedTakedownRequest = (takedownRequest: TakedownRequest) =>
 	takedownRequest.status.valueOf() === "Approved";
+
+export const isDeniedTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Denied";

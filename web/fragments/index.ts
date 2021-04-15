@@ -115,6 +115,7 @@ export const EntityFragments = {
 			}
 			commentsCount
 			isAddedToCollection
+			status
 			createdByUser {
 				id
 				username
@@ -205,18 +206,45 @@ export const TakedownRequestFragments = {
 	takedownRequest: gql`
 		fragment TakedownRequest on TakedownRequest {
 			id
+			entity {
+				...AudioItem
+			}
 			type
 			message
 			status
 			createdByUser {
-				...User
+				id
+				username
+				email
 			}
 			createdAt
 			updatedByUser {
-				...User
+				id
+				username
+				email
 			}
 			updatedAt
 		}
-		${UserFragments.user}
+		${EntityFragments.audioItem}
+	`,
+	takedownRequestWithoutEntity: gql`
+		fragment TakedownRequestWithoutEntity on TakedownRequest {
+			id
+			type
+			message
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
 	`,
 };

@@ -5,7 +5,6 @@ import {
 	Entity,
 	EntityType,
 	TakedownRequest,
-	TakedownRequestStatus,
 	isPendingTakedownRequest,
 	isApprovedTakedownRequest,
 } from "types";
@@ -21,10 +20,10 @@ import DateTimeService from "services/DateTime";
 const TAKEDOWN_REQUESTS_FOR_ENTITY = gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
 		takedownRequestsForEntity(input: $input) {
-			...TakedownRequest
+			...TakedownRequestWithoutEntity
 		}
 	}
-	${TakedownRequestFragments.takedownRequest}
+	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `;
 
 interface QueryData {

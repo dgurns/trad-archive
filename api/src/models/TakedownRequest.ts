@@ -79,11 +79,10 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	// Generated fields make this model easier to consume via the GraphQL API.
 	// These fields are not saved in the database and are generated at runtime.
 	// The Entity is what the TakedownRequest refers to.
-	@Field(() => EntityUnion)
+	@Field(() => EntityUnion, { nullable: true })
 	entity!: Entity;
 	@AfterLoad()
 	setEntity() {
-		console.log("setting in resolver", this.audioItem);
 		this.entity = this.audioItem;
 	}
 }

@@ -40,6 +40,10 @@ const Menu = ({ children }: Props) => {
 
 	const childrenAsArray = Array.isArray(children) ? children : [children];
 
+	if (!children) {
+		return null;
+	}
+
 	return (
 		<div className="relative" ref={containerRef}>
 			<button className="btn-secondary" onClick={onIconClicked}>

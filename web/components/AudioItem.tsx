@@ -66,6 +66,8 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 		playbackPositionSeconds
 	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds)}`;
 
+	const isTakenDown = status === EntityStatus.TakenDown;
+
 	return (
 		<div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 mb-8">
 			<Link href={`/entities/audio-items/${slug}`}>
@@ -77,10 +79,9 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 			</div>
 
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
-				{status === EntityStatus.TakenDown ? (
+				{isTakenDown ? (
 					<div className="flex flex-row items-center px-4 py-6 text-gray-500">
-						This AudioItem received a [Copyright/Performer] Takedown Request on
-						XX-XX-XXXX
+						This AudioItem has been removed via an approved Takedown Request
 					</div>
 				) : (
 					<>
@@ -146,7 +147,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 				</div>
 
 				<Menu>
-					<RequestTakedownButton entity={audioItem} />
+					{!isTakenDown && <RequestTakedownButton entity={audioItem} />}
 				</Menu>
 			</div>
 		</div>

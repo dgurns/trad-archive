@@ -95,7 +95,7 @@ const CreateTakedownRequestForm = ({ entity, onSuccess }: Props) => {
 			</label>
 			<select
 				id="select-type"
-				className="mb-6"
+				className="mb-4"
 				value={type}
 				onChange={(event) => setType(event.target.value as TakedownRequestType)}
 			>
@@ -107,7 +107,7 @@ const CreateTakedownRequestForm = ({ entity, onSuccess }: Props) => {
 			</select>
 
 			<textarea
-				className="mb-6"
+				className="mb-4"
 				placeholder="Please include as many details as you can..."
 				value={message}
 				onChange={(event) => setMessage(event.target.value)}
@@ -117,11 +117,12 @@ const CreateTakedownRequestForm = ({ entity, onSuccess }: Props) => {
 			<input type="submit" value="Submit" disabled={loading} />
 
 			{validationError && (
-				<div className="mt-6 text-red-600">{validationError}</div>
+				<div className="mt-4 text-red-600">{validationError}</div>
 			)}
 			{error && (
-				<div className="mt-6 text-red-600">
-					{error.graphQLErrors.join(", ")}
+				<div className="mt-4 text-red-600">
+					Error submitting Takedown Request. Please reload the page and try
+					again.
 				</div>
 			)}
 		</form>

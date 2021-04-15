@@ -138,3 +138,9 @@ export interface TakedownRequest {
 	updatedByUser: User;
 	updatedAt: string;
 }
+
+export const isPendingTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Pending";
+
+export const isApprovedTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Approved";

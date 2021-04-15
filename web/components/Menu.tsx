@@ -60,7 +60,7 @@ const Menu = ({ children }: Props) => {
 					>
 						{childrenAsArray.map((child, index) => (
 							<div
-								className="cursor-pointer p-2 first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200"
+								className="cursor-pointer first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200"
 								key={index}
 							>
 								{child}

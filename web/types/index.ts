@@ -22,6 +22,11 @@ export enum EntityType {
 	Place = "Place",
 }
 
+export enum EntityStatus {
+	Published = "Published",
+	TakenDown = "TakenDown",
+}
+
 export function isAudioItem(entity: Entity): entity is AudioItem {
 	return (entity as AudioItem).entityType === EntityType.AudioItem;
 }
@@ -42,6 +47,7 @@ interface BaseEntity {
 	aliases: string;
 	description: string | null;
 	tags: Tag[];
+	status?: EntityStatus;
 	createdByUser: User;
 	lastUpdatedByUser: User;
 	createdAt: string;
@@ -109,3 +115,35 @@ export interface CollectionEntry {
 	user?: User | null;
 	createdAt: string;
 }
+
+export enum TakedownRequestType {
+	Performer = "Performer",
+	Copyright = "Copyright",
+}
+
+export enum TakedownRequestStatus {
+	Pending = "Pending",
+	Approved = "Approved",
+	Denied = "Denied",
+}
+
+export interface TakedownRequest {
+	id: string;
+	entity?: Entity;
+	type: TakedownRequestType;
+	message: string | null;
+	status: TakedownRequestStatus;
+	createdByUser: User;
+	createdAt: string;
+	updatedByUser: User;
+	updatedAt: string;
+}
+
+export const isPendingTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Pending";
+
+export const isApprovedTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Approved";
+
+export const isDeniedTakedownRequest = (takedownRequest: TakedownRequest) =>
+	takedownRequest.status.valueOf() === "Denied";

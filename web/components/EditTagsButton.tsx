@@ -36,7 +36,7 @@ interface Props {
 	className?: string;
 	children?: React.ReactChild | React.ReactChild[];
 }
-const EditTags = ({ entity, className, children }: Props) => {
+const EditTagsButton = ({ entity, className, children }: Props) => {
 	const { currentUser, requireLogin } = useRequireLogin();
 
 	const [editTagsModalIsVisible, setEditTagsModalIsVisible] = useState(false);
@@ -127,7 +127,7 @@ const EditTags = ({ entity, className, children }: Props) => {
 										{objectEntity.entityType}
 									</div>
 									{objectEntity.name}
-									{subjectTimeMarkerSeconds && (
+									{typeof subjectTimeMarkerSeconds === "number" && (
 										<span className="italic text-gray-500">
 											{`at ${DateTimeService.formatSecondsAsDuration(
 												subjectTimeMarkerSeconds
@@ -147,4 +147,4 @@ const EditTags = ({ entity, className, children }: Props) => {
 	);
 };
 
-export default EditTags;
+export default EditTagsButton;

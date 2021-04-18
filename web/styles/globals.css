@@ -28,7 +28,7 @@
 	/* Primary buttons (for example the "Save" button on a form) */
 	.btn,
 	input[type="submit"] {
-		@apply bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
+		@apply w-auto bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
 	}
 
 	/* Text buttons (look like links but have no underline, for example "Add Tag") */
@@ -43,7 +43,7 @@
 
 	/* Secondary buttons (with an icon and small bold text, for example "+ Add to Collection") */
 	.btn-secondary {
-		@apply text-gray-500 text-sm font-bold whitespace-nowrap flex flex-row items-center no-underline py-0.5 pl-1 pr-1.5 rounded hover:no-underline hover:bg-gray-200;
+		@apply text-gray-500 text-sm font-bold whitespace-nowrap flex flex-row items-center no-underline py-0.5 px-1 rounded hover:no-underline hover:bg-gray-200;
 	}
 	.btn-secondary-active {
 		@apply text-gray-800;

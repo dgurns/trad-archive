@@ -4,7 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { Entity, EntityType, Tag } from "types";
 import usePlayerContext from "hooks/usePlayerContext";
 
-import SearchEntities from "components/SearchEntities";
+import SearchBox from "components/SearchBox";
 import SelectRelationship from "components/SelectRelationship";
 
 const CREATE_TAG_MUTATION = gql`
@@ -153,12 +153,16 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	if (!selectedEntity) {
 		return (
-			<SearchEntities
+			<SearchBox
 				onSelect={onSelectEntity}
 				onNewEntityCreated={onNewEntityCreated}
 			/>
 		);
 	}
+
+	// Only show the time marker option if the subject entity is an AudioItem
+	const shouldShowTimeMarkerCheckbox =
+		entity.entityType === EntityType.AudioItem;
 
 	return (
 		<>
@@ -198,27 +202,29 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				</div>
 			)}
 
-			<div className="mt-4 flex flex-row items-center justify-start">
-				<input
-					type="checkbox"
-					id="time-marker"
-					checked={shouldAddTimeMarker}
-					onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
-				/>
-				<label htmlFor="time-marker" className="ml-2">
-					<div className="flex flex-row items-center">
-						Mark this tag at time{" "}
-						<div className="w-16 mx-2">
-							<input
-								type="number"
-								value={timeMarkerValue}
-								onChange={onTimeMarkerValueChanged}
-							/>{" "}
+			{shouldShowTimeMarkerCheckbox && (
+				<div className="mt-4 flex flex-row items-center justify-start">
+					<input
+						type="checkbox"
+						id="time-marker"
+						checked={shouldAddTimeMarker}
+						onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
+					/>
+					<label htmlFor="time-marker" className="ml-2">
+						<div className="flex flex-row items-center">
+							Mark this tag at time{" "}
+							<div className="w-16 mx-2">
+								<input
+									type="number"
+									value={timeMarkerValue}
+									onChange={onTimeMarkerValueChanged}
+								/>{" "}
+							</div>
+							second{timeMarkerValue === 1 ? "" : "s"}
 						</div>
-						second{timeMarkerValue === 1 ? "" : "s"}
-					</div>
-				</label>
-			</div>
+					</label>
+				</div>
+			)}
 
 			<button
 				className="btn mt-6"

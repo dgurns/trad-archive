@@ -79,7 +79,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 					const isActive = activeTimeMarker === timeMarker;
 					return (
 						<div
-							className={`flex flex-row items-center p-2 mb-1 rounded cursor-pointer text-sm hover:bg-gray-200 ${
+							className={`flex flex-row items-center p-2 mb-1 last:mb-0 rounded cursor-pointer text-sm hover:bg-gray-200 ${
 								isActive ? "text-black bg-gray-200" : "text-gray-500"
 							}`}
 							key={index}

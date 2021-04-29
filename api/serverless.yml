@@ -13,7 +13,7 @@ provider:
 
 functions:
   graphql:
-    handler: src/apolloServer.graphqlHandler
+    handler: src/handlers/graphql.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     events:

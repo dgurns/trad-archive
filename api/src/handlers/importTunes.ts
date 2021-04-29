@@ -45,6 +45,48 @@ const fetchAliasesData = async (): Promise<RawAlias[]> => {
 	return response.json();
 };
 
+interface SortedTunesWithAliases {
+	[tuneId: string]: {
+		rawTune: RawTune;
+		aliases: RawAlias[];
+	};
+}
+const organizeRawTunes = (
+	rawTunes: RawTune[],
+	sortedTunesWithAliases: SortedTunesWithAliases
+): void => {
+	// Sort by TheSession Tune ID in ascending order
+	const sortedRawTunes = rawTunes.sort(
+		(a, b) => parseInt(a.tune_id) - parseInt(b.tune_id)
+	);
+	sortedRawTunes.forEach((rawTune) => {
+		// If the tune ID does not exist in the object, set it
+		if (!sortedTunesWithAliases[rawTune.tune_id]) {
+			sortedTunesWithAliases[rawTune.tune_id] = {
+				...sortedTunesWithAliases[rawTune.tune_id],
+				rawTune,
+			};
+		}
+	});
+};
+
+const organizeRawAliases = (
+	rawAliases: RawAlias[],
+	sortedTunesWithAliases: SortedTunesWithAliases
+): void => {
+	rawAliases.forEach((rawAlias) => {
+		if (sortedTunesWithAliases[rawAlias.tune_id]) {
+			sortedTunesWithAliases[rawAlias.tune_id] = {
+				...sortedTunesWithAliases[rawAlias.tune_id],
+				aliases: [
+					...(sortedTunesWithAliases[rawAlias.tune_id].aliases ?? []),
+					rawAlias,
+				],
+			};
+		}
+	});
+};
+
 // handler fetches the latest `tunes` and `aliases` from TheSession.org's data
 // dumps and, if new tunes are found, saves them to the database.
 // Data sources:
@@ -64,18 +106,24 @@ export const handler = async (
 
 	await initializeDbConnection();
 
-	let startAddingAtIndex = 0;
-	const mostRecentTuneInDb = await Tune.findOne();
+	const sortedTunesWithAliases: SortedTunesWithAliases = {};
+	organizeRawTunes(rawTunes, sortedTunesWithAliases);
+	organizeRawAliases(rawAliases, sortedTunesWithAliases);
+
+	let startAddingAtRawTuneId: string = "1";
+	const [mostRecentTuneInDb] = await Tune.find({
+		order: { id: "DESC" },
+		take: 1,
+	});
 	if (mostRecentTuneInDb) {
-		startAddingAtIndex = rawTunes.findIndex(
-			(rawTune) => rawTune.tune_id === mostRecentTuneInDb.theSessionTuneId
-		);
+		startAddingAtRawTuneId = mostRecentTuneInDb.theSessionTuneId;
 	}
 
-	// Add raw tunes to DB
+	// Starting at the given ID, add all the tunes from TheSession data to the DB
 
 	return {
 		success: true,
-		message: "Added x new tunes to the database",
+		tunesFoundOnTheSession: Object.keys(sortedTunesWithAliases).length,
+		tunesAddedToDb: 0,
 	};
 };

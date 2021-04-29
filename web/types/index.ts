@@ -79,7 +79,7 @@ export interface Place extends BaseEntity {
 
 export interface Tune extends BaseEntity {
 	entityType: EntityType.Tune;
-	theSessionId: string;
+	theSessionTuneId: string;
 }
 
 export interface Relationship {

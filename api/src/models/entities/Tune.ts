@@ -27,8 +27,8 @@ export class Tune extends EntityBaseFields {
 	@JoinColumn()
 	tags!: Tag[];
 
-	// theSessionId is the Tune ID on TheSession.org
+	// theSessionTuneId is the Tune ID on TheSession.org
 	@Field(() => String)
 	@Column()
-	theSessionId!: string;
+	theSessionTuneId!: string;
 }

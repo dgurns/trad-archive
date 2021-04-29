@@ -9,7 +9,7 @@ provider:
   # Settings to get ahead of deprecation warnings
   apiGateway:
     shouldStartNameWithService: true
-  lambdaHashingVersion: '20201221'
+  lambdaHashingVersion: "20201221"
 
 functions:
   graphql:
@@ -41,7 +41,7 @@ custom:
     preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
     prod: https://www.tradarchive.com
   webpack:
-    webpackConfig: 'webpack.config.js'
+    webpackConfig: "webpack.config.js"
     includeModules:
       forceInclude:
         - pg
@@ -50,9 +50,10 @@ custom:
     domainName: api-${opt:stage}.tradarchive.com
     certificateArn: arn:aws:acm:us-east-1:727441280422:certificate/2e5a0bc4-0c2b-43d4-a7a6-58eab5e3ea2b
     createRoute53Record: true
-    endpointType: 'regional'
+    endpointType: "regional"
     securityPolicy: tls_1_2
     autoDomain: true
   serverless-offline:
     httpPort: 4000
     noPrependStageInUrl: true
+    allowCache: true

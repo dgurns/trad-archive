@@ -15,6 +15,7 @@ import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
+import { Tune } from "models/entities/Tune";
 import { Relationship } from "models/Relationship";
 import { EntityUnion, Entity } from "resolvers/EntityResolver";
 
@@ -43,6 +44,9 @@ export class Tag extends TypeOrmBaseEntity {
 	@ManyToOne(() => Place, { nullable: true })
 	subjectPlace!: Place;
 
+	@ManyToOne(() => Tune, { nullable: true })
+	subjectTune!: Tune;
+
 	@ManyToOne(() => AudioItem, { nullable: true })
 	objectAudioItem!: AudioItem;
 
@@ -54,6 +58,9 @@ export class Tag extends TypeOrmBaseEntity {
 
 	@ManyToOne(() => Place, { nullable: true })
 	objectPlace!: Place;
+
+	@ManyToOne(() => Tune, { nullable: true })
+	objectTune!: Tune;
 
 	@Field(() => Int, { nullable: true })
 	@Column({ nullable: true, default: null })

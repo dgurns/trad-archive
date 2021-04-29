@@ -29,6 +29,14 @@ functions:
           cors:
             origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
             allowCredentials: true
+  importTunes:
+    handler: src/handlers/importTunes.handler
+    environment:
+      SERVERLESS_STAGE: ${opt:stage}
+    events:
+      - schedule:
+          rate: rate(24 hours)
+          enabled: false
 
 plugins:
   - serverless-webpack

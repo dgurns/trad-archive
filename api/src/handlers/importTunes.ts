@@ -48,7 +48,7 @@ const fetchAliasesData = async (): Promise<RawAlias[]> => {
 interface SortedTunesWithAliases {
 	[tuneId: string]: {
 		rawTune: RawTune;
-		aliases: RawAlias[];
+		rawAliases: RawAlias[];
 	};
 }
 const organizeRawTunes = (
@@ -78,8 +78,8 @@ const organizeRawAliases = (
 		if (sortedTunesWithAliases[rawAlias.tune_id]) {
 			sortedTunesWithAliases[rawAlias.tune_id] = {
 				...sortedTunesWithAliases[rawAlias.tune_id],
-				aliases: [
-					...(sortedTunesWithAliases[rawAlias.tune_id].aliases ?? []),
+				rawAliases: [
+					...(sortedTunesWithAliases[rawAlias.tune_id].rawAliases ?? []),
 					rawAlias,
 				],
 			};
@@ -104,11 +104,11 @@ export const handler = async (
 		return new Error("Error fetching tunes and aliases from TheSession data");
 	}
 
-	await initializeDbConnection();
-
 	const sortedTunesWithAliases: SortedTunesWithAliases = {};
 	organizeRawTunes(rawTunes, sortedTunesWithAliases);
 	organizeRawAliases(rawAliases, sortedTunesWithAliases);
+
+	await initializeDbConnection();
 
 	let startAddingAtRawTuneId: string = "1";
 	const [mostRecentTuneInDb] = await Tune.find({
@@ -123,7 +123,7 @@ export const handler = async (
 
 	return {
 		success: true,
-		tunesFoundOnTheSession: Object.keys(sortedTunesWithAliases).length,
-		tunesAddedToDb: 0,
+		totalTunesFoundOnTheSession: Object.keys(sortedTunesWithAliases).length,
+		totalNewTunesAddedToDb: 0,
 	};
 };

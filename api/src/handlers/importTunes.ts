@@ -1,10 +1,11 @@
 import "reflect-metadata";
 import { ScheduledEvent, Context as LambdaContext } from "aws-lambda";
 import fetch from "node-fetch";
-import { Connection } from "typeorm";
+import { Connection, getManager } from "typeorm";
 
 import { connectToDatabase } from "db";
 import { Tune } from "models/entities/Tune";
+import EntityService from "services/Entity";
 
 // Store the DB connection outside of the Lambda handler so it can persist
 // between invocations once it is created.
@@ -45,41 +46,39 @@ const fetchAliasesData = async (): Promise<RawAlias[]> => {
 	return response.json();
 };
 
-interface SortedTunesWithAliases {
+interface RawDataByTuneId {
 	[tuneId: string]: {
 		rawTune: RawTune;
 		rawAliases: RawAlias[];
 	};
 }
-const organizeRawTunes = (
+const sortRawTunesById = (
 	rawTunes: RawTune[],
-	sortedTunesWithAliases: SortedTunesWithAliases
+	rawDataByTuneId: RawDataByTuneId
 ): void => {
-	// Sort by TheSession Tune ID in ascending order
-	const sortedRawTunes = rawTunes.sort(
-		(a, b) => parseInt(a.tune_id) - parseInt(b.tune_id)
-	);
-	sortedRawTunes.forEach((rawTune) => {
+	rawTunes.forEach((rawTune) => {
 		// If the tune ID does not exist in the object, set it
-		if (!sortedTunesWithAliases[rawTune.tune_id]) {
-			sortedTunesWithAliases[rawTune.tune_id] = {
-				...sortedTunesWithAliases[rawTune.tune_id],
+		if (!rawDataByTuneId[rawTune.tune_id]) {
+			rawDataByTuneId[rawTune.tune_id] = {
+				...rawDataByTuneId[rawTune.tune_id],
 				rawTune,
 			};
 		}
 	});
 };
 
-const organizeRawAliases = (
+const sortRawAliasesByTuneId = (
 	rawAliases: RawAlias[],
-	sortedTunesWithAliases: SortedTunesWithAliases
+	rawDataByTuneId: RawDataByTuneId
 ): void => {
 	rawAliases.forEach((rawAlias) => {
-		if (sortedTunesWithAliases[rawAlias.tune_id]) {
-			sortedTunesWithAliases[rawAlias.tune_id] = {
-				...sortedTunesWithAliases[rawAlias.tune_id],
+		// If the raw alias's parent tune ID exists in the object, add the alias to
+		// the existing ones
+		if (rawDataByTuneId[rawAlias.tune_id]) {
+			rawDataByTuneId[rawAlias.tune_id] = {
+				...rawDataByTuneId[rawAlias.tune_id],
 				rawAliases: [
-					...(sortedTunesWithAliases[rawAlias.tune_id].rawAliases ?? []),
+					...(rawDataByTuneId[rawAlias.tune_id].rawAliases ?? []),
 					rawAlias,
 				],
 			};
@@ -96,6 +95,8 @@ export const handler = async (
 	event: ScheduledEvent,
 	context: LambdaContext
 ) => {
+	const startTime = Date.now();
+
 	const [rawTunes, rawAliases] = await Promise.all([
 		fetchTunesData(),
 		fetchAliasesData(),
@@ -104,26 +105,55 @@ export const handler = async (
 		return new Error("Error fetching tunes and aliases from TheSession data");
 	}
 
-	const sortedTunesWithAliases: SortedTunesWithAliases = {};
-	organizeRawTunes(rawTunes, sortedTunesWithAliases);
-	organizeRawAliases(rawAliases, sortedTunesWithAliases);
+	const rawDataByTuneId: RawDataByTuneId = {};
+	sortRawTunesById(rawTunes, rawDataByTuneId);
+	sortRawAliasesByTuneId(rawAliases, rawDataByTuneId);
 
 	await initializeDbConnection();
 
-	let startAddingAtRawTuneId: string = "1";
-	const [mostRecentTuneInDb] = await Tune.find({
-		order: { id: "DESC" },
-		take: 1,
-	});
-	if (mostRecentTuneInDb) {
-		startAddingAtRawTuneId = mostRecentTuneInDb.theSessionTuneId;
+	const tunesInDb =
+		(await getManager()
+			.createQueryBuilder(Tune, "tune")
+			.select("tune.theSessionTuneId")
+			.getMany()) ?? [];
+
+	let totalNewTunesAddedToDb = 0;
+	const keys = Object.keys(rawDataByTuneId);
+
+	for (let i = 0; i < keys.length; i++) {
+		const tuneId = keys[i];
+
+		const tuneIsAlreadyInDb =
+			tunesInDb.findIndex((tuneInDb) => tuneInDb.theSessionTuneId === tuneId) >
+			-1;
+		if (tuneIsAlreadyInDb) {
+			continue;
+		}
+
+		const { rawTune, rawAliases } = rawDataByTuneId[tuneId];
+		try {
+			const tune = Tune.create({
+				name: rawTune.name,
+				slug: EntityService.cleanSlug(`${tuneId}-${rawTune.name}`),
+				description: `${rawTune.type ?? ""} ${rawTune.meter ?? ""} ${
+					rawTune.mode ?? ""
+				}`,
+				aliases: rawAliases?.map((rawAlias) => rawAlias.alias).join(", "),
+				theSessionTuneId: tuneId,
+			});
+			await tune.save();
+			totalNewTunesAddedToDb += 1;
+		} catch (error) {
+			console.log("Error adding tune with ID %s: ", tuneId, error.message);
+		}
 	}
 
-	// Starting at the given ID, add all the tunes from TheSession data to the DB
+	const totalTunesFoundOnTheSession = keys.length;
+	const elapsedTimeMs = Date.now() - startTime;
+	console.log("Total tunes found on TheSession: ", totalTunesFoundOnTheSession);
+	console.log("Total tunes in database before this script: ", tunesInDb.length);
+	console.log("Total new tunes added to database: ", totalNewTunesAddedToDb);
+	console.log("Elapsed time: %s ms", elapsedTimeMs);
 
-	return {
-		success: true,
-		totalTunesFoundOnTheSession: Object.keys(sortedTunesWithAliases).length,
-		totalNewTunesAddedToDb: 0,
-	};
+	return;
 };

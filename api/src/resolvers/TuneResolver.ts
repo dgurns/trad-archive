@@ -3,10 +3,8 @@ import { Resolver, Query, Mutation, Ctx, Arg } from "type-graphql";
 import { CustomContext } from "middleware/context";
 import { Tune } from "models/entities/Tune";
 import { User } from "models/User";
-import { CreateTuneInput, UpdateTuneInput } from "resolvers/TuneResolverTypes";
+import { UpdateTuneInput } from "resolvers/TuneResolverTypes";
 import { entityRelationsForFind } from "resolvers/EntityResolver";
-import EntityService from "services/Entity";
-
 @Resolver()
 export class TuneResolver {
 	@Query(() => Tune, { nullable: true })

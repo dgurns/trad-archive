@@ -46,8 +46,8 @@ interface BaseEntity {
 	aliases: string;
 	description: string | null;
 	tags: Tag[];
-	createdByUser: User;
-	lastUpdatedByUser: User;
+	createdByUser: User | null;
+	lastUpdatedByUser: User | null;
 	createdAt: string;
 	updatedAt: string;
 }

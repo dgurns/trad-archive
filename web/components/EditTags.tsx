@@ -127,7 +127,7 @@ const EditTags = ({ entity, className, children }: Props) => {
 										{objectEntity.entityType}
 									</div>
 									{objectEntity.name}
-									{subjectTimeMarkerSeconds && (
+									{typeof subjectTimeMarkerSeconds === "number" && (
 										<span className="italic text-gray-500">
 											{`at ${DateTimeService.formatSecondsAsDuration(
 												subjectTimeMarkerSeconds

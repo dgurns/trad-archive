@@ -136,23 +136,23 @@ export class EntityResolver {
 				.take(takeFromEach)
 				.getMany(),
 			entityManager
-				.createQueryBuilder(Tune, "tune")
-				.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
-					aliases: `%${searchTermLowercased}%`,
-				})
-				.take(takeFromEach)
-				.getMany(),
-			entityManager
 				.createQueryBuilder(AudioItem, "audioItem")
 				.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
 				.where("unaccent(LOWER(audioItem.name)) LIKE unaccent(:name)", {
 					name: `%${searchTermLowercased}%`,
 				})
 				.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
+					aliases: `%${searchTermLowercased}%`,
+				})
+				.take(takeFromEach)
+				.getMany(),
+			entityManager
+				.createQueryBuilder(Tune, "tune")
+				.leftJoinAndSelect("tune.createdByUser", "createdByUser")
+				.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
+					name: `%${searchTermLowercased}%`,
+				})
+				.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
 					aliases: `%${searchTermLowercased}%`,
 				})
 				.take(takeFromEach)

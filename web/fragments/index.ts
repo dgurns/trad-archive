@@ -209,6 +209,10 @@ export const EntityFragments = {
 				...Tag
 			}
 			theSessionTuneId
+			type
+			meter
+			mode
+			abc
 		}
 		${TagFragments.tag}
 	`,

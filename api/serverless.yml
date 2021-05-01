@@ -33,7 +33,7 @@ functions:
     handler: src/handlers/importTunes.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
-    timeout: 45
+    timeout: 120
     events:
       - schedule:
           rate: rate(5 minutes)

@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import Link from "next/link";
-import compareAsc from "date-fns/compareAsc";
 
 import { Tag, Entity } from "types";
 import EntityService from "services/Entity";
@@ -29,15 +28,11 @@ interface TagsProps {
 const Tags = ({ entity }: TagsProps) => {
 	const { tags } = entity;
 
-	// Sort Tags, and don't include Tags with a time marker.
 	const sortedTags = useMemo(() => {
 		if (!Array.isArray(tags)) {
 			return [];
 		}
-		const tagsWithoutTimeMarkers = tags.filter(
-			(tag) => typeof tag.subjectTimeMarkerSeconds !== "number"
-		);
-		return TagService.sort(tagsWithoutTimeMarkers);
+		return TagService.sort(tags);
 	}, [tags]);
 
 	return (

@@ -43,7 +43,7 @@ interface BaseEntity {
 	id: string;
 	name: string;
 	slug: string;
-	aliases: string;
+	aliases: string | null;
 	description: string | null;
 	tags: Tag[];
 	createdByUser: User | null;
@@ -80,6 +80,10 @@ export interface Place extends BaseEntity {
 export interface Tune extends BaseEntity {
 	entityType: EntityType.Tune;
 	theSessionTuneId: string;
+	type: string | null;
+	meter: string | null;
+	mode: string | null;
+	abc: string | null;
 }
 
 export interface Relationship {

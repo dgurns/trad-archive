@@ -33,10 +33,10 @@ functions:
     handler: src/handlers/importTunes.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
-    timeout: 120
+    timeout: 240
     events:
       - schedule:
-          rate: rate(24 hours)
+          rate: rate(10 minutes)
           enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
 
 plugins:
@@ -51,7 +51,7 @@ custom:
     prod: https://www.tradarchive.com
   shouldRunImportTunes:
     dev: false
-    preview: false
+    preview: true
     # TODO: Run on prod when environment is ready
     prod: false
   webpack:

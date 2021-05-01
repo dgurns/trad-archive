@@ -35,7 +35,7 @@ functions:
       SERVERLESS_STAGE: ${opt:stage}
     events:
       - schedule:
-          rate: rate(24 hours)
+          rate: rate(5 minutes)
           enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
 
 plugins:
@@ -50,8 +50,8 @@ custom:
     prod: https://www.tradarchive.com
   shouldRunImportTunes:
     dev: false
-    # TODO: Enable preview and production when this is working
-    preview: false
+    preview: true
+    # TODO: Run on prod when environment is ready
     prod: false
   webpack:
     webpackConfig: "webpack.config.js"

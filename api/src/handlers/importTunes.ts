@@ -24,6 +24,7 @@ interface RawTune {
 	type: string;
 	meter: string;
 	mode: string;
+	abc: string;
 	date: string;
 	username: string;
 }
@@ -135,11 +136,12 @@ export const handler = async (
 			const tune = Tune.create({
 				name: rawTune.name,
 				slug: EntityService.cleanSlug(`${tuneId}-${rawTune.name}`),
-				description: `${rawTune.type ?? ""} ${rawTune.meter ?? ""} ${
-					rawTune.mode ?? ""
-				}`,
 				aliases: rawAliases?.map((rawAlias) => rawAlias.alias).join(", "),
 				theSessionTuneId: tuneId,
+				type: rawTune.type,
+				meter: rawTune.meter,
+				mode: rawTune.mode,
+				abc: rawTune.abc,
 			});
 			await tune.save();
 			totalNewTunesAddedToDb += 1;

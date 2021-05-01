@@ -31,4 +31,21 @@ export class Tune extends EntityBaseFields {
 	@Field(() => String)
 	@Column()
 	theSessionTuneId!: string;
+
+	// type, meter, mode, and abc are populated with data from TheSession
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true, default: null })
+	type!: string;
+
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true, default: null })
+	meter!: string;
+
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true, default: null })
+	mode!: string;
+
+	@Field(() => String, { nullable: true })
+	@Column({ nullable: true, default: null })
+	abc!: string;
 }

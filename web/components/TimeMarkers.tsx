@@ -79,28 +79,30 @@ const TimeMarkers = ({ audioItem }: Props) => {
 					const isActive = activeTimeMarker === timeMarker;
 					return (
 						<div
-							className="flex flex-row items-center mb-1 text-sm"
+							className="flex flex-row items-start md:items-center justify-start mb-2 last:mb-1 text-sm"
 							key={index}
-							onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
 						>
-							<div
-								className={`flex flex-row items-center w-16 py-2 justify-center mr-3 rounded cursor-pointer hover:bg-gray-200 ${
-									isActive ? "text-black bg-gray-200" : "text-gray-500"
-								}`}
-							>
-								{isActive && "> "}
-								{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}{" "}
+							<div className="flex flex-row w-16 flex-shrink-0">
+								<div className="w-3 text-left">{isActive && ">"}</div>
+								<button
+									className="btn-text underline hover:underline"
+									onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
+								>
+									{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}
+								</button>
 							</div>
-							{tagsAtTimeMarker.map((tag, index) => (
-								<span className="flex flex-row items-center" key={index}>
-									<Link href={Entity.makeHrefForView(tag.objectEntity)}>
-										<a id="time-marker-tag-link">{tag.objectEntity.name}</a>
-									</Link>
-									{index !== tagsAtTimeMarker.length - 1 && (
-										<span className="mr-1">,</span>
-									)}
-								</span>
-							))}
+							<div className="flex flex-col md:flex-row">
+								{tagsAtTimeMarker.map((tag, index) => (
+									<span className="flex flex-row items-center" key={index}>
+										<Link href={Entity.makeHrefForView(tag.objectEntity)}>
+											<a id="time-marker-tag-link">{tag.objectEntity.name}</a>
+										</Link>
+										{index !== tagsAtTimeMarker.length - 1 && (
+											<span className="hidden md:block mr-1">,</span>
+										)}
+									</span>
+								))}
+							</div>
 						</div>
 					);
 				}

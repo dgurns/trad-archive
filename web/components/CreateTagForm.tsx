@@ -48,7 +48,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	const [
 		shouldCreateInverseRelationship,
 		setShouldCreateInverseRelationship,
-	] = useState(false);
+	] = useState(true);
 	const [
 		selectedInverseRelationshipId,
 		setSelectedInverseRelationshipId,

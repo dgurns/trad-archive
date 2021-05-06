@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { useEffect, useState, useCallback, ChangeEvent } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import debounce from "lodash/debounce";
 
 import { Entity } from "types";
 import { EntityFragments } from "fragments";
+import EntityService from "services/Entity";
 
 import LoadingCircle from "components/LoadingCircle";
 import CreateNewEntities from "components/CreateNewEntities";
@@ -96,15 +98,22 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 				<div className="mt-4">
 					<ul className="max-h-40">
 						{searchResults.map((entity, index) => (
-							<li
-								className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
-								onClick={() => onSelect(entity)}
-								key={index}
-							>
-								<span>{entity.name}</span>
-								<span className="uppercase text-gray-500 text-sm">
-									{entity.entityType}
-								</span>
+							<li className="flex flex-row" key={index}>
+								<div
+									className="flex flex-1 justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
+									onClick={() => onSelect(entity)}
+								>
+									<span>{entity.name}</span>
+									<span className="uppercase text-gray-500 text-sm">
+										{entity.entityType}
+									</span>
+								</div>
+
+								<Link href={EntityService.makeHrefForView(entity)}>
+									<a className="btn-icon w-auto px-2" target="_blank">
+										<i className="material-icons text-base">launch</i>
+									</a>
+								</Link>
 							</li>
 						))}
 					</ul>

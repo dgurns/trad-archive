@@ -32,7 +32,10 @@ const Tags = ({ entity }: TagsProps) => {
 		if (!Array.isArray(tags)) {
 			return [];
 		}
-		return TagService.sort(tags);
+		const tagsWithoutTimeMarkers = tags.filter(
+			(tag) => typeof tag.subjectTimeMarkerSeconds !== "number"
+		);
+		return TagService.sort(tagsWithoutTimeMarkers);
 	}, [tags]);
 
 	return (

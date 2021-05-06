@@ -46,7 +46,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 
 	const onTimeMarkerClicked = useCallback(
 		(event, timeMarker) => {
-			if (event.target.href) {
+			if (event.target.id === "time-marker-tag-link") {
 				event.stopPropagation();
 				return;
 			}
@@ -79,19 +79,22 @@ const TimeMarkers = ({ audioItem }: Props) => {
 					const isActive = activeTimeMarker === timeMarker;
 					return (
 						<div
-							className={`flex flex-row items-center p-2 mb-1 rounded cursor-pointer text-sm hover:bg-gray-200 ${
-								isActive ? "text-black bg-gray-200" : "text-gray-500"
-							}`}
+							className="flex flex-row items-center mb-1 text-sm"
 							key={index}
 							onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
 						>
-							<div className="w-14">
+							<div
+								className={`flex flex-row items-center w-16 py-2 justify-center mr-3 rounded cursor-pointer hover:bg-gray-200 ${
+									isActive ? "text-black bg-gray-200" : "text-gray-500"
+								}`}
+							>
+								{isActive && "> "}
 								{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}{" "}
 							</div>
 							{tagsAtTimeMarker.map((tag, index) => (
-								<span key={index}>
+								<span className="flex flex-row items-center" key={index}>
 									<Link href={Entity.makeHrefForView(tag.objectEntity)}>
-										{tag.objectEntity.name}
+										<a id="time-marker-tag-link">{tag.objectEntity.name}</a>
 									</Link>
 									{index !== tagsAtTimeMarker.length - 1 && (
 										<span className="mr-1">,</span>

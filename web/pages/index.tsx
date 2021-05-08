@@ -25,9 +25,12 @@ interface AudioItemsQueryVariables {
 }
 
 // Attempt to reuse instance of server side Apollo Client between runs of
-// getStaticProps
+// getStaticProps, to avoid creating a new database connection on every request
 let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
+// getStaticProps enables us to incrementally render a static homepage on the
+// server side. It regenerates with the latest data on each new request, at most
+// once per second.
 export async function getStaticProps() {
 	if (!serverSideApolloClient) {
 		serverSideApolloClient = new ApolloClient({

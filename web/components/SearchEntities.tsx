@@ -100,7 +100,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 						{searchResults.map((entity, index) => (
 							<li className="flex flex-row" key={index}>
 								<button
-									className="flex flex-1 justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
+									className="flex flex-1 justify-between items-center text-left p-2 rounded cursor-pointer hover:bg-gray-200"
 									onClick={() => onSelect(entity)}
 								>
 									<span>{entity.name}</span>

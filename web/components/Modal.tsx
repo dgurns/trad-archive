@@ -1,3 +1,5 @@
+import { useHotkeys } from "react-hotkeys-hook";
+
 interface Props {
 	children: React.ReactChild | React.ReactChild[];
 	isVisible: boolean;
@@ -13,6 +15,16 @@ const Modal = ({
 	title,
 	className,
 }: Props) => {
+	// Close the modal when escape key is pressed, even if a form field is focused
+	useHotkeys(
+		"esc",
+		onClose,
+		{
+			enableOnTags: ["INPUT", "TEXTAREA"],
+		},
+		[onClose]
+	);
+
 	if (!isVisible) {
 		return null;
 	}

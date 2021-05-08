@@ -41,7 +41,7 @@ const Modal = ({
 			/>
 
 			<div
-				className={`bg-white rounded relative w-full p-4 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${
+				className={`bg-white rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${
 					className ?? ""
 				}`}
 			>
@@ -51,6 +51,9 @@ const Modal = ({
 						className="btn-icon flex flex-row items-center justify-center ml-4 mb-0.5"
 						onClick={onClose}
 					>
+						<span className="border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-0.5 mr-3">
+							ESC
+						</span>
 						<i className="material-icons">close</i>
 					</button>
 				</div>

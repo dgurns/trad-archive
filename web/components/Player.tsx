@@ -21,8 +21,8 @@ const Player = () => {
 	}, [activeAudioItem]);
 
 	return (
-		<div className="flex flex-col align-center justify-center p-4 bg-white">
-			<div className="flex flex-row justify-between mb-3">
+		<div className="flex flex-col align-center justify-center px-4 pb-4 pt-2 bg-white">
+			<div className="flex flex-row justify-between mb-2">
 				<div className="leading-8">
 					Now playing:{" "}
 					<span className="text-gray-500">{activeAudioItem.name}</span>

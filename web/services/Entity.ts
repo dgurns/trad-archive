@@ -1,5 +1,10 @@
 import { Entity, EntityType } from "types";
 
+const cleanSlug = (rawSlug: string) => {
+	const slugWithHyphens = rawSlug.replace(/[\s]/g, "-");
+	return slugWithHyphens.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
+};
+
 const makeHrefForView = (entity: Entity) => {
 	switch (entity.entityType) {
 		case EntityType.AudioItem:
@@ -22,6 +27,7 @@ const makeHrefForEdit = (entity: Entity) => {
 };
 
 const EntityService = {
+	cleanSlug,
 	makeHrefForView,
 	makeHrefForEdit,
 };

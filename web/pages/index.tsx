@@ -1,4 +1,10 @@
-import { apolloClient } from "apolloClient";
+import {
+	ApolloClient,
+	InMemoryCache,
+	NormalizedCacheObject,
+} from "@apollo/client";
+
+import { API_URL } from "apolloClient";
 import { AudioItem } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 
@@ -17,8 +23,21 @@ interface AudioItemsQueryVariables {
 		skip: number;
 	};
 }
+
+// Attempt to reuse instance of server side Apollo Client between runs of
+// getStaticProps
+let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
+
 export async function getStaticProps() {
-	const { data } = await apolloClient.query<
+	if (!serverSideApolloClient) {
+		serverSideApolloClient = new ApolloClient({
+			uri: API_URL,
+			credentials: "include",
+			cache: new InMemoryCache(),
+		});
+	}
+
+	const { data } = await serverSideApolloClient.query<
 		AudioItemsQueryData,
 		AudioItemsQueryVariables
 	>({

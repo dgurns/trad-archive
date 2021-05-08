@@ -106,7 +106,7 @@ const Header = () => {
 					>
 						<i className="material-icons">search</i>
 						<span className="hidden md:block md:pl-1">Search</span>
-						<span className="border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
+						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
 					</button>
 				</div>
 

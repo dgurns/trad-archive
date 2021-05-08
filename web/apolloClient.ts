@@ -7,9 +7,10 @@ let apiUrl = `http://localhost:4000${graphqlPath}`;
 if (typeof NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "string") {
 	apiUrl = `https://api-${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}.tradarchive.com${graphqlPath}`;
 }
+export const API_URL = apiUrl;
 
 export const apolloClient = new ApolloClient({
-	uri: apiUrl,
+	uri: API_URL,
 	credentials: "include",
 	cache: new InMemoryCache({
 		typePolicies: {

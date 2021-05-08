@@ -59,7 +59,9 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 	return (
 		<div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 mb-8">
 			<Link href={`/entities/audio-items/${slug}`}>
-				<a className="mb-2 link-h1">{name}</a>
+				<h1 className="mb-2">
+					<a className="link-bare">{name}</a>
+				</h1>
 			</Link>
 
 			<div className="mb-4">

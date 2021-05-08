@@ -99,7 +99,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 					<ul className="max-h-40">
 						{searchResults.map((entity, index) => (
 							<li className="flex flex-row" key={index}>
-								<div
+								<button
 									className="flex flex-1 justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
 									onClick={() => onSelect(entity)}
 								>
@@ -107,7 +107,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 									<span className="uppercase text-gray-500 text-sm">
 										{entity.entityType}
 									</span>
-								</div>
+								</button>
 
 								<Link href={EntityService.makeHrefForView(entity)}>
 									<a className="btn-icon w-auto px-2" target="_blank">

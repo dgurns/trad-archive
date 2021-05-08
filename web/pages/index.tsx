@@ -14,10 +14,10 @@ import LoadingBlock from "components/LoadingBlock";
 
 const RESULTS_PER_PAGE = 10;
 
-interface AudioItemsQueryData {
+interface QueryData {
 	audioItems: AudioItem[];
 }
-interface AudioItemsQueryVariables {
+interface QueryVariables {
 	input: {
 		take: number;
 		skip: number;
@@ -39,10 +39,9 @@ export async function getStaticProps() {
 			cache: new InMemoryCache(),
 		});
 	}
-
 	const { data } = await serverSideApolloClient.query<
-		AudioItemsQueryData,
-		AudioItemsQueryVariables
+		QueryData,
+		QueryVariables
 	>({
 		query: AUDIO_ITEMS_QUERY,
 		variables: {

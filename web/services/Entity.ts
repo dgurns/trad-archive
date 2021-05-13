@@ -6,7 +6,7 @@ const cleanSlug = (rawSlug: string) => {
 };
 
 const makeHrefForView = (entity: Entity) => {
-	switch (entity.entityType) {
+	switch (entity?.entityType) {
 		case EntityType.AudioItem:
 			return `/entities/audio-items/${entity.slug}`;
 		case EntityType.Person:

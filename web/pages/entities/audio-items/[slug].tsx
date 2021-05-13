@@ -66,7 +66,7 @@ const ViewAudioItemBySlug = () => {
 					<AudioItemComponent audioItem={audioItem} />
 				</div>
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h1 className="mb-4">About {name}</h1>
+					<h2 className="mb-4">About {name}</h2>
 					<div className="mb-4">
 						Entity Type:
 						<br />
@@ -78,7 +78,7 @@ const ViewAudioItemBySlug = () => {
 						<span className="text-gray-500">{aliases}</span>
 					</div>
 					<Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>
-					<h1 className="mt-8 mb-4">Tags</h1>
+					<h2 className="mt-8 mb-4">Tags</h2>
 					{sortedTags.map((tag, index) => (
 						<TagWithRelationshipToObject
 							tag={tag}

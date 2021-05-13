@@ -124,7 +124,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			objectEntityId: selectedEntity.id,
 			subjectTimeMarkerSeconds,
 		};
-		createTag({ variables: { input: tagInput } });
+		await createTag({ variables: { input: tagInput } });
 
 		if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
 			const inverseTagInput = {
@@ -135,7 +135,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				objectEntityId: entity.id,
 				subjectTimeMarkerSeconds,
 			};
-			createTag({ variables: { input: inverseTagInput } });
+			await createTag({ variables: { input: inverseTagInput } });
 		}
 	}, [
 		selectedRelationshipId,

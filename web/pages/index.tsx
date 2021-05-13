@@ -5,7 +5,7 @@ import {
 } from "@apollo/client";
 
 import { API_URL } from "apolloClient";
-import { AudioItem } from "types";
+import { AudioItem, EntityStatus } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 
 import Layout from "components/Layout";
@@ -19,8 +19,9 @@ interface QueryData {
 }
 interface QueryVariables {
 	input: {
-		take: number;
-		skip: number;
+		take?: number;
+		skip?: number;
+		status?: EntityStatus;
 	};
 }
 
@@ -47,6 +48,7 @@ export async function getStaticProps() {
 		variables: {
 			input: {
 				take: RESULTS_PER_PAGE,
+				status: EntityStatus.Published,
 				skip: 0,
 			},
 		},
@@ -64,13 +66,10 @@ interface Props {
 }
 
 export default function Home({ prefetchedAudioItems }: Props) {
-	const [
-		audioItems = prefetchedAudioItems,
-		{ loading, error },
-		fetchNextPage,
-	] = useAudioItems({
-		resultsPerPage: RESULTS_PER_PAGE,
-	});
+	const [audioItems = prefetchedAudioItems, { loading, error }, fetchNextPage] =
+		useAudioItems({
+			resultsPerPage: RESULTS_PER_PAGE,
+		});
 
 	if (!audioItems && !error) {
 		return (

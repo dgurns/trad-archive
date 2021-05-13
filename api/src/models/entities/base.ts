@@ -16,6 +16,7 @@ export enum EntityType {
 	Person = "Person",
 	Instrument = "Instrument",
 	Place = "Place",
+	Tune = "Tune",
 }
 registerEnumType(EntityType, {
 	name: "EntityType",
@@ -31,7 +32,7 @@ registerEnumType(EntityStatus, {
 });
 
 // EntityBaseFields represents the basic fields that are inherited by every
-// Entity type like Person, AudioItem, or Instrument
+// Entity type like Person, AudioItem, Instrument, Place, or Tune
 @ObjectType()
 export class EntityBaseFields extends TypeOrmBaseEntity {
 	@Field(() => String)

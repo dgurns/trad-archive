@@ -116,6 +116,7 @@ export class AudioItemResolver {
 			.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
 			.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
 			.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
+			.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
 			.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
 			.orderBy("relevantTag.createdAt", "DESC");
 		if (take) {
@@ -147,6 +148,7 @@ export class AudioItemResolver {
 			.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
 			.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
 			.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
+			.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
 			.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
 			.orderBy("audioItem.createdAt", "DESC");
 		if (take) {

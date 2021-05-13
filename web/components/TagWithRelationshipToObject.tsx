@@ -31,7 +31,7 @@ const TagWithRelationshipToObject = ({ tag, className }: Props) => {
 				{objectEntity.name}
 			</Link>
 			<br />
-			{shouldShowTimeMarker && (
+			{typeof subjectTimeMarkerSeconds === "number" && (
 				<em>
 					{`at ${DateTimeService.formatSecondsAsDuration(
 						subjectTimeMarkerSeconds

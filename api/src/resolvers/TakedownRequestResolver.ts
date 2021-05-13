@@ -25,6 +25,7 @@ const addRelationsToQueryBuilder = (
 		.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
 		.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
 		.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
+		.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
 		.leftJoinAndSelect("takedownRequest.createdByUser", "createdByUser")
 		.leftJoinAndSelect("takedownRequest.updatedByUser", "updatedByUser");
 };

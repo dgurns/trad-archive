@@ -46,7 +46,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 
 	const onTimeMarkerClicked = useCallback(
 		(event, timeMarker) => {
-			if (event.target.href) {
+			if (event.target.id === "time-marker-tag-link") {
 				event.stopPropagation();
 				return;
 			}
@@ -79,25 +79,30 @@ const TimeMarkers = ({ audioItem }: Props) => {
 					const isActive = activeTimeMarker === timeMarker;
 					return (
 						<div
-							className={`flex flex-row items-center p-2 mb-1 last:mb-0 rounded cursor-pointer text-sm hover:bg-gray-200 ${
-								isActive ? "text-black bg-gray-200" : "text-gray-500"
-							}`}
+							className="flex flex-row items-start md:items-center justify-start mb-2 last:mb-1 text-sm"
 							key={index}
-							onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
 						>
-							<div className="w-14">
-								{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}{" "}
+							<div className="flex flex-row w-16 flex-shrink-0">
+								<div className="w-3 text-left">{isActive && ">"}</div>
+								<button
+									className="btn-text underline hover:underline"
+									onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
+								>
+									{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}
+								</button>
 							</div>
-							{tagsAtTimeMarker.map((tag, index) => (
-								<span key={index}>
-									<Link href={Entity.makeHrefForView(tag.objectEntity)}>
-										{tag.objectEntity.name}
-									</Link>
-									{index !== tagsAtTimeMarker.length - 1 && (
-										<span className="mr-1">,</span>
-									)}
-								</span>
-							))}
+							<div className="flex flex-col md:flex-row">
+								{tagsAtTimeMarker.map((tag, index) => (
+									<span className="flex flex-row items-center" key={index}>
+										<Link href={Entity.makeHrefForView(tag.objectEntity)}>
+											<a id="time-marker-tag-link">{tag.objectEntity.name}</a>
+										</Link>
+										{index !== tagsAtTimeMarker.length - 1 && (
+											<span className="hidden md:block mr-1">,</span>
+										)}
+									</span>
+								))}
+							</div>
 						</div>
 					);
 				}

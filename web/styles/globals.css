@@ -12,14 +12,11 @@
 	.link {
 		@apply text-teal-600 underline hover:text-teal-800;
 	}
-	.link-h1 {
-		@apply text-xl font-bold text-black no-underline hover:text-teal-800;
+	.link-bare {
+		@apply text-black no-underline cursor-pointer hover:text-teal-800;
 	}
 
 	/* Buttons */
-	button:focus {
-		@apply outline-none;
-	}
 	button:disabled,
 	input[type="submit"]:disabled {
 		@apply cursor-not-allowed opacity-50 animate-pulse hover:no-underline;
@@ -38,12 +35,12 @@
 
 	/* Icon buttons (for example, the "X" on a modal) */
 	.btn-icon {
-		@apply text-gray-500 no-underline hover:no-underline hover:text-gray-800;
+		@apply text-gray-500 no-underline hover:no-underline p-1 rounded flex flex-row items-center justify-center hover:text-gray-800 hover:bg-gray-200;
 	}
 
 	/* Secondary buttons (with an icon and small bold text, for example "+ Add to Collection") */
 	.btn-secondary {
-		@apply text-gray-500 text-sm font-bold whitespace-nowrap flex flex-row items-center no-underline py-0.5 px-1 rounded hover:no-underline hover:bg-gray-200;
+		@apply text-gray-500 text-sm font-bold whitespace-nowrap flex flex-row items-center no-underline p-1 rounded hover:no-underline hover:text-gray-800 hover:bg-gray-200;
 	}
 	.btn-secondary-active {
 		@apply text-gray-800;

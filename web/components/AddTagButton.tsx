@@ -17,12 +17,14 @@ const PARENT_ENTITY_QUERY = gql`
 			...Person
 			...Instrument
 			...Place
+			...Tune
 		}
 	}
 	${EntityFragments.audioItem}
 	${EntityFragments.person}
 	${EntityFragments.instrument}
 	${EntityFragments.place}
+	${EntityFragments.tune}
 `;
 
 interface Props {

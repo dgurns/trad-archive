@@ -25,5 +25,14 @@ module.exports = {
 			full: "100%",
 		},
 	},
+	variants: {
+		extend: {
+			backgroundColor: ["disabled", "checked"],
+			borderColor: ["checked", "hover"],
+			borderRadius: ["hover"],
+			cursor: ["disabled"],
+			margin: ["last"],
+		},
+	},
 	plugins: [require("@tailwindcss/forms")],
 };

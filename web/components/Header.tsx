@@ -1,6 +1,7 @@
 import { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { Entity } from "types";
 import useCurrentUser from "hooks/useCurrentUser";
@@ -8,7 +9,7 @@ import UserService from "services/User";
 import EntityService from "services/Entity";
 
 import Modal from "components/Modal";
-import SearchBox from "components/SearchBox";
+import SearchEntities from "components/SearchEntities";
 
 const Header = () => {
 	const router = useRouter();
@@ -16,6 +17,16 @@ const Header = () => {
 	const [currentUser, { loading }] = useCurrentUser();
 
 	const [searchModalIsVisible, setSearchModalIsVisible] = useState(false);
+
+	const openSearchModal = (event) => {
+		event.preventDefault();
+		setSearchModalIsVisible(true);
+	};
+	const closeSearchModal = () => {
+		setSearchModalIsVisible(false);
+	};
+
+	useHotkeys("/", openSearchModal);
 
 	const onSelectSearchResult = useCallback(
 		(entity: Entity) => {
@@ -90,11 +101,12 @@ const Header = () => {
 						</a>
 					</Link>
 					<button
-						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
-						onClick={() => setSearchModalIsVisible(true)}
+						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 group ml-4"
+						onClick={openSearchModal}
 					>
 						<i className="material-icons">search</i>
 						<span className="hidden md:block md:pl-1">Search</span>
+						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
 					</button>
 				</div>
 
@@ -104,9 +116,9 @@ const Header = () => {
 			<Modal
 				title="Search"
 				isVisible={searchModalIsVisible}
-				onClose={() => setSearchModalIsVisible(false)}
+				onClose={closeSearchModal}
 			>
-				<SearchBox
+				<SearchEntities
 					onSelect={onSelectSearchResult}
 					onNewEntityCreated={onNewEntityCreated}
 				/>

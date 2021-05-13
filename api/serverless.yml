@@ -9,11 +9,11 @@ provider:
   # Settings to get ahead of deprecation warnings
   apiGateway:
     shouldStartNameWithService: true
-  lambdaHashingVersion: '20201221'
+  lambdaHashingVersion: "20201221"
 
 functions:
   graphql:
-    handler: src/apolloServer.graphqlHandler
+    handler: src/handlers/graphql.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     events:
@@ -29,6 +29,15 @@ functions:
           cors:
             origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
             allowCredentials: true
+  importTunes:
+    handler: src/handlers/importTunes.handler
+    environment:
+      SERVERLESS_STAGE: ${opt:stage}
+    timeout: 240
+    events:
+      - schedule:
+          rate: rate(24 hours)
+          enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
 
 plugins:
   - serverless-webpack
@@ -40,8 +49,13 @@ custom:
     dev: http://localhost:3000
     preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
     prod: https://www.tradarchive.com
+  shouldRunImportTunes:
+    dev: false
+    preview: true
+    # TODO: Run on prod when environment is ready
+    prod: false
   webpack:
-    webpackConfig: 'webpack.config.js'
+    webpackConfig: "webpack.config.js"
     includeModules:
       forceInclude:
         - pg
@@ -50,9 +64,10 @@ custom:
     domainName: api-${opt:stage}.tradarchive.com
     certificateArn: arn:aws:acm:us-east-1:727441280422:certificate/2e5a0bc4-0c2b-43d4-a7a6-58eab5e3ea2b
     createRoute53Record: true
-    endpointType: 'regional'
+    endpointType: "regional"
     securityPolicy: tls_1_2
     autoDomain: true
   serverless-offline:
     httpPort: 4000
     noPrependStageInUrl: true
+    allowCache: true

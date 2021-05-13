@@ -24,6 +24,7 @@ import { AudioItemResolver } from "resolvers/AudioItemResolver";
 import { PersonResolver } from "resolvers/PersonResolver";
 import { InstrumentResolver } from "resolvers/InstrumentResolver";
 import { PlaceResolver } from "resolvers/PlaceResolver";
+import { TuneResolver } from "resolvers/TuneResolver";
 
 const { SERVERLESS_STAGE } = process.env;
 
@@ -52,6 +53,7 @@ const initializeServer = async () => {
 				PersonResolver,
 				InstrumentResolver,
 				PlaceResolver,
+				TuneResolver,
 			],
 			dateScalarMode: "isoDate",
 			authChecker,
@@ -68,7 +70,9 @@ const initializeServer = async () => {
 	return apolloServer;
 };
 
-export const graphqlHandler = (
+// handler takes incoming requests from API Gateway and handles them via an
+// Apollo Server GraphQL API
+export const handler = (
 	event: APIGatewayProxyEvent,
 	context: LambdaContext,
 	callback: APIGatewayProxyCallback
@@ -88,12 +92,12 @@ export const graphqlHandler = (
 	}
 
 	initializeServer().then((apolloServer) => {
-		const handler = apolloServer.createHandler({
+		const apolloServerHandler = apolloServer.createHandler({
 			cors: {
 				origin: allowedOrigin,
 				credentials: true,
 			},
 		});
-		return handler(event, context, callback);
+		return apolloServerHandler(event, context, callback);
 	});
 };

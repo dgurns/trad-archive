@@ -1,26 +1,30 @@
+import Link from "next/link";
 import { useEffect, useState, useCallback, ChangeEvent } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import debounce from "lodash/debounce";
 
 import { Entity } from "types";
 import { EntityFragments } from "fragments";
+import EntityService from "services/Entity";
 
 import LoadingCircle from "components/LoadingCircle";
 import CreateNewEntities from "components/CreateNewEntities";
 
 const SEARCH_ENTITIES_QUERY = gql`
-	query SearchBox($input: SearchEntitiesInput!) {
+	query SearchEntities($input: SearchEntitiesInput!) {
 		searchEntities(input: $input) {
 			...AudioItem
 			...Person
 			...Instrument
 			...Place
+			...Tune
 		}
 	}
 	${EntityFragments.audioItem}
 	${EntityFragments.person}
 	${EntityFragments.instrument}
 	${EntityFragments.place}
+	${EntityFragments.tune}
 `;
 
 interface QueryData {
@@ -36,7 +40,7 @@ interface Props {
 	onSelect: (entity: Entity) => void;
 	onNewEntityCreated?: (entity: Entity) => void;
 }
-const SearchBox = ({ onSelect, onNewEntityCreated }: Props) => {
+const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState<Entity[] | undefined>();
 
@@ -59,7 +63,7 @@ const SearchBox = ({ onSelect, onNewEntityCreated }: Props) => {
 		const cleanedSearchTerm = searchTerm?.trim() ?? "";
 		if (cleanedSearchTerm.length >= 3) {
 			debouncedSearchEntities({
-				variables: { input: { searchTerm: cleanedSearchTerm } },
+				variables: { input: { searchTerm: cleanedSearchTerm, take: 30 } },
 			});
 		}
 	}, [searchTerm]);
@@ -94,15 +98,22 @@ const SearchBox = ({ onSelect, onNewEntityCreated }: Props) => {
 				<div className="mt-4">
 					<ul className="max-h-40">
 						{searchResults.map((entity, index) => (
-							<li
-								className="flex flex-row justify-between items-center p-2 rounded cursor-pointer hover:bg-gray-200"
-								onClick={() => onSelect(entity)}
-								key={index}
-							>
-								<span>{entity.name}</span>
-								<span className="uppercase text-gray-500 text-sm">
-									{entity.entityType}
-								</span>
+							<li className="flex flex-row" key={index}>
+								<button
+									className="flex flex-1 justify-between items-center text-left p-2 rounded cursor-pointer hover:bg-gray-200"
+									onClick={() => onSelect(entity)}
+								>
+									<span>{entity.name}</span>
+									<span className="uppercase text-gray-500 text-sm">
+										{entity.entityType}
+									</span>
+								</button>
+
+								<Link href={EntityService.makeHrefForView(entity)}>
+									<a className="btn-icon w-auto px-2" target="_blank">
+										<i className="material-icons text-base">launch</i>
+									</a>
+								</Link>
 							</li>
 						))}
 					</ul>
@@ -122,4 +133,4 @@ const SearchBox = ({ onSelect, onNewEntityCreated }: Props) => {
 	);
 };
 
-export default SearchBox;
+export default SearchEntities;

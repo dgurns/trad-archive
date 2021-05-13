@@ -17,10 +17,21 @@ class MyDocument extends Document {
 			<Html>
 				<Head>
 					<link rel="icon" href="/favicon.ico" />
-					<link rel="preconnect" href="https://fonts.gstatic.com" />
+					<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+					<link rel="preconnect" href="https://fonts.gstatic.com/" />
 					<link
-						rel="stylesheet preconnect"
-						href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+						href="https://fonts.googleapis.com/icon?family=Material+Icons"
+						rel="preload"
+						as="style"
+					/>
+					<link
+						href="https://fonts.googleapis.com/icon?family=Material+Icons"
+						rel="stylesheet"
+					/>
+					<link
+						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"
+						rel="preload"
+						as="style"
 					/>
 					<link
 						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"

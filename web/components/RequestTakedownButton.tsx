@@ -114,10 +114,10 @@ const RequestTakedownButton = ({ entity }: Props) => {
 	return (
 		<>
 			<span
-				className="flex flex-row items-center p-2"
+				className="rounded flex flex-row items-center p-2"
 				onClick={onButtonClicked}
 			>
-				<i className="material-icons-outlined mr-0.5">report_problem</i>
+				<i className="material-icons mr-0.5">report_problem</i>
 				Request Takedown
 			</span>
 

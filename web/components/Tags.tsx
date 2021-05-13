@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import Link from "next/link";
-import compareAsc from "date-fns/compareAsc";
 
 import { Tag, Entity } from "types";
 import EntityService from "services/Entity";

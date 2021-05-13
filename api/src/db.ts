@@ -8,6 +8,7 @@ import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
+import { Tune } from "models/entities/Tune";
 import { TakedownRequest } from "models/TakedownRequest";
 
 const DB_CONNECTION_NAME = "default";
@@ -33,6 +34,7 @@ export const connectToDatabase = async () => {
 			Person,
 			Instrument,
 			Place,
+			Tune,
 		],
 		// TODO: Set synchronize to false in production
 		synchronize: true,

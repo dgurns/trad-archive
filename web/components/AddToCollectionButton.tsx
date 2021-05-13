@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, useLazyQuery, gql } from "@apollo/client";
 
-import useAudioItem from "hooks/useAudioItem";
+import { AUDIO_ITEM_QUERY } from "hooks/useAudioItem";
 import useRequireLogin from "hooks/useRequireLogin";
 import useCollectionEntriesForUser from "hooks/useCollectionEntriesForUser";
 import { AudioItem, CollectionEntry } from "types";
@@ -40,16 +40,16 @@ interface DeleteMutationVariables {
 interface Props {
 	audioItem: AudioItem;
 }
-const AddToCollectionButton = ({ audioItem }: Props) => {
+const AddToCollection = ({ audioItem }: Props) => {
 	const { id, slug, isAddedToCollection } = audioItem;
 
 	const router = useRouter();
 	const { currentUser, requireLogin } = useRequireLogin();
-	const [, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
-	const [
-		,
-		{ refetch: refetchCollectionEntriesForUser },
-	] = useCollectionEntriesForUser();
+	const [refetchAudioItem] = useLazyQuery(AUDIO_ITEM_QUERY, {
+		fetchPolicy: "network-only",
+	});
+	const [, { refetch: refetchCollectionEntriesForUser }] =
+		useCollectionEntriesForUser();
 
 	const [
 		createCollectionEntry,
@@ -94,10 +94,11 @@ const AddToCollectionButton = ({ audioItem }: Props) => {
 
 	useEffect(() => {
 		if (createData) {
-			refetchParentAudioItem();
+			// Now that the Audio Item has been added, refetching the updated
+			// Collection Entries will also update the Audio Item in cache
 			refetchCollectionEntriesForUser();
 		}
-	}, [createData, refetchParentAudioItem, refetchCollectionEntriesForUser]);
+	}, [createData, refetchAudioItem, refetchCollectionEntriesForUser, slug]);
 	useEffect(() => {
 		if (createError) {
 			window.alert("Error adding to collection. Please try again.");
@@ -105,11 +106,14 @@ const AddToCollectionButton = ({ audioItem }: Props) => {
 	}, [createError]);
 
 	useEffect(() => {
-		if (deleteData) {
-			refetchParentAudioItem();
+		const refetch = async () => {
+			await refetchAudioItem({ variables: { slug } });
 			refetchCollectionEntriesForUser();
+		};
+		if (deleteData) {
+			refetch();
 		}
-	}, [deleteData, refetchParentAudioItem, refetchCollectionEntriesForUser]);
+	}, [deleteData, refetchAudioItem, refetchCollectionEntriesForUser, slug]);
 	useEffect(() => {
 		if (deleteError) {
 			window.alert("Error removing from collection. Please try again.");
@@ -139,4 +143,4 @@ const AddToCollectionButton = ({ audioItem }: Props) => {
 	);
 };
 
-export default AddToCollectionButton;
+export default AddToCollection;

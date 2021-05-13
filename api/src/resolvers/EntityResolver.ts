@@ -6,17 +6,18 @@ import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
+import { Tune } from "models/entities/Tune";
 import { SearchEntitiesInput } from "resolvers/EntityResolverTypes";
 
 // Entity is a type for representing any entity
-export type Entity = AudioItem | Person | Instrument | Place;
+export type Entity = AudioItem | Person | Instrument | Place | Tune;
 
 // EntityUnionType is a GraphQL union type returned by resolvers. It contains
 // logic for GraphQL clients to distinguish the entity type represented by a
 // value.
 export const EntityUnion = createUnionType({
 	name: "Entity",
-	types: () => [AudioItem, Person, Instrument, Place],
+	types: () => [AudioItem, Person, Instrument, Place, Tune],
 	resolveType: (value) => {
 		switch (value.entityType) {
 			case EntityType.AudioItem:
@@ -27,6 +28,8 @@ export const EntityUnion = createUnionType({
 				return Instrument;
 			case EntityType.Place:
 				return Place;
+			case EntityType.Tune:
+				return Tune;
 			default:
 				return undefined;
 		}
@@ -42,6 +45,7 @@ export const entityRelationsForFind = [
 	"tags.objectPerson",
 	"tags.objectInstrument",
 	"tags.objectPlace",
+	"tags.objectTune",
 ];
 
 // EntityResolver contains resolvers for querying across all entity types
@@ -72,6 +76,10 @@ export class EntityResolver {
 				where: [{ id }, { slug }],
 				relations: entityRelationsForFind,
 			}),
+			Tune.findOne({
+				where: [{ id }, { slug }],
+				relations: entityRelationsForFind,
+			}),
 		]);
 		let entity;
 		results.forEach((result) => {
@@ -90,7 +98,7 @@ export class EntityResolver {
 			throw new Error("Must include a search term of at least 3 letters");
 		}
 		const searchTermLowercased = searchTerm.toLowerCase();
-		const takeFromEach = Math.round(take / 4);
+		const takeFromEach = Math.round(take / 5);
 		const entityManager = getManager();
 		const results = await Promise.all([
 			entityManager
@@ -134,6 +142,17 @@ export class EntityResolver {
 					name: `%${searchTermLowercased}%`,
 				})
 				.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
+					aliases: `%${searchTermLowercased}%`,
+				})
+				.take(takeFromEach)
+				.getMany(),
+			entityManager
+				.createQueryBuilder(Tune, "tune")
+				.leftJoinAndSelect("tune.createdByUser", "createdByUser")
+				.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
+					name: `%${searchTermLowercased}%`,
+				})
+				.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
 					aliases: `%${searchTermLowercased}%`,
 				})
 				.take(takeFromEach)

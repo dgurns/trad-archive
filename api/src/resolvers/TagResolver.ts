@@ -9,6 +9,7 @@ import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
+import { Tune } from "models/entities/Tune";
 import { Relationship } from "models/Relationship";
 
 const tagRelationsForFind = [
@@ -16,10 +17,12 @@ const tagRelationsForFind = [
 	"subjectPerson",
 	"subjectInstrument",
 	"subjectPlace",
+	"subjectTune",
 	"objectAudioItem",
 	"objectPerson",
 	"objectInstrument",
 	"objectPlace",
+	"objectTune",
 ];
 
 const addTagRelationsToQueryBuilder = (
@@ -31,10 +34,12 @@ const addTagRelationsToQueryBuilder = (
 		.leftJoinAndSelect("tag.subjectPerson", "subjectPerson")
 		.leftJoinAndSelect("tag.subjectInstrument", "subjectInstrument")
 		.leftJoinAndSelect("tag.subjectPlace", "subjectPlace")
+		.leftJoinAndSelect("tag.subjectTune", "subjectTune")
 		.leftJoinAndSelect("tag.objectAudioItem", "objectAudioItem")
 		.leftJoinAndSelect("tag.objectPerson", "objectPerson")
 		.leftJoinAndSelect("tag.objectInstrument", "objectInstrument")
-		.leftJoinAndSelect("tag.objectPlace", "objectPlace");
+		.leftJoinAndSelect("tag.objectPlace", "objectPlace")
+		.leftJoinAndSelect("tag.objectTune", "objectTune");
 };
 
 @Resolver()
@@ -145,6 +150,12 @@ export class TagResolver {
 					tag.subjectPlace = place;
 					break;
 				}
+			case EntityType.Tune:
+				const tune = await Tune.findOne({ where: { id: subjectEntityId } });
+				if (tune) {
+					tag.subjectTune = tune;
+					break;
+				}
 			// If the entity isn't found and break isn't called, the switch statement
 			// will continue on to the default case and throw an error.
 			default:
@@ -178,6 +189,12 @@ export class TagResolver {
 				const place = await Place.findOne({ where: { id: objectEntityId } });
 				if (place) {
 					tag.objectPlace = place;
+					break;
+				}
+			case EntityType.Tune:
+				const tune = await Tune.findOne({ where: { id: objectEntityId } });
+				if (tune) {
+					tag.objectTune = tune;
 					break;
 				}
 			// If the entity isn't found and break isn't called, the switch statement

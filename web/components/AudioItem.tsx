@@ -16,15 +16,8 @@ interface Props {
 	audioItem: AudioItem;
 }
 const AudioItemComponent = ({ audioItem }: Props) => {
-	const {
-		name,
-		slug,
-		description,
-		tags,
-		status,
-		createdByUser,
-		createdAt,
-	} = audioItem;
+	const { name, slug, description, tags, status, createdByUser, createdAt } =
+		audioItem;
 
 	const {
 		activeAudioItem,
@@ -70,9 +63,11 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 	return (
 		<div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 mb-8">
-			<Link href={`/entities/audio-items/${slug}`}>
-				<a className="mb-2 link-h1">{name}</a>
-			</Link>
+			<h1 className="mb-2">
+				<Link href={`/entities/audio-items/${slug}`}>
+					<a className="link-bare">{name}</a>
+				</Link>
+			</h1>
 
 			<div className="mb-4">
 				<Tags entity={audioItem} />
@@ -117,13 +112,12 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 								</button>
 							)}
 						</div>
-
-						{shouldShowTimeMarkers && (
-							<div className="mx-4 mb-4 pt-4 border-t border-gray-200">
-								<TimeMarkers audioItem={audioItem} />
-							</div>
-						)}
 					</>
+				)}
+				{shouldShowTimeMarkers && (
+					<div className="mx-4 mb-2 pt-3 border-t border-gray-200">
+						<TimeMarkers audioItem={audioItem} />
+					</div>
 				)}
 			</div>
 

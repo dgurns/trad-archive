@@ -54,6 +54,14 @@ export const TagEntityFragments = {
 			slug
 		}
 	`,
+	tagTune: gql`
+		fragment TagTune on Tune {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
 };
 
 export const TagFragments = {
@@ -68,12 +76,14 @@ export const TagFragments = {
 				...TagInstrument
 				...TagPerson
 				...TagPlace
+				...TagTune
 			}
 			objectEntity {
 				...TagAudioItem
 				...TagInstrument
 				...TagPerson
 				...TagPlace
+				...TagTune
 			}
 			subjectTimeMarkerSeconds
 			createdAt
@@ -83,6 +93,7 @@ export const TagFragments = {
 		${TagEntityFragments.tagInstrument}
 		${TagEntityFragments.tagPerson}
 		${TagEntityFragments.tagPlace}
+		${TagEntityFragments.tagTune}
 	`,
 };
 
@@ -184,6 +195,25 @@ export const EntityFragments = {
 				id
 				username
 			}
+		}
+		${TagFragments.tag}
+	`,
+	tune: gql`
+		fragment Tune on Tune {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			theSessionTuneId
+			type
+			meter
+			mode
+			abc
 		}
 		${TagFragments.tag}
 	`,

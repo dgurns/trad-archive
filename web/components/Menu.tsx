@@ -57,20 +57,24 @@ const Menu = ({ children }: Props) => {
 						onClick={onBackgroundClicked}
 					/>
 
-					<div
-						className={`absolute top-8 ${
+					<ul
+						className={`absolute top-9 ${
 							shouldOpenLeft ? "right-0 text-right" : "left-0 text-left"
 						} flex flex-col bg-white rounded shadow-xl`}
 					>
 						{childrenAsArray.map((child, index) => (
-							<div
-								className="cursor-pointer first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200"
+							<li
+								className={`cursor-pointer first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200 ${
+									index === 0 ? "hover:rounded-t" : ""
+								} ${
+									index === childrenAsArray.length - 1 ? "hover:rounded-b" : ""
+								}`}
 								key={index}
 							>
 								{child}
-							</div>
+							</li>
 						))}
-					</div>
+					</ul>
 				</>
 			)}
 		</div>

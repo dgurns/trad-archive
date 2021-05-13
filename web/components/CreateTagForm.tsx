@@ -4,7 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { Entity, EntityType, Tag } from "types";
 import usePlayerContext from "hooks/usePlayerContext";
 
-import SearchBox from "components/SearchBox";
+import SearchEntities from "components/SearchEntities";
 import SelectRelationship from "components/SelectRelationship";
 
 const CREATE_TAG_MUTATION = gql`
@@ -45,14 +45,10 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
 	const [selectedRelationshipId, setSelectedRelationshipId] = useState("");
-	const [
-		shouldCreateInverseRelationship,
-		setShouldCreateInverseRelationship,
-	] = useState(false);
-	const [
-		selectedInverseRelationshipId,
-		setSelectedInverseRelationshipId,
-	] = useState("");
+	const [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] =
+		useState(true);
+	const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] =
+		useState("");
 
 	const [createTag, { loading, data, error }] = useMutation<
 		{ createTag: Tag },
@@ -128,7 +124,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			objectEntityId: selectedEntity.id,
 			subjectTimeMarkerSeconds,
 		};
-		createTag({ variables: { input: tagInput } });
+		await createTag({ variables: { input: tagInput } });
 
 		if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
 			const inverseTagInput = {
@@ -139,7 +135,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				objectEntityId: entity.id,
 				subjectTimeMarkerSeconds,
 			};
-			createTag({ variables: { input: inverseTagInput } });
+			await createTag({ variables: { input: inverseTagInput } });
 		}
 	}, [
 		selectedRelationshipId,
@@ -153,7 +149,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	if (!selectedEntity) {
 		return (
-			<SearchBox
+			<SearchEntities
 				onSelect={onSelectEntity}
 				onNewEntityCreated={onNewEntityCreated}
 			/>

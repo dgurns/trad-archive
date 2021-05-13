@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
@@ -73,7 +72,7 @@ const ViewTuneBySlug = () => {
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<h1 className="mb-4">Audio Items Tagged with "{name}"</h1>
+					<h2 className="mb-4">Audio Items Tagged with "{name}"</h2>
 					{shouldShowAudioItems && (
 						<>
 							{audioItems.map((audioItem, index) => (
@@ -97,7 +96,7 @@ const ViewTuneBySlug = () => {
 				</div>
 
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h1 className="mb-4">About {name}</h1>
+					<h2 className="mb-4">About {name}</h2>
 					<div className="mb-4">
 						Entity Type:
 						<br />
@@ -141,7 +140,7 @@ const ViewTuneBySlug = () => {
 						<span className="text-gray-500">{abc}</span>
 					</div>
 
-					<h1 className="mt-8 mb-4">Tags</h1>
+					<h2 className="mt-8 mb-4">Tags</h2>
 					{tags.map((tag, index) => (
 						<TagWithRelationshipToObject
 							tag={tag}

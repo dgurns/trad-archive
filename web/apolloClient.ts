@@ -51,16 +51,40 @@ export const apolloClient = new ApolloClient({
 					},
 				},
 			},
-			Person: {
+			AudioItem: {
 				fields: {
-					// Replace tags field entirely when an updated Person result is added
-					// to the cache
+					tags: {
+						merge: false,
+					},
+					createdByUser: {
+						merge(existing, incoming) {
+							return { ...existing, ...incoming };
+						},
+					},
+				},
+			},
+			Comment: {
+				fields: {
+					parentAudioItem: {
+						merge(existing, incoming) {
+							return { ...existing, ...incoming };
+						},
+					},
+					createdByUser: {
+						merge(existing, incoming) {
+							return { ...existing, ...incoming };
+						},
+					},
+				},
+			},
+			Instrument: {
+				fields: {
 					tags: {
 						merge: false,
 					},
 				},
 			},
-			Instrument: {
+			Person: {
 				fields: {
 					tags: {
 						merge: false,
@@ -74,14 +98,26 @@ export const apolloClient = new ApolloClient({
 					},
 				},
 			},
-			Tune: {
+			Tag: {
 				fields: {
-					tags: {
-						merge: false,
+					subjectEntity: {
+						merge(existing, incoming) {
+							return { ...existing, ...incoming };
+						},
+					},
+					objectEntity: {
+						merge(existing, incoming) {
+							return { ...existing, ...incoming };
+						},
+					},
+					createdByUser: {
+						merge(existing, incoming) {
+							return { ...existing, incoming };
+						},
 					},
 				},
 			},
-			AudioItem: {
+			Tune: {
 				fields: {
 					tags: {
 						merge: false,

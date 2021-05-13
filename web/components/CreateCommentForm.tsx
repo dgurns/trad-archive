@@ -9,10 +9,10 @@ import EntityService from "services/Entity";
 const CREATE_COMMENT_MUTATION = gql`
 	mutation CreateComment($input: CreateCommentInput!) {
 		createComment(input: $input) {
-			...Comment
+			...CommentWithoutParentEntity
 		}
 	}
-	${CommentFragments.comment}
+	${CommentFragments.commentWithoutParentEntity}
 `;
 
 interface MutationData {

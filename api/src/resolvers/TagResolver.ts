@@ -43,7 +43,8 @@ const addTagRelationsToQueryBuilder = (
 		.leftJoinAndSelect("tag.objectPerson", "objectPerson")
 		.leftJoinAndSelect("tag.objectInstrument", "objectInstrument")
 		.leftJoinAndSelect("tag.objectPlace", "objectPlace")
-		.leftJoinAndSelect("tag.objectTune", "objectTune");
+		.leftJoinAndSelect("tag.objectTune", "objectTune")
+		.leftJoinAndSelect("tag.createdByUser", "createdByUser");
 };
 
 @Resolver()

@@ -3,10 +3,14 @@ import {
 	InMemoryCache,
 	NormalizedCacheObject,
 } from "@apollo/client";
+import Link from "next/link";
 
 import { API_URL } from "apolloClient";
 import { AudioItem, EntityStatus } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
+import useComments from "hooks/useComments";
+import useTags from "hooks/useTags";
+import EntityService from "services/Entity";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
@@ -43,7 +47,7 @@ export async function getStaticProps() {
 				cache: new InMemoryCache(),
 			});
 		}
-		const { data } = await serverSideApolloClient.query<
+		const { data: audioItemsData } = await serverSideApolloClient.query<
 			QueryData,
 			QueryVariables
 		>({
@@ -56,7 +60,7 @@ export async function getStaticProps() {
 				},
 			},
 		});
-		audioItems = data.audioItems;
+		audioItems = audioItemsData.audioItems;
 	} catch {
 		//
 	}
@@ -78,40 +82,86 @@ export default function Home({ prefetchedAudioItems }: Props) {
 			resultsPerPage: RESULTS_PER_PAGE,
 		});
 
-	if (!audioItems && !error) {
-		return (
-			<Layout>
-				<LoadingBlock />
-			</Layout>
-		);
-	} else if (!audioItems && error) {
-		return (
-			<Layout>
-				<div className="text-red-600">{error.message}</div>
-			</Layout>
-		);
-	} else if (!audioItems?.length) {
-		return (
-			<Layout>
-				<div className="text-gray-500">No Audio Items found</div>
-			</Layout>
-		);
-	}
+	const [latestComments] = useComments({
+		resultsPerPage: 2,
+		queryOptions: {
+			fetchPolicy: "no-cache",
+		},
+	});
+	const [latestTags] = useTags({
+		resultsPerPage: 5,
+		queryOptions: {
+			fetchPolicy: "no-cache",
+		},
+	});
 
 	return (
 		<Layout>
-			{audioItems.map((audioItem, index) => (
-				<AudioItemComponent audioItem={audioItem} key={index} />
-			))}
-			{!loading ? (
-				<div className="flex flex-row justify-center">
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
+			<div className="flex flex-col md:flex-row">
+				<div className="flex flex-1 flex-col pb-8">
+					{!audioItems && error && (
+						<div className="text-red-600">{error.message}</div>
+					)}
+					{audioItems?.length === 0 && (
+						<div className="text-gray-500">No Audio Items found</div>
+					)}
+					{audioItems?.map((audioItem, index) => (
+						<AudioItemComponent audioItem={audioItem} key={index} />
+					))}
+					{!loading ? (
+						<div className="flex flex-row justify-center">
+							<button className="btn-text" onClick={fetchNextPage}>
+								Load More
+							</button>
+						</div>
+					) : (
+						<LoadingBlock />
+					)}
 				</div>
-			) : (
-				<LoadingBlock />
-			)}
+
+				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+					<h2 className="mb-4">Latest Comments</h2>
+					{latestComments?.map((comment, index) => {
+						const { createdByUser, parentAudioItem, text } = comment;
+						return (
+							<div className="mb-4" key={index}>
+								<div className="text-gray-500">
+									<Link href={`/users/${createdByUser.id}`}>
+										{createdByUser.username}
+									</Link>
+									{` commented on `}
+									<Link href={EntityService.makeHrefForView(parentAudioItem)}>
+										{parentAudioItem.name}
+									</Link>
+								</div>
+								<div className="whitespace-pre-line">{text}</div>
+							</div>
+						);
+					})}
+
+					<h2 className="mt-4 mb-4">Latest Tags</h2>
+					{latestTags?.map((tag, index) => {
+						const { createdByUser, subjectEntity, objectEntity } = tag;
+						return (
+							<div className="mb-4" key={index}>
+								<div className="text-gray-500 mb-1">
+									<Link href={`/users/${createdByUser.id}`}>
+										{createdByUser.username}
+									</Link>
+									{` tagged `}
+									<Link href={EntityService.makeHrefForView(subjectEntity)}>
+										{subjectEntity.name}
+									</Link>
+									{` with `}
+									<Link href={EntityService.makeHrefForView(objectEntity)}>
+										{objectEntity.name}
+									</Link>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			</div>
 		</Layout>
 	);
 }

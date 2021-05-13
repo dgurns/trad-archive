@@ -7,6 +7,7 @@ import {
 	CommentsForParentEntityInput,
 	CreateCommentInput,
 } from "resolvers/CommentResolverTypes";
+import { entityRelationsForFind } from "resolvers/EntityResolver";
 import { AudioItem } from "models/entities/AudioItem";
 import { Comment } from "models/Comment";
 

@@ -86,6 +86,9 @@ export const TagFragments = {
 				...TagTune
 			}
 			subjectTimeMarkerSeconds
+			createdByUser {
+				...User
+			}
 			createdAt
 		}
 		${RelationshipFragments.relationship}
@@ -94,20 +97,6 @@ export const TagFragments = {
 		${TagEntityFragments.tagPerson}
 		${TagEntityFragments.tagPlace}
 		${TagEntityFragments.tagTune}
-	`,
-};
-
-export const CommentFragments = {
-	comment: gql`
-		fragment Comment on Comment {
-			id
-			text
-			createdByUser {
-				...User
-			}
-			createdAt
-			updatedAt
-		}
 		${UserFragments.user}
 	`,
 };
@@ -216,6 +205,37 @@ export const EntityFragments = {
 			abc
 		}
 		${TagFragments.tag}
+	`,
+};
+
+export const CommentFragments = {
+	comment: gql`
+		fragment Comment on Comment {
+			id
+			text
+			parentAudioItem {
+				...AudioItem
+			}
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${EntityFragments.audioItem}
+		${UserFragments.user}
+	`,
+	commentWithoutParentEntity: gql`
+		fragment CommentWithoutParentEntity on Comment {
+			id
+			text
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${UserFragments.user}
 	`,
 };
 

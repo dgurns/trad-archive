@@ -66,7 +66,7 @@ export class Tag extends TypeOrmBaseEntity {
 	@Column({ nullable: true, default: null })
 	subjectTimeMarkerSeconds!: number;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
 

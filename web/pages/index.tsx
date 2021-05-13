@@ -145,8 +145,8 @@ export default function Home({
 					{latestComments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						return (
-							<div className="mb-4" key={index}>
-								<div className="text-gray-500 mb-1">
+							<div className="mb-4 text-gray-500" key={index}>
+								<div className=" mb-1">
 									<Link href={`/users/${createdByUser.id}`}>
 										{createdByUser.username}
 									</Link>
@@ -154,6 +154,7 @@ export default function Home({
 									<Link href={EntityService.makeHrefForView(parentAudioItem)}>
 										{parentAudioItem.name}
 									</Link>
+									{":"}
 								</div>
 								<div className="whitespace-pre-line text-sm">{text}</div>
 							</div>
@@ -164,18 +165,18 @@ export default function Home({
 					{latestTags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						return (
-							<div className="mb-4" key={index}>
-								<div className="text-gray-500 mb-1">
+							<div className="mb-4 text-gray-500" key={index}>
+								<div className="mb-1">
 									<Link href={`/users/${createdByUser.id}`}>
 										{createdByUser.username}
 									</Link>
 									{` tagged `}
 									<Link href={EntityService.makeHrefForView(subjectEntity)}>
-										{subjectEntity.name}
+										{subjectEntity?.name}
 									</Link>
 									{` with `}
 									<Link href={EntityService.makeHrefForView(objectEntity)}>
-										{objectEntity.name}
+										{objectEntity?.name}
 									</Link>
 								</div>
 							</div>

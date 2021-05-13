@@ -2,6 +2,15 @@ import { InputType, Field, Int } from "type-graphql";
 import { EntityType } from "models/entities/base";
 
 @InputType()
+export class TagsInput {
+	@Field(() => Int, { nullable: true, defaultValue: 10 })
+	take?: number;
+
+	@Field(() => Int, { nullable: true, defaultValue: 0 })
+	skip?: number;
+}
+
+@InputType()
 export class TagsToEntityInput {
 	@Field(() => EntityType)
 	entityType!: EntityType;

@@ -33,29 +33,36 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 // server side. It regenerates with the latest data on each new request, at most
 // once per second.
 export async function getStaticProps() {
-	if (!serverSideApolloClient) {
-		serverSideApolloClient = new ApolloClient({
-			uri: API_URL,
-			credentials: "include",
-			cache: new InMemoryCache(),
-		});
-	}
-	const { data } = await serverSideApolloClient.query<
-		QueryData,
-		QueryVariables
-	>({
-		query: AUDIO_ITEMS_QUERY,
-		variables: {
-			input: {
-				take: RESULTS_PER_PAGE,
-				status: EntityStatus.Published,
-				skip: 0,
+	let audioItems: AudioItem[] | null = null;
+
+	try {
+		if (!serverSideApolloClient) {
+			serverSideApolloClient = new ApolloClient({
+				uri: API_URL,
+				credentials: "include",
+				cache: new InMemoryCache(),
+			});
+		}
+		const { data } = await serverSideApolloClient.query<
+			QueryData,
+			QueryVariables
+		>({
+			query: AUDIO_ITEMS_QUERY,
+			variables: {
+				input: {
+					take: RESULTS_PER_PAGE,
+					status: EntityStatus.Published,
+					skip: 0,
+				},
 			},
-		},
-	});
+		});
+		audioItems = data.audioItems;
+	} catch {
+		//
+	}
 	return {
 		props: {
-			prefetchedAudioItems: data?.audioItems ?? null,
+			prefetchedAudioItems: audioItems,
 		},
 		revalidate: 1,
 	};

@@ -112,7 +112,7 @@ export const apolloClient = new ApolloClient({
 					},
 					createdByUser: {
 						merge(existing, incoming) {
-							return { ...existing, incoming };
+							return { ...existing, ...incoming };
 						},
 					},
 				},

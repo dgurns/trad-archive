@@ -6,25 +6,22 @@ import {
 import Link from "next/link";
 
 import { API_URL } from "apolloClient";
-import { AudioItem, EntityStatus } from "types";
+import { AudioItem, Tag, Comment, EntityStatus } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
-import useComments from "hooks/useComments";
-import useTags from "hooks/useTags";
+import useComments, { COMMENTS_QUERY } from "hooks/useComments";
+import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
-const RESULTS_PER_PAGE = 10;
-
-interface QueryData {
-	audioItems: AudioItem[];
-}
+const AUDIO_ITEM_RESULTS = 10;
+const COMMENT_RESULTS = 2;
+const TAG_RESULTS = 5;
 interface QueryVariables {
 	input: {
 		take?: number;
-		skip?: number;
 		status?: EntityStatus;
 	};
 }
@@ -38,6 +35,8 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 // once per second.
 export async function getStaticProps() {
 	let audioItems: AudioItem[] | null = null;
+	let comments: Comment[] | null = null;
+	let tags: Tag[] | null = null;
 
 	try {
 		if (!serverSideApolloClient) {
@@ -47,26 +46,48 @@ export async function getStaticProps() {
 				cache: new InMemoryCache(),
 			});
 		}
-		const { data: audioItemsData } = await serverSideApolloClient.query<
-			QueryData,
-			QueryVariables
-		>({
-			query: AUDIO_ITEMS_QUERY,
-			variables: {
-				input: {
-					take: RESULTS_PER_PAGE,
-					status: EntityStatus.Published,
-					skip: 0,
+		const [audioItemsQuery, commentsQuery, tagsQuery] = await Promise.all([
+			serverSideApolloClient.query<{ audioItems: AudioItem[] }, QueryVariables>(
+				{
+					query: AUDIO_ITEMS_QUERY,
+					variables: {
+						input: {
+							take: AUDIO_ITEM_RESULTS,
+							status: EntityStatus.Published,
+						},
+					},
+				}
+			),
+			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
+				query: COMMENTS_QUERY,
+				variables: {
+					input: {
+						take: COMMENT_RESULTS,
+					},
 				},
-			},
-		});
-		audioItems = audioItemsData.audioItems;
+			}),
+			serverSideApolloClient.query<{ tags: Tag[] }, QueryVariables>({
+				query: TAGS_QUERY,
+				variables: {
+					input: {
+						take: TAG_RESULTS,
+					},
+				},
+			}),
+		]);
+
+		audioItems = audioItemsQuery?.data.audioItems;
+		comments = commentsQuery?.data.comments;
+		tags = tagsQuery?.data.tags;
 	} catch {
 		//
 	}
+
 	return {
 		props: {
 			prefetchedAudioItems: audioItems,
+			prefetchedComments: comments,
+			prefetchedTags: tags,
 		},
 		revalidate: 1,
 	};
@@ -74,25 +95,25 @@ export async function getStaticProps() {
 
 interface Props {
 	prefetchedAudioItems: AudioItem[] | null;
+	prefetchedTags: Tag[] | null;
+	prefetchedComments: Comment[] | null;
 }
 
-export default function Home({ prefetchedAudioItems }: Props) {
+export default function Home({
+	prefetchedAudioItems,
+	prefetchedTags,
+	prefetchedComments,
+}: Props) {
 	const [audioItems = prefetchedAudioItems, { loading, error }, fetchNextPage] =
 		useAudioItems({
-			resultsPerPage: RESULTS_PER_PAGE,
+			resultsPerPage: AUDIO_ITEM_RESULTS,
 		});
 
-	const [latestComments] = useComments({
-		resultsPerPage: 2,
-		queryOptions: {
-			fetchPolicy: "no-cache",
-		},
+	const [latestComments = prefetchedComments] = useComments({
+		resultsPerPage: COMMENT_RESULTS,
 	});
-	const [latestTags] = useTags({
-		resultsPerPage: 5,
-		queryOptions: {
-			fetchPolicy: "no-cache",
-		},
+	const [latestTags = prefetchedTags] = useTags({
+		resultsPerPage: TAG_RESULTS,
 	});
 
 	return (

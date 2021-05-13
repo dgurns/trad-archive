@@ -5,7 +5,7 @@ import { useLazyQuery, gql } from "@apollo/client";
 import { AudioItem, Comment, EntityType } from "types";
 import { CommentFragments } from "fragments";
 import DateTimeService from "services/DateTime";
-import { AUDIO_ITEM_QUERY } from "hooks/useAudioItem";
+import useAudioItem from "hooks/useAudioItem";
 
 import Modal from "components/Modal";
 import CreateCommentForm from "components/CreateCommentForm";
@@ -32,16 +32,14 @@ interface QueryVariables {
 interface Props {
 	audioItem: AudioItem;
 }
-const ViewComments = ({ audioItem }: Props) => {
+const ViewCommentsButton = ({ audioItem }: Props) => {
 	const { id, slug, entityType, commentsCount } = audioItem;
 
 	const commentsRef = useRef<HTMLDivElement>();
 
 	const [modalIsVisible, setModalIsVisible] = useState(false);
 
-	const [refetchAudioItem] = useLazyQuery(AUDIO_ITEM_QUERY, {
-		fetchPolicy: "network-only",
-	});
+	const [_, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
 
 	const [getComments, { loading, data, error }] = useLazyQuery<
 		QueryData,
@@ -59,7 +57,7 @@ const ViewComments = ({ audioItem }: Props) => {
 		});
 	}, [getComments]);
 
-	const onViewCommentsClicked = useCallback(() => {
+	const onViewCommentsButtonClicked = useCallback(() => {
 		if (commentsCount !== comments.length) {
 			fetchComments();
 		}
@@ -68,8 +66,8 @@ const ViewComments = ({ audioItem }: Props) => {
 
 	const onCreateCommentSuccess = useCallback(async () => {
 		await fetchComments();
-		await refetchAudioItem({ variables: { slug } });
-	}, [fetchComments, refetchAudioItem]);
+		await refetchParentAudioItem({ slug });
+	}, [fetchComments, refetchParentAudioItem]);
 
 	const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 
@@ -94,7 +92,7 @@ const ViewComments = ({ audioItem }: Props) => {
 
 	return (
 		<>
-			<button className="btn-secondary" onClick={onViewCommentsClicked}>
+			<button className="btn-secondary" onClick={onViewCommentsButtonClicked}>
 				<i className="material-icons mr-0.5">chat_bubble_outline</i>
 				{commentsCount > 0 ? (
 					<>
@@ -128,7 +126,7 @@ const ViewComments = ({ audioItem }: Props) => {
 									</Link>{" "}
 									{DateTimeService.formatDateYearTime(createdAt)}
 								</div>
-								<div className="text-sm">{text}</div>
+								<div className="text-sm whitespace-pre-line">{text}</div>
 							</div>
 						))}
 					</div>
@@ -147,4 +145,4 @@ const ViewComments = ({ audioItem }: Props) => {
 	);
 };
 
-export default ViewComments;
+export default ViewCommentsButton;

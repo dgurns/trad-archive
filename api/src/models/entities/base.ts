@@ -10,7 +10,7 @@ import {
 import { ObjectType, Field, registerEnumType } from "type-graphql";
 import { User } from "models/User";
 
-// EntityType is an enum which defines the different types of entities
+// EntityType is an enum which defines the possible types for an Entity
 export enum EntityType {
 	AudioItem = "AudioItem",
 	Person = "Person",
@@ -20,6 +20,15 @@ export enum EntityType {
 }
 registerEnumType(EntityType, {
 	name: "EntityType",
+});
+
+// EntityStatus is an enum which defines the possible statuses for an Entity
+export enum EntityStatus {
+	Published = "PUBLISHED",
+	TakenDown = "TAKEN_DOWN",
+}
+registerEnumType(EntityStatus, {
+	name: "EntityStatus",
 });
 
 // EntityBaseFields represents the basic fields that are inherited by every
@@ -48,6 +57,10 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	@Field(() => String, { nullable: true })
 	@Column({ nullable: true, default: null })
 	description!: string;
+
+	@Field(() => EntityStatus)
+	@Column({ type: "enum", enum: EntityStatus, default: EntityStatus.Published })
+	status!: EntityStatus;
 
 	@Field(() => User)
 	@ManyToOne(() => User, { eager: true })

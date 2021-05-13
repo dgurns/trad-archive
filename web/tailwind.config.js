@@ -1,6 +1,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
+	mode: "jit",
 	purge: ["./components/**/*.{js,ts,jsx,tsx}", "./pages/**/*.{js,ts,jsx,tsx}"],
 	darkMode: "media",
 	theme: {
@@ -28,6 +29,7 @@ module.exports = {
 		extend: {
 			backgroundColor: ["disabled", "checked"],
 			borderColor: ["checked", "hover"],
+			borderRadius: ["hover"],
 			cursor: ["disabled"],
 			margin: ["last"],
 		},

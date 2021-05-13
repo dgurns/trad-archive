@@ -19,6 +19,8 @@ const TagWithRelationshipToObject = ({ tag, className }: Props) => {
 		return null;
 	}
 
+	const shouldShowTimeMarker = typeof subjectTimeMarkerSeconds === "number";
+
 	return (
 		<div className={`text-gray-500 ${className ?? ""}`}>
 			<em>{relationship.name}</em>

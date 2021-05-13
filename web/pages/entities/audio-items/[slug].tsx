@@ -11,8 +11,8 @@ import TagService from "services/Tag";
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
-import AddTag from "components/AddTag";
-import EditTags from "components/EditTags";
+import AddTagButton from "components/AddTagButton";
+import EditTagsButton from "components/EditTagsButton";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
 
 const AUDIO_ITEM_QUERY = gql`
@@ -87,11 +87,11 @@ const ViewAudioItemBySlug = () => {
 						/>
 					))}
 					<div>
-						<AddTag entity={audioItem} />
+						<AddTagButton entity={audioItem} />
 						{sortedTags.length > 0 && (
 							<>
 								<span className="text-gray-500 px-2">/</span>
-								<EditTags entity={audioItem} />
+								<EditTagsButton entity={audioItem} />
 							</>
 						)}
 					</div>

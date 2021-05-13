@@ -9,6 +9,7 @@ import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
+import { TakedownRequest } from "models/TakedownRequest";
 
 const DB_CONNECTION_NAME = "default";
 
@@ -28,6 +29,7 @@ export const connectToDatabase = async () => {
 			Relationship,
 			Comment,
 			CollectionEntry,
+			TakedownRequest,
 			AudioItem,
 			Person,
 			Instrument,

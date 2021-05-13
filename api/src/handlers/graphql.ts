@@ -18,6 +18,7 @@ import { TagResolver } from "resolvers/TagResolver";
 import { RelationshipResolver } from "resolvers/RelationshipResolver";
 import { CommentResolver } from "resolvers/CommentResolver";
 import { CollectionEntryResolver } from "resolvers/CollectionEntryResolver";
+import { TakedownRequestResolver } from "resolvers/TakedownRequestResolver";
 import { EntityResolver } from "resolvers/EntityResolver";
 import { AudioItemResolver } from "resolvers/AudioItemResolver";
 import { PersonResolver } from "resolvers/PersonResolver";
@@ -46,6 +47,7 @@ const initializeServer = async () => {
 				RelationshipResolver,
 				CommentResolver,
 				CollectionEntryResolver,
+				TakedownRequestResolver,
 				EntityResolver,
 				AudioItemResolver,
 				PersonResolver,

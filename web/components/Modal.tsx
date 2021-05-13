@@ -41,12 +41,13 @@ const Modal = ({
 			/>
 
 			<div
-				className={`bg-white rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${
+				className={`bg-white cursor-auto rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${
 					className ?? ""
 				}`}
 			>
-				<div className="flex flex-row justify-between items-center mb-4">
+				<div className="flex flex-row justify-between items-center mb-4 text-black">
 					<h1>{title}</h1>
+
 					<button
 						className="btn-icon flex flex-row items-center justify-center ml-4 mb-0.5"
 						onClick={onClose}
@@ -57,7 +58,11 @@ const Modal = ({
 						<i className="material-icons">close</i>
 					</button>
 				</div>
-				{children}
+
+				{/* Add some style resets so that the Modal's parent doesn't affect the content */}
+				<div className="text-base text-black font-normal whitespace-normal text-left cursor-auto">
+					{children}
+				</div>
 			</div>
 		</div>
 	);

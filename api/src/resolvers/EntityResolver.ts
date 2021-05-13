@@ -1,5 +1,5 @@
 import { Resolver, Query, Arg, createUnionType } from "type-graphql";
-import { getManager, SelectQueryBuilder } from "typeorm";
+import { getManager } from "typeorm";
 
 import { EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";

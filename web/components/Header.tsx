@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useHotkeys } from "react-hotkeys-hook";

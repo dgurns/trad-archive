@@ -10,8 +10,8 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItemComponent from "components/AudioItem";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
-import AddTag from "components/AddTag";
-import EditTags from "components/EditTags";
+import AddTagButton from "components/AddTagButton";
+import EditTagsButton from "components/EditTagsButton";
 
 const TUNE_QUERY = gql`
 	query Tune($slug: String!) {
@@ -150,11 +150,11 @@ const ViewTuneBySlug = () => {
 						/>
 					))}
 					<div>
-						<AddTag entity={tune} />
+						<AddTagButton entity={tune} />
 						{tags.length > 0 && (
 							<>
 								<span className="text-gray-500 px-2">/</span>
-								<EditTags entity={tune} />
+								<EditTagsButton entity={tune} />
 							</>
 						)}
 					</div>

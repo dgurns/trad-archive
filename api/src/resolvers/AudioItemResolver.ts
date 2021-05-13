@@ -25,6 +25,7 @@ import {
 } from "resolvers/AudioItemResolverTypes";
 import { entityRelationsForFind } from "resolvers/EntityResolver";
 import EntityService from "services/Entity";
+import { EntityStatus } from "models/entities/base";
 
 @Resolver(() => AudioItem)
 export class AudioItemResolver {
@@ -74,8 +75,17 @@ export class AudioItemResolver {
 
 	@Query(() => [AudioItem])
 	async audioItems(@Arg("input") input: AudioItemsInput) {
-		const { take, skip } = input;
+		const { take, skip, status } = input;
+
+		type AudioItemsWhereOptions = {
+			status?: EntityStatus;
+		};
+		const whereOptions: AudioItemsWhereOptions = {};
+		if (status) {
+			whereOptions.status = status;
+		}
 		const audioItems = await AudioItem.find({
+			where: whereOptions,
 			take,
 			skip,
 			order: { createdAt: "DESC" },

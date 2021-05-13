@@ -25,7 +25,7 @@
 	/* Primary buttons (for example the "Save" button on a form) */
 	.btn,
 	input[type="submit"] {
-		@apply bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
+		@apply w-auto bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
 	}
 
 	/* Text buttons (look like links but have no underline, for example "Add Tag") */

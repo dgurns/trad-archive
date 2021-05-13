@@ -34,9 +34,9 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 // server side. It regenerates with the latest data on each new request, at most
 // once per second.
 export async function getStaticProps() {
-	let audioItems: AudioItem[] | null = null;
-	let comments: Comment[] | null = null;
-	let tags: Tag[] | null = null;
+	let audioItems: AudioItem[] | undefined;
+	let comments: Comment[] | undefined;
+	let tags: Tag[] | undefined;
 
 	try {
 		if (!serverSideApolloClient) {
@@ -76,9 +76,9 @@ export async function getStaticProps() {
 			}),
 		]);
 
-		audioItems = audioItemsQuery?.data.audioItems;
-		comments = commentsQuery?.data.comments;
-		tags = tagsQuery?.data.tags;
+		audioItems = audioItemsQuery?.data?.audioItems;
+		comments = commentsQuery?.data?.comments;
+		tags = tagsQuery?.data?.tags;
 	} catch {
 		//
 	}
@@ -94,15 +94,15 @@ export async function getStaticProps() {
 }
 
 interface Props {
-	prefetchedAudioItems: AudioItem[] | null;
-	prefetchedTags: Tag[] | null;
-	prefetchedComments: Comment[] | null;
+	prefetchedAudioItems?: AudioItem[];
+	prefetchedComments?: Comment[];
+	prefetchedTags?: Tag[];
 }
 
 export default function Home({
 	prefetchedAudioItems,
-	prefetchedTags,
 	prefetchedComments,
+	prefetchedTags,
 }: Props) {
 	const [audioItems = prefetchedAudioItems, { loading, error }, fetchNextPage] =
 		useAudioItems({

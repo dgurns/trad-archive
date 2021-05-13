@@ -51,7 +51,7 @@ const Modal = ({
 						className="btn-icon flex flex-row items-center justify-center ml-4 mb-0.5"
 						onClick={onClose}
 					>
-						<span className="border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-0.5 mr-3">
+						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-0.5 mr-3">
 							ESC
 						</span>
 						<i className="material-icons">close</i>

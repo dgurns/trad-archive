@@ -22,7 +22,7 @@ class MyDocument extends Document {
 					<link
 						href="https://fonts.googleapis.com/icon?family=Material+Icons"
 						rel="preload"
-						as="stylesheet"
+						as="style"
 					/>
 					<link
 						href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -30,8 +30,8 @@ class MyDocument extends Document {
 					/>
 					<link
 						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"
-						rel="reload"
-						as="stylesheet"
+						rel="preload"
+						as="style"
 					/>
 					<link
 						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"

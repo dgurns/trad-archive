@@ -57,7 +57,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		errorPolicy: "all",
 	});
 
-	// Once Tag has been created, call onSuccess prop
 	useEffect(() => {
 		if (data?.createTag) {
 			onSuccess(data.createTag);

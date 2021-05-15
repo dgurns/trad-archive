@@ -37,10 +37,14 @@ export const EntityUnion = createUnionType({
 });
 
 // entityRelationsForFind contains the necessary relations needed when querying
-// for an Entity via `find()`, `findOne()`, etc. It does not fetch Tag relations
-// for the subjectEntity since that is just the root Entity itself.
+// for an Entity via `find()`, `findOne()`, etc.
 export const entityRelationsForFind = [
 	"tags",
+	"tags.subjectAudioItem",
+	"tags.subjectPerson",
+	"tags.subjectInstrument",
+	"tags.subjectPlace",
+	"tags.subjectTune",
 	"tags.objectAudioItem",
 	"tags.objectPerson",
 	"tags.objectInstrument",

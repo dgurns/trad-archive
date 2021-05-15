@@ -17,10 +17,10 @@ export const TAGS_QUERY = gql`
 	${TagFragments.tag}
 `;
 
-interface QueryData {
+export interface TagsQueryData {
 	tags: Tag[];
 }
-interface QueryVariables {
+export interface TagsQueryVariables {
 	input: {
 		take?: number;
 		skip?: number;
@@ -28,15 +28,15 @@ interface QueryVariables {
 }
 interface HookArgs {
 	resultsPerPage?: number;
-	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
+	queryOptions?: LazyQueryHookOptions<TagsQueryData, TagsQueryVariables>;
 }
 
 const useTags = ({ resultsPerPage = 10, queryOptions = {} }: HookArgs = {}): [
 	Tag[] | undefined,
-	LazyQueryResult<QueryData, {}>,
+	LazyQueryResult<TagsQueryData, {}>,
 	() => void
 ] => {
-	const [getTags, tagsQuery] = useLazyQuery<QueryData, QueryVariables>(
+	const [getTags, tagsQuery] = useLazyQuery<TagsQueryData, TagsQueryVariables>(
 		TAGS_QUERY,
 		{
 			notifyOnNetworkStatusChange: true,

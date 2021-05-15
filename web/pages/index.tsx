@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
 	ApolloClient,
 	InMemoryCache,
@@ -11,6 +12,7 @@ import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
+import CommentService from "services/Comment";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
@@ -107,7 +109,7 @@ export default function Home({
 	const [fetchedAudioItems, { loading, error }, fetchNextPage] = useAudioItems({
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
 	});
-	const [fetchedComments] = useComments({
+	const { comments: fetchedComments } = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
 	});
 	const [fetchedTags] = useTags({
@@ -115,7 +117,11 @@ export default function Home({
 	});
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
-	const comments = fetchedComments ?? prefetchedComments;
+	const comments = useMemo(() => {
+		const data = fetchedComments ?? prefetchedComments;
+		const sorted = CommentService.sortByCreatedAtDesc(data);
+		return sorted.slice(0, 2);
+	}, [fetchedComments, prefetchedComments]);
 	const tags = fetchedTags ?? prefetchedTags;
 
 	return (
@@ -146,6 +152,9 @@ export default function Home({
 					<h2 className="mb-4">Latest Comments</h2>
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
+						if (!createdByUser) {
+							return null;
+						}
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
 								<div className=" mb-1">

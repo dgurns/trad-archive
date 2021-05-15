@@ -4,6 +4,7 @@ import { useMutation, gql } from "@apollo/client";
 import { Comment, Entity, isAudioItem } from "types";
 import { CommentFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
+import useComments from "hooks/useComments";
 import EntityService from "services/Entity";
 
 const CREATE_COMMENT_MUTATION = gql`
@@ -38,6 +39,8 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 		MutationVariables
 	>(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
 
+	const { commentsQuery } = useComments();
+
 	const onSubmit = useCallback(
 		async (event) => {
 			event.preventDefault();
@@ -59,6 +62,7 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 	useEffect(() => {
 		if (data?.createComment) {
 			setText("");
+			commentsQuery.refetch();
 			if (onSuccess) {
 				onSuccess(data.createComment);
 			}

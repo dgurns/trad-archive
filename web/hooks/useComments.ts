@@ -4,6 +4,7 @@ import {
 	gql,
 	LazyQueryResult,
 	LazyQueryHookOptions,
+	QueryLazyOptions,
 } from "@apollo/client";
 import { Comment } from "types";
 import { CommentFragments } from "fragments";
@@ -30,15 +31,17 @@ interface HookArgs {
 	resultsPerPage?: number;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
+interface HookReturnValue {
+	comments: Comment[];
+	getComments: (options?: QueryLazyOptions<QueryVariables>) => void;
+	commentsQuery: LazyQueryResult<QueryData, QueryVariables>;
+	fetchNextPageOfComments: () => void;
+}
 
 const useComments = ({
 	resultsPerPage = 10,
 	queryOptions = {},
-}: HookArgs = {}): [
-	Comment[] | undefined,
-	LazyQueryResult<QueryData, {}>,
-	() => void
-] => {
+}: HookArgs = {}): HookReturnValue => {
 	const [getComments, commentsQuery] = useLazyQuery<QueryData, QueryVariables>(
 		COMMENTS_QUERY,
 		{
@@ -60,7 +63,7 @@ const useComments = ({
 
 	const comments = data?.comments;
 
-	const fetchNextPage = useCallback(() => {
+	const fetchNextPageOfComments = useCallback(() => {
 		fetchMore({
 			variables: {
 				input: {
@@ -71,7 +74,12 @@ const useComments = ({
 		});
 	}, [fetchMore, resultsPerPage, comments]);
 
-	return [commentsQuery.data?.comments, commentsQuery, fetchNextPage];
+	return {
+		comments: commentsQuery.data?.comments,
+		getComments,
+		commentsQuery,
+		fetchNextPageOfComments,
+	};
 };
 
 export default useComments;

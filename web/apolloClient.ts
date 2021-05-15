@@ -51,9 +51,9 @@ export const apolloClient = new ApolloClient({
 					},
 					comments: {
 						keyArgs: false,
-						merge(existing, incoming) {
+						merge(_, incoming) {
 							// Just return incoming results until pagination is implemented
-							return incoming ?? existing;
+							return incoming;
 						},
 					},
 					tags: {

@@ -1,10 +1,9 @@
-import { useMemo, useCallback } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 
 import { Tag, Entity } from "types";
 import EntityService from "services/Entity";
 import TagService from "services/Tag";
-import useTags from "hooks/useTags";
 
 import AddTagButton from "components/AddTagButton";
 
@@ -29,13 +28,6 @@ interface TagsProps {
 const Tags = ({ entity }: TagsProps) => {
 	const { tags } = entity;
 
-	const [, { refetch: refetchLatestTags }] = useTags();
-
-	const onAddTagSuccess = useCallback(() => {
-		// Refetch latest Tags globally so they will include this new Tag
-		refetchLatestTags();
-	}, [refetchLatestTags]);
-
 	const sortedTags = useMemo(() => {
 		if (!Array.isArray(tags)) {
 			return [];
@@ -51,7 +43,7 @@ const Tags = ({ entity }: TagsProps) => {
 				</div>
 			))}
 			<div className={tags?.length > 0 ? "mb-2 ml-1" : undefined}>
-				<AddTagButton entity={entity} onSuccess={onAddTagSuccess} />
+				<AddTagButton entity={entity} />
 			</div>
 		</div>
 	);

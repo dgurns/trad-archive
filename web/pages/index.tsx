@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
 	ApolloClient,
 	InMemoryCache,
@@ -11,6 +12,7 @@ import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
+import CommentService from "services/Comment";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
@@ -121,7 +123,13 @@ export default function Home({
 	});
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
-	const comments = fetchedComments ?? prefetchedComments;
+	const comments = useMemo(() => {
+		const data = fetchedComments ?? prefetchedComments;
+		if (!data) {
+			return undefined;
+		}
+		return CommentService.sortByCreatedAtDesc(data);
+	}, [fetchedComments, prefetchedComments]);
 	const tags = fetchedTags ?? prefetchedTags;
 
 	return (

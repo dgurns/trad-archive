@@ -3,6 +3,7 @@ import { useMutation, gql } from "@apollo/client";
 
 import { Entity, EntityType, Tag } from "types";
 import usePlayerContext from "hooks/usePlayerContext";
+import useTags from "hooks/useTags";
 
 import SearchEntities from "components/SearchEntities";
 import SelectRelationship from "components/SelectRelationship";
@@ -57,11 +58,18 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		errorPolicy: "all",
 	});
 
+	const { tagsQuery } = useTags();
+
 	useEffect(() => {
+		const onTagCreated = async (tag: Tag) => {
+			// Refetch the top-level Tags query so it includes this new Tag
+			await tagsQuery.refetch();
+			onSuccess(tag);
+		};
 		if (data?.createTag) {
-			onSuccess(data.createTag);
+			onTagCreated(data.createTag);
 		}
-	}, [data]);
+	}, [data, tagsQuery]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {

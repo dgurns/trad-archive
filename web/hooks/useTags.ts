@@ -3,6 +3,7 @@ import {
 	useLazyQuery,
 	gql,
 	LazyQueryResult,
+	QueryLazyOptions,
 	LazyQueryHookOptions,
 } from "@apollo/client";
 import { Tag } from "types";
@@ -17,10 +18,10 @@ export const TAGS_QUERY = gql`
 	${TagFragments.tag}
 `;
 
-export interface TagsQueryData {
+interface QueryData {
 	tags: Tag[];
 }
-export interface TagsQueryVariables {
+interface QueryVariables {
 	input: {
 		take?: number;
 		skip?: number;
@@ -28,15 +29,20 @@ export interface TagsQueryVariables {
 }
 interface HookArgs {
 	resultsPerPage?: number;
-	queryOptions?: LazyQueryHookOptions<TagsQueryData, TagsQueryVariables>;
+	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
+}
+interface HookReturnValue {
+	tags: Tag[];
+	getTags: (options?: QueryLazyOptions<QueryVariables>) => void;
+	tagsQuery: LazyQueryResult<QueryData, QueryVariables>;
+	fetchNextPageOfTags: () => void;
 }
 
-const useTags = ({ resultsPerPage = 10, queryOptions = {} }: HookArgs = {}): [
-	Tag[] | undefined,
-	LazyQueryResult<TagsQueryData, {}>,
-	() => void
-] => {
-	const [getTags, tagsQuery] = useLazyQuery<TagsQueryData, TagsQueryVariables>(
+const useTags = ({
+	resultsPerPage = 10,
+	queryOptions = {},
+}: HookArgs = {}): HookReturnValue => {
+	const [getTags, tagsQuery] = useLazyQuery<QueryData, QueryVariables>(
 		TAGS_QUERY,
 		{
 			notifyOnNetworkStatusChange: true,
@@ -57,7 +63,7 @@ const useTags = ({ resultsPerPage = 10, queryOptions = {} }: HookArgs = {}): [
 
 	const tags = data?.tags;
 
-	const fetchNextPage = useCallback(() => {
+	const fetchNextPageOfTags = useCallback(() => {
 		fetchMore({
 			variables: {
 				input: {
@@ -68,7 +74,12 @@ const useTags = ({ resultsPerPage = 10, queryOptions = {} }: HookArgs = {}): [
 		});
 	}, [fetchMore, resultsPerPage, tags]);
 
-	return [tagsQuery.data?.tags, tagsQuery, fetchNextPage];
+	return {
+		tags: tagsQuery.data?.tags,
+		getTags,
+		tagsQuery,
+		fetchNextPageOfTags,
+	};
 };
 
 export default useTags;

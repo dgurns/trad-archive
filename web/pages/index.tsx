@@ -13,6 +13,7 @@ import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
 import CommentService from "services/Comment";
+import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
@@ -112,17 +113,26 @@ export default function Home({
 	const { comments: fetchedComments } = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
 	});
-	const [fetchedTags] = useTags({
+	const { tags: fetchedTags } = useTags({
 		resultsPerPage: NUM_TAGS_TO_FETCH,
 	});
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
+
 	const comments = useMemo(() => {
 		const data = fetchedComments ?? prefetchedComments;
 		const sorted = CommentService.sortByCreatedAtDesc(data);
-		return sorted.slice(0, 2);
+		return sorted.slice(0, NUM_COMMENTS_TO_FETCH);
 	}, [fetchedComments, prefetchedComments]);
-	const tags = fetchedTags ?? prefetchedTags;
+
+	const tags = useMemo(() => {
+		const data = fetchedTags ?? prefetchedTags;
+		const sorted = TagService.sort(
+			data,
+			TagService.TagSortStrategy.CreatedAtDesc
+		);
+		return sorted.slice(0, NUM_TAGS_TO_FETCH);
+	}, [fetchedComments, prefetchedComments]);
 
 	return (
 		<Layout>

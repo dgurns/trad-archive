@@ -49,6 +49,12 @@ export const apolloClient = new ApolloClient({
 							return incoming;
 						},
 					},
+					comments: {
+						keyArgs: false,
+					},
+					tags: {
+						keyArgs: false,
+					},
 				},
 			},
 			AudioItem: {

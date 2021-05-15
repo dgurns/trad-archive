@@ -54,7 +54,11 @@ export const apolloClient = new ApolloClient({
 			AudioItem: {
 				fields: {
 					tags: {
-						merge: false,
+						merge(existing, incoming) {
+							// If incoming `tags` field value is `null` or `undefined`, don't
+							// overwrite the existing field value in the cache.
+							return incoming ?? existing;
+						},
 					},
 					createdByUser: {
 						merge(existing, incoming) {
@@ -66,8 +70,11 @@ export const apolloClient = new ApolloClient({
 			Comment: {
 				fields: {
 					parentAudioItem: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						// If any nested fields of the incoming parentAudioItem have custom
+						// merge behavior, mergeObjects ensure that the custom merge
+						// functions will be called recursively.
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 					createdByUser: {
@@ -80,34 +87,40 @@ export const apolloClient = new ApolloClient({
 			Instrument: {
 				fields: {
 					tags: {
-						merge: false,
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
 					},
 				},
 			},
 			Person: {
 				fields: {
 					tags: {
-						merge: false,
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
 					},
 				},
 			},
 			Place: {
 				fields: {
 					tags: {
-						merge: false,
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
 					},
 				},
 			},
 			Tag: {
 				fields: {
 					subjectEntity: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 					objectEntity: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 					createdByUser: {
@@ -120,7 +133,9 @@ export const apolloClient = new ApolloClient({
 			Tune: {
 				fields: {
 					tags: {
-						merge: false,
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
 					},
 				},
 			},

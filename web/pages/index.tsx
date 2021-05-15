@@ -16,9 +16,9 @@ import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
-const AUDIO_ITEM_RESULTS = 10;
-const COMMENT_RESULTS = 2;
-const TAG_RESULTS = 5;
+const NUM_AUDIO_ITEMS_TO_FETCH = 10;
+const NUM_COMMENTS_TO_FETCH = 2;
+const NUM_TAGS_TO_FETCH = 5;
 interface QueryVariables {
 	input: {
 		take?: number;
@@ -52,7 +52,7 @@ export async function getStaticProps() {
 					query: AUDIO_ITEMS_QUERY,
 					variables: {
 						input: {
-							take: AUDIO_ITEM_RESULTS,
+							take: NUM_AUDIO_ITEMS_TO_FETCH,
 							status: EntityStatus.Published,
 						},
 					},
@@ -62,7 +62,7 @@ export async function getStaticProps() {
 				query: COMMENTS_QUERY,
 				variables: {
 					input: {
-						take: COMMENT_RESULTS,
+						take: NUM_COMMENTS_TO_FETCH,
 					},
 				},
 			}),
@@ -70,7 +70,7 @@ export async function getStaticProps() {
 				query: TAGS_QUERY,
 				variables: {
 					input: {
-						take: TAG_RESULTS,
+						take: NUM_TAGS_TO_FETCH,
 					},
 				},
 			}),
@@ -85,9 +85,9 @@ export async function getStaticProps() {
 
 	return {
 		props: {
-			prefetchedAudioItems: audioItems,
-			prefetchedComments: comments,
-			prefetchedTags: tags,
+			prefetchedAudioItems: audioItems ?? null,
+			prefetchedComments: comments ?? null,
+			prefetchedTags: tags ?? null,
 		},
 		revalidate: 1,
 	};
@@ -104,17 +104,25 @@ export default function Home({
 	prefetchedComments,
 	prefetchedTags,
 }: Props) {
-	const [audioItems = prefetchedAudioItems, { loading, error }, fetchNextPage] =
-		useAudioItems({
-			resultsPerPage: AUDIO_ITEM_RESULTS,
-		});
+	const [fetchedAudioItems, { loading, error }, fetchNextPage] = useAudioItems({
+		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
+	});
+	const [fetchedComments] = useComments({
+		resultsPerPage: NUM_COMMENTS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-and-network",
+		},
+	});
+	const [fetchedTags] = useTags({
+		resultsPerPage: NUM_TAGS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-and-network",
+		},
+	});
 
-	const [latestComments = prefetchedComments] = useComments({
-		resultsPerPage: COMMENT_RESULTS,
-	});
-	const [latestTags = prefetchedTags] = useTags({
-		resultsPerPage: TAG_RESULTS,
-	});
+	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
+	const comments = fetchedComments ?? prefetchedComments;
+	const tags = fetchedTags ?? prefetchedTags;
 
 	return (
 		<Layout>
@@ -142,7 +150,7 @@ export default function Home({
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h2 className="mb-4">Latest Comments</h2>
-					{latestComments?.map((comment, index) => {
+					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
@@ -162,8 +170,11 @@ export default function Home({
 					})}
 
 					<h2 className="mt-4 mb-4">Latest Tags</h2>
-					{latestTags?.map((tag, index) => {
+					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
+						if (!subjectEntity || !objectEntity) {
+							return null;
+						}
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
 								<div className="mb-1">
@@ -172,11 +183,11 @@ export default function Home({
 									</Link>
 									{` tagged `}
 									<Link href={EntityService.makeHrefForView(subjectEntity)}>
-										{subjectEntity?.name}
+										{subjectEntity.name}
 									</Link>
 									{` with `}
 									<Link href={EntityService.makeHrefForView(objectEntity)}>
-										{objectEntity?.name}
+										{objectEntity.name}
 									</Link>
 								</div>
 							</div>

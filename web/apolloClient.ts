@@ -58,18 +58,9 @@ export const apolloClient = new ApolloClient({
 					},
 					tags: {
 						keyArgs: false,
-						merge(existing, incoming) {
-							const merged = existing ? existing.slice(0) : [];
-							// Loop through incoming Tags and add them to cache if they don't
-							// already exist
-							for (let i = 0; i < incoming.length; i++) {
-								if (merged.findIndex((ref) => ref === incoming[i]) >= 0) {
-									continue;
-								} else {
-									merged.push(incoming[i]);
-								}
-							}
-							return merged;
+						merge(_, incoming) {
+							// Just return incoming results until pagination is implemented
+							return incoming;
 						},
 					},
 				},

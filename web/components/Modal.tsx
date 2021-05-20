@@ -46,7 +46,7 @@ const Modal = ({
 				}`}
 			>
 				<div className="flex flex-row justify-between items-center mb-4 text-black">
-					<h1>{title}</h1>
+					<h2>{title}</h2>
 
 					<button
 						className="btn-icon flex flex-row items-center justify-center ml-4 mb-0.5"

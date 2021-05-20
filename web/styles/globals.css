@@ -4,11 +4,11 @@
 
 @layer components {
 	h1 {
-		@apply text-3xl font-bold;
+		@apply text-3xl font-bold text-yellow-600;
 	}
 
 	h2 {
-		@apply text-xl font-bold;
+		@apply text-xl font-bold text-gray-700;
 	}
 
 	h3 {

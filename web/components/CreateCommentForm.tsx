@@ -62,12 +62,11 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 	useEffect(() => {
 		if (data?.createComment) {
 			setText("");
-			commentsQuery.refetch();
 			if (onSuccess) {
 				onSuccess(data.createComment);
 			}
 		}
-	}, [data]);
+	}, [data, commentsQuery]);
 
 	return (
 		<form onSubmit={onSubmit} className="w-full">

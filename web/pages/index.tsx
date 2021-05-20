@@ -161,8 +161,8 @@ export default function Home({
 	const { tags: fetchedTags } = useTags({
 		resultsPerPage: NUM_TAGS_TO_FETCH,
 	});
-	console.log("audioItems loading", loading);
-	console.log("fetchedAudioItems", fetchedAudioItems);
+
+	console.log(fetchedComments);
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
 

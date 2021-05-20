@@ -61,15 +61,10 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	const { tagsQuery } = useTags();
 
 	useEffect(() => {
-		const onTagCreated = async (tag: Tag) => {
-			// Refetch the top-level Tags query so it includes this new Tag
-			await tagsQuery.refetch();
-			onSuccess(tag);
-		};
-		if (data?.createTag) {
-			onTagCreated(data.createTag);
+		if (data?.createTag && onSuccess) {
+			onSuccess(data.createTag);
 		}
-	}, [data, tagsQuery]);
+	}, [data, tagsQuery, onSuccess]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {

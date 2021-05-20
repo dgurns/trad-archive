@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import compareDesc from "date-fns/compareDesc";
 
 const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 
@@ -44,16 +45,15 @@ export const apolloClient = new ApolloClient({
 					},
 					collectionEntriesForUser: {
 						keyArgs: false,
-						merge(_, incoming) {
+						merge(existing, incoming) {
 							// Just return incoming results until pagination is implemented
-							return incoming;
+							return incoming ?? existing;
 						},
 					},
 					comments: {
 						keyArgs: false,
-						merge(_, incoming) {
-							// Just return incoming results until pagination is implemented
-							return incoming;
+						merge(existing, incoming) {
+							return incoming ?? existing;
 						},
 					},
 					entity: {

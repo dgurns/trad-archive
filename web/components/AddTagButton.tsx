@@ -49,7 +49,8 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 
 	const refetchParentEntityAndClose = useCallback(
 		async (tag: Tag) => {
-			await Promise.all([getParentEntity(), refetchAudioItems()]);
+			getParentEntity();
+			refetchAudioItems();
 			setAddTagModalIsVisible(false);
 			if (onSuccess) {
 				onSuccess(tag);

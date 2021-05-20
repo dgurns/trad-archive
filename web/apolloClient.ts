@@ -10,6 +10,38 @@ if (typeof NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "string") {
 }
 export const API_URL = apiUrl;
 
+// mergeArrayById holds logic for merging incoming arrays to the cache. If an
+// incoming array item ID already exists in the cache, it will replace the
+// existing item. Otherwise it will be added to the end of the cached items.
+const mergeArrayById = (
+	existing: any[],
+	incoming: any[],
+	{ readField, mergeObjects }
+) => {
+	const merged: any[] = existing ? existing.slice(0) : [];
+	const idToIndex: Record<string, number> = Object.create(null);
+	if (existing) {
+		existing.forEach((item, index) => {
+			idToIndex[readField("id", item)] = index;
+		});
+	}
+	if (incoming) {
+		incoming.forEach((item) => {
+			const id = readField("id", item);
+			const index = idToIndex[id];
+			if (typeof index === "number") {
+				// Merge the new item data with the existing item data.
+				merged[index] = mergeObjects(merged[index], item);
+			} else {
+				// First time we've seen this item in this array.
+				idToIndex[id] = merged.length;
+				merged.push(item);
+			}
+		});
+	}
+	return merged;
+};
+
 export const apolloClient = new ApolloClient({
 	uri: API_URL,
 	credentials: "include",
@@ -51,10 +83,10 @@ export const apolloClient = new ApolloClient({
 						},
 					},
 					comments: {
+						// Use shared cache for this query regardless of args like `take` or
+						// `skip`
 						keyArgs: false,
-						merge(existing, incoming) {
-							return incoming ?? existing;
-						},
+						merge: mergeArrayById,
 					},
 					entity: {
 						keyArgs: false,
@@ -64,10 +96,7 @@ export const apolloClient = new ApolloClient({
 					},
 					tags: {
 						keyArgs: false,
-						merge(_, incoming) {
-							// Just return incoming results until pagination is implemented
-							return incoming;
-						},
+						merge: mergeArrayById,
 					},
 				},
 			},
@@ -83,6 +112,15 @@ export const apolloClient = new ApolloClient({
 					createdByUser: {
 						merge(existing, incoming) {
 							return { ...existing, ...incoming };
+						},
+					},
+				},
+			},
+			CollectionEntry: {
+				fields: {
+					audioItem: {
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},

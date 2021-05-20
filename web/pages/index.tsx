@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
+	useQuery,
 	ApolloClient,
 	InMemoryCache,
 	NormalizedCacheObject,
@@ -113,42 +114,44 @@ export default function Home({
 	prefetchedComments,
 	prefetchedTags,
 }: Props) {
-	// Populate the Apollo Client cache with the prefetched data, so subsequent
-	// queries can pull from the cache instead of using the network
-	if (prefetchedAudioItems) {
-		apolloClient.writeQuery({
-			query: AUDIO_ITEMS_QUERY,
-			data: { audioItems: prefetchedAudioItems },
-			variables: {
-				input: {
-					take: NUM_AUDIO_ITEMS_TO_FETCH,
-					status: EntityStatus.Published,
+	// On mount, populate the Apollo Client cache with the prefetched data, so
+	// subsequent queries can pull from the cache instead of using the network
+	useEffect(() => {
+		if (prefetchedAudioItems) {
+			apolloClient.writeQuery({
+				query: AUDIO_ITEMS_QUERY,
+				data: { audioItems: prefetchedAudioItems },
+				variables: {
+					input: {
+						take: NUM_AUDIO_ITEMS_TO_FETCH,
+						status: EntityStatus.Published,
+					},
 				},
-			},
-		});
-	}
-	if (prefetchedComments) {
-		apolloClient.writeQuery({
-			query: COMMENTS_QUERY,
-			data: { comments: prefetchedComments },
-			variables: {
-				input: {
-					take: NUM_COMMENTS_TO_FETCH,
+			});
+		}
+		if (prefetchedComments) {
+			apolloClient.writeQuery({
+				query: COMMENTS_QUERY,
+				data: { comments: prefetchedComments },
+				variables: {
+					input: {
+						take: NUM_COMMENTS_TO_FETCH,
+					},
 				},
-			},
-		});
-	}
-	if (prefetchedTags) {
-		apolloClient.writeQuery({
-			query: TAGS_QUERY,
-			data: { tags: prefetchedTags },
-			variables: {
-				input: {
-					take: NUM_TAGS_TO_FETCH,
+			});
+		}
+		if (prefetchedTags) {
+			apolloClient.writeQuery({
+				query: TAGS_QUERY,
+				data: { tags: prefetchedTags },
+				variables: {
+					input: {
+						take: NUM_TAGS_TO_FETCH,
+					},
 				},
-			},
-		});
-	}
+			});
+		}
+	}, [prefetchedAudioItems, prefetchedComments, prefetchedTags]);
 
 	// These queries skip the initial network request since the cache is
 	// pre-populated
@@ -158,11 +161,7 @@ export default function Home({
 	const { comments: fetchedComments } = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
 	});
-	const { tags: fetchedTags } = useTags({
-		resultsPerPage: NUM_TAGS_TO_FETCH,
-	});
-
-	console.log(fetchedComments);
+	const { tags: fetchedTags } = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
 

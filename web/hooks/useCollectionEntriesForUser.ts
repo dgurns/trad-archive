@@ -24,8 +24,7 @@ const useCollectionEntriesForUser = (): [
 	const [currentUser] = useCurrentUser();
 
 	const [makeQuery, query] = useLazyQuery<QueryData, {}>(
-		COLLECTION_ENTRIES_FOR_USER_QUERY,
-		{ fetchPolicy: "cache-first" }
+		COLLECTION_ENTRIES_FOR_USER_QUERY
 	);
 
 	useEffect(() => {

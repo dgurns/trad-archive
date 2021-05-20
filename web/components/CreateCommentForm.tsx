@@ -39,7 +39,9 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 		MutationVariables
 	>(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
 
-	const { commentsQuery } = useComments();
+	const {
+		commentsQuery: { refetch: refetchTopLevelComments },
+	} = useComments();
 
 	const onSubmit = useCallback(
 		async (event) => {
@@ -65,8 +67,11 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 			if (onSuccess) {
 				onSuccess(data.createComment);
 			}
+			// Now that a new Comment has been created, update the top-level
+			// `comments` query
+			refetchTopLevelComments();
 		}
-	}, [data, commentsQuery]);
+	}, [data, refetchTopLevelComments]);
 
 	return (
 		<form onSubmit={onSubmit} className="w-full">

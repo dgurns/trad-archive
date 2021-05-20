@@ -46,7 +46,7 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 		queryOptions: { fetchPolicy: "cache-only" },
 	});
 
-	const [getComments, { loading, data, error }] = useLazyQuery<
+	const [getCommentsForParentEntity, { loading, data, error }] = useLazyQuery<
 		QueryData,
 		QueryVariables
 	>(COMMENTS_FOR_PARENT_ENTITY_QUERY, {
@@ -54,25 +54,25 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 	});
 	const comments = data?.commentsForParentEntity ?? [];
 
-	const fetchComments = useCallback(() => {
-		getComments({
+	const fetchCommentsForParent = useCallback(() => {
+		getCommentsForParentEntity({
 			variables: {
 				input: { parentEntityType: entityType, parentEntityId: id },
 			},
 		});
-	}, [getComments]);
+	}, [getCommentsForParentEntity]);
 
 	const onViewCommentsButtonClicked = useCallback(() => {
 		if (commentsCount !== comments.length) {
-			fetchComments();
+			fetchCommentsForParent();
 		}
 		setModalIsVisible(true);
-	}, [fetchComments, commentsCount, comments]);
+	}, [fetchCommentsForParent, commentsCount, comments]);
 
 	const onCreateCommentSuccess = useCallback(async () => {
-		await fetchComments();
-		await refetchParentAudioItem({ slug });
-	}, [fetchComments, refetchParentAudioItem]);
+		fetchCommentsForParent();
+		refetchParentAudioItem({ slug });
+	}, [fetchCommentsForParent, refetchParentAudioItem]);
 
 	const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 

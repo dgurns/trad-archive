@@ -58,13 +58,24 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		errorPolicy: "all",
 	});
 
-	const { tagsQuery } = useTags();
+	const {
+		tagsQuery: { refetch: refetchTopLevelTags },
+	} = useTags({
+		queryOptions: { fetchPolicy: "network-only" },
+	});
 
 	useEffect(() => {
-		if (data?.createTag && onSuccess) {
-			onSuccess(data.createTag);
+		const onTagCreated = async (tag: Tag) => {
+			// Now that a new Tag has been created, refetch the top-level `tags` query
+			if (refetchTopLevelTags) {
+				await refetchTopLevelTags();
+			}
+			onSuccess(tag);
+		};
+		if (data?.createTag) {
+			onTagCreated(data.createTag);
 		}
-	}, [data, tagsQuery, onSuccess]);
+	}, [data, refetchTopLevelTags, onSuccess]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {

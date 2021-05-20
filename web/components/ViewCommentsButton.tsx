@@ -131,7 +131,9 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 									</Link>{" "}
 									{DateTimeService.formatDateYearTime(createdAt)}
 								</div>
-								<div className="text-sm whitespace-pre-line">{text}</div>
+								<div className="text-sm whitespace-pre-line text-gray-900">
+									{text}
+								</div>
 							</div>
 						))}
 					</div>

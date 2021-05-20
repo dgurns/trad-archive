@@ -31,11 +31,12 @@ interface QueryVariables {
 }
 
 // Attempt to reuse instance of server side Apollo Client between runs of
-// getServerSideProps, to avoid creating a new DB connection on every request
+// getStaticProps, to avoid creating a new DB connection on every request
 let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-// Enable server-side rendering
-export async function getServerSideProps({ req }) {
+// getStaticProps fetches data server-side and pre-renders a static HTML page.
+// It will regenerate the static HTML at most once per second.
+export async function getStaticProps() {
 	let audioItems: AudioItem[] | undefined;
 	let comments: Comment[] | undefined;
 	let tags: Tag[] | undefined;
@@ -51,9 +52,6 @@ export async function getServerSideProps({ req }) {
 						// Force server-side queries to get the latest data each time
 						fetchPolicy: "no-cache",
 					},
-				},
-				headers: {
-					Cookie: req.headers.cookie,
 				},
 			});
 		}
@@ -100,6 +98,7 @@ export async function getServerSideProps({ req }) {
 			prefetchedComments: comments ?? null,
 			prefetchedTags: tags ?? null,
 		},
+		revalidate: 1,
 	};
 }
 

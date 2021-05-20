@@ -4,7 +4,7 @@
 
 @layer components {
 	h1 {
-		@apply text-3xl font-bold text-yellow-600;
+		@apply text-3xl font-bold text-black;
 	}
 
 	h2 {

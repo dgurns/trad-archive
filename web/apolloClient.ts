@@ -95,8 +95,9 @@ export const apolloClient = new ApolloClient({
 						},
 					},
 					tags: {
-						keyArgs: false,
-						merge: mergeArrayById,
+						merge(_, incoming) {
+							return incoming;
+						},
 					},
 				},
 			},

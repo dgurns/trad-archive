@@ -53,7 +53,7 @@ const ViewUserById = () => {
 		<Layout>
 			<div className="flex flex-col-reverse md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h2 className="mb-4">Audio Items Added by "{username}"</h2>
+					<h1 className="mb-6">Audio Items Added by "{username}"</h1>
 					{audioItemsLoading && <LoadingBlock />}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
@@ -63,7 +63,7 @@ const ViewUserById = () => {
 					))}
 				</div>
 				<div className="flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h2 className="mb-4">About {username}</h2>
+					<h3 className="mb-4">About {username}</h3>
 					<div className="mb-4">
 						Account Created:
 						<br />

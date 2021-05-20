@@ -185,6 +185,7 @@ export default function Home({
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
+					<h1 className="mb-6">Explore Audio Items</h1>
 					{!audioItems && error && (
 						<div className="text-red-600">{error.message}</div>
 					)}
@@ -206,7 +207,7 @@ export default function Home({
 				</div>
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h2 className="mb-4">Latest Comments</h2>
+					<h3 className="mb-4">Latest Comments</h3>
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser) {
@@ -229,7 +230,7 @@ export default function Home({
 						);
 					})}
 
-					<h2 className="mt-4 mb-4">Latest Tags</h2>
+					<h3 className="mt-4 mb-4">Latest Tags</h3>
 					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						if (!subjectEntity || !objectEntity) {

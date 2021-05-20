@@ -63,11 +63,11 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 
 	return (
 		<div className="flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 mb-8">
-			<h1 className="mb-2">
+			<h2 className="mb-2">
 				<Link href={`/entities/audio-items/${slug}`}>
 					<a className="link-bare">{name}</a>
 				</Link>
-			</h1>
+			</h2>
 
 			<div className="mb-4">
 				<Tags entity={audioItem} />

@@ -39,7 +39,12 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 
 	const [modalIsVisible, setModalIsVisible] = useState(false);
 
-	const [, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
+	// The parent AudioItem has already been fetched, so only use the cache for
+	// this query
+	const [, { refetch: refetchParentAudioItem }] = useAudioItem({
+		slug,
+		queryOptions: { fetchPolicy: "cache-only" },
+	});
 
 	const [getComments, { loading, data, error }] = useLazyQuery<
 		QueryData,

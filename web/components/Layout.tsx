@@ -11,7 +11,10 @@ const Layout = ({ children }: Props) => {
 		NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF !== "master";
 
 	const fixedHeaderRef = useRef<HTMLDivElement>();
-	const [fixedHeaderHeight, setFixedHeaderHeight] = useState(48);
+	const defaultFixedHeaderHeight = shouldShowPreviewWarning ? 76 : 48;
+	const [fixedHeaderHeight, setFixedHeaderHeight] = useState(
+		defaultFixedHeaderHeight
+	);
 
 	useEffect(() => {
 		const fixedHeader = fixedHeaderRef.current;
@@ -22,6 +25,11 @@ const Layout = ({ children }: Props) => {
 
 	return (
 		<div style={{ paddingTop: fixedHeaderHeight }}>
+			<div className="flex flex-col justify-start items-center">
+				<div className="w-full lg:max-w-5xl py-6 px-4 pb-44">{children}</div>
+			</div>
+
+			{/* Add header to the DOM after child content so its modals overlay */}
 			<div className="fixed top-0 right-0 left-0" ref={fixedHeaderRef}>
 				{shouldShowPreviewWarning && (
 					<div className="flex flex-row items-center justify-center py-1 px-4 bg-black text-white text-sm text-center">
@@ -29,9 +37,6 @@ const Layout = ({ children }: Props) => {
 					</div>
 				)}
 				<Header />
-			</div>
-			<div className="flex flex-col justify-start items-center">
-				<div className="w-full lg:max-w-5xl py-6 px-4 pb-44">{children}</div>
 			</div>
 		</div>
 	);

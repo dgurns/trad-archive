@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import Link from "next/link";
 
-import { API_URL } from "apolloClient";
+import { API_URL, apolloClient } from "apolloClient";
 import { AudioItem, Tag, Comment, EntityStatus } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
@@ -30,13 +30,11 @@ interface QueryVariables {
 }
 
 // Attempt to reuse instance of server side Apollo Client between runs of
-// getStaticProps, to avoid creating a new database connection on every request
+// getServerSideProps, to avoid creating a new DB connection on every request
 let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
-// getStaticProps enables us to incrementally render a static homepage on the
-// server side. It regenerates with the latest data on each new request, at most
-// once per second.
-export async function getStaticProps() {
+// Enable server-side rendering
+export async function getServerSideProps({ req }) {
 	let audioItems: AudioItem[] | undefined;
 	let comments: Comment[] | undefined;
 	let tags: Tag[] | undefined;
@@ -47,6 +45,15 @@ export async function getStaticProps() {
 				uri: API_URL,
 				credentials: "include",
 				cache: new InMemoryCache(),
+				defaultOptions: {
+					query: {
+						// Force server-side queries to get the latest data each time
+						fetchPolicy: "no-cache",
+					},
+				},
+				headers: {
+					Cookie: req.headers.cookie,
+				},
 			});
 		}
 		const [audioItemsQuery, commentsQuery, tagsQuery] = await Promise.all([
@@ -92,7 +99,6 @@ export async function getStaticProps() {
 			prefetchedComments: comments ?? null,
 			prefetchedTags: tags ?? null,
 		},
-		revalidate: 1,
 	};
 }
 
@@ -107,6 +113,45 @@ export default function Home({
 	prefetchedComments,
 	prefetchedTags,
 }: Props) {
+	// Populate the Apollo Client cache with the prefetched data, so subsequent
+	// queries can pull from the cache instead of using the network
+	if (prefetchedAudioItems) {
+		apolloClient.writeQuery({
+			query: AUDIO_ITEMS_QUERY,
+			data: { audioItems: prefetchedAudioItems },
+			variables: {
+				input: {
+					take: NUM_AUDIO_ITEMS_TO_FETCH,
+					status: EntityStatus.Published,
+				},
+			},
+		});
+	}
+	if (prefetchedComments) {
+		apolloClient.writeQuery({
+			query: COMMENTS_QUERY,
+			data: { comments: prefetchedComments },
+			variables: {
+				input: {
+					take: NUM_COMMENTS_TO_FETCH,
+				},
+			},
+		});
+	}
+	if (prefetchedTags) {
+		apolloClient.writeQuery({
+			query: TAGS_QUERY,
+			data: { tags: prefetchedTags },
+			variables: {
+				input: {
+					take: NUM_TAGS_TO_FETCH,
+				},
+			},
+		});
+	}
+
+	// These queries skip the initial network request since the cache is
+	// pre-populated
 	const [fetchedAudioItems, { loading, error }, fetchNextPage] = useAudioItems({
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
 	});
@@ -116,23 +161,25 @@ export default function Home({
 	const { tags: fetchedTags } = useTags({
 		resultsPerPage: NUM_TAGS_TO_FETCH,
 	});
+	console.log("audioItems loading", loading);
+	console.log("fetchedAudioItems", fetchedAudioItems);
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
 
 	const comments = useMemo(() => {
-		const data = fetchedComments ?? prefetchedComments;
+		const data = fetchedComments ?? prefetchedComments ?? [];
 		const sorted = CommentService.sortByCreatedAtDesc(data);
 		return sorted.slice(0, NUM_COMMENTS_TO_FETCH);
 	}, [fetchedComments, prefetchedComments]);
 
 	const tags = useMemo(() => {
-		const data = fetchedTags ?? prefetchedTags;
+		const data = fetchedTags ?? prefetchedTags ?? [];
 		const sorted = TagService.sort(
 			data,
 			TagService.TagSortStrategy.CreatedAtDesc
 		);
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
-	}, [fetchedComments, prefetchedComments]);
+	}, [fetchedTags, prefetchedTags]);
 
 	return (
 		<Layout>

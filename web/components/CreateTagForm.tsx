@@ -146,6 +146,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		}
 	}, [
 		selectedRelationshipId,
+		shouldCreateInverseRelationship,
 		selectedInverseRelationshipId,
 		entity,
 		selectedEntity,
@@ -179,21 +180,19 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				/>
 			</div>
 
-			{selectedRelationshipId && (
-				<div className="mt-6 flex flex-row items-center justify-start">
-					<input
-						type="checkbox"
-						id="reverse-relationship"
-						checked={shouldCreateInverseRelationship}
-						onChange={(event) =>
-							setShouldCreateInverseRelationship(event.target.checked)
-						}
-					/>
-					<label htmlFor="reverse-relationship" className="ml-2">
-						Also create the inverse relationship
-					</label>
-				</div>
-			)}
+			<div className="mt-6 flex flex-row items-center justify-start">
+				<input
+					type="checkbox"
+					id="reverse-relationship"
+					checked={shouldCreateInverseRelationship}
+					onChange={(event) =>
+						setShouldCreateInverseRelationship(event.target.checked)
+					}
+				/>
+				<label htmlFor="reverse-relationship" className="ml-2">
+					Also create the inverse relationship
+				</label>
+			</div>
 
 			{shouldCreateInverseRelationship && (
 				<div className="mt-3">

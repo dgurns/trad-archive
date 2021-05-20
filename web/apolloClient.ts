@@ -56,6 +56,12 @@ export const apolloClient = new ApolloClient({
 							return incoming;
 						},
 					},
+					entity: {
+						keyArgs: false,
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
+						},
+					},
 					tags: {
 						keyArgs: false,
 						merge(_, incoming) {

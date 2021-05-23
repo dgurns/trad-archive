@@ -1,7 +1,11 @@
-import { Entity as TypeOrmEntity, Column, OneToMany } from "typeorm";
+import { Entity as TypeOrmEntity, Column, OneToMany, AfterLoad } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityBaseFields, EntityType } from "models/entities/base";
+import {
+	EntityBaseFields,
+	EntityType,
+	EntityStatus,
+} from "models/entities/base";
 import { Tag } from "models/Tag";
 import { Comment } from "models/Comment";
 
@@ -21,7 +25,15 @@ export class AudioItem extends EntityBaseFields {
 	@OneToMany(() => Comment, (comment) => comment.parentAudioItem)
 	comments!: Comment[];
 
-	@Field(() => String)
-	@Column()
-	urlSource!: string;
+	@Field(() => String, { nullable: true })
+	@Column({ type: "varchar", nullable: true, default: null })
+	urlSource!: string | null;
+	@AfterLoad()
+	returnNullIfTakenDown() {
+		// Return null if the AudioItem has been taken down, to prevent consumers of
+		// the API from accessing the source audio URL
+		if (this.status === EntityStatus.TakenDown) {
+			this.urlSource = null;
+		}
+	}
 }

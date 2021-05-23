@@ -62,7 +62,7 @@ export interface AudioItem extends BaseEntity {
 	entityType: EntityType.AudioItem;
 	comments?: Comment[] | null;
 	commentsCount?: number;
-	urlSource: string;
+	urlSource: string | null;
 	isAddedToCollection?: boolean;
 }
 

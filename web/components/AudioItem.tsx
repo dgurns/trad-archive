@@ -135,6 +135,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 			<div className="border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center">
 				<div className="flex flex-row items-center">
 					<ViewCommentsButton audioItem={audioItem} />
+
 					<div className="ml-2">
 						<AddToCollectionButton audioItem={audioItem} />
 					</div>

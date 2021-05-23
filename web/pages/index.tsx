@@ -189,7 +189,7 @@ export default function Home({
 		}
 	}, [prefetchedAudioItems, prefetchedComments, prefetchedTags]);
 
-	// These queries skip the initial network request since the cache is
+	// These queries skip the initial network request if the cache is
 	// pre-populated
 	const [
 		fetchedAudioItems,

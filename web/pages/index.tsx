@@ -55,18 +55,19 @@ export async function getStaticProps() {
 				},
 			});
 		}
-		const [audioItemsQuery, commentsQuery, tagsQuery] = await Promise.all([
-			serverSideApolloClient.query<{ audioItems: AudioItem[] }, QueryVariables>(
-				{
-					query: AUDIO_ITEMS_QUERY,
-					variables: {
-						input: {
-							take: NUM_AUDIO_ITEMS_TO_FETCH,
-							status: EntityStatus.Published,
-						},
-					},
-				}
-			),
+		const audioItemsQuery = await serverSideApolloClient.query<
+			{ audioItems: AudioItem[] },
+			QueryVariables
+		>({
+			query: AUDIO_ITEMS_QUERY,
+			variables: {
+				input: {
+					take: NUM_AUDIO_ITEMS_TO_FETCH,
+					status: EntityStatus.Published,
+				},
+			},
+		});
+		const [commentsQuery, tagsQuery] = await Promise.all([
 			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
 				query: COMMENTS_QUERY,
 				variables: {
@@ -113,13 +114,12 @@ export default function Home({
 	prefetchedComments,
 	prefetchedTags,
 }: Props) {
-	// On mount, populate the Apollo Client cache with the prefetched data, so
-	// subsequent queries can pull from the cache instead of using the network
+	// If there is prefetched data and the cache is not yet populated, populate it
 	useEffect(() => {
 		if (prefetchedAudioItems) {
-			apolloClient.writeQuery({
+			// Check if there are already AudioItems in the cache
+			const cachedAudioItems = apolloClient.readQuery({
 				query: AUDIO_ITEMS_QUERY,
-				data: { audioItems: prefetchedAudioItems },
 				variables: {
 					input: {
 						take: NUM_AUDIO_ITEMS_TO_FETCH,
@@ -127,40 +127,87 @@ export default function Home({
 					},
 				},
 			});
+			// If not, add the prefetched AudioItems to the cache
+			if (!cachedAudioItems) {
+				apolloClient.writeQuery({
+					query: AUDIO_ITEMS_QUERY,
+					data: { audioItems: prefetchedAudioItems },
+					variables: {
+						input: {
+							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							status: EntityStatus.Published,
+						},
+					},
+				});
+			}
 		}
 		if (prefetchedComments) {
-			apolloClient.writeQuery({
+			// Check if there are already Comments in the cache
+			const cachedComments = apolloClient.readQuery({
 				query: COMMENTS_QUERY,
-				data: { comments: prefetchedComments },
 				variables: {
 					input: {
 						take: NUM_COMMENTS_TO_FETCH,
 					},
 				},
 			});
+			// If not, add the prefetched Comments to the cache
+			if (!cachedComments) {
+				apolloClient.writeQuery({
+					query: COMMENTS_QUERY,
+					data: { comments: prefetchedComments },
+					variables: {
+						input: {
+							take: NUM_COMMENTS_TO_FETCH,
+						},
+					},
+				});
+			}
 		}
 		if (prefetchedTags) {
-			apolloClient.writeQuery({
+			// Check if there are already Tags in the cache
+			const cachedTags = apolloClient.readQuery({
 				query: TAGS_QUERY,
-				data: { tags: prefetchedTags },
 				variables: {
 					input: {
 						take: NUM_TAGS_TO_FETCH,
 					},
 				},
 			});
+			// If not, add the prefetched Tags to the cache
+			if (!cachedTags) {
+				apolloClient.writeQuery({
+					query: TAGS_QUERY,
+					data: { tags: prefetchedTags },
+					variables: {
+						input: {
+							take: NUM_TAGS_TO_FETCH,
+						},
+					},
+				});
+			}
 		}
 	}, [prefetchedAudioItems, prefetchedComments, prefetchedTags]);
 
 	// These queries skip the initial network request since the cache is
 	// pre-populated
-	const [fetchedAudioItems, { loading, error }, fetchNextPage] = useAudioItems({
+	const [
+		fetchedAudioItems,
+		{ loading: audioItemsLoading, error: audioItemsError },
+		fetchNextPage,
+	] = useAudioItems({
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
 	});
-	const { comments: fetchedComments } = useComments({
+	const {
+		comments: fetchedComments,
+		commentsQuery: { loading: commentsLoading },
+	} = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
 	});
-	const { tags: fetchedTags } = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
+	const {
+		tags: fetchedTags,
+		tagsQuery: { loading: tagsLoading },
+	} = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
 
 	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
 
@@ -184,8 +231,8 @@ export default function Home({
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore Audio Items</h1>
-					{!audioItems && error && (
-						<div className="text-red-600">{error.message}</div>
+					{!audioItems && audioItemsError && (
+						<div className="text-red-600">{audioItemsError.message}</div>
 					)}
 					{audioItems?.length === 0 && (
 						<div className="text-gray-500">No Audio Items found</div>
@@ -193,7 +240,7 @@ export default function Home({
 					{audioItems?.map((audioItem, index) => (
 						<AudioItemComponent audioItem={audioItem} key={index} />
 					))}
-					{!loading ? (
+					{!audioItemsLoading ? (
 						<div className="flex flex-row justify-center">
 							<button className="btn-text" onClick={fetchNextPage}>
 								Load More
@@ -206,6 +253,7 @@ export default function Home({
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Latest Comments</h3>
+					{commentsLoading && <LoadingBlock />}
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser) {
@@ -229,6 +277,7 @@ export default function Home({
 					})}
 
 					<h3 className="mt-4 mb-4">Latest Tags</h3>
+					{tagsLoading && <LoadingBlock />}
 					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						if (!subjectEntity || !objectEntity) {

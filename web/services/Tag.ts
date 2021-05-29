@@ -1,8 +1,10 @@
 import compareAsc from "date-fns/compareAsc";
+import compareDesc from "date-fns/compareDesc";
 import { Tag } from "types";
 
-enum SortStrategy {
+enum TagSortStrategy {
 	CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER",
+	CreatedAtDesc = "CREATED_AT_DESC",
 }
 
 /**
@@ -31,6 +33,17 @@ const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
 };
 
 /**
+ * Sort Tags by `createdAt` DESC
+ */
+const sortByCreatedAtDesc = (tags: Tag[]) => {
+	const sortedTags = [...tags];
+	sortedTags.sort((a, b) => {
+		return compareDesc(new Date(a.createdAt), new Date(b.createdAt));
+	});
+	return sortedTags;
+};
+
+/**
  * @param {Array<Tag>} tags
  * 	- The Tags you want to sort
  * @param {Enum} sortStrategy
@@ -41,16 +54,19 @@ const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
  */
 const sort = (
 	tags: Tag[],
-	sortStrategy = SortStrategy.CreatedAtThenTimeMarker
+	sortStrategy = TagSortStrategy.CreatedAtThenTimeMarker
 ) => {
 	switch (sortStrategy) {
-		case SortStrategy.CreatedAtThenTimeMarker:
+		case TagSortStrategy.CreatedAtThenTimeMarker:
 			return sortByCreatedAtThenTimeMarker(tags);
+		case TagSortStrategy.CreatedAtDesc:
+			return sortByCreatedAtDesc(tags);
 		default:
 			return tags;
 	}
 };
 
 export default {
+	TagSortStrategy,
 	sort,
 };

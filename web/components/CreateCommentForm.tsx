@@ -4,15 +4,16 @@ import { useMutation, gql } from "@apollo/client";
 import { Comment, Entity, isAudioItem } from "types";
 import { CommentFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
+import useComments from "hooks/useComments";
 import EntityService from "services/Entity";
 
 const CREATE_COMMENT_MUTATION = gql`
 	mutation CreateComment($input: CreateCommentInput!) {
 		createComment(input: $input) {
-			...Comment
+			...CommentWithoutParentEntity
 		}
 	}
-	${CommentFragments.comment}
+	${CommentFragments.commentWithoutParentEntity}
 `;
 
 interface MutationData {
@@ -38,6 +39,10 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 		MutationVariables
 	>(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
 
+	const {
+		commentsQuery: { refetch: refetchTopLevelComments },
+	} = useComments();
+
 	const onSubmit = useCallback(
 		async (event) => {
 			event.preventDefault();
@@ -62,8 +67,11 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 			if (onSuccess) {
 				onSuccess(data.createComment);
 			}
+			// Now that a new Comment has been created, update the top-level
+			// `comments` query
+			refetchTopLevelComments();
 		}
-	}, [data]);
+	}, [data, refetchTopLevelComments]);
 
 	return (
 		<form onSubmit={onSubmit} className="w-full">

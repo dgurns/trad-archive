@@ -86,6 +86,9 @@ export const TagFragments = {
 				...TagTune
 			}
 			subjectTimeMarkerSeconds
+			createdByUser {
+				...User
+			}
 			createdAt
 		}
 		${RelationshipFragments.relationship}
@@ -94,20 +97,33 @@ export const TagFragments = {
 		${TagEntityFragments.tagPerson}
 		${TagEntityFragments.tagPlace}
 		${TagEntityFragments.tagTune}
+		${UserFragments.user}
 	`,
-};
-
-export const CommentFragments = {
-	comment: gql`
-		fragment Comment on Comment {
+	tagForEntity: gql`
+		fragment TagForEntity on Tag {
 			id
-			text
+			relationship {
+				...Relationship
+			}
+			objectEntity {
+				...TagAudioItem
+				...TagInstrument
+				...TagPerson
+				...TagPlace
+				...TagTune
+			}
+			subjectTimeMarkerSeconds
 			createdByUser {
 				...User
 			}
 			createdAt
-			updatedAt
 		}
+		${RelationshipFragments.relationship}
+		${TagEntityFragments.tagAudioItem}
+		${TagEntityFragments.tagInstrument}
+		${TagEntityFragments.tagPerson}
+		${TagEntityFragments.tagPlace}
+		${TagEntityFragments.tagTune}
 		${UserFragments.user}
 	`,
 };
@@ -122,7 +138,7 @@ export const EntityFragments = {
 			aliases
 			description
 			tags {
-				...Tag
+				...TagForEntity
 			}
 			commentsCount
 			isAddedToCollection
@@ -135,7 +151,7 @@ export const EntityFragments = {
 			updatedAt
 			urlSource
 		}
-		${TagFragments.tag}
+		${TagFragments.tagForEntity}
 	`,
 	person: gql`
 		fragment Person on Person {
@@ -216,6 +232,37 @@ export const EntityFragments = {
 			abc
 		}
 		${TagFragments.tag}
+	`,
+};
+
+export const CommentFragments = {
+	comment: gql`
+		fragment Comment on Comment {
+			id
+			text
+			parentAudioItem {
+				...AudioItem
+			}
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${EntityFragments.audioItem}
+		${UserFragments.user}
+	`,
+	commentWithoutParentEntity: gql`
+		fragment CommentWithoutParentEntity on Comment {
+			id
+			text
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${UserFragments.user}
 	`,
 };
 

@@ -1,42 +1,41 @@
-import { useEffect } from 'react';
-import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
-import { CollectionEntry } from 'types';
-import { CollectionEntryFragments } from 'fragments';
-import useCurrentUser from 'hooks/useCurrentUser';
+import { useEffect } from "react";
+import { useLazyQuery, gql, LazyQueryResult } from "@apollo/client";
+import { CollectionEntry } from "types";
+import { CollectionEntryFragments } from "fragments";
+import useCurrentUser from "hooks/useCurrentUser";
 
 const COLLECTION_ENTRIES_FOR_USER_QUERY = gql`
-  query CollectionEntriesForUser {
-    collectionEntriesForUser {
-      ...CollectionEntry
-    }
-  }
-  ${CollectionEntryFragments.collectionEntry}
+	query CollectionEntriesForUser {
+		collectionEntriesForUser {
+			...CollectionEntry
+		}
+	}
+	${CollectionEntryFragments.collectionEntry}
 `;
 
 interface QueryData {
-  collectionEntriesForUser: CollectionEntry[];
+	collectionEntriesForUser: CollectionEntry[];
 }
 
 const useCollectionEntriesForUser = (): [
-  CollectionEntry[] | undefined,
-  LazyQueryResult<QueryData, {}>
+	CollectionEntry[] | undefined,
+	LazyQueryResult<QueryData, {}>
 ] => {
-  const [currentUser] = useCurrentUser();
+	const [currentUser] = useCurrentUser();
 
-  const [makeQuery, query] = useLazyQuery<QueryData, {}>(
-    COLLECTION_ENTRIES_FOR_USER_QUERY,
-    { fetchPolicy: 'cache-and-network' }
-  );
+	const [makeQuery, query] = useLazyQuery<QueryData, {}>(
+		COLLECTION_ENTRIES_FOR_USER_QUERY
+	);
 
-  useEffect(() => {
-    if (currentUser) {
-      makeQuery();
-    }
-  }, [makeQuery, currentUser]);
+	useEffect(() => {
+		if (currentUser) {
+			makeQuery();
+		}
+	}, [makeQuery, currentUser]);
 
-  const collectionEntriesForUser = query.data?.collectionEntriesForUser;
+	const collectionEntriesForUser = query.data?.collectionEntriesForUser;
 
-  return [collectionEntriesForUser, query];
+	return [collectionEntriesForUser, query];
 };
 
 export default useCollectionEntriesForUser;

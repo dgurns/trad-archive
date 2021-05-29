@@ -53,13 +53,8 @@ const ViewInstrumentBySlug = () => {
 	}
 
 	const { instrument } = instrumentData;
-	const {
-		name,
-		entityType,
-		aliases,
-		description,
-		tags,
-	} = instrumentData.instrument;
+	const { name, entityType, aliases, description, tags } =
+		instrumentData.instrument;
 	const sortedTags = TagService.sort(tags);
 
 	const shouldShowAudioItems = audioItems.length > 0;
@@ -70,7 +65,7 @@ const ViewInstrumentBySlug = () => {
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h1 className="mb-4">Audio Items Tagged with "{name}"</h1>
+					<h1 className="mb-6">Audio Items Tagged with "{name}"</h1>
 					{shouldShowAudioItems && (
 						<>
 							{audioItems.map((audioItem, index) => (
@@ -92,8 +87,9 @@ const ViewInstrumentBySlug = () => {
 						<div className="text-red-600">Error fetching Audio Items</div>
 					)}
 				</div>
+
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h1 className="mb-4">About {name}</h1>
+					<h3 className="mb-4">About {name}</h3>
 					<div className="mb-4">
 						Entity Type:
 						<br />
@@ -110,7 +106,8 @@ const ViewInstrumentBySlug = () => {
 						<span className="text-gray-500">{description}</span>
 					</div>
 					<Link href={`/entities/instruments/${slug}/edit`}>Edit</Link>
-					<h1 className="mt-8 mb-4">Tags</h1>
+
+					<h3 className="mt-8 mb-4">Tags</h3>
 					{sortedTags.map((tag, index) => (
 						<TagWithRelationshipToObject
 							tag={tag}

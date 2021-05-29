@@ -1,5 +1,10 @@
 import { useEffect, useCallback } from "react";
-import { useLazyQuery, gql, LazyQueryResult } from "@apollo/client";
+import {
+	useLazyQuery,
+	gql,
+	LazyQueryHookOptions,
+	LazyQueryResult,
+} from "@apollo/client";
 import { AudioItem, EntityStatus } from "types";
 import { EntityFragments } from "fragments";
 
@@ -24,9 +29,10 @@ interface QueryVariables {
 }
 interface HookArgs {
 	resultsPerPage?: number;
+	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
 
-const useAudioItems = ({ resultsPerPage }: HookArgs = {}): [
+const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
 	AudioItem[] | undefined,
 	LazyQueryResult<QueryData, {}>,
 	() => void
@@ -34,7 +40,7 @@ const useAudioItems = ({ resultsPerPage }: HookArgs = {}): [
 	const [getAudioItems, audioItemsQuery] = useLazyQuery<
 		QueryData,
 		QueryVariables
-	>(AUDIO_ITEMS_QUERY, { notifyOnNetworkStatusChange: true });
+	>(AUDIO_ITEMS_QUERY, { notifyOnNetworkStatusChange: true, ...queryOptions });
 	const { data, fetchMore } = audioItemsQuery;
 
 	useEffect(() => {

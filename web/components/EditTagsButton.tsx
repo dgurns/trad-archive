@@ -4,6 +4,7 @@ import { useLazyQuery, useMutation, gql } from "@apollo/client";
 import { Entity } from "types";
 import { EntityFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
+import useTags from "hooks/useTags";
 import DateTimeService from "services/DateTime";
 import TagService from "services/Tag";
 
@@ -48,10 +49,12 @@ const EditTagsButton = ({ entity, className, children }: Props) => {
 		fetchPolicy: "network-only",
 	});
 
-	const [
-		deleteTag,
-		{ loading: deleteTagLoading, data: deleteTagData },
-	] = useMutation(DELETE_TAG_MUTATION, { errorPolicy: "all" });
+	const [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] =
+		useMutation(DELETE_TAG_MUTATION, { errorPolicy: "all" });
+
+	const {
+		tagsQuery: { refetch: refetchTopLevelTags },
+	} = useTags();
 
 	const onDeleteTag = useCallback(
 		async (id: string) => {
@@ -67,13 +70,18 @@ const EditTagsButton = ({ entity, className, children }: Props) => {
 
 	useEffect(() => {
 		const onDeleteSuccess = async () => {
-			await getParentEntity();
+			await Promise.all([refetchTopLevelTags(), getParentEntity()]);
 			setEditTagsModalIsVisible(false);
 		};
 		if (deleteTagData?.deleteTag) {
 			onDeleteSuccess();
 		}
-	}, [deleteTagData, getParentEntity, setEditTagsModalIsVisible]);
+	}, [
+		deleteTagData,
+		getParentEntity,
+		setEditTagsModalIsVisible,
+		refetchTopLevelTags,
+	]);
 
 	const { tags } = entity;
 
@@ -108,12 +116,8 @@ const EditTagsButton = ({ entity, className, children }: Props) => {
 					<LoadingBlock />
 				) : (
 					sortedTags.map((tag, index) => {
-						const {
-							id,
-							relationship,
-							objectEntity,
-							subjectTimeMarkerSeconds,
-						} = tag;
+						const { id, relationship, objectEntity, subjectTimeMarkerSeconds } =
+							tag;
 						return (
 							<div
 								className="flex flex-row items-start justify-start"

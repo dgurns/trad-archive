@@ -3,6 +3,7 @@ import { useMutation, gql } from "@apollo/client";
 
 import { Entity, EntityType, Tag } from "types";
 import usePlayerContext from "hooks/usePlayerContext";
+import useTags from "hooks/useTags";
 
 import SearchEntities from "components/SearchEntities";
 import SelectRelationship from "components/SelectRelationship";
@@ -57,12 +58,24 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		errorPolicy: "all",
 	});
 
-	// Once Tag has been created, call onSuccess prop
+	const {
+		tagsQuery: { refetch: refetchTopLevelTags },
+	} = useTags({
+		queryOptions: { fetchPolicy: "network-only" },
+	});
+
 	useEffect(() => {
+		const onTagCreated = async (tag: Tag) => {
+			// Now that a new Tag has been created, refetch the top-level `tags` query
+			if (refetchTopLevelTags) {
+				await refetchTopLevelTags();
+			}
+			onSuccess(tag);
+		};
 		if (data?.createTag) {
-			onSuccess(data.createTag);
+			onTagCreated(data.createTag);
 		}
-	}, [data]);
+	}, [data, refetchTopLevelTags, onSuccess]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {
@@ -139,6 +152,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		}
 	}, [
 		selectedRelationshipId,
+		shouldCreateInverseRelationship,
 		selectedInverseRelationshipId,
 		entity,
 		selectedEntity,
@@ -172,21 +186,19 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				/>
 			</div>
 
-			{selectedRelationshipId && (
-				<div className="mt-6 flex flex-row items-center justify-start">
-					<input
-						type="checkbox"
-						id="reverse-relationship"
-						checked={shouldCreateInverseRelationship}
-						onChange={(event) =>
-							setShouldCreateInverseRelationship(event.target.checked)
-						}
-					/>
-					<label htmlFor="reverse-relationship" className="ml-2">
-						Also create the inverse relationship
-					</label>
-				</div>
-			)}
+			<div className="mt-6 flex flex-row items-center justify-start">
+				<input
+					type="checkbox"
+					id="reverse-relationship"
+					checked={shouldCreateInverseRelationship}
+					onChange={(event) =>
+						setShouldCreateInverseRelationship(event.target.checked)
+					}
+				/>
+				<label htmlFor="reverse-relationship" className="ml-2">
+					Also create the inverse relationship
+				</label>
+			</div>
 
 			{shouldCreateInverseRelationship && (
 				<div className="mt-3">

@@ -14,10 +14,10 @@ import LoadingCircle from "components/LoadingCircle";
 const COMMENTS_FOR_PARENT_ENTITY_QUERY = gql`
 	query CommentsForParentEntity($input: CommentsForParentEntityInput!) {
 		commentsForParentEntity(input: $input) {
-			...Comment
+			...CommentWithoutParentEntity
 		}
 	}
-	${CommentFragments.comment}
+	${CommentFragments.commentWithoutParentEntity}
 `;
 
 interface QueryData {
@@ -39,9 +39,14 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 
 	const [modalIsVisible, setModalIsVisible] = useState(false);
 
-	const [_, { refetch: refetchParentAudioItem }] = useAudioItem({ slug });
+	// The parent AudioItem has already been fetched, so only use the cache for
+	// this query
+	const [, { refetch: refetchParentAudioItem }] = useAudioItem({
+		slug,
+		queryOptions: { fetchPolicy: "cache-only" },
+	});
 
-	const [getComments, { loading, data, error }] = useLazyQuery<
+	const [getCommentsForParentEntity, { loading, data, error }] = useLazyQuery<
 		QueryData,
 		QueryVariables
 	>(COMMENTS_FOR_PARENT_ENTITY_QUERY, {
@@ -49,25 +54,25 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 	});
 	const comments = data?.commentsForParentEntity ?? [];
 
-	const fetchComments = useCallback(() => {
-		getComments({
+	const fetchCommentsForParent = useCallback(() => {
+		getCommentsForParentEntity({
 			variables: {
 				input: { parentEntityType: entityType, parentEntityId: id },
 			},
 		});
-	}, [getComments]);
+	}, [getCommentsForParentEntity]);
 
 	const onViewCommentsButtonClicked = useCallback(() => {
 		if (commentsCount !== comments.length) {
-			fetchComments();
+			fetchCommentsForParent();
 		}
 		setModalIsVisible(true);
-	}, [fetchComments, commentsCount, comments]);
+	}, [fetchCommentsForParent, commentsCount, comments]);
 
 	const onCreateCommentSuccess = useCallback(async () => {
-		await fetchComments();
-		await refetchParentAudioItem({ slug });
-	}, [fetchComments, refetchParentAudioItem]);
+		fetchCommentsForParent();
+		refetchParentAudioItem({ slug });
+	}, [fetchCommentsForParent, refetchParentAudioItem]);
 
 	const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 
@@ -126,7 +131,9 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 									</Link>{" "}
 									{DateTimeService.formatDateYearTime(createdAt)}
 								</div>
-								<div className="text-sm whitespace-pre-line">{text}</div>
+								<div className="text-sm whitespace-pre-line text-gray-900">
+									{text}
+								</div>
 							</div>
 						))}
 					</div>

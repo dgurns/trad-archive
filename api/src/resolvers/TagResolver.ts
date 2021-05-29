@@ -3,7 +3,11 @@ import { getManager, SelectQueryBuilder } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { Tag } from "models/Tag";
 import { User } from "models/User";
-import { TagsToEntityInput, CreateTagInput } from "resolvers/TagResolverTypes";
+import {
+	TagsInput,
+	TagsToEntityInput,
+	CreateTagInput,
+} from "resolvers/TagResolverTypes";
 import { EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
@@ -39,7 +43,8 @@ const addTagRelationsToQueryBuilder = (
 		.leftJoinAndSelect("tag.objectPerson", "objectPerson")
 		.leftJoinAndSelect("tag.objectInstrument", "objectInstrument")
 		.leftJoinAndSelect("tag.objectPlace", "objectPlace")
-		.leftJoinAndSelect("tag.objectTune", "objectTune");
+		.leftJoinAndSelect("tag.objectTune", "objectTune")
+		.leftJoinAndSelect("tag.createdByUser", "createdByUser");
 };
 
 @Resolver()
@@ -50,6 +55,18 @@ export class TagResolver {
 			where: { id },
 			relations: tagRelationsForFind,
 		});
+	}
+
+	@Query(() => [Tag])
+	async tags(@Arg("input") input: TagsInput) {
+		const { take, skip } = input;
+		const tagsQuery = await getManager().createQueryBuilder(Tag, "tag");
+		const tagsQueryWithRelations = addTagRelationsToQueryBuilder(tagsQuery);
+		return tagsQueryWithRelations
+			.orderBy("tag.createdAt", "DESC")
+			.take(take)
+			.skip(skip)
+			.getMany();
 	}
 
 	// tagsToEntity fetches all Tags that have the given entity as object. For

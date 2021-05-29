@@ -4,7 +4,15 @@
 
 @layer components {
 	h1 {
-		@apply text-xl font-bold;
+		@apply text-3xl font-bold text-gray-700;
+	}
+
+	h2 {
+		@apply text-xl font-bold text-gray-700;
+	}
+
+	h3 {
+		@apply text-lg font-bold text-gray-700;
 	}
 
 	/* Links */
@@ -13,7 +21,7 @@
 		@apply text-teal-600 underline hover:text-teal-800;
 	}
 	.link-bare {
-		@apply text-black no-underline cursor-pointer hover:text-teal-800;
+		@apply text-gray-700 no-underline cursor-pointer hover:text-teal-800;
 	}
 
 	/* Buttons */

@@ -4,6 +4,7 @@ import { useLazyQuery, gql } from "@apollo/client";
 import { Entity, Tag } from "types";
 import { EntityFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
+import useAudioItems from "hooks/useAudioItems";
 import EntityService from "services/Entity";
 
 import Modal from "components/Modal";
@@ -44,10 +45,12 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 		variables: { id: entity.id },
 		fetchPolicy: "network-only",
 	});
+	const [, { refetch: refetchAudioItems }] = useAudioItems();
 
 	const refetchParentEntityAndClose = useCallback(
 		async (tag: Tag) => {
-			await getParentEntity();
+			getParentEntity();
+			refetchAudioItems();
 			setAddTagModalIsVisible(false);
 			if (onSuccess) {
 				onSuccess(tag);

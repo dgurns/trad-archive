@@ -62,7 +62,7 @@ export interface AudioItem extends BaseEntity {
 	entityType: EntityType.AudioItem;
 	comments?: Comment[] | null;
 	commentsCount?: number;
-	urlSource: string;
+	urlSource: string | null;
 	isAddedToCollection?: boolean;
 }
 
@@ -108,7 +108,7 @@ export interface Tag {
 	subjectEntity?: Entity;
 	objectEntity: Entity;
 	subjectTimeMarkerSeconds?: number | null;
-	createdByUser: User;
+	createdByUser?: User | null;
 	createdAt: string;
 	updatedAt: string;
 }

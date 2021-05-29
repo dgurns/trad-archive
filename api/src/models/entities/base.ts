@@ -62,11 +62,11 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	@Column({ type: "enum", enum: EntityStatus, default: EntityStatus.Published })
 	status!: EntityStatus;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	updatedByUser!: User;
 

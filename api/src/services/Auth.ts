@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import { CookieSerializeOptions } from "cookie";
-import { v4 as uuid } from 'uuid';
-import bcrypt from 'bcrypt';
+import { v4 as uuid } from "uuid";
+import bcrypt from "bcrypt";
 import addDays from "date-fns/addDays";
 import subYears from "date-fns/subYears";
-import addMinutes from 'date-fns/addMinutes';
+import addMinutes from "date-fns/addMinutes";
 
 import { User } from "models/User";
 
@@ -24,7 +24,7 @@ type AutoLoginToken = {
 	tokenUnhashed: string;
 	tokenHashed: string;
 	tokenExpiry: Date;
-}
+};
 const createAutoLoginToken = async (): Promise<AutoLoginToken> => {
 	const tokenUnhashed = uuid();
 	const tokenHashed = await bcrypt.hash(tokenUnhashed, 10);
@@ -32,14 +32,14 @@ const createAutoLoginToken = async (): Promise<AutoLoginToken> => {
 	return {
 		tokenUnhashed,
 		tokenHashed,
-		tokenExpiry
-	}
+		tokenExpiry,
+	};
 };
 
 // buildAutoLoginUrl returns a URL that a user can visit to automatically log in
 const buildAutoLoginUrl = (autoLoginTokenUnhashed: string) => {
-  return `${WEB_ORIGIN}/auto-login?token=${autoLoginTokenUnhashed}`;
-}
+	return `${WEB_ORIGIN}/auto-login?token=${autoLoginTokenUnhashed}`;
+};
 
 const createJwt = (user: User) => {
 	const token = jwt.sign({ userId: user.id }, JWT_SECRET_KEY);

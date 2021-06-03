@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useMutation, gql } from "@apollo/client";
 
 import { UserFragments } from "fragments";
+import { User } from "types";
+import useCurrentUser from "hooks/useCurrentUser";
 
 import Layout from "components/Layout";
 import LoadingCircle from "components/LoadingCircle";
@@ -19,21 +21,34 @@ const AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = gql`
 	${UserFragments.currentUser}
 `;
 
+interface MutationData {
+	authenticateWithAutoLoginToken: User;
+}
+interface MutationVars {
+	input: {
+		tokenUnhashed: string;
+		userEmail: string;
+	};
+}
+
 const AutoLogin = () => {
 	const router = useRouter();
-	const { tokenUnhashed, redirectTo } = router.query;
+	const { tokenUnhashed, userEmail, redirectTo } = router.query;
+
+	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
 
 	const [authenticateWithAutoLoginToken, { loading, data, error }] =
-		useMutation(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
+		useMutation<MutationData, MutationVars>(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
 
+	// When a token and email are present in query params, attempt to authenticate
 	useEffect(() => {
-		if (!tokenUnhashed) {
+		if (typeof tokenUnhashed !== "string" || typeof userEmail !== "string") {
 			return;
 		}
 		const authenticate = async () => {
 			try {
 				await authenticateWithAutoLoginToken({
-					variables: { input: { tokenUnhashed } },
+					variables: { input: { tokenUnhashed, userEmail } },
 				});
 			} catch {
 				//
@@ -42,11 +57,18 @@ const AutoLogin = () => {
 		authenticate();
 	}, [tokenUnhashed, authenticateWithAutoLoginToken]);
 
+	// Once auto-login token is authenticated, a cookie will now be set with JWT.
+	// Refetch current user with that cookie.
 	useEffect(() => {
 		if (data?.authenticateWithAutoLoginToken) {
-			router.push(typeof redirectTo === "string" ? redirectTo : "/");
+			refetchCurrentUser();
 		}
-	}, [data, router, redirectTo]);
+	}, [data, refetchCurrentUser]);
+
+	// If the current user is logged in, redirect if applicable or go to homepage
+	if (currentUser) {
+		router.push(typeof redirectTo === "string" ? redirectTo : "/");
+	}
 
 	const checkYourEmailContent = (
 		<>

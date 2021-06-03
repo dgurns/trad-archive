@@ -115,17 +115,26 @@ export class AuthResolver {
 			}
 		}
 
-		const { tokenUnhashed } = input;
+		const { tokenUnhashed, userEmail } = input;
 		if (!tokenUnhashed) {
 			throw new Error("No auto-login token provided");
 		}
-		const tokenHashed = bcrypt.hash(tokenUnhashed, 10);
 
-		const user = await User.findOne({
-			where: { autoLoginTokenHashed: tokenHashed },
-		});
-		if (!user || !user.autoLoginTokenExpiry) {
-			throw new Error("This is not a valid auto-login token");
+		const user = await User.findOne({ where: { email: userEmail } });
+		if (!user) {
+			throw new Error("Could not find a user with this email address");
+		} else if (!user.autoLoginTokenExpiry || !user.autoLoginTokenHashed) {
+			throw new Error(
+				"This user has an invalid auto-login token. Please try again."
+			);
+		}
+
+		const tokenIsValid = await bcrypt.compare(
+			tokenUnhashed,
+			user.autoLoginTokenHashed
+		);
+		if (!tokenIsValid) {
+			throw new Error("This auto-login token is invalid");
 		}
 
 		const tokenExpiry = new Date(user.autoLoginTokenExpiry);

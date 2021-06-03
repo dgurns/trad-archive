@@ -24,5 +24,8 @@ export class LogInInput {
 @InputType()
 export class AuthenticateWithAutoLoginTokenInput {
 	@Field(() => String)
+	userEmail!: string;
+
+	@Field(() => String)
 	tokenUnhashed!: string;
 }

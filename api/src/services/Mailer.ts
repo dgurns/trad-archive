@@ -26,6 +26,7 @@ const sendEmailWithAutoLoginUrl = ({
 
 	const autoLoginUrl = AuthService.makeAutoLoginUrl({
 		autoLoginTokenUnhashed,
+		userEmail: user.email,
 		redirectTo,
 	});
 

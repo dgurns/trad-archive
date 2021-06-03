@@ -43,14 +43,17 @@ const makeInvalidAutoLoginTokenExpiry = () => {
 
 interface MakeAutoLoginUrlArgs {
 	autoLoginTokenUnhashed: string;
+	userEmail: string;
 	redirectTo?: string;
 }
 const makeAutoLoginUrl = ({
 	autoLoginTokenUnhashed,
+	userEmail,
 	redirectTo,
 }: MakeAutoLoginUrlArgs) => {
 	const params = new URLSearchParams({
 		tokenUnhashed: autoLoginTokenUnhashed,
+		userEmail,
 	});
 	if (redirectTo) {
 		params.set("redirectTo", redirectTo);

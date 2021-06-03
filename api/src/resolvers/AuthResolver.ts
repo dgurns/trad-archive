@@ -4,12 +4,15 @@ import { getManager } from "typeorm";
 import { UserInputError, AuthenticationError } from "apollo-server-lambda";
 import isAfter from "date-fns/isAfter";
 
-import { SignUpInput, LogInInput } from "resolvers/AuthResolverTypes";
+import {
+	SignUpInput,
+	LogInInput,
+	AuthenticateWithAutoLoginTokenInput,
+} from "resolvers/AuthResolverTypes";
 import { User } from "models/User";
 import { CustomContext } from "middleware/context";
 import AuthService from "services/Auth";
 import MailerService from "services/Mailer";
-import Mailer from "services/Mailer";
 
 @Resolver()
 export class AuthResolver {
@@ -59,7 +62,7 @@ export class AuthResolver {
 		});
 		await user.save();
 
-		await Mailer.sendEmailWithAutoLoginUrl({
+		await MailerService.sendEmailWithAutoLoginUrl({
 			user,
 			autoLoginTokenUnhashed: tokenUnhashed,
 		});
@@ -68,9 +71,10 @@ export class AuthResolver {
 	}
 
 	@Mutation(() => User)
-	async logIn(@Arg("email") email: string, @Arg("password") password: string) {
-		if (!email || !password) {
-			throw new UserInputError("Must provide email and password");
+	async logIn(@Arg("input") input: LogInInput) {
+		const { email } = input;
+		if (!email) {
+			throw new UserInputError("Must provide email");
 		}
 
 		const user = await User.findOne({ where: { email } });
@@ -86,7 +90,7 @@ export class AuthResolver {
 		user.autoLoginTokenExpiry = tokenExpiry;
 		await user.save();
 
-		await Mailer.sendEmailWithAutoLoginUrl({
+		await MailerService.sendEmailWithAutoLoginUrl({
 			user,
 			autoLoginTokenUnhashed: tokenUnhashed,
 		});
@@ -96,16 +100,27 @@ export class AuthResolver {
 
 	@Mutation(() => User)
 	async authenticateWithAutoLoginToken(
-		@Arg("token") token: string,
+		@Arg("input") input: AuthenticateWithAutoLoginTokenInput,
 		@Ctx() ctx: CustomContext
 	) {
-		if (!token) {
+		// If the user is already logged in, return the User
+		if (ctx.userId) {
+			const loggedInUser = await User.findOne({ where: { id: ctx.userId } });
+			if (loggedInUser) {
+				return loggedInUser;
+			} else {
+				throw new Error("Error fetching logged in user");
+			}
+		}
+
+		const { tokenUnhashed } = input;
+		if (!tokenUnhashed) {
 			throw new Error("No auto-login token provided");
 		}
-		const hashedToken = bcrypt.hash(token, 10);
+		const tokenHashed = bcrypt.hash(tokenUnhashed, 10);
 
 		const user = await User.findOne({
-			where: { autoLoginTokenHashed: hashedToken },
+			where: { autoLoginTokenHashed: tokenHashed },
 		});
 		if (!user || !user.autoLoginTokenExpiry) {
 			throw new Error("Invalid auto-login token");
@@ -116,12 +131,30 @@ export class AuthResolver {
 			const jwt = AuthService.createJwt(user);
 			ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
 		} else {
-			throw new Error("This auto-login token has expired");
+			throw new Error("This auto-login token is no longer valid");
 		}
+
+		// Invalidate the auto-login token now that the user has logged in
+		user.autoLoginTokenExpiry = AuthService.makeInvalidAutoLoginTokenExpiry();
+		await user.save();
+
+		return user;
 	}
 
 	@Mutation(() => Boolean)
-	logOut(@Ctx() ctx: CustomContext) {
+	async logOut(@Ctx() ctx: CustomContext) {
+		// Invalidate any existing auto-login token for the user
+		if (ctx.userId) {
+			const loggedInUser = await User.findOne({ where: { id: ctx.userId } });
+			if (loggedInUser) {
+				loggedInUser.autoLoginTokenExpiry =
+					AuthService.makeInvalidAutoLoginTokenExpiry();
+				await loggedInUser.save();
+			}
+		}
+
+		// Set an invalid response JWT cookie which will clear the cookie on the
+		// client side
 		ctx.setResponseJwtCookie = AuthService.makeInvalidJwtCookie();
 		return true;
 	}

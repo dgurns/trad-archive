@@ -36,8 +36,12 @@ const createAutoLoginToken = async (): Promise<AutoLoginToken> => {
 	};
 };
 
-// buildAutoLoginUrl returns a URL that a user can visit to automatically log in
-const buildAutoLoginUrl = (autoLoginTokenUnhashed: string) => {
+const makeInvalidAutoLoginTokenExpiry = () => {
+	return subYears(new Date(), 1);
+};
+
+// makeAutoLoginUrl returns a URL that a user can visit to automatically log in
+const makeAutoLoginUrl = (autoLoginTokenUnhashed: string) => {
 	return `${WEB_ORIGIN}/auto-login?token=${autoLoginTokenUnhashed}`;
 };
 
@@ -103,7 +107,8 @@ const makeInvalidJwtCookie = (): JwtCookie => {
 export default {
 	isValidEmail,
 	createAutoLoginToken,
-	buildAutoLoginUrl,
+	makeInvalidAutoLoginTokenExpiry,
+	makeAutoLoginUrl,
 	createJwt,
 	extractUserIdFromJwt,
 	COOKIE_NAME,

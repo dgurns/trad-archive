@@ -1,3 +1,4 @@
+import { URLSearchParams } from "url";
 import jwt from "jsonwebtoken";
 import { CookieSerializeOptions } from "cookie";
 import { v4 as uuid } from "uuid";
@@ -40,9 +41,21 @@ const makeInvalidAutoLoginTokenExpiry = () => {
 	return subYears(new Date(), 1);
 };
 
-// makeAutoLoginUrl returns a URL that a user can visit to automatically log in
-const makeAutoLoginUrl = (autoLoginTokenUnhashed: string) => {
-	return `${WEB_ORIGIN}/auto-login?token=${autoLoginTokenUnhashed}`;
+interface MakeAutoLoginUrlArgs {
+	autoLoginTokenUnhashed: string;
+	redirectTo?: string;
+}
+const makeAutoLoginUrl = ({
+	autoLoginTokenUnhashed,
+	redirectTo,
+}: MakeAutoLoginUrlArgs) => {
+	const params = new URLSearchParams({
+		token: autoLoginTokenUnhashed,
+	});
+	if (redirectTo) {
+		params.set("redirectTo", redirectTo);
+	}
+	return `${WEB_ORIGIN}/auto-login?${params.toString()}`;
 };
 
 const createJwt = (user: User) => {

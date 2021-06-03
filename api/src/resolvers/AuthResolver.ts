@@ -27,7 +27,7 @@ export class AuthResolver {
 
 	@Mutation(() => User)
 	async signUp(@Arg("input") input: SignUpInput) {
-		const { email, username } = input;
+		const { email, username, redirectTo } = input;
 		if (!email || !username) {
 			throw new UserInputError("Must provide email and username");
 		}
@@ -65,6 +65,7 @@ export class AuthResolver {
 		await MailerService.sendEmailWithAutoLoginUrl({
 			user,
 			autoLoginTokenUnhashed: tokenUnhashed,
+			redirectTo,
 		});
 
 		return user;
@@ -72,7 +73,7 @@ export class AuthResolver {
 
 	@Mutation(() => User)
 	async logIn(@Arg("input") input: LogInInput) {
-		const { email } = input;
+		const { email, redirectTo } = input;
 		if (!email) {
 			throw new UserInputError("Must provide email");
 		}
@@ -93,6 +94,7 @@ export class AuthResolver {
 		await MailerService.sendEmailWithAutoLoginUrl({
 			user,
 			autoLoginTokenUnhashed: tokenUnhashed,
+			redirectTo,
 		});
 
 		return user;

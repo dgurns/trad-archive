@@ -8,8 +8,8 @@ import Layout from "components/Layout";
 import { User } from "types";
 
 const SIGN_UP_MUTATION = gql`
-	mutation SignUp($email: String!, $username: String!, $password: String!) {
-		signUp(email: $email, username: $username, password: $password) {
+	mutation SignUp($input: SignUpInput!) {
+		signUp(input: $input) {
 			id
 			permissions
 			email
@@ -27,8 +27,6 @@ const SignUp = () => {
 
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [passwordConfirmation, setPasswordConfirmation] = useState("");
 	const [validationError, setValidationError] = useState("");
 
 	const [signUp, { loading, data, error }] = useMutation<MutationData>(
@@ -40,11 +38,7 @@ const SignUp = () => {
 	const onSignUp = (event) => {
 		event.preventDefault();
 		setValidationError("");
-		if (password !== passwordConfirmation) {
-			setValidationError("Passwords don't match");
-			return;
-		}
-		signUp({ variables: { email, username, password } });
+		signUp({ variables: { input: { email, username, redirectTo } } });
 	};
 
 	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
@@ -80,20 +74,6 @@ const SignUp = () => {
 						className="mb-2"
 						value={username}
 						onChange={(event) => setUsername(event.target.value)}
-					/>
-					<input
-						placeholder="Choose a password"
-						type="password"
-						className="mb-2"
-						value={password}
-						onChange={(event) => setPassword(event.target.value)}
-					/>
-					<input
-						placeholder="Repeat password"
-						type="password"
-						className="mb-4"
-						value={passwordConfirmation}
-						onChange={(event) => setPasswordConfirmation(event.target.value)}
 					/>
 					<input
 						type="submit"

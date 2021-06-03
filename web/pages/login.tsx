@@ -7,8 +7,8 @@ import Layout from "components/Layout";
 import { User } from "types";
 
 const LOG_IN_MUTATION = gql`
-	mutation LogIn($email: String!, $password: String!) {
-		logIn(email: $email, password: $password) {
+	mutation LogIn($input: LogInInput!) {
+		logIn(input: $input) {
 			id
 			permissions
 			email
@@ -25,7 +25,6 @@ const Login = () => {
 	const { redirectTo } = router.query;
 
 	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
 
 	const [logIn, { loading, data, error }] = useMutation<MutationData>(
 		LOG_IN_MUTATION,
@@ -35,7 +34,7 @@ const Login = () => {
 	);
 	const onLogIn = (event) => {
 		event.preventDefault();
-		logIn({ variables: { email, password } });
+		logIn({ variables: { input: { email, redirectTo } } });
 	};
 
 	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
@@ -65,13 +64,6 @@ const Login = () => {
 						className="mb-2"
 						value={email}
 						onChange={(event) => setEmail(event.target.value)}
-					/>
-					<input
-						placeholder="Your password"
-						type="password"
-						className="mb-4"
-						value={password}
-						onChange={(event) => setPassword(event.target.value)}
 					/>
 					<input
 						type="submit"

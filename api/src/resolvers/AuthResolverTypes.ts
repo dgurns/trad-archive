@@ -7,12 +7,18 @@ export class SignUpInput {
 
 	@Field(() => String, { nullable: true })
 	username?: string;
+
+	@Field(() => String, { nullable: true })
+	redirectTo?: string;
 }
 
 @InputType()
 export class LogInInput {
 	@Field(() => String)
 	email!: string;
+
+	@Field(() => String, { nullable: true })
+	redirectTo?: string;
 }
 
 @InputType()

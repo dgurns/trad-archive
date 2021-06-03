@@ -13,16 +13,21 @@ const sendEmail = (data: MailDataRequired) => {
 interface SendEmailWithAutoLoginUrlArgs {
 	user: User;
 	autoLoginTokenUnhashed: string;
+	redirectTo?: string;
 }
 const sendEmailWithAutoLoginUrl = ({
 	user,
 	autoLoginTokenUnhashed,
+	redirectTo,
 }: SendEmailWithAutoLoginUrlArgs) => {
 	if (!user || !autoLoginTokenUnhashed) {
 		throw new Error("User and auto login token must be provided");
 	}
 
-	const autoLoginUrl = AuthService.buildAutoLoginUrl(autoLoginTokenUnhashed);
+	const autoLoginUrl = AuthService.makeAutoLoginUrl({
+		autoLoginTokenUnhashed,
+		redirectTo,
+	});
 
 	const data = {
 		to: user.email,

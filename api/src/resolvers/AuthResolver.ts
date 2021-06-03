@@ -125,7 +125,7 @@ export class AuthResolver {
 			where: { autoLoginTokenHashed: tokenHashed },
 		});
 		if (!user || !user.autoLoginTokenExpiry) {
-			throw new Error("Invalid auto-login token");
+			throw new Error("This is not a valid auto-login token");
 		}
 
 		const tokenExpiry = new Date(user.autoLoginTokenExpiry);

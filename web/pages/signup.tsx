@@ -6,16 +6,15 @@ import { useMutation, gql } from "@apollo/client";
 import useCurrentUser from "hooks/useCurrentUser";
 import Layout from "components/Layout";
 import { User } from "types";
+import { UserFragments } from "fragments";
 
 const SIGN_UP_MUTATION = gql`
 	mutation SignUp($input: SignUpInput!) {
 		signUp(input: $input) {
-			id
-			permissions
-			email
-			username
+			...CurrentUser
 		}
 	}
+	${UserFragments.currentUser}
 `;
 interface MutationData {
 	signUp: User;
@@ -24,6 +23,7 @@ interface MutationData {
 const SignUp = () => {
 	const router = useRouter();
 	const { redirectTo } = router.query;
+	const [currentUser] = useCurrentUser();
 
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
@@ -41,13 +41,11 @@ const SignUp = () => {
 		signUp({ variables: { input: { email, username, redirectTo } } });
 	};
 
-	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
-
 	useEffect(() => {
 		if (data?.signUp) {
-			refetchCurrentUser();
+			router.push("/auto-login");
 		}
-	}, [data, refetchCurrentUser]);
+	}, [data, router]);
 
 	if (currentUser) {
 		router.push(typeof redirectTo === "string" ? redirectTo : "/");
@@ -71,7 +69,7 @@ const SignUp = () => {
 					/>
 					<input
 						placeholder="Your full name"
-						className="mb-2"
+						className="mb-4"
 						value={username}
 						onChange={(event) => setUsername(event.target.value)}
 					/>

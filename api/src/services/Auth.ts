@@ -50,7 +50,7 @@ const makeAutoLoginUrl = ({
 	redirectTo,
 }: MakeAutoLoginUrlArgs) => {
 	const params = new URLSearchParams({
-		token: autoLoginTokenUnhashed,
+		tokenUnhashed: autoLoginTokenUnhashed,
 	});
 	if (redirectTo) {
 		params.set("redirectTo", redirectTo);

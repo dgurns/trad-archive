@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useMutation, gql } from "@apollo/client";
+
 import useCurrentUser from "hooks/useCurrentUser";
 import Layout from "components/Layout";
 import { User } from "types";
+import { UserFragments } from "fragments";
 
 const LOG_IN_MUTATION = gql`
 	mutation LogIn($input: LogInInput!) {
 		logIn(input: $input) {
-			id
-			permissions
-			email
-			username
+			...CurrentUser
 		}
 	}
+	${UserFragments.currentUser}
 `;
 interface MutationData {
 	logIn: User;
@@ -23,6 +23,7 @@ interface MutationData {
 const Login = () => {
 	const router = useRouter();
 	const { redirectTo } = router.query;
+	const [currentUser] = useCurrentUser();
 
 	const [email, setEmail] = useState("");
 
@@ -32,18 +33,17 @@ const Login = () => {
 			errorPolicy: "all",
 		}
 	);
+
 	const onLogIn = (event) => {
 		event.preventDefault();
 		logIn({ variables: { input: { email, redirectTo } } });
 	};
 
-	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
-
 	useEffect(() => {
 		if (data?.logIn) {
-			refetchCurrentUser();
+			router.push("/auto-login");
 		}
-	}, [data, refetchCurrentUser]);
+	}, [data, router]);
 
 	if (currentUser) {
 		router.push(typeof redirectTo === "string" ? redirectTo : "/");
@@ -61,7 +61,7 @@ const Login = () => {
 					<input
 						placeholder="Your email"
 						autoFocus
-						className="mb-2"
+						className="mb-4"
 						value={email}
 						onChange={(event) => setEmail(event.target.value)}
 					/>

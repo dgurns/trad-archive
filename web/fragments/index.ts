@@ -8,6 +8,14 @@ export const UserFragments = {
 			createdAt
 		}
 	`,
+	currentUser: gql`
+		fragment CurrentUser on User {
+			id
+			permissions
+			email
+			username
+		}
+	`,
 };
 
 export const RelationshipFragments = {

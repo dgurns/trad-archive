@@ -2,10 +2,14 @@ import bcrypt from 'bcrypt';
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { getManager } from 'typeorm';
 import { UserInputError, AuthenticationError } from 'apollo-server-lambda';
+import isAfter from 'date-fns/isAfter';
 
+import { SignUpInput, LogInInput } from 'resolvers/AuthResolverTypes';
 import { User } from 'models/User';
-import AuthService from 'services/Auth';
 import { CustomContext } from 'middleware/context';
+import AuthService from 'services/Auth';
+import MailerService from 'services/Mailer';
+import Mailer from 'services/Mailer';
 
 @Resolver()
 export class AuthResolver {
@@ -20,13 +24,14 @@ export class AuthResolver {
 
   @Mutation(() => User)
   async signUp(
-    @Arg('email') email: string,
-    @Arg('username') username: string,
-    @Arg('password') password: string,
-    @Ctx() ctx: CustomContext
+    @Arg('input') input: SignUpInput,
   ) {
-    if (!email || !username || !password) {
-      throw new UserInputError('Must provide email, username, and password');
+		const { email, username } = input;
+    if (!email || !username) {
+      throw new UserInputError('Must provide email and username');
+    }
+		if (!AuthService.isValidEmail(email)) {
+      throw new Error('Invalid email address');
     }
 
     const existingUser = await getManager()
@@ -44,25 +49,18 @@ export class AuthResolver {
           : 'That username is taken, please pick another one'
       );
     }
-
-    if (!AuthService.isValidEmail(email)) {
-      throw new Error('Invalid email address');
-    }
-    if (!AuthService.isSecurePassword(password)) {
-      throw new Error('Password must be at least 6 characters');
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+		
+    const { tokenUnhashed, tokenHashed, tokenExpiry } = await AuthService.createAutoLoginToken();
+		
     const user = User.create({
       email,
       username,
-      hashedPassword,
+			autoLoginTokenHashed: tokenHashed,
+			autoLoginTokenExpiry: tokenExpiry
     });
     await user.save();
 
-    const jwt = AuthService.createJwt(user);
-    ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
+		await Mailer.sendEmailWithAutoLoginUrl({ user, autoLoginTokenUnhashed: tokenUnhashed })
 
     return user;
   }
@@ -71,7 +69,6 @@ export class AuthResolver {
   async logIn(
     @Arg('email') email: string,
     @Arg('password') password: string,
-    @Ctx() ctx: CustomContext
   ) {
     if (!email || !password) {
       throw new UserInputError('Must provide email and password');
@@ -84,16 +81,36 @@ export class AuthResolver {
       );
     }
 
-    const passwordIsValid = await bcrypt.compare(password, user.hashedPassword);
-    if (!passwordIsValid) {
-      throw new AuthenticationError('Invalid password');
-    }
+    const { tokenUnhashed, tokenHashed, tokenExpiry } = await AuthService.createAutoLoginToken();
+		user.autoLoginTokenHashed = tokenHashed;
+		user.autoLoginTokenExpiry = tokenExpiry;
+		await user.save();
 
-    const jwt = AuthService.createJwt(user);
-    ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
+		await Mailer.sendEmailWithAutoLoginUrl({ user, autoLoginTokenUnhashed: tokenUnhashed })
 
     return user;
   }
+
+	@Mutation(() => User)
+	async authenticateWithAutoLoginToken(@Arg('token') token: string, @Ctx() ctx: CustomContext) {
+		if (!token) {
+			throw new Error('No auto-login token provided');
+		}
+		const hashedToken = bcrypt.hash(token, 10);
+
+    const user = await User.findOne({ where: { autoLoginTokenHashed: hashedToken } });
+    if (!user || !user.autoLoginTokenExpiry) {
+      throw new Error('Invalid auto-login token');
+    }
+
+    const tokenExpiry = new Date(user.autoLoginTokenExpiry);
+    if (isAfter(tokenExpiry, new Date())) {
+      const jwt = AuthService.createJwt(user);
+    	ctx.setResponseJwtCookie = AuthService.makeValidJwtCookie(jwt);
+    } else {
+      throw new Error('This auto-login token has expired');
+    }
+	}
 
   @Mutation(() => Boolean)
   logOut(@Ctx() ctx: CustomContext) {

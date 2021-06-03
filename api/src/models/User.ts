@@ -44,8 +44,12 @@ export class User extends TypeOrmBaseEntity {
   @Index()
   username!: string;
 
-  @Column()
-  hashedPassword!: string;
+  @Column({ nullable: true, default: null })
+	@Index()
+  autoLoginTokenHashed!: string;
+
+  @Column({ type: 'timestamptz', nullable: true, default: null })
+  autoLoginTokenExpiry!: Date;
 
   @Field()
   @CreateDateColumn({ type: 'timestamptz' })

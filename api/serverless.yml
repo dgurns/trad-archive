@@ -16,18 +16,19 @@ functions:
     handler: src/handlers/graphql.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
+      WEB_ORIGIN: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
     events:
       - http:
           path: graphql
           method: post
           cors:
-            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
+            origin: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
             allowCredentials: true
       - http:
           path: graphql
           method: get
           cors:
-            origin: ${self:custom.allowedOrigin.${opt:stage}, self:custom.allowedOrigin.preview}
+            origin: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
             allowCredentials: true
   importTunes:
     handler: src/handlers/importTunes.handler
@@ -45,7 +46,7 @@ plugins:
   - serverless-offline
 
 custom:
-  allowedOrigin:
+  webOrigin:
     dev: http://localhost:3000
     preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
     prod: https://www.tradarchive.com

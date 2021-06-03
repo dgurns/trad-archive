@@ -2,11 +2,13 @@ import sendgrid, { MailDataRequired } from "@sendgrid/mail";
 import { User } from "models/User";
 import AuthService from "services/Auth";
 
-const { SENDGRID_API_KEY, WEB_ORIGIN } = process.env;
+const { SENDGRID_API_KEY } = process.env;
+console.log("SENDGRID", SENDGRID_API_KEY);
 
 sendgrid.setApiKey(SENDGRID_API_KEY ?? "");
 
 const sendEmail = (data: MailDataRequired) => {
+	console.log("in sendEmail function", SENDGRID_API_KEY);
 	return sendgrid.send(data);
 };
 

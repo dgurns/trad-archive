@@ -1,37 +1,36 @@
-import { useEffect } from 'react';
-import { useLazyQuery, gql, LazyQueryResult } from '@apollo/client';
-import { User } from 'types';
+import { useEffect } from "react";
+import { useLazyQuery, gql, LazyQueryResult } from "@apollo/client";
+
+import { User } from "types";
+import { UserFragments } from "fragments";
 
 export const CURRENT_USER_QUERY = gql`
-  query {
-    currentUser {
-      id
-      permissions
-      email
-      username
-    }
-  }
+	query {
+		currentUser {
+			...CurrentUser
+		}
+	}
+	${UserFragments.currentUser}
 `;
 
 interface QueryData {
-  currentUser: User;
+	currentUser: User;
 }
 
 const useCurrentUser = (): [
-  User | null | undefined,
-  LazyQueryResult<QueryData, {}>
+	User | null | undefined,
+	LazyQueryResult<QueryData, {}>
 ] => {
-  const [getCurrentUser, currentUserQuery] = useLazyQuery<QueryData>(
-    CURRENT_USER_QUERY
-  );
+	const [getCurrentUser, currentUserQuery] =
+		useLazyQuery<QueryData>(CURRENT_USER_QUERY);
 
-  useEffect(() => {
-    getCurrentUser();
-  }, [getCurrentUser]);
+	useEffect(() => {
+		getCurrentUser();
+	}, [getCurrentUser]);
 
-  const currentUser = currentUserQuery.data?.currentUser;
+	const currentUser = currentUserQuery.data?.currentUser;
 
-  return [currentUser, currentUserQuery];
+	return [currentUser, currentUserQuery];
 };
 
 export default useCurrentUser;

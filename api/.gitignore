@@ -2,3 +2,4 @@ node_modules
 .build
 .webpack
 yarn-error.log
+.env

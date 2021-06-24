@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import {
-	useQuery,
 	ApolloClient,
 	InMemoryCache,
 	NormalizedCacheObject,

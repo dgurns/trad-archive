@@ -6,16 +6,15 @@ import { useMutation, gql } from "@apollo/client";
 import useCurrentUser from "hooks/useCurrentUser";
 import Layout from "components/Layout";
 import { User } from "types";
+import { UserFragments } from "fragments";
 
 const SIGN_UP_MUTATION = gql`
-	mutation SignUp($email: String!, $username: String!, $password: String!) {
-		signUp(email: $email, username: $username, password: $password) {
-			id
-			permissions
-			email
-			username
+	mutation SignUp($input: SignUpInput!) {
+		signUp(input: $input) {
+			...CurrentUser
 		}
 	}
+	${UserFragments.currentUser}
 `;
 interface MutationData {
 	signUp: User;
@@ -24,11 +23,10 @@ interface MutationData {
 const SignUp = () => {
 	const router = useRouter();
 	const { redirectTo } = router.query;
+	const [currentUser] = useCurrentUser();
 
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [passwordConfirmation, setPasswordConfirmation] = useState("");
 	const [validationError, setValidationError] = useState("");
 
 	const [signUp, { loading, data, error }] = useMutation<MutationData>(
@@ -40,20 +38,14 @@ const SignUp = () => {
 	const onSignUp = (event) => {
 		event.preventDefault();
 		setValidationError("");
-		if (password !== passwordConfirmation) {
-			setValidationError("Passwords don't match");
-			return;
-		}
-		signUp({ variables: { email, username, password } });
+		signUp({ variables: { input: { email, username, redirectTo } } });
 	};
-
-	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
 
 	useEffect(() => {
 		if (data?.signUp) {
-			refetchCurrentUser();
+			router.push("/auto-login");
 		}
-	}, [data, refetchCurrentUser]);
+	}, [data, router]);
 
 	if (currentUser) {
 		router.push(typeof redirectTo === "string" ? redirectTo : "/");
@@ -77,23 +69,9 @@ const SignUp = () => {
 					/>
 					<input
 						placeholder="Your full name"
-						className="mb-2"
+						className="mb-4"
 						value={username}
 						onChange={(event) => setUsername(event.target.value)}
-					/>
-					<input
-						placeholder="Choose a password"
-						type="password"
-						className="mb-2"
-						value={password}
-						onChange={(event) => setPassword(event.target.value)}
-					/>
-					<input
-						placeholder="Repeat password"
-						type="password"
-						className="mb-4"
-						value={passwordConfirmation}
-						onChange={(event) => setPasswordConfirmation(event.target.value)}
 					/>
 					<input
 						type="submit"

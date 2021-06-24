@@ -1,10 +1,15 @@
+import { URLSearchParams } from "url";
 import jwt from "jsonwebtoken";
 import { CookieSerializeOptions } from "cookie";
+import { v4 as uuid } from "uuid";
+import bcrypt from "bcrypt";
 import addDays from "date-fns/addDays";
 import subYears from "date-fns/subYears";
+import addMinutes from "date-fns/addMinutes";
+
 import { User } from "models/User";
 
-const { SERVERLESS_STAGE } = process.env;
+const { SERVERLESS_STAGE, WEB_ORIGIN } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? "my-jwt-secret-key";
 
 const isValidEmail = (email?: string) => {
@@ -16,11 +21,44 @@ const isValidEmail = (email?: string) => {
 	return validityRegex.test(email);
 };
 
-const isSecurePassword = (password?: string) => {
-	if (!password || password.length < 6) {
-		return false;
+type AutoLoginToken = {
+	tokenUnhashed: string;
+	tokenHashed: string;
+	tokenExpiry: Date;
+};
+const createAutoLoginToken = async (): Promise<AutoLoginToken> => {
+	const tokenUnhashed = uuid();
+	const tokenHashed = await bcrypt.hash(tokenUnhashed, 10);
+	const tokenExpiry = addMinutes(new Date(), 10);
+	return {
+		tokenUnhashed,
+		tokenHashed,
+		tokenExpiry,
+	};
+};
+
+const makeInvalidAutoLoginTokenExpiry = () => {
+	return subYears(new Date(), 1);
+};
+
+interface MakeAutoLoginUrlArgs {
+	autoLoginTokenUnhashed: string;
+	userEmail: string;
+	redirectTo?: string;
+}
+const makeAutoLoginUrl = ({
+	autoLoginTokenUnhashed,
+	userEmail,
+	redirectTo,
+}: MakeAutoLoginUrlArgs) => {
+	const params = new URLSearchParams({
+		tokenUnhashed: autoLoginTokenUnhashed,
+		userEmail,
+	});
+	if (redirectTo) {
+		params.set("redirectTo", redirectTo);
 	}
-	return true;
+	return `${WEB_ORIGIN}/auto-login?${params.toString()}`;
 };
 
 const createJwt = (user: User) => {
@@ -84,7 +122,9 @@ const makeInvalidJwtCookie = (): JwtCookie => {
 
 export default {
 	isValidEmail,
-	isSecurePassword,
+	createAutoLoginToken,
+	makeInvalidAutoLoginTokenExpiry,
+	makeAutoLoginUrl,
 	createJwt,
 	extractUserIdFromJwt,
 	COOKIE_NAME,

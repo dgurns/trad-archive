@@ -36,12 +36,11 @@ export const connectToDatabase = async () => {
 			Place,
 			Tune,
 		],
-		// TODO: Set synchronize to false in production
-		synchronize: true,
+		synchronize: false,
 		migrationsRun: true,
-		migrations: ["src/migrations/*"],
+		migrations: [__dirname + "/migrations/*{.ts,.js}"],
 		cli: {
-			migrationsDir: "src/migrations",
+			migrationsDir: __dirname + "/migrations",
 		},
 	});
 

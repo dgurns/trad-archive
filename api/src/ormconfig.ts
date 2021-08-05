@@ -35,8 +35,9 @@ const ormConfig: ConnectionOptions = {
 		Place,
 		Tune,
 	],
-	synchronize: false,
-	migrationsRun: true,
+	// TODO: Need to come up with a better migration solution for preview/prod
+	synchronize: true,
+	migrationsRun: false,
 	migrations: [__dirname + "/migrations/*{.ts,.js}"],
 	cli: {
 		migrationsDir: __dirname + "/migrations",

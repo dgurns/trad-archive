@@ -34,7 +34,6 @@ let dbConnection: Connection | undefined;
 let apolloServer: ApolloServer | undefined;
 
 const initializeServer = async () => {
-	console.log("INITIALIZING SERVER");
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
 	}
@@ -79,8 +78,6 @@ export const handler = (
 	callback: APIGatewayProxyCallback
 ) => {
 	context.callbackWaitsForEmptyEventLoop = false;
-
-	console.log("EVENT", event);
 
 	let allowedOrigin: string | undefined;
 	switch (SERVERLESS_STAGE) {

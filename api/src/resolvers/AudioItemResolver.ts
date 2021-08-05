@@ -26,7 +26,6 @@ import {
 import { entityRelationsForFind } from "resolvers/EntityResolver";
 import EntityService from "services/Entity";
 import { EntityStatus } from "models/entities/base";
-import { Knex } from "knex";
 
 @Resolver(() => AudioItem)
 export class AudioItemResolver {

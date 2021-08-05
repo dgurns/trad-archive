@@ -91,7 +91,10 @@ export const handler = (
 			allowedOrigin = `https://trad-archive-git-${SERVERLESS_STAGE}-dangurney.vercel.app`;
 	}
 
+	console.log("EVENT", event);
+
 	initializeServer().then((apolloServer) => {
+		console.log("SERVER INITIALIZED", apolloServer);
 		const apolloServerHandler = apolloServer.createHandler({
 			cors: {
 				origin: allowedOrigin,

@@ -74,3 +74,4 @@ custom:
     httpPort: 4000
     noPrependStageInUrl: true
     allowCache: true
+    useChildProcesses: true

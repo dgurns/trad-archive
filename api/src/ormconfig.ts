@@ -37,9 +37,13 @@ const ormConfig: ConnectionOptions = {
 	],
 	synchronize: false,
 	migrationsRun: true,
-	migrations: [__dirname + "/migrations/*{.ts,.js}"],
+	migrations: [
+		process.env.SERVERLESS_STAGE === "dev"
+			? "./migrations/*{.ts,.js}"
+			: "../migrations/*{.ts,.js}",
+	],
 	cli: {
-		migrationsDir: __dirname + "/migrations",
+		migrationsDir: "./migrations",
 	},
 };
 

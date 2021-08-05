@@ -1,51 +1,8 @@
 import { createConnection, getConnectionManager } from "typeorm";
-import { User } from "models/User";
-import { Tag } from "models/Tag";
-import { Comment } from "models/Comment";
-import { CollectionEntry } from "models/CollectionEntry";
-import { Relationship } from "models/Relationship";
-import { AudioItem } from "models/entities/AudioItem";
-import { Person } from "models/entities/Person";
-import { Instrument } from "models/entities/Instrument";
-import { Place } from "models/entities/Place";
-import { Tune } from "models/entities/Tune";
-import { TakedownRequest } from "models/TakedownRequest";
+import ormConfig, { DB_CONNECTION_NAME } from "ormconfig";
 
-const DB_CONNECTION_NAME = "default";
-
-export const connectToDatabase = async () => {
-	const dbConnection = await createConnection({
-		name: DB_CONNECTION_NAME,
-		type: "postgres",
-		host: process.env.DATABASE_HOST ?? "localhost",
-		port: parseInt(process.env.DATABASE_PORT ?? "5432"),
-		username: process.env.DATABASE_USERNAME ?? "postgres",
-		password: process.env.DATABASE_PASSWORD ?? "password",
-		database: process.env.DATABASE_NAME ?? "postgres",
-		logging: false,
-		entities: [
-			User,
-			Tag,
-			Relationship,
-			Comment,
-			CollectionEntry,
-			TakedownRequest,
-			AudioItem,
-			Person,
-			Instrument,
-			Place,
-			Tune,
-		],
-		synchronize: false,
-		migrationsRun: true,
-		migrations: [__dirname + "/migrations/*{.ts,.js}"],
-		cli: {
-			migrationsDir: __dirname + "/migrations",
-		},
-	});
-
-	return dbConnection;
-
+export const connectToDatabase = () => {
+	return createConnection(ormConfig);
 	// Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
 	// for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"
 	//

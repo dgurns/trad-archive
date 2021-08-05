@@ -35,6 +35,7 @@
 		"@types/uuid": "^8.3.0",
 		"apollo-server-plugin-base": "^0.10.3",
 		"aws-lambda": "^1.0.6",
+		"copy-webpack-plugin": "^9.0.1",
 		"serverless-domain-manager": "^5.1.0",
 		"serverless-offline": "^8.0.0",
 		"serverless-webpack": "^5.4.2",

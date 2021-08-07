@@ -105,6 +105,7 @@ export class AuthResolver {
 		@Arg("input") input: AuthenticateWithAutoLoginTokenInput,
 		@Ctx() ctx: CustomContext
 	) {
+		console.log("CTX", ctx);
 		// If the user is already logged in, return the User
 		if (ctx.userId) {
 			const loggedInUser = await User.findOne({ where: { id: ctx.userId } });

@@ -38,7 +38,11 @@ const SignUp = () => {
 	const onSignUp = (event) => {
 		event.preventDefault();
 		setValidationError("");
-		signUp({ variables: { input: { email, username, redirectTo } } });
+		signUp({
+			variables: {
+				input: { email, username, redirectTo },
+			},
+		});
 	};
 
 	useEffect(() => {

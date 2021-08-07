@@ -29,12 +29,12 @@ class MyDocument extends Document {
 						rel="stylesheet"
 					/>
 					<link
-						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"
+						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700%26display=swap"
 						rel="preload"
 						as="style"
 					/>
 					<link
-						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap"
+						href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700%26display=swap"
 						rel="stylesheet"
 					/>
 				</Head>

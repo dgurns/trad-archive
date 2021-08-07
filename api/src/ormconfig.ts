@@ -1,3 +1,4 @@
+import path from "path";
 import { ConnectionOptions } from "typeorm";
 import { User } from "models/User";
 import { Tag } from "models/Tag";
@@ -37,13 +38,9 @@ const ormConfig: ConnectionOptions = {
 	],
 	synchronize: false,
 	migrationsRun: true,
-	migrations: [
-		process.env.SERVERLESS_STAGE === "dev"
-			? "./migrations/*{.ts,.js}"
-			: "../migrations/*{.ts,.js}",
-	],
+	migrations: [path.resolve(__dirname, "../migrations/**/*.js")],
 	cli: {
-		migrationsDir: "./migrations",
+		migrationsDir: __dirname + "/migrations",
 	},
 };
 

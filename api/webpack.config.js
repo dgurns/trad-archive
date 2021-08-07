@@ -17,7 +17,12 @@ module.exports = {
 	},
 	plugins: [
 		new CopyPlugin({
-			patterns: [{ from: "src/migrations", to: "src/migrations" }],
+			patterns: [
+				{
+					from: "src/migrations",
+					to: "src/migrations",
+				},
+			],
 		}),
 	],
 	node: false,

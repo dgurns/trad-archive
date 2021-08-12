@@ -1,8 +1,13 @@
+import { useState } from "react";
+
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import SearchEntities from "components/SearchEntities";
 
 const AccountVerify = () => {
+	const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] =
+		useState(false);
+
 	return (
 		<Layout>
 			<RequireUser>
@@ -24,7 +29,7 @@ const AccountVerify = () => {
 				</div>
 				<div className="flex flex-col max-w-xs">
 					<SearchEntities
-						className="mb-6"
+						className="mb-8"
 						onSelect={() => {}}
 						onNewEntityCreated={() => {}}
 					/>
@@ -34,6 +39,25 @@ const AccountVerify = () => {
 					Please attach a photo proving your identity (utility bill, ID, etc):
 				</div>
 				<button className="block btn mb-8">Choose image</button>
+
+				<div className="mb-2">
+					Do you give ITMA permission to make recordings of you publicly
+					available for non-commercial use, as long as you can take them down at
+					any time?
+				</div>
+				<div className="mb-8 flex flex-row items-center justify-start">
+					<input
+						type="checkbox"
+						id="copyright-permission"
+						checked={copyrightPermissionIsGranted}
+						onChange={(event) =>
+							setCopyrightPermissionIsGranted(event.target.checked)
+						}
+					/>
+					<label htmlFor="copyright-permission" className="ml-2">
+						Yes, I give permission
+					</label>
+				</div>
 
 				<button className="btn" disabled>
 					Submit

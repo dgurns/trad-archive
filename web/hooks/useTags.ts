@@ -59,7 +59,7 @@ const useTags = ({
 				},
 			},
 		});
-	}, [getTags]);
+	}, [getTags, resultsPerPage]);
 
 	const tags = data?.tags;
 

@@ -59,7 +59,7 @@ const useComments = ({
 				},
 			},
 		});
-	}, [getComments]);
+	}, [getComments, resultsPerPage]);
 
 	const comments = data?.comments;
 

@@ -39,8 +39,9 @@ interface QueryVariables {
 interface Props {
 	onSelect: (entity: Entity) => void;
 	onNewEntityCreated?: (entity: Entity) => void;
+	className?: string;
 }
-const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
+const SearchEntities = ({ onSelect, onNewEntityCreated, className }: Props) => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState<Entity[] | undefined>();
 
@@ -75,7 +76,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 	}, [data]);
 
 	return (
-		<>
+		<div className={className ?? ""}>
 			<div className="relative">
 				<input
 					autoFocus
@@ -129,7 +130,7 @@ const SearchEntities = ({ onSelect, onNewEntityCreated }: Props) => {
 					)}
 				</div>
 			)}
-		</>
+		</div>
 	);
 };
 

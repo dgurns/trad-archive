@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import useCurrentUser from "hooks/useCurrentUser";
 
 interface Props {
-	children: React.ReactElement;
+	children: React.ReactNode | React.ReactNode[];
 	requireUserId?: string;
 }
 
@@ -19,7 +19,7 @@ const RequireUser = ({
 	} else if (requireUserId && currentUser?.id !== requireUserId) {
 		return <div>You do not have access to this page</div>;
 	} else if (currentUser) {
-		return children;
+		return <>{children}</>;
 	} else if (typeof window !== "undefined") {
 		router.push({
 			pathname: "/login",

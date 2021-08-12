@@ -55,6 +55,9 @@ const Collection = () => {
 								</Link>
 								<div>
 									Tags:{" "}
+									{sortedTags.length === 0 && (
+										<span className="text-gray-500">None</span>
+									)}
 									{sortedTags.map((tag, index) => (
 										<span key={index}>
 											<TagLink tag={tag} />

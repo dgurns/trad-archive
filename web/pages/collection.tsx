@@ -21,18 +21,13 @@ const TagLink = ({ tag }: TagLinkProps) => {
 	return <Link href={href}>{objectEntity.name}</Link>;
 };
 
-const UserIdCollection = () => {
-	const router = useRouter();
-	const { id } = router.query;
-	const userId = typeof id === "string" ? id : undefined;
-
+const Collection = () => {
 	const [collectionEntries, { loading, error }] = useCollectionEntriesForUser();
-
 	const { activeAudioItem, setActiveAudioItem } = usePlayerContext();
 
 	return (
 		<Layout>
-			<RequireUser requireUserId={userId}>
+			<RequireUser>
 				<div className="flex flex-col">
 					<h1 className="mb-4">Your Collection</h1>
 					{error && (
@@ -41,6 +36,12 @@ const UserIdCollection = () => {
 					{loading && !collectionEntries && (
 						<div className="mb-4">
 							<LoadingBlock />
+						</div>
+					)}
+					{collectionEntries?.length === 0 && (
+						<div className="text-gray-500">
+							Nothing in your collection yet - try adding some{" "}
+							<Link href="/">Audio Items</Link>!
 						</div>
 					)}
 					{collectionEntries?.map(({ audioItem }, index) => {
@@ -81,4 +82,4 @@ const UserIdCollection = () => {
 	);
 };
 
-export default UserIdCollection;
+export default Collection;

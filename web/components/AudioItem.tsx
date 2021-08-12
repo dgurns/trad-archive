@@ -129,7 +129,9 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 					</Link>{" "}
 					{DateTime.formatDateYearTime(createdAt)}
 				</div>
-				<div className="text-sm mt-1 text-gray-900">{description}</div>
+				<div className="text-sm mt-1 text-gray-900 whitespace-pre-line">
+					{description}
+				</div>
 			</div>
 
 			<div className="border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center">

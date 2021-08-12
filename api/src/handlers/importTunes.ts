@@ -98,6 +98,7 @@ export const handler = async (
 ) => {
 	const startTime = Date.now();
 
+	console.log("Fetching tunes and aliases data from The Session data dumps...");
 	const [rawTunes, rawAliases] = await Promise.all([
 		fetchTunesData(),
 		fetchAliasesData(),
@@ -112,6 +113,7 @@ export const handler = async (
 
 	await initializeDbConnection();
 
+	console.log("Checking tunes already in database...");
 	const tunesInDb =
 		(await getManager()
 			.createQueryBuilder(Tune, "tune")
@@ -121,6 +123,7 @@ export const handler = async (
 	let totalNewTunesAddedToDb = 0;
 	const keys = Object.keys(rawDataByTuneId);
 
+	console.log("Adding new tunes if not already in database...");
 	for (let i = 0; i < keys.length; i++) {
 		const tuneId = keys[i];
 
@@ -146,7 +149,11 @@ export const handler = async (
 			await tune.save();
 			totalNewTunesAddedToDb += 1;
 		} catch (error) {
-			console.log("Error adding tune with ID %s: ", tuneId, error.message);
+			console.log(
+				"Error adding tune with ID %s: ",
+				tuneId,
+				(error as Error).message
+			);
 		}
 	}
 

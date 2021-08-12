@@ -253,6 +253,7 @@ export default function Home({
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Latest Comments</h3>
 					{commentsLoading && <LoadingBlock />}
+					{comments?.length === 0 && <div className="text-gray-500">None</div>}
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser) {
@@ -277,6 +278,7 @@ export default function Home({
 
 					<h3 className="mt-4 mb-4">Latest Tags</h3>
 					{tagsLoading && <LoadingBlock />}
+					{tags?.length === 0 && <div className="text-gray-500">None</div>}
 					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						if (!subjectEntity || !objectEntity) {

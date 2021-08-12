@@ -49,7 +49,7 @@ const Header = () => {
 		} else if (currentUser) {
 			return (
 				<div className="flex flex-row items-center">
-					<Link href={`/users/${currentUser.id}/collection`}>
+					<Link href="/collection">
 						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
 							<i className="material-icons">bookmark</i>
 							<span className="hidden md:block md:pl-1">Your Collection</span>
@@ -63,9 +63,10 @@ const Header = () => {
 							</a>
 						</Link>
 					)}
-					<Link href="/logout">
+					<Link href="/account">
 						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
-							Log out
+							<i className="material-icons">account_circle</i>
+							<span className="hidden md:block md:pl-1">Account</span>
 						</a>
 					</Link>
 				</div>

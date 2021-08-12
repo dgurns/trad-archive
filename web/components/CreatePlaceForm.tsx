@@ -124,7 +124,7 @@ const CreatePlaceForm = ({ onSuccess }: Props) => {
 							href={`https://www.google.com/maps/place/${name}`}
 							target="_blank"
 						>
-							{name ? `${name} on ` : ""}Google Maps
+							{name ? `${name} on ` : ""}Google Maps (will open in new tab)
 						</a>{" "}
 						and right-click on the exact location you'd like. You'll see numbers
 						like "53.2838294,-9.1888286". Click to copy them to your clipboard.

@@ -52,7 +52,7 @@ const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
 				},
 			},
 		});
-	}, [getAudioItems]);
+	}, [getAudioItems, resultsPerPage]);
 
 	const audioItems = data?.audioItems;
 

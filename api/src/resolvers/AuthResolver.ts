@@ -55,8 +55,8 @@ export class AuthResolver {
 			await AuthService.createAutoLoginToken();
 
 		const user = User.create({
-			email,
-			username,
+			email: email.trim(),
+			username: username.trim(),
 			autoLoginTokenHashed: tokenHashed,
 			autoLoginTokenExpiry: tokenExpiry,
 		});

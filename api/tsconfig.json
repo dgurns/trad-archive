@@ -4,6 +4,7 @@
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
 		"lib": ["esnext"],
 		"module": "CommonJS",
 		"moduleResolution": "node",

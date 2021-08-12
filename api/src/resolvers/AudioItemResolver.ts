@@ -58,7 +58,7 @@ export class AudioItemResolver {
 	}
 
 	@Query(() => AudioItem, { nullable: true })
-	audioItem(
+	async audioItem(
 		@Arg("id", { nullable: true }) id: string,
 		@Arg("slug", { nullable: true }) slug: string
 	) {

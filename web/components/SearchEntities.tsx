@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback, ChangeEvent } from "react";
 import { useLazyQuery, gql } from "@apollo/client";
 import debounce from "lodash/debounce";
 
-import { Entity } from "types";
+import { Entity, EntityType } from "types";
 import { EntityFragments } from "fragments";
 import EntityService from "services/Entity";
 
@@ -33,15 +33,24 @@ interface QueryData {
 interface QueryVariables {
 	input: {
 		searchTerm: string;
+		entityTypes?: EntityType[];
 		take?: number;
 	};
 }
 interface Props {
+	entityTypes?: EntityType[];
+	take?: number;
 	onSelect: (entity: Entity) => void;
 	onNewEntityCreated?: (entity: Entity) => void;
 	className?: string;
 }
-const SearchEntities = ({ onSelect, onNewEntityCreated, className }: Props) => {
+const SearchEntities = ({
+	entityTypes,
+	take,
+	onSelect,
+	onNewEntityCreated,
+	className,
+}: Props) => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [searchResults, setSearchResults] = useState<Entity[] | undefined>();
 
@@ -64,7 +73,13 @@ const SearchEntities = ({ onSelect, onNewEntityCreated, className }: Props) => {
 		const cleanedSearchTerm = searchTerm?.trim() ?? "";
 		if (cleanedSearchTerm.length >= 3) {
 			debouncedSearchEntities({
-				variables: { input: { searchTerm: cleanedSearchTerm, take: 30 } },
+				variables: {
+					input: {
+						searchTerm: cleanedSearchTerm,
+						entityTypes,
+						take: take ?? 30,
+					},
+				},
 			});
 		}
 	}, [searchTerm]);
@@ -125,7 +140,10 @@ const SearchEntities = ({ onSelect, onNewEntityCreated, className }: Props) => {
 
 					{onNewEntityCreated && (
 						<div className="mt-2 ml-2">
-							<CreateNewEntities onNewEntityCreated={onNewEntityCreated} />
+							<CreateNewEntities
+								entityTypes={entityTypes}
+								onNewEntityCreated={onNewEntityCreated}
+							/>
 						</div>
 					)}
 				</div>

@@ -52,7 +52,7 @@ const Header = () => {
 					<Link href="/collection">
 						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
 							<i className="material-icons">bookmark</i>
-							<span className="hidden md:block md:pl-1">Your Collection</span>
+							<span className="hidden md:block md:pl-1">Collection</span>
 						</a>
 					</Link>
 					{UserService.isAdmin(currentUser) && (

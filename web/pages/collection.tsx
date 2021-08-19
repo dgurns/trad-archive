@@ -29,7 +29,7 @@ const Collection = () => {
 		<Layout>
 			<RequireUser>
 				<div className="flex flex-col">
-					<h1 className="mb-4">Your Collection</h1>
+					<h1 className="mb-4">Collection</h1>
 					{error && (
 						<div className="text-red-600 mb-4">Could not fetch Collection</div>
 					)}

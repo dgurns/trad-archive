@@ -65,10 +65,14 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
+	@Column()
+	createdByUserId!: string;
 
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	updatedByUser!: User;
+	@Column()
+	updatedByUserId!: string;
 
 	@Field()
 	@CreateDateColumn({ type: "timestamptz" })

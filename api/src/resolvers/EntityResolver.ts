@@ -36,22 +36,6 @@ export const EntityUnion = createUnionType({
 	},
 });
 
-// entityRelationsForFind contains the necessary relations needed when querying
-// for an Entity via `find()`, `findOne()`, etc.
-export const entityRelationsForFind = [
-	"tags",
-	"tags.subjectAudioItem",
-	"tags.subjectPerson",
-	"tags.subjectInstrument",
-	"tags.subjectPlace",
-	"tags.subjectTune",
-	"tags.objectAudioItem",
-	"tags.objectPerson",
-	"tags.objectInstrument",
-	"tags.objectPlace",
-	"tags.objectTune",
-];
-
 // EntityResolver contains resolvers for querying across all entity types
 @Resolver()
 export class EntityResolver {
@@ -66,23 +50,18 @@ export class EntityResolver {
 		const results = await Promise.all([
 			AudioItem.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Person.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Instrument.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Place.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Tune.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 		]);
 		let entity;

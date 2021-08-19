@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from "type-graphql";
-import { getManager, SelectQueryBuilder } from "typeorm";
+import { getManager } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { Tag } from "models/Tag";
 import { User } from "models/User";
@@ -16,76 +16,31 @@ import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
 import { Relationship } from "models/Relationship";
 
-const tagRelationsForFind = [
-	"subjectAudioItem",
-	"subjectPerson",
-	"subjectInstrument",
-	"subjectPlace",
-	"subjectTune",
-	"objectAudioItem",
-	"objectPerson",
-	"objectInstrument",
-	"objectPlace",
-	"objectTune",
-];
-
-const addTagRelationsToQueryBuilder = (
-	query: SelectQueryBuilder<Tag>
-): SelectQueryBuilder<Tag> => {
-	return query
-		.leftJoinAndSelect("tag.relationship", "relationship")
-		.leftJoinAndSelect("tag.subjectAudioItem", "subjectAudioItem")
-		.leftJoinAndSelect("tag.subjectPerson", "subjectPerson")
-		.leftJoinAndSelect("tag.subjectInstrument", "subjectInstrument")
-		.leftJoinAndSelect("tag.subjectPlace", "subjectPlace")
-		.leftJoinAndSelect("tag.subjectTune", "subjectTune")
-		.leftJoinAndSelect("tag.objectAudioItem", "objectAudioItem")
-		.leftJoinAndSelect("tag.objectPerson", "objectPerson")
-		.leftJoinAndSelect("tag.objectInstrument", "objectInstrument")
-		.leftJoinAndSelect("tag.objectPlace", "objectPlace")
-		.leftJoinAndSelect("tag.objectTune", "objectTune")
-		.leftJoinAndSelect("tag.createdByUser", "createdByUser");
-};
-
-@Resolver()
+@Resolver(() => Tag)
 export class TagResolver {
 	@Query(() => Tag)
 	tag(@Arg("id") id: string) {
 		return Tag.findOne({
 			where: { id },
-			relations: tagRelationsForFind,
 		});
 	}
 
 	@Query(() => [Tag])
 	async tags(@Arg("input") input: TagsInput) {
 		const { take, skip } = input;
-		const tagsQuery = await getManager().createQueryBuilder(Tag, "tag");
-		const tagsQueryWithRelations = addTagRelationsToQueryBuilder(tagsQuery);
-		return tagsQueryWithRelations
-			.orderBy("tag.createdAt", "DESC")
-			.take(take)
-			.skip(skip)
-			.getMany();
+		return Tag.find({ take, skip, order: { createdAt: "DESC" } });
 	}
 
 	// tagsToEntity fetches all Tags that have the given entity as object. For
 	// example, if the entity is Tommy Peoples, this would return all Tags
 	// connecting other entities to Tommy Peoples.
 	@Query(() => [Tag])
-	async tagsToEntity(@Arg("input") input: TagsToEntityInput) {
+	tagsToEntity(@Arg("input") input: TagsToEntityInput) {
 		const { entityType, entityId } = input;
-
-		const tagsQuery = await getManager()
-			.createQueryBuilder(Tag, "tag")
-			.where(`tag.object${entityType}Id = :entityId`, {
-				entityId,
-			});
-		const tagsQueryWithRelations = addTagRelationsToQueryBuilder(tagsQuery);
-		const tags = tagsQueryWithRelations
-			.orderBy("tag.createdAt", "DESC")
-			.getMany();
-		return tags;
+		return Tag.find({
+			where: { [`object${entityType}Id`]: entityId },
+			order: { createdAt: "DESC" },
+		});
 	}
 
 	@Mutation(() => Tag)

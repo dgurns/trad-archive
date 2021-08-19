@@ -8,7 +8,7 @@ import {
 	AfterLoad,
 	Column,
 } from "typeorm";
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, FieldResolver, Int } from "type-graphql";
 
 import { User } from "models/User";
 import { AudioItem } from "models/entities/AudioItem";
@@ -31,36 +31,58 @@ export class Tag extends TypeOrmBaseEntity {
 	@Field(() => Relationship)
 	@ManyToOne(() => Relationship, { eager: true })
 	relationship!: Relationship;
+	@Column()
+	relationshipId!: string;
 
-	@ManyToOne(() => AudioItem, { nullable: true })
+	@ManyToOne(() => AudioItem, { nullable: true, eager: true })
 	subjectAudioItem!: AudioItem;
+	@Column()
+	subjectAudioItemId!: string;
 
-	@ManyToOne(() => Person, { nullable: true })
+	@ManyToOne(() => Person, { nullable: true, eager: true })
 	subjectPerson!: Person;
+	@Column()
+	subjectPersonId!: string;
 
-	@ManyToOne(() => Instrument, { nullable: true })
+	@ManyToOne(() => Instrument, { nullable: true, eager: true })
 	subjectInstrument!: Instrument;
+	@Column()
+	subjectInstrumentId!: string;
 
-	@ManyToOne(() => Place, { nullable: true })
+	@ManyToOne(() => Place, { nullable: true, eager: true })
 	subjectPlace!: Place;
+	@Column()
+	subjectPlaceId!: string;
 
-	@ManyToOne(() => Tune, { nullable: true })
+	@ManyToOne(() => Tune, { nullable: true, eager: true })
 	subjectTune!: Tune;
+	@Column()
+	subjectTuneId!: string;
 
-	@ManyToOne(() => AudioItem, { nullable: true })
+	@ManyToOne(() => AudioItem, { nullable: true, eager: true })
 	objectAudioItem!: AudioItem;
+	@Column()
+	objectAudioItemId!: string;
 
-	@ManyToOne(() => Person, { nullable: true })
+	@ManyToOne(() => Person, { nullable: true, eager: true })
 	objectPerson!: Person;
+	@Column()
+	objectPersonId!: string;
 
-	@ManyToOne(() => Instrument, { nullable: true })
+	@ManyToOne(() => Instrument, { nullable: true, eager: true })
 	objectInstrument!: Instrument;
+	@Column()
+	objectInstrumentId!: string;
 
-	@ManyToOne(() => Place, { nullable: true })
+	@ManyToOne(() => Place, { nullable: true, eager: true })
 	objectPlace!: Place;
+	@Column()
+	objectPlaceId!: string;
 
-	@ManyToOne(() => Tune, { nullable: true })
+	@ManyToOne(() => Tune, { nullable: true, eager: true })
 	objectTune!: Tune;
+	@Column()
+	objectTuneId!: string;
 
 	@Field(() => Int, { nullable: true })
 	@Column({ nullable: true, default: null })
@@ -69,6 +91,8 @@ export class Tag extends TypeOrmBaseEntity {
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
+	@Column()
+	createdByUserId!: string;
 
 	@Field()
 	@CreateDateColumn({ type: "timestamptz" })

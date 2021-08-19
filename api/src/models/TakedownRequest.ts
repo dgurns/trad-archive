@@ -63,6 +63,8 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	@Field(() => User)
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
+	@Column()
+	createdByUserId!: string;
 
 	@Field()
 	@CreateDateColumn({ type: "timestamptz" })
@@ -71,6 +73,8 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	@Field(() => User)
 	@ManyToOne(() => User, { eager: true })
 	updatedByUser!: User;
+	@Column()
+	updatedByUserId!: string;
 
 	@Field()
 	@UpdateDateColumn({ type: "timestamptz" })

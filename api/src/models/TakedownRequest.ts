@@ -60,10 +60,10 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	})
 	status!: TakedownRequestStatus;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	createdByUserId!: string;
 
 	@Field()

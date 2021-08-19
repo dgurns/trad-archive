@@ -33,10 +33,10 @@ export class Relationship extends TypeOrmBaseEntity {
 	@Column({ type: "enum", enum: EntityType })
 	objectEntityType!: EntityType;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	createdByUserId!: string;
 
 	@Field()

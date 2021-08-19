@@ -29,10 +29,10 @@ export class Comment extends TypeOrmBaseEntity {
 	@Column()
 	text!: string;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	createdByUserId!: string;
 
 	@Field()

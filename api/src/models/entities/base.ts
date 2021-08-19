@@ -65,13 +65,13 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	createdByUserId!: string;
 
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	updatedByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	updatedByUserId!: string;
 
 	@Field()

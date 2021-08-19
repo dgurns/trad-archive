@@ -70,10 +70,10 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	@CreateDateColumn({ type: "timestamptz" })
 	createdAt!: Date;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	updatedByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	updatedByUserId!: string;
 
 	@Field()

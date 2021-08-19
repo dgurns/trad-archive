@@ -36,52 +36,52 @@ export class Tag extends TypeOrmBaseEntity {
 
 	@ManyToOne(() => AudioItem, { nullable: true, eager: true })
 	subjectAudioItem!: AudioItem;
-	@Column()
+	@Column({ nullable: true, default: null })
 	subjectAudioItemId!: string;
 
 	@ManyToOne(() => Person, { nullable: true, eager: true })
 	subjectPerson!: Person;
-	@Column()
+	@Column({ nullable: true, default: null })
 	subjectPersonId!: string;
 
 	@ManyToOne(() => Instrument, { nullable: true, eager: true })
 	subjectInstrument!: Instrument;
-	@Column()
+	@Column({ nullable: true, default: null })
 	subjectInstrumentId!: string;
 
 	@ManyToOne(() => Place, { nullable: true, eager: true })
 	subjectPlace!: Place;
-	@Column()
+	@Column({ nullable: true, default: null })
 	subjectPlaceId!: string;
 
 	@ManyToOne(() => Tune, { nullable: true, eager: true })
 	subjectTune!: Tune;
-	@Column()
+	@Column({ nullable: true, default: null })
 	subjectTuneId!: string;
 
 	@ManyToOne(() => AudioItem, { nullable: true, eager: true })
 	objectAudioItem!: AudioItem;
-	@Column()
+	@Column({ nullable: true, default: null })
 	objectAudioItemId!: string;
 
 	@ManyToOne(() => Person, { nullable: true, eager: true })
 	objectPerson!: Person;
-	@Column()
+	@Column({ nullable: true, default: null })
 	objectPersonId!: string;
 
 	@ManyToOne(() => Instrument, { nullable: true, eager: true })
 	objectInstrument!: Instrument;
-	@Column()
+	@Column({ nullable: true, default: null })
 	objectInstrumentId!: string;
 
 	@ManyToOne(() => Place, { nullable: true, eager: true })
 	objectPlace!: Place;
-	@Column()
+	@Column({ nullable: true, default: null })
 	objectPlaceId!: string;
 
 	@ManyToOne(() => Tune, { nullable: true, eager: true })
 	objectTune!: Tune;
-	@Column()
+	@Column({ nullable: true, default: null })
 	objectTuneId!: string;
 
 	@Field(() => Int, { nullable: true })
@@ -91,7 +91,7 @@ export class Tag extends TypeOrmBaseEntity {
 	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
-	@Column()
+	@Column({ nullable: true, default: null })
 	createdByUserId!: string;
 
 	@Field()

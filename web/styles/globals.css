@@ -36,6 +36,10 @@
 		@apply w-auto bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
 	}
 
+	input[type="file"] {
+		@apply w-auto text-gray-500 cursor-pointer hover:no-underline;
+	}
+
 	/* Text buttons (look like links but have no underline, for example "Add Tag") */
 	.btn-text {
 		@apply text-teal-600 no-underline hover:no-underline hover:text-teal-800;

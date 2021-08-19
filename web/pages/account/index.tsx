@@ -9,10 +9,10 @@ const AccountHome = () => {
 			<RequireUser>
 				<h1 className="mb-4">Account</h1>
 				<Link href="/account/verify">
-					<a className="block mb-2">Verify yourself and link Person tag</a>
+					<a className="block mb-2">Verify Yourself and Link Person Tag</a>
 				</Link>
 				<Link href="/logout">
-					<a className="block mb-2">Log out</a>
+					<a className="block mb-2">Log Out</a>
 				</Link>
 			</RequireUser>
 		</Layout>

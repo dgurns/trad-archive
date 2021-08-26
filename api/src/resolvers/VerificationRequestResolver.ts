@@ -148,7 +148,7 @@ export class VerificationRequestResolver {
 		return verificationRequest;
 	}
 
-	@FieldResolver(() => String)
+	@FieldResolver(() => String, { nullable: true })
 	@Authorized(UserPermission.Admin)
 	presignedImageDownloadUrl(@Root() verificationRequest: VerificationRequest) {
 		return S3Service.makePresignedGetUrl(verificationRequest.imageS3Key);

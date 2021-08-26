@@ -2,14 +2,12 @@ import {
 	Entity as TypeOrmEntity,
 	Column,
 	OneToMany,
-	OneToOne,
 	JoinColumn,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
 import { EntityBaseFields, EntityType } from "models/entities/base";
 import { Tag } from "models/Tag";
-import { User } from "models/User";
 
 // Person represents a unique human, for example Seamus Ennis
 @ObjectType()
@@ -35,10 +33,4 @@ export class Person extends EntityBaseFields {
 	@Field(() => String)
 	@Column()
 	lastName!: string;
-
-	@Field(() => User, { nullable: true })
-	@OneToOne(() => User, { eager: true, nullable: true })
-	verifiedUser!: User;
-	@Column({ nullable: true })
-	verifiedUserId!: string;
 }

@@ -3,14 +3,11 @@ import {
 	BaseEntity as TypeOrmBaseEntity,
 	PrimaryGeneratedColumn,
 	Column,
-	JoinColumn,
 	CreateDateColumn,
 	UpdateDateColumn,
 	Index,
-	OneToOne,
 } from "typeorm";
 import { ObjectType, Authorized, Field, registerEnumType } from "type-graphql";
-import { Person } from "./entities/Person";
 
 export enum UserPermission {
 	User = "USER",
@@ -63,13 +60,6 @@ export class User extends TypeOrmBaseEntity {
 	@Field(() => CopyrightPermissionStatus, { nullable: true })
 	@Column({ nullable: true, default: null })
 	copyrightPermissionStatus!: CopyrightPermissionStatus;
-
-	@Field(() => Person, { nullable: true })
-	@OneToOne(() => Person, { eager: true, nullable: true })
-	@JoinColumn()
-	verifiedPerson!: Person;
-	@Column({ nullable: true })
-	verifiedPersonId!: string;
 
 	@Field()
 	@CreateDateColumn({ type: "timestamptz" })

@@ -1,5 +1,5 @@
 import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
-import { FindManyOptions, getManager } from "typeorm";
+import { FindManyOptions } from "typeorm";
 import { CustomContext } from "middleware/context";
 import {
 	UserVerificationRequestsInput,
@@ -11,8 +11,6 @@ import {
 	UserVerificationRequestStatus,
 } from "models/UserVerificationRequest";
 import { User, UserPermission } from "models/User";
-import { EntityStatus, EntityType } from "models/entities/base";
-import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
 
 @Resolver(() => UserVerificationRequest)
@@ -50,7 +48,6 @@ export class UserVerificationRequestResolver {
 		}
 
 		const userVerificationRequest = UserVerificationRequest.create({
-			user,
 			person,
 			imageS3Key,
 			copyrightPermissionStatus,
@@ -92,19 +89,6 @@ export class UserVerificationRequestResolver {
 		userVerificationRequest.status = status;
 		userVerificationRequest.updatedByUser = user;
 		await userVerificationRequest.save();
-
-		// If approved, update the User and Person records with the new linkage
-		const shouldAddLinkage =
-			userVerificationRequest.status === UserVerificationRequestStatus.Approved;
-		const person = await Person.findOne({
-			where: { id: userVerificationRequest.person.id },
-		});
-		if (shouldAddLinkage && person) {
-			user.verifiedPerson = person;
-			person.verifiedUser = user;
-			await user.save();
-			await person.save();
-		}
 
 		return userVerificationRequest;
 	}

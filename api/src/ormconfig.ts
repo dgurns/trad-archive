@@ -11,6 +11,7 @@ import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
 import { TakedownRequest } from "models/TakedownRequest";
+import { UserVerificationRequest } from "models/UserVerificationRequest";
 
 export const DB_CONNECTION_NAME = "default";
 
@@ -30,6 +31,7 @@ const ormConfig: ConnectionOptions = {
 		Comment,
 		CollectionEntry,
 		TakedownRequest,
+		UserVerificationRequest,
 		AudioItem,
 		Person,
 		Instrument,

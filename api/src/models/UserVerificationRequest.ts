@@ -28,13 +28,6 @@ export class UserVerificationRequest extends TypeOrmBaseEntity {
 	@PrimaryGeneratedColumn("uuid")
 	readonly id!: string;
 
-	@Field(() => User)
-	@ManyToOne(() => User, { eager: true })
-	user!: User;
-	@Index()
-	@Column()
-	userId!: string;
-
 	@Field(() => Person)
 	@ManyToOne(() => Person, { eager: true })
 	person!: Person;

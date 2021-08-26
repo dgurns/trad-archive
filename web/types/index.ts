@@ -3,11 +3,16 @@ export enum UserPermission {
 	Admin = "ADMIN",
 }
 
+export enum CopyrightPermissionStatus {
+	FullNonCommercialGranted = "FULL_NON_COMMERCIAL_GRANTED",
+}
 export interface User {
 	id: string;
 	permissions?: UserPermission[];
 	email?: string;
 	username: string;
+	copyrightPermissionStatus?: CopyrightPermissionStatus | null;
+	verifiedPerson?: Person | null;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -71,6 +76,7 @@ export interface Person extends BaseEntity {
 	firstName: string;
 	middleName: string | null;
 	lastName: string;
+	verifiedUser?: User | null;
 }
 
 export interface Instrument extends BaseEntity {

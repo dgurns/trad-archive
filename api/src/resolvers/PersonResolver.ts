@@ -12,6 +12,10 @@ import { In } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { Person } from "models/entities/Person";
 import { User } from "models/User";
+import {
+	UserVerificationRequest,
+	UserVerificationRequestStatus,
+} from "models/UserVerificationRequest";
 import { Tag } from "models/Tag";
 import {
 	CreatePersonInput,
@@ -135,5 +139,22 @@ export class PersonResolver {
 		return Tag.find({
 			where: { subjectPersonId: In([person.id]) },
 		});
+	}
+
+	@FieldResolver(() => User, { nullable: true })
+	async verifiedUser(@Root() person: Person, @Ctx() ctx: CustomContext) {
+		const successfulVerificationRequest = await UserVerificationRequest.findOne(
+			{
+				where: {
+					personId: person.id,
+					status: UserVerificationRequestStatus.Approved,
+				},
+			}
+		);
+		if (successfulVerificationRequest) {
+			return successfulVerificationRequest.createdByUser;
+		} else {
+			return null;
+		}
 	}
 }

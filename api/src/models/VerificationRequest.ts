@@ -12,18 +12,18 @@ import { ObjectType, Field, registerEnumType } from "type-graphql";
 import { User, CopyrightPermissionStatus } from "models/User";
 import { Person } from "models/entities/Person";
 
-export enum UserVerificationRequestStatus {
+export enum VerificationRequestStatus {
 	Pending = "Pending",
 	Approved = "Approved",
 	Denied = "Denied",
 }
-registerEnumType(UserVerificationRequestStatus, {
-	name: "UserVerificationRequestStatus",
+registerEnumType(VerificationRequestStatus, {
+	name: "VerificationRequestStatus",
 });
 
 @ObjectType()
 @TypeOrmEntity()
-export class UserVerificationRequest extends TypeOrmBaseEntity {
+export class VerificationRequest extends TypeOrmBaseEntity {
 	@Field(() => String)
 	@PrimaryGeneratedColumn("uuid")
 	readonly id!: string;
@@ -35,14 +35,14 @@ export class UserVerificationRequest extends TypeOrmBaseEntity {
 	@Column()
 	personId!: string;
 
-	@Field(() => UserVerificationRequestStatus, { nullable: true })
+	@Field(() => VerificationRequestStatus, { nullable: true })
 	@Column({
 		type: "enum",
-		enum: UserVerificationRequestStatus,
+		enum: VerificationRequestStatus,
 		nullable: true,
-		default: UserVerificationRequestStatus.Pending,
+		default: VerificationRequestStatus.Pending,
 	})
-	status!: UserVerificationRequestStatus;
+	status!: VerificationRequestStatus;
 
 	@Field(() => CopyrightPermissionStatus, { nullable: true })
 	@Column({

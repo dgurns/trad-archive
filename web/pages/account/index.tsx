@@ -2,18 +2,18 @@ import { useMemo } from "react";
 import Link from "next/link";
 
 import {
-	isApprovedUserVerificationRequest,
-	isPendingUserVerificationRequest,
+	isApprovedVerificationRequest,
+	isPendingVerificationRequest,
 } from "types";
 import EntityService from "services/Entity";
-import useUserVerificationRequestsForUser from "hooks/useUserVerificationRequestsForUser";
+import useVerificationRequestsForCurrentUser from "hooks/useVerificationRequestsForCurrentUser";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 
 const AccountHome = () => {
 	const [verificationRequests = [], { loading, data, error }] =
-		useUserVerificationRequestsForUser();
+		useVerificationRequestsForCurrentUser();
 
 	const verifyYourselfMarkup = useMemo(() => {
 		if (!loading && error) {
@@ -22,7 +22,7 @@ const AccountHome = () => {
 			return "Loading verification status...";
 		}
 		const approvedRequest = verificationRequests.find((request) =>
-			isApprovedUserVerificationRequest(request)
+			isApprovedVerificationRequest(request)
 		);
 		if (approvedRequest) {
 			return (
@@ -35,7 +35,7 @@ const AccountHome = () => {
 			);
 		}
 		const pendingRequest = verificationRequests.find((request) =>
-			isPendingUserVerificationRequest(request)
+			isPendingVerificationRequest(request)
 		);
 		if (pendingRequest) {
 			return (

@@ -13,9 +13,9 @@ import { CustomContext } from "middleware/context";
 import { Person } from "models/entities/Person";
 import { User } from "models/User";
 import {
-	UserVerificationRequest,
-	UserVerificationRequestStatus,
-} from "models/UserVerificationRequest";
+	VerificationRequest,
+	VerificationRequestStatus,
+} from "models/VerificationRequest";
 import { Tag } from "models/Tag";
 import {
 	CreatePersonInput,
@@ -143,14 +143,12 @@ export class PersonResolver {
 
 	@FieldResolver(() => User, { nullable: true })
 	async verifiedUser(@Root() person: Person, @Ctx() ctx: CustomContext) {
-		const successfulVerificationRequest = await UserVerificationRequest.findOne(
-			{
-				where: {
-					personId: person.id,
-					status: UserVerificationRequestStatus.Approved,
-				},
-			}
-		);
+		const successfulVerificationRequest = await VerificationRequest.findOne({
+			where: {
+				personId: person.id,
+				status: VerificationRequestStatus.Approved,
+			},
+		});
 		if (successfulVerificationRequest) {
 			return successfulVerificationRequest.createdByUser;
 		} else {

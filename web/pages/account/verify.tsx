@@ -7,11 +7,11 @@ import {
 	Entity,
 	Person,
 	isPerson,
-	UserVerificationRequest,
+	VerificationRequest,
 	CopyrightPermissionStatus,
 } from "types";
-import { UserVerificationRequestFragments } from "fragments";
-import useUserVerificationRequestsForUser from "hooks/useUserVerificationRequestsForUser";
+import { VerificationRequestFragments } from "fragments";
+import useVerificationRequestsForCurrentUser from "hooks/useVerificationRequestsForCurrentUser";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
@@ -19,18 +19,16 @@ import SearchEntities from "components/SearchEntities";
 import LoadingCircle from "components/LoadingCircle";
 
 const CREATE_USER_VERIFICATION_REQUEST_MUTATION = gql`
-	mutation CreateUserVerificationRequest(
-		$input: CreateUserVerificationRequestInput!
-	) {
-		createUserVerificationRequest(input: $input) {
-			...UserVerificationRequest
+	mutation CreateVerificationRequest($input: CreateVerificationRequestInput!) {
+		createVerificationRequest(input: $input) {
+			...VerificationRequest
 		}
 	}
-	${UserVerificationRequestFragments.userVerificationRequest}
+	${VerificationRequestFragments.verificationRequest}
 `;
 
 interface MutationData {
-	createUserVerificationRequest: UserVerificationRequest;
+	createVerificationRequest: VerificationRequest;
 }
 interface MutationVars {
 	input: {
@@ -48,7 +46,7 @@ const AccountVerify = () => {
 			refetch: refetchVerificationRequestsForUser,
 			loading: refetchVerificationRequestsIsLoading,
 		},
-	] = useUserVerificationRequestsForUser();
+	] = useVerificationRequestsForCurrentUser();
 
 	const [personEntity, setPersonEntity] = useState<Person | undefined>();
 	const [imageFileObjectUrl, setImageFileObjectUrl] = useState<
@@ -57,7 +55,7 @@ const AccountVerify = () => {
 	const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] =
 		useState(false);
 
-	const [createUserVerificationRequest, { loading, data, error }] = useMutation<
+	const [createVerificationRequest, { loading, data, error }] = useMutation<
 		MutationData,
 		MutationVars
 	>(CREATE_USER_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
@@ -92,7 +90,7 @@ const AccountVerify = () => {
 		if (!requiredFieldsAreSet) {
 			return window.alert("Please fill out all the fields");
 		}
-		createUserVerificationRequest({
+		createVerificationRequest({
 			variables: {
 				input: {
 					personId: personEntity.id,
@@ -109,7 +107,7 @@ const AccountVerify = () => {
 			await refetchVerificationRequestsForUser();
 			router.push("/account");
 		};
-		if (data?.createUserVerificationRequest?.id) {
+		if (data?.createVerificationRequest?.id) {
 			refetchAndRedirect();
 		}
 	}, [data, router, refetchVerificationRequestsForUser]);

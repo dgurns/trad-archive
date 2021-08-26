@@ -336,9 +336,9 @@ export const TakedownRequestFragments = {
 	`,
 };
 
-export const UserVerificationRequestFragments = {
-	userVerificationRequest: gql`
-		fragment UserVerificationRequest on UserVerificationRequest {
+export const VerificationRequestFragments = {
+	verificationRequest: gql`
+		fragment VerificationRequest on VerificationRequest {
 			id
 			person {
 				id

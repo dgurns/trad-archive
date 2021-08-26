@@ -1,21 +1,21 @@
 import { InputType, Field, Int } from "type-graphql";
-import { UserVerificationRequestStatus } from "models/UserVerificationRequest";
+import { VerificationRequestStatus } from "models/VerificationRequest";
 import { CopyrightPermissionStatus } from "models/User";
 
 @InputType()
-export class UserVerificationRequestsInput {
+export class VerificationRequestsInput {
 	@Field(() => Int, { nullable: true, defaultValue: 40 })
 	take?: number;
 
 	@Field(() => Int, { nullable: true, defaultValue: 0 })
 	skip?: number;
 
-	@Field(() => UserVerificationRequestStatus, { nullable: true })
-	status?: UserVerificationRequestStatus;
+	@Field(() => VerificationRequestStatus, { nullable: true })
+	status?: VerificationRequestStatus;
 }
 
 @InputType()
-export class CreateUserVerificationRequestInput {
+export class CreateVerificationRequestInput {
 	@Field(() => String)
 	personId!: string;
 
@@ -27,10 +27,10 @@ export class CreateUserVerificationRequestInput {
 }
 
 @InputType()
-export class UpdateUserVerificationRequestStatusInput {
+export class UpdateVerificationRequestStatusInput {
 	@Field(() => String)
 	id!: string;
 
-	@Field(() => UserVerificationRequestStatus)
-	status!: UserVerificationRequestStatus;
+	@Field(() => VerificationRequestStatus)
+	status!: VerificationRequestStatus;
 }

@@ -167,31 +167,31 @@ export const isApprovedTakedownRequest = (takedownRequest: TakedownRequest) =>
 export const isDeniedTakedownRequest = (takedownRequest: TakedownRequest) =>
 	takedownRequest.status.valueOf() === "Denied";
 
-export enum UserVerificationRequestStatus {
+export enum VerificationRequestStatus {
 	Pending = "Pending",
 	Approved = "Approved",
 	Denied = "Denied",
 }
-export interface UserVerificationRequest {
+export interface VerificationRequest {
 	id: string;
 	person: Person;
 	imageS3Key: string;
 	copyrightPermissionStatus: CopyrightPermissionStatus | null;
-	status: UserVerificationRequestStatus;
+	status: VerificationRequestStatus;
 	createdByUser: User;
 	createdAt: string;
 	updatedByUser: User;
 	updatedAt: string;
 }
 
-export const isPendingUserVerificationRequest = (
-	userVerificationRequest: UserVerificationRequest
-) => userVerificationRequest.status.valueOf() === "Pending";
+export const isPendingVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Pending";
 
-export const isApprovedUserVerificationRequest = (
-	userVerificationRequest: UserVerificationRequest
-) => userVerificationRequest.status.valueOf() === "Approved";
+export const isApprovedVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Approved";
 
-export const isDeniedUserVerificationRequest = (
-	userVerificationRequest: UserVerificationRequest
-) => userVerificationRequest.status.valueOf() === "Denied";
+export const isDeniedVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Denied";

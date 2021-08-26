@@ -6,6 +6,12 @@ export const UserFragments = {
 			id
 			username
 			copyrightPermissionStatus
+			verifiedPerson {
+				id
+				entityType
+				slug
+				name
+			}
 			createdAt
 		}
 	`,
@@ -156,6 +162,11 @@ export const EntityFragments = {
 			createdByUser {
 				id
 				username
+				verifiedPerson {
+					id
+					entityType
+					slug
+				}
 			}
 			createdAt
 			updatedAt
@@ -174,6 +185,9 @@ export const EntityFragments = {
 			tags {
 				...Tag
 			}
+			verifiedUser {
+				...User
+			}
 			createdByUser {
 				id
 				username
@@ -185,6 +199,7 @@ export const EntityFragments = {
 			lastName
 		}
 		${TagFragments.tag}
+		${UserFragments.user}
 	`,
 	instrument: gql`
 		fragment Instrument on Instrument {

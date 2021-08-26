@@ -26,8 +26,9 @@ const AccountHome = () => {
 		);
 		if (approvedRequest) {
 			return (
-				<span>
-					You are verified as{" "}
+				<span className="flex flex-row items-center">
+					<i className="material-icons text-base">verified</i>
+					<span className="ml-2 mr-1">You are verified as</span>
 					<Link href={EntityService.makeHrefForView(approvedRequest.person)}>
 						{approvedRequest.person.name}
 					</Link>

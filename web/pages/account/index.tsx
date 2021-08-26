@@ -17,9 +17,15 @@ const AccountHome = () => {
 
 	const verifyYourselfMarkup = useMemo(() => {
 		if (!loading && error) {
-			return "Error fetching verification status. Please reload.";
+			return (
+				<span className="text-red-600">
+					Error fetching verification status. Please reload.
+				</span>
+			);
 		} else if (loading) {
-			return "Loading verification status...";
+			return (
+				<span className="text-gray-500">Loading verification status...</span>
+			);
 		}
 		const approvedRequest = verificationRequests.find((request) =>
 			isApprovedVerificationRequest(request)

@@ -175,7 +175,7 @@ export enum VerificationRequestStatus {
 export interface VerificationRequest {
 	id: string;
 	person: Person;
-	imageS3Key: string;
+	presignedImageDownloadUrl: string | null;
 	copyrightPermissionStatus: CopyrightPermissionStatus | null;
 	status: VerificationRequestStatus;
 	createdByUser: User;

@@ -1,4 +1,13 @@
-import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
+import {
+	Resolver,
+	Mutation,
+	Ctx,
+	Arg,
+	Query,
+	Authorized,
+	Root,
+	FieldResolver,
+} from "type-graphql";
 import { FindManyOptions } from "typeorm";
 
 import S3Service from "services/S3";
@@ -137,5 +146,11 @@ export class VerificationRequestResolver {
 		await verificationRequest.save();
 
 		return verificationRequest;
+	}
+
+	@FieldResolver(() => String)
+	@Authorized(UserPermission.Admin)
+	presignedImageDownloadUrl(@Root() verificationRequest: VerificationRequest) {
+		return S3Service.makePresignedGetUrl(verificationRequest.imageS3Key);
 	}
 }

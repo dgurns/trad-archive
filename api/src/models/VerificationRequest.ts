@@ -8,7 +8,12 @@ import {
 	ManyToOne,
 	Index,
 } from "typeorm";
-import { ObjectType, Field, registerEnumType } from "type-graphql";
+import {
+	ObjectType,
+	Field,
+	registerEnumType,
+	FieldResolver,
+} from "type-graphql";
 import { User, CopyrightPermissionStatus } from "models/User";
 import { Person } from "models/entities/Person";
 

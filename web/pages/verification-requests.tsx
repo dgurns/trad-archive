@@ -151,8 +151,14 @@ const VerificationRequests = () => {
 					)}
 					{!verificationRequestsLoading &&
 						verificationRequests?.map((verificationRequest, index) => {
-							const { id, person, createdAt, createdByUser, status } =
-								verificationRequest;
+							const {
+								id,
+								person,
+								presignedImageDownloadUrl,
+								createdAt,
+								createdByUser,
+								status,
+							} = verificationRequest;
 
 							return (
 								<div className="mb-4" key={index}>
@@ -167,7 +173,10 @@ const VerificationRequests = () => {
 										<a target="_blank">{person.name}</a>
 									</Link>
 									<br />
-									Proof: <a href="">Image</a>
+									Proof:{" "}
+									<a href={presignedImageDownloadUrl} target="_blank">
+										Image
+									</a>
 									<br />
 									Email: {createdByUser.email}
 									<br />

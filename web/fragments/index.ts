@@ -361,6 +361,7 @@ export const VerificationRequestFragments = {
 				name
 				slug
 			}
+			presignedImageDownloadUrl
 			copyrightPermissionStatus
 			status
 			createdByUser {

@@ -18,7 +18,12 @@ import RequireUser from "components/RequireUser";
 import SearchEntities from "components/SearchEntities";
 import LoadingCircle from "components/LoadingCircle";
 
-const CREATE_USER_VERIFICATION_REQUEST_MUTATION = gql`
+const CREATE_PRESIGNED_UPLOAD_URL_MUTATION = gql`
+	mutation CreatePresignedUploadUrl($filename: String!) {
+		createPresignedUploadUrlForVerificationImage(filename: $filename)
+	}
+`;
+const CREATE_VERIFICATION_REQUEST_MUTATION = gql`
 	mutation CreateVerificationRequest($input: CreateVerificationRequestInput!) {
 		createVerificationRequest(input: $input) {
 			...VerificationRequest
@@ -27,10 +32,16 @@ const CREATE_USER_VERIFICATION_REQUEST_MUTATION = gql`
 	${VerificationRequestFragments.verificationRequest}
 `;
 
-interface MutationData {
+interface CreatePresignedUploadUrlMutationData {
+	createPresignedUploadUrlForVerificationImage: string;
+}
+interface CreatePresignedUploadUrlMutationVars {
+	filename: string;
+}
+interface CreateVerificationRequestMutationData {
 	createVerificationRequest: VerificationRequest;
 }
-interface MutationVars {
+interface CreateVerificationRequestMutationVars {
 	input: {
 		personId: string;
 		imageS3Key: string;
@@ -49,16 +60,36 @@ const AccountVerify = () => {
 	] = useVerificationRequestsForCurrentUser();
 
 	const [personEntity, setPersonEntity] = useState<Person | undefined>();
+	const [imageFile, setImageFile] = useState<File>();
 	const [imageFileObjectUrl, setImageFileObjectUrl] = useState<
 		string | undefined
 	>();
 	const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] =
 		useState(false);
 
-	const [createVerificationRequest, { loading, data, error }] = useMutation<
-		MutationData,
-		MutationVars
-	>(CREATE_USER_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
+	const [
+		createPresignedUploadUrl,
+		{
+			loading: createPresignedUploadUrlLoading,
+			data: createPresignedUploadUrlData,
+			error: createPresignedUploadUrlError,
+		},
+	] = useMutation<
+		CreatePresignedUploadUrlMutationData,
+		CreatePresignedUploadUrlMutationVars
+	>(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" });
+
+	const [
+		createVerificationRequest,
+		{
+			loading: createVerificationRequestLoading,
+			data: createVerificationRequestData,
+			error: createVerificationRequestError,
+		},
+	] = useMutation<
+		CreateVerificationRequestMutationData,
+		CreateVerificationRequestMutationVars
+	>(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
 
 	const onSelectEntity = (entity: Entity) => {
 		if (isPerson(entity)) {
@@ -71,6 +102,7 @@ const AccountVerify = () => {
 			return;
 		}
 		const selectedFile = event.target.files[0];
+		setImageFile(selectedFile);
 		const objectUrl = URL.createObjectURL(selectedFile);
 		setImageFileObjectUrl(objectUrl);
 	};
@@ -84,22 +116,29 @@ const AccountVerify = () => {
 	}, [imageFileObjectUrl]);
 
 	const requiredFieldsAreSet =
-		personEntity && imageFileObjectUrl && copyrightPermissionIsGranted;
+		personEntity && imageFile && copyrightPermissionIsGranted;
 
-	const onSubmitClicked = () => {
+	const onSubmitClicked = async () => {
 		if (!requiredFieldsAreSet) {
 			return window.alert("Please fill out all the fields");
 		}
-		createVerificationRequest({
-			variables: {
-				input: {
-					personId: personEntity.id,
-					imageS3Key: "test-s3-key",
-					copyrightPermissionStatus:
-						CopyrightPermissionStatus.FullNonCommercialGranted,
-				},
-			},
+		console.log(imageFile.name);
+		// Create a presigned upload URL for the image and upload it
+		const response = await createPresignedUploadUrl({
+			variables: { filename: imageFile.name },
 		});
+		console.log(response);
+		// Then create the VerificationRequest
+		// createVerificationRequest({
+		// 	variables: {
+		// 		input: {
+		// 			personId: personEntity.id,
+		// 			imageS3Key: "test-s3-key",
+		// 			copyrightPermissionStatus:
+		// 				CopyrightPermissionStatus.FullNonCommercialGranted,
+		// 		},
+		// 	},
+		// });
 	};
 
 	useEffect(() => {
@@ -107,10 +146,14 @@ const AccountVerify = () => {
 			await refetchVerificationRequestsForUser();
 			router.push("/account");
 		};
-		if (data?.createVerificationRequest?.id) {
+		if (createVerificationRequestData?.createVerificationRequest?.id) {
 			refetchAndRedirect();
 		}
-	}, [data, router, refetchVerificationRequestsForUser]);
+	}, [
+		createVerificationRequestData,
+		router,
+		refetchVerificationRequestsForUser,
+	]);
 
 	return (
 		<Layout>
@@ -189,7 +232,8 @@ const AccountVerify = () => {
 					</label>
 				</div>
 
-				{loading || refetchVerificationRequestsIsLoading ? (
+				{createVerificationRequestLoading ||
+				refetchVerificationRequestsIsLoading ? (
 					<LoadingCircle />
 				) : (
 					<button
@@ -201,7 +245,7 @@ const AccountVerify = () => {
 					</button>
 				)}
 
-				{error && (
+				{createVerificationRequestError && (
 					<div className="mt-4 text-red-600">
 						Error submitting user verification request. Please reload the page
 						and try again.

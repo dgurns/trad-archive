@@ -1,5 +1,7 @@
 import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
 import { FindManyOptions } from "typeorm";
+
+import S3Service from "services/S3";
 import { CustomContext } from "middleware/context";
 import {
 	VerificationRequestsInput,
@@ -40,6 +42,36 @@ export class VerificationRequestResolver {
 		return VerificationRequest.find({
 			where: { createdByUserId: ctx.userId },
 		});
+	}
+
+	// Any logged-in user can upload a verification image to their own account
+	@Mutation(() => String)
+	createPresignedUploadUrlForVerificationImage(
+		@Arg("filename") filename: string,
+		@Ctx() ctx: CustomContext
+	) {
+		if (!ctx.userId) {
+			throw new Error(
+				"You must be logged in to create a presigned URL for verification image upload"
+			);
+		} else if (!filename) {
+			throw new Error("You must provide a filename for the image");
+		}
+		const s3Key = `users/${ctx.userId}/verification/${filename}`;
+		return S3Service.makePresignedPutUrl(s3Key);
+	}
+
+	// Only admins can download verification images
+	@Mutation(() => String)
+	@Authorized(UserPermission.Admin)
+	createPresignedDownloadUrlForVerificationImage(
+		@Arg("s3Key") s3Key: string,
+		@Ctx() ctx: CustomContext
+	) {
+		if (!s3Key) {
+			throw new Error("You must provide the image's s3Key");
+		}
+		return S3Service.makePresignedGetUrl(s3Key);
 	}
 
 	@Mutation(() => VerificationRequest)

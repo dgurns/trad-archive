@@ -5,6 +5,7 @@ import S3Service from "services/S3";
 import { CustomContext } from "middleware/context";
 import {
 	VerificationRequestsInput,
+	CreatePresignedUploadUrlForVerificationImageResponse,
 	CreateVerificationRequestInput,
 	UpdateVerificationRequestStatusInput,
 } from "resolvers/VerificationRequestResolverTypes";
@@ -45,8 +46,8 @@ export class VerificationRequestResolver {
 	}
 
 	// Any logged-in user can upload a verification image to their own account
-	@Mutation(() => String)
-	createPresignedUploadUrlForVerificationImage(
+	@Mutation(() => CreatePresignedUploadUrlForVerificationImageResponse)
+	async createPresignedUploadUrlForVerificationImage(
 		@Arg("filename") filename: string,
 		@Ctx() ctx: CustomContext
 	) {
@@ -57,8 +58,12 @@ export class VerificationRequestResolver {
 		} else if (!filename) {
 			throw new Error("You must provide a filename for the image");
 		}
-		const s3Key = `users/${ctx.userId}/verification/${filename}`;
-		return S3Service.makePresignedPutUrl(s3Key);
+		const imageS3Key = `users/${ctx.userId}/verification/${filename}`;
+		const presignedUploadUrl = await S3Service.makePresignedPutUrl(imageS3Key);
+		return {
+			imageS3Key,
+			presignedUploadUrl,
+		};
 	}
 
 	// Only admins can download verification images

@@ -20,7 +20,10 @@ import LoadingCircle from "components/LoadingCircle";
 
 const CREATE_PRESIGNED_UPLOAD_URL_MUTATION = gql`
 	mutation CreatePresignedUploadUrl($filename: String!) {
-		createPresignedUploadUrlForVerificationImage(filename: $filename)
+		createPresignedUploadUrlForVerificationImage(filename: $filename) {
+			imageS3Key
+			presignedUploadUrl
+		}
 	}
 `;
 const CREATE_VERIFICATION_REQUEST_MUTATION = gql`
@@ -33,7 +36,10 @@ const CREATE_VERIFICATION_REQUEST_MUTATION = gql`
 `;
 
 interface CreatePresignedUploadUrlMutationData {
-	createPresignedUploadUrlForVerificationImage: string;
+	createPresignedUploadUrlForVerificationImage: {
+		imageS3Key: string;
+		presignedUploadUrl: string;
+	};
 }
 interface CreatePresignedUploadUrlMutationVars {
 	filename: string;
@@ -54,7 +60,7 @@ const AccountVerify = () => {
 	const [
 		,
 		{
-			refetch: refetchVerificationRequestsForUser,
+			refetch: refetchVerificationRequestsForCurrentUser,
 			loading: refetchVerificationRequestsIsLoading,
 		},
 	] = useVerificationRequestsForCurrentUser();
@@ -66,27 +72,14 @@ const AccountVerify = () => {
 	>();
 	const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] =
 		useState(false);
+	const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
-	const [
-		createPresignedUploadUrl,
-		{
-			loading: createPresignedUploadUrlLoading,
-			data: createPresignedUploadUrlData,
-			error: createPresignedUploadUrlError,
-		},
-	] = useMutation<
+	const [createPresignedUploadUrl] = useMutation<
 		CreatePresignedUploadUrlMutationData,
 		CreatePresignedUploadUrlMutationVars
 	>(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" });
 
-	const [
-		createVerificationRequest,
-		{
-			loading: createVerificationRequestLoading,
-			data: createVerificationRequestData,
-			error: createVerificationRequestError,
-		},
-	] = useMutation<
+	const [createVerificationRequest] = useMutation<
 		CreateVerificationRequestMutationData,
 		CreateVerificationRequestMutationVars
 	>(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
@@ -122,38 +115,42 @@ const AccountVerify = () => {
 		if (!requiredFieldsAreSet) {
 			return window.alert("Please fill out all the fields");
 		}
-		console.log(imageFile.name);
-		// Create a presigned upload URL for the image and upload it
-		const response = await createPresignedUploadUrl({
-			variables: { filename: imageFile.name },
-		});
-		console.log(response);
-		// Then create the VerificationRequest
-		// createVerificationRequest({
-		// 	variables: {
-		// 		input: {
-		// 			personId: personEntity.id,
-		// 			imageS3Key: "test-s3-key",
-		// 			copyrightPermissionStatus:
-		// 				CopyrightPermissionStatus.FullNonCommercialGranted,
-		// 		},
-		// 	},
-		// });
-	};
-
-	useEffect(() => {
-		const refetchAndRedirect = async () => {
-			await refetchVerificationRequestsForUser();
+		setFormIsSubmitting(true);
+		try {
+			// Create a presigned upload URL for the image
+			const response = await createPresignedUploadUrl({
+				variables: { filename: imageFile.name },
+			});
+			const { imageS3Key, presignedUploadUrl } =
+				response.data.createPresignedUploadUrlForVerificationImage;
+			// Upload the image
+			await fetch(presignedUploadUrl, { method: "PUT", body: imageFile });
+			// Then create the VerificationRequest
+			const { data } = await createVerificationRequest({
+				variables: {
+					input: {
+						personId: personEntity.id,
+						imageS3Key,
+						copyrightPermissionStatus:
+							CopyrightPermissionStatus.FullNonCommercialGranted,
+					},
+				},
+			});
+			if (!data.createVerificationRequest) {
+				throw new Error();
+			}
+			// Refetch the Verification Requests for current user and navigate to
+			// their Account page
+			await refetchVerificationRequestsForCurrentUser();
+			setFormIsSubmitting(false);
 			router.push("/account");
-		};
-		if (createVerificationRequestData?.createVerificationRequest?.id) {
-			refetchAndRedirect();
+		} catch {
+			setFormIsSubmitting(false);
+			window.alert(
+				"Error submitting verification request. Please reload and try again."
+			);
 		}
-	}, [
-		createVerificationRequestData,
-		router,
-		refetchVerificationRequestsForUser,
-	]);
+	};
 
 	return (
 		<Layout>
@@ -232,8 +229,7 @@ const AccountVerify = () => {
 					</label>
 				</div>
 
-				{createVerificationRequestLoading ||
-				refetchVerificationRequestsIsLoading ? (
+				{refetchVerificationRequestsIsLoading || formIsSubmitting ? (
 					<LoadingCircle />
 				) : (
 					<button
@@ -243,13 +239,6 @@ const AccountVerify = () => {
 					>
 						Submit
 					</button>
-				)}
-
-				{createVerificationRequestError && (
-					<div className="mt-4 text-red-600">
-						Error submitting user verification request. Please reload the page
-						and try again.
-					</div>
 				)}
 			</RequireUser>
 		</Layout>

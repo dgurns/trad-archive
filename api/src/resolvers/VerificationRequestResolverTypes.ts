@@ -1,4 +1,4 @@
-import { InputType, Field, Int } from "type-graphql";
+import { InputType, ObjectType, Field, Int } from "type-graphql";
 import { VerificationRequestStatus } from "models/VerificationRequest";
 import { CopyrightPermissionStatus } from "models/User";
 
@@ -12,6 +12,15 @@ export class VerificationRequestsInput {
 
 	@Field(() => VerificationRequestStatus, { nullable: true })
 	status?: VerificationRequestStatus;
+}
+
+@ObjectType()
+export class CreatePresignedUploadUrlForVerificationImageResponse {
+	@Field(() => String)
+	imageS3Key!: string;
+
+	@Field(() => String)
+	presignedUploadUrl!: string;
 }
 
 @InputType()

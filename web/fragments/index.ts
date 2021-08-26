@@ -5,6 +5,7 @@ export const UserFragments = {
 		fragment User on User {
 			id
 			username
+			copyrightPermissionStatus
 			createdAt
 		}
 	`,
@@ -14,6 +15,7 @@ export const UserFragments = {
 			permissions
 			email
 			username
+			copyrightPermissionStatus
 		}
 	`,
 };
@@ -317,6 +319,34 @@ export const TakedownRequestFragments = {
 			id
 			type
 			message
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`,
+};
+
+export const UserVerificationRequestFragments = {
+	userVerificationRequest: gql`
+		fragment UserVerificationRequest on UserVerificationRequest {
+			id
+			person {
+				id
+				entityType
+				name
+				slug
+			}
+			copyrightPermissionStatus
 			status
 			createdByUser {
 				id

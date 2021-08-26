@@ -16,6 +16,7 @@ import { Person } from "models/entities/Person";
 @Resolver(() => UserVerificationRequest)
 export class UserVerificationRequestResolver {
 	@Query(() => [UserVerificationRequest])
+	@Authorized(UserPermission.Admin)
 	userVerificationRequests(@Arg("input") input: UserVerificationRequestsInput) {
 		const { take, skip, status } = input;
 		const findOptions: FindManyOptions<UserVerificationRequest> = {
@@ -27,6 +28,18 @@ export class UserVerificationRequestResolver {
 			findOptions.where = { status };
 		}
 		return UserVerificationRequest.find(findOptions);
+	}
+
+	@Query(() => [UserVerificationRequest])
+	userVerificationRequestsForUser(@Ctx() ctx: CustomContext) {
+		if (!ctx.userId) {
+			throw new Error(
+				"Must be logged in to fetch UserVerificationRequests for user"
+			);
+		}
+		return UserVerificationRequest.find({
+			where: { createdByUserId: ctx.userId },
+		});
 	}
 
 	@Mutation(() => UserVerificationRequest)

@@ -18,7 +18,7 @@ registerEnumType(UserPermission, {
 });
 
 export enum CopyrightPermissionStatus {
-	FullNonCommercialGranted = "FULL_NON_COMMERCIAL_GRANTED",
+	FullNonCommercialGranted = "FullNonCommercialGranted",
 }
 registerEnumType(CopyrightPermissionStatus, {
 	name: "CopyrightPermissionStatus",

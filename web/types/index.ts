@@ -4,7 +4,7 @@ export enum UserPermission {
 }
 
 export enum CopyrightPermissionStatus {
-	FullNonCommercialGranted = "FULL_NON_COMMERCIAL_GRANTED",
+	FullNonCommercialGranted = "FullNonCommercialGranted",
 }
 export interface User {
 	id: string;

@@ -1,18 +1,66 @@
 import { useState, useEffect } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
-import { EntityType, Entity, Person, isPerson } from "types";
+import {
+	EntityType,
+	Entity,
+	Person,
+	isPerson,
+	UserVerificationRequest,
+	CopyrightPermissionStatus,
+} from "types";
+import { UserVerificationRequestFragments } from "fragments";
+import useUserVerificationRequestsForUser from "hooks/useUserVerificationRequestsForUser";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import SearchEntities from "components/SearchEntities";
+import LoadingCircle from "components/LoadingCircle";
+
+const CREATE_USER_VERIFICATION_REQUEST_MUTATION = gql`
+	mutation CreateUserVerificationRequest(
+		$input: CreateUserVerificationRequestInput!
+	) {
+		createUserVerificationRequest(input: $input) {
+			...UserVerificationRequest
+		}
+	}
+	${UserVerificationRequestFragments.userVerificationRequest}
+`;
+
+interface MutationData {
+	createUserVerificationRequest: UserVerificationRequest;
+}
+interface MutationVars {
+	input: {
+		personId: string;
+		imageS3Key: string;
+		copyrightPermissionStatus: CopyrightPermissionStatus;
+	};
+}
 
 const AccountVerify = () => {
+	const router = useRouter();
+	const [
+		,
+		{
+			refetch: refetchVerificationRequestsForUser,
+			loading: refetchVerificationRequestsIsLoading,
+		},
+	] = useUserVerificationRequestsForUser();
+
 	const [personEntity, setPersonEntity] = useState<Person | undefined>();
 	const [imageFileObjectUrl, setImageFileObjectUrl] = useState<
 		string | undefined
 	>();
 	const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] =
 		useState(false);
+
+	const [createUserVerificationRequest, { loading, data, error }] = useMutation<
+		MutationData,
+		MutationVars
+	>(CREATE_USER_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
 
 	const onSelectEntity = (entity: Entity) => {
 		if (isPerson(entity)) {
@@ -36,6 +84,35 @@ const AccountVerify = () => {
 			}
 		};
 	}, [imageFileObjectUrl]);
+
+	const requiredFieldsAreSet =
+		personEntity && imageFileObjectUrl && copyrightPermissionIsGranted;
+
+	const onSubmitClicked = () => {
+		if (!requiredFieldsAreSet) {
+			return window.alert("Please fill out all the fields");
+		}
+		createUserVerificationRequest({
+			variables: {
+				input: {
+					personId: personEntity.id,
+					imageS3Key: "test-s3-key",
+					copyrightPermissionStatus:
+						CopyrightPermissionStatus.FullNonCommercialGranted,
+				},
+			},
+		});
+	};
+
+	useEffect(() => {
+		const refetchAndRedirect = async () => {
+			await refetchVerificationRequestsForUser();
+			router.push("/account");
+		};
+		if (data?.createUserVerificationRequest?.id) {
+			refetchAndRedirect();
+		}
+	}, [data, router, refetchVerificationRequestsForUser]);
 
 	return (
 		<Layout>
@@ -114,12 +191,24 @@ const AccountVerify = () => {
 					</label>
 				</div>
 
-				<button
-					className="btn"
-					disabled={!personEntity || !copyrightPermissionIsGranted}
-				>
-					Submit
-				</button>
+				{loading || refetchVerificationRequestsIsLoading ? (
+					<LoadingCircle />
+				) : (
+					<button
+						className="btn"
+						onClick={onSubmitClicked}
+						disabled={!requiredFieldsAreSet}
+					>
+						Submit
+					</button>
+				)}
+
+				{error && (
+					<div className="mt-4 text-red-600">
+						Error submitting user verification request. Please reload the page
+						and try again.
+					</div>
+				)}
 			</RequireUser>
 		</Layout>
 	);

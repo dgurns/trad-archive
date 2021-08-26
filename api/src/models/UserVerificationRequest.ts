@@ -13,9 +13,9 @@ import { User, CopyrightPermissionStatus } from "models/User";
 import { Person } from "models/entities/Person";
 
 export enum UserVerificationRequestStatus {
-	Pending = "PENDING",
-	Approved = "APPROVED",
-	Denied = "DENIED",
+	Pending = "Pending",
+	Approved = "Approved",
+	Denied = "Denied",
 }
 registerEnumType(UserVerificationRequestStatus, {
 	name: "UserVerificationRequestStatus",

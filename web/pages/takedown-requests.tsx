@@ -114,14 +114,16 @@ const TakedownRequests = () => {
 			<RequireAdmin>
 				<>
 					<h1 className="mb-4">Takedown Requests</h1>
+
 					{takedownRequestsLoading && <LoadingBlock />}
 					{takedownRequestsError && (
 						<div className="text-red-600">
 							{takedownRequestsError.graphQLErrors.join(", ")}
 						</div>
 					)}
-					{takedownRequests.length > 0 &&
-						takedownRequests.map((takedownRequest, index) => {
+
+					{!takedownRequestsLoading &&
+						takedownRequests?.map((takedownRequest, index) => {
 							const {
 								id,
 								createdAt,

@@ -58,7 +58,7 @@ interface CreateVerificationRequestMutationVars {
 const AccountVerify = () => {
 	const router = useRouter();
 	const [
-		,
+		_,
 		{
 			refetch: refetchVerificationRequestsForCurrentUser,
 			loading: refetchVerificationRequestsIsLoading,

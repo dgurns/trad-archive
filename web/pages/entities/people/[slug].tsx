@@ -54,7 +54,7 @@ const ViewPersonBySlug = () => {
 	}
 
 	const { person } = personData;
-	const { name, entityType, aliases, description, tags } = person;
+	const { name, entityType, aliases, description, tags, verifiedUser } = person;
 	const sortedTags = TagService.sort(tags);
 
 	const shouldShowAudioItems = audioItems.length > 0;
@@ -89,21 +89,38 @@ const ViewPersonBySlug = () => {
 				</div>
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">About {name}</h3>
+
+					{verifiedUser && (
+						<div className="mb-4">
+							<div className="flex flex-row items-center">
+								<i className="material-icons text-base mr-2">verified</i>
+								Verified As User:
+							</div>
+							<Link href={`/users/${verifiedUser.id}`}>
+								{verifiedUser.username}
+							</Link>
+						</div>
+					)}
+
 					<div className="mb-4">
 						Entity Type:
 						<br />
 						<span className="text-gray-500">{entityType}</span>
 					</div>
-					<div className="mb-4">
-						Aliases:
-						<br />
-						<span className="text-gray-500">{aliases}</span>
-					</div>
-					<div className="mb-4">
-						Description:
-						<br />
-						<span className="text-gray-500">{description}</span>
-					</div>
+					{aliases && (
+						<div className="mb-4">
+							Aliases:
+							<br />
+							<span className="text-gray-500">{aliases}</span>
+						</div>
+					)}
+					{description && (
+						<div className="mb-4">
+							Description:
+							<br />
+							<span className="text-gray-500">{description}</span>
+						</div>
+					)}
 					<Link href={`/entities/people/${slug}/edit`}>Edit</Link>
 
 					<h3 className="mt-8 mb-4">Tags</h3>

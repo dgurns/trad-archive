@@ -3,11 +3,16 @@ export enum UserPermission {
 	Admin = "ADMIN",
 }
 
+export enum CopyrightPermissionStatus {
+	FullNonCommercialGranted = "FullNonCommercialGranted",
+}
 export interface User {
 	id: string;
 	permissions?: UserPermission[];
 	email?: string;
 	username: string;
+	copyrightPermissionStatus?: CopyrightPermissionStatus | null;
+	verifiedPerson?: Person | null;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -71,6 +76,7 @@ export interface Person extends BaseEntity {
 	firstName: string;
 	middleName: string | null;
 	lastName: string;
+	verifiedUser?: User | null;
 }
 
 export interface Instrument extends BaseEntity {
@@ -160,3 +166,32 @@ export const isApprovedTakedownRequest = (takedownRequest: TakedownRequest) =>
 
 export const isDeniedTakedownRequest = (takedownRequest: TakedownRequest) =>
 	takedownRequest.status.valueOf() === "Denied";
+
+export enum VerificationRequestStatus {
+	Pending = "Pending",
+	Approved = "Approved",
+	Denied = "Denied",
+}
+export interface VerificationRequest {
+	id: string;
+	person: Person;
+	presignedImageDownloadUrl: string | null;
+	copyrightPermissionStatus: CopyrightPermissionStatus | null;
+	status: VerificationRequestStatus;
+	createdByUser: User;
+	createdAt: string;
+	updatedByUser: User;
+	updatedAt: string;
+}
+
+export const isPendingVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Pending";
+
+export const isApprovedVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Approved";
+
+export const isDeniedVerificationRequest = (
+	verificationRequest: VerificationRequest
+) => verificationRequest.status.valueOf() === "Denied";

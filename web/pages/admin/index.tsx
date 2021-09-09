@@ -8,6 +8,9 @@ const AdminHome = () => {
 			<RequireAdmin>
 				<>
 					<h1 className="mb-4">Admin</h1>
+					<Link href="/verification-requests">
+						<a className="block mb-2">Manage Verification Requests</a>
+					</Link>
 					<Link href="/takedown-requests">
 						<a className="block mb-2">Manage Takedown Requests</a>
 					</Link>

@@ -17,6 +17,13 @@ registerEnumType(UserPermission, {
 	name: "UserPermission",
 });
 
+export enum CopyrightPermissionStatus {
+	FullNonCommercialGranted = "FullNonCommercialGranted",
+}
+registerEnumType(CopyrightPermissionStatus, {
+	name: "CopyrightPermissionStatus",
+});
+
 @ObjectType()
 @TypeOrmEntity()
 export class User extends TypeOrmBaseEntity {
@@ -49,6 +56,10 @@ export class User extends TypeOrmBaseEntity {
 
 	@Column({ type: "timestamptz", nullable: true, default: null })
 	autoLoginTokenExpiry!: Date;
+
+	@Field(() => CopyrightPermissionStatus, { nullable: true })
+	@Column({ nullable: true, default: null })
+	copyrightPermissionStatus!: CopyrightPermissionStatus;
 
 	@Field()
 	@CreateDateColumn({ type: "timestamptz" })

@@ -6,36 +6,40 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	Column,
-} from 'typeorm';
-import { ObjectType, Field } from 'type-graphql';
+} from "typeorm";
+import { ObjectType, Field } from "type-graphql";
 
-import { User } from 'models/User';
-import { AudioItem } from 'models/entities/AudioItem';
+import { User } from "models/User";
+import { AudioItem } from "models/entities/AudioItem";
 
 @ObjectType()
 @TypeOrmEntity()
 export class Comment extends TypeOrmBaseEntity {
 	@Field(() => String)
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryGeneratedColumn("uuid")
 	readonly id!: string;
 
 	@Field(() => AudioItem, { nullable: true })
-	@ManyToOne(() => AudioItem)
+	@ManyToOne(() => AudioItem, { eager: true })
 	parentAudioItem!: AudioItem;
+	@Column()
+	parentAudioItemId!: string;
 
 	@Field(() => String)
 	@Column()
 	text!: string;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
+	@Column({ nullable: true, default: null })
+	createdByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: 'timestamptz' })
+	@CreateDateColumn({ type: "timestamptz" })
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: 'timestamptz' })
+	@UpdateDateColumn({ type: "timestamptz" })
 	updatedAt!: Date;
 }

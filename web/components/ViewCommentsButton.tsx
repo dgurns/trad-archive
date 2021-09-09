@@ -125,9 +125,18 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 					<div className="max-h-1/2 overflow-auto" ref={commentsRef}>
 						{comments.map(({ createdByUser, createdAt, text }, index) => (
 							<div className="mb-2" key={index}>
-								<div className="text-gray-500 text-sm mb-1">
+								<div className="text-gray-500 text-sm mb-1 flex flex-row items-center">
 									<Link href={`/users/${createdByUser.id}`}>
-										{createdByUser.username}
+										<a className="mr-1 flex flex-row items-center">
+											{createdByUser.verifiedPerson && (
+												<div className="inline">
+													<i className="material-icons text-sm mr-1">
+														verified
+													</i>
+												</div>
+											)}
+											<span>{createdByUser.username}</span>
+										</a>
 									</Link>{" "}
 									{DateTimeService.formatDateYearTime(createdAt)}
 								</div>

@@ -5,6 +5,13 @@ export const UserFragments = {
 		fragment User on User {
 			id
 			username
+			copyrightPermissionStatus
+			verifiedPerson {
+				id
+				entityType
+				slug
+				name
+			}
 			createdAt
 		}
 	`,
@@ -14,6 +21,7 @@ export const UserFragments = {
 			permissions
 			email
 			username
+			copyrightPermissionStatus
 		}
 	`,
 };
@@ -154,6 +162,11 @@ export const EntityFragments = {
 			createdByUser {
 				id
 				username
+				verifiedPerson {
+					id
+					entityType
+					slug
+				}
 			}
 			createdAt
 			updatedAt
@@ -172,6 +185,9 @@ export const EntityFragments = {
 			tags {
 				...Tag
 			}
+			verifiedUser {
+				...User
+			}
 			createdByUser {
 				id
 				username
@@ -183,6 +199,7 @@ export const EntityFragments = {
 			lastName
 		}
 		${TagFragments.tag}
+		${UserFragments.user}
 	`,
 	instrument: gql`
 		fragment Instrument on Instrument {
@@ -317,6 +334,35 @@ export const TakedownRequestFragments = {
 			id
 			type
 			message
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`,
+};
+
+export const VerificationRequestFragments = {
+	verificationRequest: gql`
+		fragment VerificationRequest on VerificationRequest {
+			id
+			person {
+				id
+				entityType
+				name
+				slug
+			}
+			presignedImageDownloadUrl
+			copyrightPermissionStatus
 			status
 			createdByUser {
 				id

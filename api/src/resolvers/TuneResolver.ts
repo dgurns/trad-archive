@@ -1,8 +1,9 @@
-import { Resolver, Query, Arg } from "type-graphql";
+import { Resolver, Query, Arg, FieldResolver, Root } from "type-graphql";
+import { In } from "typeorm";
 
 import { Tune } from "models/entities/Tune";
-import { entityRelationsForFind } from "resolvers/EntityResolver";
-@Resolver()
+import { Tag } from "models/Tag";
+@Resolver(() => Tune)
 export class TuneResolver {
 	@Query(() => Tune, { nullable: true })
 	tune(
@@ -15,7 +16,6 @@ export class TuneResolver {
 		const whereOptions = id ? { id } : { slug };
 		return Tune.findOne({
 			where: whereOptions,
-			relations: entityRelationsForFind,
 		});
 	}
 
@@ -28,7 +28,13 @@ export class TuneResolver {
 			take,
 			skip,
 			order: { createdAt: "DESC" },
-			relations: entityRelationsForFind,
+		});
+	}
+
+	@FieldResolver(() => [Tag])
+	tags(@Root() tune: Tune) {
+		return Tag.find({
+			where: { subjectTuneId: In([tune.id]) },
 		});
 	}
 }

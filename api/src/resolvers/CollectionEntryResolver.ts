@@ -1,5 +1,4 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from "type-graphql";
-import { getManager } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { User } from "models/User";
 import {
@@ -9,27 +8,17 @@ import {
 import { CollectionEntry } from "models/CollectionEntry";
 import { AudioItem } from "models/entities/AudioItem";
 
-@Resolver()
+@Resolver(() => CollectionEntry)
 export class CollectionEntryResolver {
 	@Query(() => [CollectionEntry])
 	collectionEntriesForUser(@Ctx() ctx: CustomContext) {
 		if (!ctx.userId) {
 			throw new Error("Must be logged in to get CollectionEntries");
 		}
-		return getManager()
-			.createQueryBuilder(CollectionEntry, "collectionEntry")
-			.where("collectionEntry.userId = :userId", { userId: ctx.userId })
-			.leftJoinAndSelect("collectionEntry.audioItem", "audioItem")
-			.leftJoinAndSelect("audioItem.tags", "tags")
-			.leftJoinAndSelect("tags.relationship", "relationship")
-			.leftJoinAndSelect("tags.objectAudioItem", "objectAudioItem")
-			.leftJoinAndSelect("tags.objectPerson", "objectPerson")
-			.leftJoinAndSelect("tags.objectPlace", "objectPlace")
-			.leftJoinAndSelect("tags.objectInstrument", "objectInstrument")
-			.leftJoinAndSelect("tags.objectTune", "objectTune")
-			.leftJoinAndSelect("audioItem.createdByUser", "audioItemCreatedByUser")
-			.orderBy("collectionEntry.createdAt", "DESC")
-			.getMany();
+		return CollectionEntry.find({
+			where: { userId: ctx.userId },
+			order: { createdAt: "DESC" },
+		});
 	}
 
 	@Mutation(() => CollectionEntry)
@@ -78,12 +67,9 @@ export class CollectionEntryResolver {
 				relations: ["user"],
 			});
 		} else if (audioItemId) {
-			collectionEntry = await getManager()
-				.createQueryBuilder(CollectionEntry, "collectionEntry")
-				.where("collectionEntry.audioItemId = :audioItemId", { audioItemId })
-				.andWhere("collectionEntry.userId = :userId", { userId: ctx.userId })
-				.leftJoinAndSelect("collectionEntry.user", "user")
-				.getOne();
+			collectionEntry = await CollectionEntry.findOne({
+				where: { audioItemId, userId: ctx.userId },
+			});
 		}
 		if (!collectionEntry) {
 			throw new Error("Could not find CollectionEntry");

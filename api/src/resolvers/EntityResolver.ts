@@ -1,5 +1,5 @@
 import { Resolver, Query, Arg, createUnionType } from "type-graphql";
-import { getManager } from "typeorm";
+import { Entity, getManager } from "typeorm";
 
 import { EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";
@@ -36,22 +36,6 @@ export const EntityUnion = createUnionType({
 	},
 });
 
-// entityRelationsForFind contains the necessary relations needed when querying
-// for an Entity via `find()`, `findOne()`, etc.
-export const entityRelationsForFind = [
-	"tags",
-	"tags.subjectAudioItem",
-	"tags.subjectPerson",
-	"tags.subjectInstrument",
-	"tags.subjectPlace",
-	"tags.subjectTune",
-	"tags.objectAudioItem",
-	"tags.objectPerson",
-	"tags.objectInstrument",
-	"tags.objectPlace",
-	"tags.objectTune",
-];
-
 // EntityResolver contains resolvers for querying across all entity types
 @Resolver()
 export class EntityResolver {
@@ -66,23 +50,18 @@ export class EntityResolver {
 		const results = await Promise.all([
 			AudioItem.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Person.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Instrument.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Place.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 			Tune.findOne({
 				where: [{ id }, { slug }],
-				relations: entityRelationsForFind,
 			}),
 		]);
 		let entity;
@@ -96,72 +75,107 @@ export class EntityResolver {
 
 	@Query(() => [EntityUnion])
 	async searchEntities(@Arg("input") input: SearchEntitiesInput) {
-		const { searchTerm, take } = input;
+		const { searchTerm, entityTypes, take } = input;
 
 		if (searchTerm.length < 3) {
 			throw new Error("Must include a search term of at least 3 letters");
 		}
 		const searchTermLowercased = searchTerm.toLowerCase();
-		const takeFromEach = Math.round(take / 5);
+		const takeFromEach = Math.round(take / (entityTypes?.length ?? 5));
 		const entityManager = getManager();
-		const results = await Promise.all([
-			entityManager
-				.createQueryBuilder(Person, "person")
-				.leftJoinAndSelect("person.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(person.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere("unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)", {
-					aliases: `%${searchTermLowercased}%`,
-				})
-				.take(takeFromEach)
-				.getMany(),
-			entityManager
-				.createQueryBuilder(Instrument, "instrument")
-				.leftJoinAndSelect("instrument.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(instrument.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere(
-					"unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)",
-					{ aliases: `%${searchTermLowercased}%` }
-				)
-				.take(takeFromEach)
-				.getMany(),
-			entityManager
-				.createQueryBuilder(Place, "place")
-				.leftJoinAndSelect("place.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(place.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere("unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)", {
-					aliases: `%${searchTermLowercased}%`,
-				})
-				.take(takeFromEach)
-				.getMany(),
-			entityManager
-				.createQueryBuilder(AudioItem, "audioItem")
-				.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(audioItem.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
-					aliases: `%${searchTermLowercased}%`,
-				})
-				.take(takeFromEach)
-				.getMany(),
-			entityManager
-				.createQueryBuilder(Tune, "tune")
-				.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-				.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
-					name: `%${searchTermLowercased}%`,
-				})
-				.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
-					aliases: `%${searchTermLowercased}%`,
-				})
-				.take(takeFromEach)
-				.getMany(),
-		]);
+
+		// Prepare the queries for each Entity type
+		const personQuery = entityManager
+			.createQueryBuilder(Person, "person")
+			.leftJoinAndSelect("person.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(person.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
+		const instrumentQuery = entityManager
+			.createQueryBuilder(Instrument, "instrument")
+			.leftJoinAndSelect("instrument.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(instrument.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
+		const placeQuery = entityManager
+			.createQueryBuilder(Place, "place")
+			.leftJoinAndSelect("place.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(place.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
+		const audioItemQuery = entityManager
+			.createQueryBuilder(AudioItem, "audioItem")
+			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(audioItem.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
+		const tuneQuery = entityManager
+			.createQueryBuilder(Tune, "tune")
+			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
+
+		// Determine which queries to make
+		let queryPromises = [];
+		if (Array.isArray(entityTypes)) {
+			for (const entityType of entityTypes) {
+				switch (entityType) {
+					case EntityType.Person:
+						queryPromises.push(personQuery);
+						break;
+					case EntityType.Instrument:
+						queryPromises.push(instrumentQuery);
+						break;
+					case EntityType.Place:
+						queryPromises.push(placeQuery);
+						break;
+					case EntityType.AudioItem:
+						queryPromises.push(audioItemQuery);
+						break;
+					case EntityType.Tune:
+						queryPromises.push(tuneQuery);
+						break;
+					default:
+						break;
+				}
+			}
+		} else {
+			queryPromises = [
+				personQuery,
+				instrumentQuery,
+				placeQuery,
+				audioItemQuery,
+				tuneQuery,
+			];
+		}
+		// Await the query results and return them
+		const results = await Promise.all<Entity[]>(queryPromises);
 		const output: Entity[] = [];
 		results.forEach((resultArray) => output.push(...resultArray));
 		return output;

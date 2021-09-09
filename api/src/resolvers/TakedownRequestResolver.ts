@@ -18,19 +18,11 @@ const addRelationsToQueryBuilder = (
 	return query
 		.leftJoinAndSelect("takedownRequest.audioItem", "audioItem")
 		.leftJoinAndSelect("audioItem.createdByUser", "audioItemCreatedByUser")
-		.leftJoinAndSelect("audioItem.tags", "tag")
-		.leftJoinAndSelect("tag.relationship", "tagRelationship")
-		.leftJoinAndSelect("tag.subjectAudioItem", "tagAudioItem")
-		.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
-		.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
-		.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
-		.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
-		.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
 		.leftJoinAndSelect("takedownRequest.createdByUser", "createdByUser")
 		.leftJoinAndSelect("takedownRequest.updatedByUser", "updatedByUser");
 };
 
-@Resolver()
+@Resolver(() => TakedownRequest)
 export class TakedownRequestResolver {
 	@Query(() => [TakedownRequest])
 	async takedownRequests(@Arg("input") input: TakedownRequestsInput) {

@@ -15,6 +15,7 @@
 		"@sendgrid/mail": "^7.4.4",
 		"apollo-server-lambda": "^2.19.1",
 		"apollo-server-plugin-http-headers": "^0.1.4",
+		"aws-sdk": "^2.976.0",
 		"bcrypt": "^5.0.0",
 		"class-validator": "^0.13.1",
 		"cookie": "^0.4.1",

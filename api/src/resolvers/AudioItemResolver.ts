@@ -9,13 +9,14 @@ import {
 	Root,
 	Int,
 } from "type-graphql";
-import { getManager, getRepository } from "typeorm";
+import { getManager, getRepository, In } from "typeorm";
 
 import { CustomContext } from "middleware/context";
 import { AudioItem } from "models/entities/AudioItem";
 import { Comment } from "models/Comment";
 import { CollectionEntry } from "models/CollectionEntry";
 import { User, UserPermission } from "models/User";
+import { Tag } from "models/Tag";
 import {
 	AudioItemsInput,
 	AudioItemsTaggedWithEntityInput,
@@ -23,40 +24,11 @@ import {
 	CreateAudioItemInput,
 	UpdateAudioItemInput,
 } from "resolvers/AudioItemResolverTypes";
-import { entityRelationsForFind } from "resolvers/EntityResolver";
 import EntityService from "services/Entity";
 import { EntityStatus } from "models/entities/base";
 
 @Resolver(() => AudioItem)
 export class AudioItemResolver {
-	@FieldResolver(() => Int)
-	async commentsCount(@Root() audioItem: AudioItem) {
-		const { count } = await getRepository(Comment)
-			.createQueryBuilder("comment")
-			.select("COUNT(id)")
-			.where("comment.parentAudioItemId = :id", { id: audioItem.id })
-			.getRawOne();
-		return parseInt(count);
-	}
-
-	@FieldResolver(() => Boolean)
-	async isAddedToCollection(
-		@Root() audioItem: AudioItem,
-		@Ctx() ctx: CustomContext
-	) {
-		if (!ctx.userId) {
-			return false;
-		}
-		const existingCollectionEntry = await getManager()
-			.createQueryBuilder(CollectionEntry, "collectionEntry")
-			.where("collectionEntry.userId = :userId", { userId: ctx.userId })
-			.andWhere("collectionEntry.audioItemId = :audioItemId", {
-				audioItemId: audioItem.id,
-			})
-			.getRawOne();
-		return Boolean(existingCollectionEntry);
-	}
-
 	@Query(() => AudioItem, { nullable: true })
 	async audioItem(
 		@Arg("id", { nullable: true }) id: string,
@@ -69,7 +41,6 @@ export class AudioItemResolver {
 		const whereOptions = id ? { id } : { slug };
 		return AudioItem.findOne({
 			where: whereOptions,
-			relations: entityRelationsForFind,
 		});
 	}
 
@@ -89,7 +60,6 @@ export class AudioItemResolver {
 			take,
 			skip,
 			order: { createdAt: "DESC" },
-			relations: entityRelationsForFind,
 		});
 		return audioItems;
 	}
@@ -110,14 +80,6 @@ export class AudioItemResolver {
 				`relevantTag.object${entityType}Id = :entityId`,
 				{ entityId }
 			)
-			.leftJoinAndSelect("audioItem.tags", "tag")
-			.leftJoinAndSelect("tag.relationship", "tagRelationship")
-			.leftJoinAndSelect("tag.subjectAudioItem", "tagAudioItem")
-			.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
-			.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
-			.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
-			.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
-			.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
 			.orderBy("relevantTag.createdAt", "DESC");
 		if (take) {
 			query.take(take);
@@ -143,13 +105,6 @@ export class AudioItemResolver {
 				{ userId }
 			)
 			.leftJoinAndSelect("audioItem.updatedByUser", "updatedByUser")
-			.leftJoinAndSelect("audioItem.tags", "tag")
-			.leftJoinAndSelect("tag.relationship", "tagRelationship")
-			.leftJoinAndSelect("tag.objectPerson", "tagObjectPerson")
-			.leftJoinAndSelect("tag.objectInstrument", "tagObjectInstrument")
-			.leftJoinAndSelect("tag.objectPlace", "tagObjectPlace")
-			.leftJoinAndSelect("tag.objectTune", "tagObjectTune")
-			.leftJoinAndSelect("tag.objectAudioItem", "tagObjectAudioItem")
 			.orderBy("audioItem.createdAt", "DESC");
 		if (take) {
 			query.take(take);
@@ -216,10 +171,7 @@ export class AudioItemResolver {
 			throw new Error("You must be logged in to update an AudioItem");
 		}
 
-		const audioItem = await AudioItem.findOne(
-			{ slug },
-			{ relations: entityRelationsForFind }
-		);
+		const audioItem = await AudioItem.findOne({ slug });
 		if (!audioItem) {
 			throw new Error("Could not find an AudioItem with that slug");
 		}
@@ -231,5 +183,49 @@ export class AudioItemResolver {
 		audioItem.updatedByUser = user;
 		await audioItem.save();
 		return audioItem;
+	}
+
+	@FieldResolver(() => [Tag])
+	tags(@Root() audioItem: AudioItem) {
+		return Tag.find({
+			where: { subjectAudioItemId: In([audioItem.id]) },
+			order: { createdAt: "ASC" },
+		});
+	}
+
+	@FieldResolver(() => [Comment])
+	comments(@Root() audioItem: AudioItem) {
+		return Tag.find({
+			where: { parentAudioItemId: In([audioItem.id]) },
+			order: { createdAt: "ASC" },
+		});
+	}
+
+	@FieldResolver(() => Int)
+	async commentsCount(@Root() audioItem: AudioItem) {
+		const { count } = await getRepository(Comment)
+			.createQueryBuilder("comment")
+			.select("COUNT(id)")
+			.where("comment.parentAudioItemId = :id", { id: audioItem.id })
+			.getRawOne();
+		return parseInt(count);
+	}
+
+	@FieldResolver(() => Boolean)
+	async isAddedToCollection(
+		@Root() audioItem: AudioItem,
+		@Ctx() ctx: CustomContext
+	) {
+		if (!ctx.userId) {
+			return false;
+		}
+		const existingCollectionEntry = await getManager()
+			.createQueryBuilder(CollectionEntry, "collectionEntry")
+			.where("collectionEntry.userId = :userId", { userId: ctx.userId })
+			.andWhere("collectionEntry.audioItemId = :audioItemId", {
+				audioItemId: audioItem.id,
+			})
+			.getRawOne();
+		return Boolean(existingCollectionEntry);
 	}
 }

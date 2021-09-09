@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { UserFragments } from "fragments";
 import { User } from "types";
 import DateTimeService from "services/DateTime";
+import EntityService from "services/Entity";
 import useAudioItemsCreatedByUser from "hooks/useAudioItemsCreatedByUser";
 
 import Layout from "components/Layout";
@@ -47,7 +49,7 @@ const ViewUserById = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const { username, createdAt } = userData.user;
+	const { username, createdAt, verifiedPerson } = userData.user;
 
 	return (
 		<Layout>
@@ -62,8 +64,22 @@ const ViewUserById = () => {
 						<AudioItemComponent audioItem={audioItem} key={index} />
 					))}
 				</div>
+
 				<div className="flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">About {username}</h3>
+
+					{verifiedPerson && (
+						<div className="mb-4">
+							<div className="flex flex-row items-center">
+								<i className="material-icons text-base mr-2">verified</i>
+								Verified As Person:
+							</div>
+							<Link href={EntityService.makeHrefForView(verifiedPerson)}>
+								{verifiedPerson.name}
+							</Link>
+						</div>
+					)}
+
 					<div className="mb-4">
 						Account Created:
 						<br />

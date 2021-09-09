@@ -18,7 +18,7 @@ import { Relationship } from "models/Relationship";
 import { UserPermission } from "models/User";
 import RelationshipService from "services/Relationship";
 
-@Resolver()
+@Resolver(() => Relationship)
 export class RelationshipResolver {
 	@Query(() => Relationship)
 	relationship(@Arg("id") id: string) {

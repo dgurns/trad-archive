@@ -6,11 +6,11 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	Column,
-} from 'typeorm';
-import { ObjectType, Field } from 'type-graphql';
+} from "typeorm";
+import { ObjectType, Field } from "type-graphql";
 
-import { EntityType } from 'models/entities/base';
-import { User } from 'models/User';
+import { EntityType } from "models/entities/base";
+import { User } from "models/User";
 
 // Relationship represents a type of relationship between two entity types, for
 // example when a person (subject) "plays" an instrument (object).
@@ -18,7 +18,7 @@ import { User } from 'models/User';
 @TypeOrmEntity()
 export class Relationship extends TypeOrmBaseEntity {
 	@Field(() => String)
-	@PrimaryGeneratedColumn('uuid')
+	@PrimaryGeneratedColumn("uuid")
 	readonly id!: string;
 
 	@Field(() => String)
@@ -26,22 +26,24 @@ export class Relationship extends TypeOrmBaseEntity {
 	name!: string;
 
 	@Field(() => EntityType)
-	@Column({ type: 'enum', enum: EntityType })
+	@Column({ type: "enum", enum: EntityType })
 	subjectEntityType!: EntityType;
 
 	@Field(() => EntityType)
-	@Column({ type: 'enum', enum: EntityType })
+	@Column({ type: "enum", enum: EntityType })
 	objectEntityType!: EntityType;
 
-	@Field(() => User)
+	@Field(() => User, { nullable: true })
 	@ManyToOne(() => User, { eager: true })
 	createdByUser!: User;
+	@Column({ nullable: true, default: null })
+	createdByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: 'timestamptz' })
+	@CreateDateColumn({ type: "timestamptz" })
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: 'timestamptz' })
+	@UpdateDateColumn({ type: "timestamptz" })
 	updatedAt!: Date;
 }

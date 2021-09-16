@@ -78,6 +78,9 @@ const ViewUserById = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
+	const noAudioItemsFound =
+		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
+
 	return (
 		<Layout>
 			<div className="flex flex-col-reverse md:flex-row">
@@ -95,6 +98,11 @@ const ViewUserById = () => {
 					{audioItemsLoading && <LoadingBlock />}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
+					)}
+					{noAudioItemsFound && (
+						<div className="text-gray-500">
+							{username} hasn't added any Audio Items yet
+						</div>
 					)}
 					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent audioItem={audioItem} key={index} />

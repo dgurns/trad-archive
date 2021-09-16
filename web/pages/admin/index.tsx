@@ -26,6 +26,9 @@ const AdminHome = () => {
 					<Link href="/entities/places/new">
 						<a className="block mb-2">Create Place</a>
 					</Link>
+					<Link href="/entities/collections/new">
+						<a className="block mb-2">Create Collection</a>
+					</Link>
 					<Link href="/relationships/new">
 						<a className="block mb-2">Create Relationship</a>
 					</Link>

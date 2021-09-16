@@ -186,6 +186,7 @@ export class EntityResolver {
 						break;
 					case EntityType.Collection:
 						queryPromises.push(collectionQuery);
+						break;
 					default:
 						break;
 				}
@@ -196,8 +197,8 @@ export class EntityResolver {
 				instrumentQuery,
 				placeQuery,
 				audioItemQuery,
-				tuneQuery,
 				collectionQuery,
+				tuneQuery,
 			];
 		}
 		// Await the query results and return them

@@ -18,6 +18,7 @@ const SEARCH_ENTITIES_QUERY = gql`
 			...Instrument
 			...Place
 			...Tune
+			...Collection
 		}
 	}
 	${EntityFragments.audioItem}
@@ -25,6 +26,7 @@ const SEARCH_ENTITIES_QUERY = gql`
 	${EntityFragments.instrument}
 	${EntityFragments.place}
 	${EntityFragments.tune}
+	${EntityFragments.collection}
 `;
 
 interface QueryData {

@@ -78,6 +78,14 @@ export const TagEntityFragments = {
 			slug
 		}
 	`,
+	tagCollection: gql`
+		fragment TagCollection on Collection {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
 };
 
 export const TagFragments = {
@@ -93,6 +101,7 @@ export const TagFragments = {
 				...TagPerson
 				...TagPlace
 				...TagTune
+				...TagCollection
 			}
 			objectEntity {
 				...TagAudioItem
@@ -100,6 +109,7 @@ export const TagFragments = {
 				...TagPerson
 				...TagPlace
 				...TagTune
+				...TagCollection
 			}
 			subjectTimeMarkerSeconds
 			createdByUser {
@@ -113,6 +123,7 @@ export const TagFragments = {
 		${TagEntityFragments.tagPerson}
 		${TagEntityFragments.tagPlace}
 		${TagEntityFragments.tagTune}
+		${TagEntityFragments.tagCollection}
 		${UserFragments.user}
 	`,
 	tagForEntity: gql`
@@ -127,6 +138,7 @@ export const TagFragments = {
 				...TagPerson
 				...TagPlace
 				...TagTune
+				...TagCollection
 			}
 			subjectTimeMarkerSeconds
 			createdByUser {
@@ -140,6 +152,7 @@ export const TagFragments = {
 		${TagEntityFragments.tagPerson}
 		${TagEntityFragments.tagPlace}
 		${TagEntityFragments.tagTune}
+		${TagEntityFragments.tagCollection}
 		${UserFragments.user}
 	`,
 };
@@ -257,6 +270,28 @@ export const EntityFragments = {
 			abc
 		}
 		${TagFragments.tag}
+	`,
+	collection: gql`
+		fragment Collection on Collection {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			itmaAtomSlug
+			createdByUser {
+				id
+				username
+			}
+			createdAt
+			updatedAt
+		}
+		${TagFragments.tag}
+		${UserFragments.user}
 	`,
 };
 

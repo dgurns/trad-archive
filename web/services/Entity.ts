@@ -17,6 +17,8 @@ const makeHrefForView = (entity: Entity) => {
 			return `/entities/places/${entity.slug}`;
 		case EntityType.Tune:
 			return `/entities/tunes/${entity.slug}`;
+		case EntityType.Collection:
+			return `/entities/collections/${entity.slug}`;
 		default:
 			return "";
 	}

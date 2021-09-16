@@ -149,7 +149,7 @@ const ViewPersonBySlug = () => {
 					{audioItemsLoading && <LoadingBlock />}
 					{noAudioItemsFound && (
 						<div className="text-gray-500">
-							No AudioItems tagged with this yet
+							No Audio Items tagged with this yet
 						</div>
 					)}
 					{audioItemsError && (

@@ -2,15 +2,15 @@ import "reflect-metadata";
 import { ScheduledEvent, Context as LambdaContext } from "aws-lambda";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
-import { Connection } from "typeorm";
+import { Connection, Entity } from "typeorm";
 
 import { connectToDatabase } from "db";
 import { Collection } from "models/entities/Collection";
+import { AudioItem } from "models/entities/AudioItem";
 import EntityService from "services/Entity";
 
 const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
-
-const { ITMA_ATOM_API_BASE_URL, ITMA_ATOM_API_KEY } = process.env;
+const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY } = process.env;
 
 // Store the DB connection outside of the Lambda handler so it can persist
 // between invocations once it is created.
@@ -20,6 +20,10 @@ const initializeDbConnection = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
 	}
+};
+
+const headers = {
+	"REST-API-Key": ITMA_ATOM_API_KEY ?? "",
 };
 
 enum PublicationStatus {
@@ -38,40 +42,9 @@ interface RawCollection {
 	scope_and_content: string;
 	creators: RawCollectionCreator[];
 }
-// RawCollectionDigitalObject is the top-level summary result for digital
-// objects within a collection.
-interface RawCollectionDigitalObject {
-	slug: string;
-}
-enum MediaType {
-	Audio = "Audio",
-	Image = "Image",
-	Video = "Video",
-	Text = "Text",
-	Other = "Other",
-}
-enum MimeType {
-	AudioMpeg = "audio/mpeg",
-}
-// RawDigitalObject is the information object returned for a given digital
-// object slug
-interface RawDigitalObject {
-	title: string;
-	publication_status: PublicationStatus;
-	scope_and_content: string;
-	digital_object: {
-		media_type: MediaType;
-		mime_type: MimeType;
-		url: string;
-	};
-}
-
-const headers = {
-	"REST-API-Key": ITMA_ATOM_API_KEY ?? "",
-};
 const fetchCollection = async (slug: string): Promise<RawCollection> => {
 	const response = await fetch(
-		`${ITMA_ATOM_API_BASE_URL}/informationobjects/${slug}`,
+		`${ITMA_ATOM_ORIGIN}/api/informationobjects/${slug}`,
 		{
 			headers,
 		}
@@ -79,38 +52,154 @@ const fetchCollection = async (slug: string): Promise<RawCollection> => {
 	return response.json();
 };
 
-interface CollectionDigitalObjectsResponse {
-	total: number;
-	results: RawCollectionDigitalObject[];
+interface FetchCollectionDigitalAudioObjectsRequest {
+	collectionSlug: string;
+	skip?: number;
+	limit?: number;
 }
-const fetchCollectionDigitalObjects = async (
-	collectionSlug: string
-): Promise<CollectionDigitalObjectsResponse> => {
+// RawCollectionDigitalAudioObject is the top-level summary result for digital
+// audio objects within a collection.
+interface RawCollectionDigitalAudioObject {
+	slug: string;
+}
+interface FetchCollectionDigitalAudioObjectsResponse {
+	total: number;
+	results: RawCollectionDigitalAudioObject[];
+}
+const fetchCollectionDigitalAudioObjects = async ({
+	collectionSlug,
+	skip = 0,
+	limit = 10, // Seems to be hard-coded on AtoM as maximum 10
+}: FetchCollectionDigitalAudioObjectsRequest): Promise<FetchCollectionDigitalAudioObjectsResponse> => {
 	const params = {
 		sort: "lastUpdated",
 		sf0: "referenceCode",
 		sq0: collectionSlug,
 		onlyMedia: "1",
 		mediaTypes: "135",
-		skip: "0",
-		resultsPerPage: "10",
+		skip: String(skip),
+		limit: String(limit),
 	};
 	const paramsToString = new URLSearchParams(params).toString();
-	const response = await fetch(
-		`${ITMA_ATOM_API_BASE_URL}/informationobjects/${paramsToString}`,
-		{ headers }
-	);
+	const url = `${ITMA_ATOM_ORIGIN}/api/informationobjects?${paramsToString}`;
+	const response = await fetch(url, { headers });
 	return response.json();
 };
 
-const fetchDigitalObject = async (slug: string): Promise<RawDigitalObject> => {
+// RawDigitalAudioObject is the information object returned for a given digital
+// audio object slug
+interface RawDigitalAudioObject {
+	title: string;
+	publication_status: PublicationStatus;
+	scope_and_content: string;
+	digital_object: {
+		media_type: string;
+		mime_type: string;
+		url: string;
+	};
+}
+const fetchDigitalAudioObject = async (
+	slug: string
+): Promise<RawDigitalAudioObject> => {
 	const response = await fetch(
-		`${ITMA_ATOM_API_BASE_URL}/informationobjects/${slug}`,
+		`${ITMA_ATOM_ORIGIN}/api/informationobjects/${slug}`,
 		{
 			headers,
 		}
 	);
 	return response.json();
+};
+
+const addCollectionToDbIfNotPresent = async (
+	rawCollection: RawCollection
+): Promise<void> => {
+	const { reference_code, scope_and_content, creators, title } = rawCollection;
+	const existing = await Collection.findOne({
+		where: { itmaAtomSlug: reference_code },
+	});
+	if (existing) {
+		console.log(`Already have DB record for ${reference_code}: ${title}`);
+		return;
+	} else {
+		let description = scope_and_content;
+		if (creators.length > 0 && creators[0].history) {
+			description = `${description} ${creators[0].history}`;
+		}
+		const newCollection = Collection.create({
+			slug: EntityService.cleanSlug(reference_code),
+			name: title,
+			description,
+			itmaAtomSlug: reference_code,
+		});
+		await newCollection.save();
+		console.log(`Added new Collection to DB: ${reference_code}: ${title}`);
+	}
+};
+
+const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
+	rawCollection: RawCollection
+): Promise<void> => {
+	const { reference_code, title } = rawCollection;
+	console.log(
+		`Adding digital audio objects from collection ${reference_code}: ${title}`
+	);
+	const { total } = await fetchCollectionDigitalAudioObjects({
+		collectionSlug: reference_code,
+	});
+	console.log(
+		`Found ${total} digital audio objects in ${reference_code}: ${title}`
+	);
+
+	let currentSkipValue = 0;
+	let audioItemsAlreadyInDb = 0;
+	let audioItemsAddedToDb = 0;
+	while (currentSkipValue < total) {
+		console.log(
+			`Checking digital audio objects ${currentSkipValue + 1}-${
+				currentSkipValue + 10
+			} from collection ${reference_code}: ${title}`
+		);
+		const response = await fetchCollectionDigitalAudioObjects({
+			collectionSlug: reference_code,
+			skip: currentSkipValue,
+			limit: 10,
+		});
+		for (const result of response.results) {
+			// Check if this is already in DB
+			const existing = await AudioItem.findOne({
+				where: { itmaAtomSlug: result.slug },
+			});
+			if (existing) {
+				audioItemsAlreadyInDb = audioItemsAlreadyInDb + 1;
+				continue;
+			} else {
+				// It's not in DB, so fetch details and add it
+				const data = await fetchDigitalAudioObject(result.slug);
+				if (
+					data?.publication_status !== "Published" ||
+					data?.digital_object?.media_type !== "Audio" ||
+					data?.digital_object?.mime_type !== "audio/mpeg"
+				) {
+					continue;
+				}
+				const urlSourceSuffix = data.digital_object.url.split("/uploads/")[1];
+				const urlSource = `${ITMA_ATOM_ORIGIN}/uploads/${urlSourceSuffix}`;
+				const newAudioItem = AudioItem.create({
+					slug: EntityService.cleanSlug(result.slug),
+					name: data.title,
+					description: data.scope_and_content,
+					urlSource,
+					itmaAtomSlug: result.slug,
+				});
+				await newAudioItem.save();
+				audioItemsAddedToDb = audioItemsAddedToDb + 1;
+			}
+		}
+		currentSkipValue = currentSkipValue + 10;
+	}
+	console.log(
+		`Added ${audioItemsAddedToDb} AudioItems to DB from collection ${reference_code}: ${title}. ${audioItemsAlreadyInDb} AudioItems were already in DB.`
+	);
 };
 
 export const handler = async (
@@ -120,10 +209,12 @@ export const handler = async (
 	const startTime = Date.now();
 
 	console.log("Fetching collection summaries from ITMA AtoM API...");
-	const collectionPromises = COLLECTION_SLUGS_TO_IMPORT.map((slug) =>
+	const fetchCollectionPromises = COLLECTION_SLUGS_TO_IMPORT.map((slug) =>
 		fetchCollection(slug)
 	);
-	const collectionPromiseResults = await Promise.allSettled(collectionPromises);
+	const collectionPromiseResults = await Promise.allSettled(
+		fetchCollectionPromises
+	);
 	const rawCollections: RawCollection[] = [];
 	collectionPromiseResults.forEach((result) => {
 		if (result.status === "fulfilled") {
@@ -138,37 +229,22 @@ export const handler = async (
 	await initializeDbConnection();
 
 	console.log("Adding collections to DB if not already present...");
-	for (const rawCollection of rawCollections) {
-		const { reference_code, scope_and_content, creators, title } =
-			rawCollection;
-		const existing = await Collection.findOne({
-			where: { itmaAtomSlug: reference_code },
-		});
-		if (existing) {
-			console.log(`Already have DB record for ${reference_code}: ${title}`);
-			continue;
-		} else {
-			let description = scope_and_content;
-			if (creators.length > 0) {
-				description = `${description} ${creators[0].history ?? ""}`;
-			}
-			const newCollection = Collection.create({
-				slug: EntityService.cleanSlug(reference_code),
-				name: title,
-				description,
-				itmaAtomSlug: reference_code,
-			});
-			await newCollection.save();
-			console.log(`Added new Collection to DB: ${reference_code}: ${title}`);
-		}
-	}
+	const addCollectionPromises = rawCollections.map((rawCollection) =>
+		addCollectionToDbIfNotPresent(rawCollection)
+	);
+	await Promise.allSettled(addCollectionPromises);
 
-	// const totalTunesFoundOnTheSession = keys.length;
-	// const elapsedTimeMs = Date.now() - startTime;
-	// console.log("Total tunes found on TheSession: ", totalTunesFoundOnTheSession);
-	// console.log("Total tunes in database before this script: ", tunesInDb.length);
-	// console.log("Total new tunes added to database: ", totalNewTunesAddedToDb);
-	// console.log("Elapsed time: %s ms", elapsedTimeMs);
+	console.log(
+		"Looping through collections and adding digital audio objects to DB if not already present..."
+	);
+	const addDigitalAudioObjectsPromises = rawCollections.map((rawCollection) =>
+		addCollectionDigitalAudioObjectsToDbIfNotPresent(rawCollection)
+	);
+	await Promise.allSettled(addDigitalAudioObjectsPromises);
 
+	const elapsedTimeMs = Date.now() - startTime;
+	console.log(
+		`Finished! Elapsed time: ${Math.round(elapsedTimeMs / 1000)} seconds`
+	);
 	return;
 };

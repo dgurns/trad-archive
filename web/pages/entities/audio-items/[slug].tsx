@@ -36,7 +36,7 @@ const ViewAudioItemBySlug = () => {
 	});
 
 	const { audioItem } = audioItemData ?? {};
-	const { name, entityType, aliases, tags } = audioItem ?? {};
+	const { name, aliases, tags, itmaAtomSlug } = audioItem ?? {};
 
 	// Sort Tags so that non-time-marker Tags appear first in order of createdAt
 	// ASC, followed by the rest in order of time marker ASC.
@@ -55,6 +55,18 @@ const ViewAudioItemBySlug = () => {
 						Aliases:
 						<br />
 						<span className="text-gray-500">{aliases}</span>
+					</div>
+				)}
+				{itmaAtomSlug && (
+					<div className="mb-4">
+						View on ITMA website:
+						<br />
+						<a
+							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+							target="_blank"
+						>
+							{name} <i className="material-icons text-sm ml-1">launch</i>
+						</a>
 					</div>
 				)}
 				<Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>

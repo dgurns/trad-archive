@@ -61,7 +61,7 @@ const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
 			variables: {
 				input: {
 					take: resultsPerPage,
-					skip: audioItems.length ?? 0,
+					skip: audioItems?.length ?? 0,
 				},
 			},
 		});

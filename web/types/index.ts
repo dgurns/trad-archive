@@ -77,6 +77,7 @@ export interface AudioItem extends BaseEntity {
 	entityType: EntityType.AudioItem;
 	comments?: Comment[] | null;
 	commentsCount?: number;
+	itmaAtomSlug: string | null;
 	urlSource: string | null;
 	isSavedByUser?: boolean;
 }

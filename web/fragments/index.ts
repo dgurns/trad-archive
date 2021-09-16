@@ -184,6 +184,7 @@ export const EntityFragments = {
 			createdAt
 			updatedAt
 			urlSource
+			itmaAtomSlug
 		}
 		${TagFragments.tagForEntity}
 	`,

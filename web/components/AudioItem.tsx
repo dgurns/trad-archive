@@ -122,22 +122,24 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 			</div>
 
 			<div className="mt-4">
-				<div className="text-gray-500 text-sm flex flex-col sm:flex-row">
-					Added by{" "}
-					<Link href={`/users/${createdByUser.id}`}>
-						<a className="flex flex-row px-0 sm:px-1">
-							{createdByUser.verifiedPerson && (
-								<div className="inline">
-									<i className="material-icons text-sm mr-1">verified</i>
-								</div>
-							)}
-							{createdByUser.username}
-						</a>
-					</Link>{" "}
-					{DateTime.formatDateYearTime(createdAt)}
-				</div>
+				{createdByUser && (
+					<div className="text-gray-500 text-sm flex flex-col sm:flex-row">
+						Added by{" "}
+						<Link href={`/users/${createdByUser.id}`}>
+							<a className="flex flex-row px-0 sm:px-1">
+								{createdByUser.verifiedPerson && (
+									<div className="inline">
+										<i className="material-icons text-sm mr-1">verified</i>
+									</div>
+								)}
+								{createdByUser.username}
+							</a>
+						</Link>{" "}
+						{DateTime.formatDateYearTime(createdAt)}
+					</div>
+				)}
 				<div className="text-sm mt-1 text-gray-900 whitespace-pre-line">
-					{description}
+					{description || "No description"}
 				</div>
 			</div>
 

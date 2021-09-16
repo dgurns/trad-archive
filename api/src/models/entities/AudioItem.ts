@@ -26,6 +26,10 @@ export class AudioItem extends EntityBaseFields {
 	comments!: Comment[];
 
 	@Field(() => String, { nullable: true })
+	@Column({ nullable: true, default: null })
+	itmaAtomSlug!: string;
+
+	@Field(() => String, { nullable: true })
 	@Column({ type: "varchar", nullable: true, default: null })
 	urlSource!: string | null;
 	@AfterLoad()

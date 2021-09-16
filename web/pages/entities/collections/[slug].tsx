@@ -64,13 +64,13 @@ const ViewCollectionBySlug = () => {
 				)}
 				{itmaAtomSlug && (
 					<div className="mb-4">
-						View on ITMA:
+						View on ITMA website:
 						<br />
 						<a
 							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
 							target="_blank"
 						>
-							{name}
+							{name} <i className="material-icons text-sm ml-1">launch</i>
 						</a>
 					</div>
 				)}

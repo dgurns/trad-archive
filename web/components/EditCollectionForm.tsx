@@ -69,7 +69,7 @@ const EditCollectionForm = ({ collection, onSuccess }: Props) => {
 					<input
 						placeholder="Aliases"
 						className="mb-2"
-						value={aliases}
+						value={aliases ?? ""}
 						onChange={(event) => setAliases(event.target.value)}
 					/>
 					<div className="text-sm text-gray-400 mb-2 ml-2">
@@ -80,7 +80,7 @@ const EditCollectionForm = ({ collection, onSuccess }: Props) => {
 						placeholder="Description"
 						className="mb-2"
 						value={description}
-						rows={5}
+						rows={10}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 					<input

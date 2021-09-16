@@ -1,5 +1,4 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import compareDesc from "date-fns/compareDesc";
 
 const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 
@@ -75,7 +74,7 @@ export const apolloClient = new ApolloClient({
 							return merged;
 						},
 					},
-					collectionEntriesForUser: {
+					savedItemsForUser: {
 						keyArgs: false,
 						merge(existing, incoming) {
 							// Just return incoming results until pagination is implemented
@@ -118,11 +117,11 @@ export const apolloClient = new ApolloClient({
 					},
 				},
 			},
-			CollectionEntry: {
+			Collection: {
 				fields: {
-					audioItem: {
-						merge(existing, incoming, { mergeObjects }) {
-							return mergeObjects(existing, incoming);
+					tags: {
+						merge(existing, incoming) {
+							return incoming ?? existing;
 						},
 					},
 				},
@@ -167,6 +166,15 @@ export const apolloClient = new ApolloClient({
 					tags: {
 						merge(existing, incoming) {
 							return incoming ?? existing;
+						},
+					},
+				},
+			},
+			SavedItem: {
+				fields: {
+					audioItem: {
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},

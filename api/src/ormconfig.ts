@@ -3,7 +3,7 @@ import { ConnectionOptions } from "typeorm";
 import { User } from "models/User";
 import { Tag } from "models/Tag";
 import { Comment } from "models/Comment";
-import { CollectionEntry } from "models/CollectionEntry";
+import { SavedItem } from "models/SavedItem";
 import { Relationship } from "models/Relationship";
 import { AudioItem } from "models/entities/AudioItem";
 import { Person } from "models/entities/Person";
@@ -30,7 +30,7 @@ const ormConfig: ConnectionOptions = {
 		Tag,
 		Relationship,
 		Comment,
-		CollectionEntry,
+		SavedItem,
 		TakedownRequest,
 		VerificationRequest,
 		AudioItem,

@@ -78,7 +78,7 @@ export interface AudioItem extends BaseEntity {
 	comments?: Comment[] | null;
 	commentsCount?: number;
 	urlSource: string | null;
-	isAddedToCollection?: boolean;
+	isSavedByUser?: boolean;
 }
 
 export interface Person extends BaseEntity {
@@ -143,7 +143,7 @@ export interface Comment {
 	updatedAt: string;
 }
 
-export interface CollectionEntry {
+export interface SavedItem {
 	id: string;
 	audioItem?: AudioItem | null;
 	user?: User | null;

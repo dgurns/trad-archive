@@ -127,9 +127,12 @@ const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
 					</>
 				)}
 				{shouldShowCreatePlace && (
-					<button className="btn-text" onClick={onCreateNewPlaceClicked}>
-						Place
-					</button>
+					<>
+						<button className="btn-text" onClick={onCreateNewPlaceClicked}>
+							Place
+						</button>
+						{shouldShowCommaAfterCreatePlace && ", "}
+					</>
 				)}
 				{shouldShowCreateCollection && (
 					<button className="btn-text" onClick={onCreateNewCollectionClicked}>

@@ -170,7 +170,7 @@ export const EntityFragments = {
 				...TagForEntity
 			}
 			commentsCount
-			isAddedToCollection
+			isSavedByUser
 			status
 			createdByUser {
 				id
@@ -326,9 +326,9 @@ export const CommentFragments = {
 	`,
 };
 
-export const CollectionEntryFragments = {
-	collectionEntry: gql`
-		fragment CollectionEntry on CollectionEntry {
+export const SavedItemFragments = {
+	savedItem: gql`
+		fragment SavedItem on SavedItem {
 			id
 			audioItem {
 				...AudioItem

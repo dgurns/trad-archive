@@ -11,11 +11,11 @@ import { ObjectType, Field } from "type-graphql";
 import { User } from "models/User";
 import { AudioItem } from "models/entities/AudioItem";
 
-// CollectionEntry represents an AudioItem that has been saved to a user's
+// SavedItem represents an AudioItem that has been saved to a user's
 // personal collection
 @ObjectType()
 @TypeOrmEntity()
-export class CollectionEntry extends TypeOrmBaseEntity {
+export class SavedItem extends TypeOrmBaseEntity {
 	@Field(() => String)
 	@PrimaryGeneratedColumn("uuid")
 	readonly id!: string;

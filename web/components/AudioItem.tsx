@@ -7,7 +7,7 @@ import usePlayerContext from "hooks/usePlayerContext";
 
 import Tags from "components/Tags";
 import Menu from "components/Menu";
-import AddToCollectionButton from "components/AddToCollectionButton";
+import SaveItemButton from "components/SaveItemButton";
 import ViewCommentsButton from "components/ViewCommentsButton";
 import TimeMarkers from "components/TimeMarkers";
 import RequestTakedownButton from "components/RequestTakedownButton";
@@ -146,7 +146,7 @@ const AudioItemComponent = ({ audioItem }: Props) => {
 					<ViewCommentsButton audioItem={audioItem} />
 
 					<div className="ml-2">
-						<AddToCollectionButton audioItem={audioItem} />
+						<SaveItemButton audioItem={audioItem} />
 					</div>
 				</div>
 

@@ -32,6 +32,15 @@ functions:
           cors:
             origin: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
             allowCredentials: true
+  importItmaAtomCollections:
+    handler: src/handlers/importItmaAtomCollections.handler
+    environment:
+      SERVERLESS_STAGE: ${opt:stage}
+    timeout: 600
+    events:
+      - schedule:
+          rate: rate(24 hours)
+          enabled: ${self:custom.shouldRunImportItmaAtomCollections.${opt:stage}, self:custom.shouldRunImportItmaAtomCollections.preview}
   importTunes:
     handler: src/handlers/importTunes.handler
     environment:
@@ -52,10 +61,16 @@ custom:
     dev: http://localhost:3000
     preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app
     prod: https://www.tradarchive.com
+  shouldRunImportItmaAtomCollections:
+    dev: false
+    # TODO: Run on preview when script is finished
+    preview: false
+    # TODO: Run on prod when environment is deployed
+    prod: false
   shouldRunImportTunes:
     dev: false
     preview: true
-    # TODO: Run on prod when environment is ready
+    # TODO: Run on prod when environment is deployed
     prod: false
   webpack:
     webpackConfig: "webpack.config.js"

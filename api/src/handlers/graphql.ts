@@ -26,6 +26,7 @@ import { PersonResolver } from "resolvers/PersonResolver";
 import { InstrumentResolver } from "resolvers/InstrumentResolver";
 import { PlaceResolver } from "resolvers/PlaceResolver";
 import { TuneResolver } from "resolvers/TuneResolver";
+import { CollectionResolver } from "resolvers/CollectionResolver";
 
 const { SERVERLESS_STAGE } = process.env;
 
@@ -56,6 +57,7 @@ const initializeServer = async () => {
 				InstrumentResolver,
 				PlaceResolver,
 				TuneResolver,
+				CollectionResolver,
 			],
 			dateScalarMode: "isoDate",
 			authChecker,

@@ -17,6 +17,7 @@ export enum EntityType {
 	Instrument = "Instrument",
 	Place = "Place",
 	Tune = "Tune",
+	Collection = "Collection",
 }
 registerEnumType(EntityType, {
 	name: "EntityType",

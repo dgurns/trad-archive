@@ -229,7 +229,7 @@ export default function Home({
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h1 className="mb-6">Explore Audio Items</h1>
+					<h1 className="mb-6">Explore</h1>
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}

@@ -126,7 +126,8 @@ export class Tag extends TypeOrmBaseEntity {
 			this.subjectPerson ??
 			this.subjectInstrument ??
 			this.subjectPlace ??
-			this.subjectTune;
+			this.subjectTune ??
+			this.subjectCollection;
 	}
 
 	@Field(() => EntityUnion)
@@ -138,6 +139,7 @@ export class Tag extends TypeOrmBaseEntity {
 			this.objectPerson ??
 			this.objectInstrument ??
 			this.objectPlace ??
-			this.objectTune;
+			this.objectTune ??
+			this.objectCollection;
 	}
 }

@@ -70,6 +70,12 @@ const CreateCollectionForm = ({ onSuccess }: Props) => {
 	return (
 		<>
 			<div className="flex flex-col align-start">
+				<div className="text-gray-500 mb-8">
+					A Collection is a logical grouping of other entities. For example,
+					"O'Neill's Music of Ireland" would be a Collection of Tunes. Or the
+					"Alan MacWeeney Collection" would be a Collection of AudioItems.
+				</div>
+
 				<form onSubmit={onCreateCollection}>
 					<input
 						placeholder="Name"
@@ -79,7 +85,7 @@ const CreateCollectionForm = ({ onSuccess }: Props) => {
 						onChange={(event) => setName(event.target.value)}
 					/>
 					<input
-						placeholder="URL slug (ie. oneills-music-of-ireland)"
+						placeholder="URL slug (ie. alan-macweeney-collection)"
 						className="mb-2"
 						value={slug}
 						onChange={(event) => setSlug(event.target.value)}
@@ -87,7 +93,7 @@ const CreateCollectionForm = ({ onSuccess }: Props) => {
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						This will be used for the URL of this Collection, for example{" "}
 						{`https://trad-archive.com/entities/collections/${
-							slug || "oneills-music-of-ireland"
+							slug || "alan-macweeney-collection"
 						}`}
 					</div>
 					<input

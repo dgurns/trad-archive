@@ -14,6 +14,9 @@ const AdminHome = () => {
 					<Link href="/takedown-requests">
 						<a className="block mb-2">Manage Takedown Requests</a>
 					</Link>
+					<Link href="/relationships/new">
+						<a className="block mb-2">Create Relationship</a>
+					</Link>
 					<Link href="/entities/audio-items/new">
 						<a className="block mb-2">Create Audio Item</a>
 					</Link>
@@ -28,9 +31,6 @@ const AdminHome = () => {
 					</Link>
 					<Link href="/entities/collections/new">
 						<a className="block mb-2">Create Collection</a>
-					</Link>
-					<Link href="/relationships/new">
-						<a className="block mb-2">Create Relationship</a>
 					</Link>
 				</>
 			</RequireAdmin>

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
@@ -34,12 +35,70 @@ const ViewCollectionBySlug = () => {
 		skip: !slug,
 		fetchPolicy: "cache-and-network",
 	});
+	const { collection } = collectionData ?? {};
+	const { name, aliases, description, tags, itmaAtomSlug } = collection ?? {};
+	const sortedTags = TagService.sort(tags);
 
 	const [
 		audioItems = [],
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPageOfAudioItems,
-	] = useAudioItemsTaggedWithEntity({ entity: collectionData?.collection });
+	] = useAudioItemsTaggedWithEntity({ entity: collection });
+
+	const aboutMarkup = useMemo(
+		() => (
+			<>
+				{description && (
+					<div className="mb-4">
+						Description:
+						<br />
+						<span className="text-gray-500">{description}</span>
+					</div>
+				)}
+				{aliases && (
+					<div className="mb-4">
+						Aliases:
+						<br />
+						<span className="text-gray-500">{aliases}</span>
+					</div>
+				)}
+				{itmaAtomSlug && (
+					<div className="mb-4">
+						View on ITMA:
+						<br />
+						<a
+							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+							target="_blank"
+						>
+							{name}
+						</a>
+					</div>
+				)}
+				<Link href={`/entities/collections/${slug}/edit`}>Edit</Link>
+			</>
+		),
+		[aliases, description, slug, itmaAtomSlug]
+	);
+
+	const tagsMarkup = useMemo(
+		() => (
+			<>
+				{sortedTags.map((tag, index) => (
+					<TagWithRelationshipToObject tag={tag} key={index} className="mb-4" />
+				))}
+				<div>
+					<AddTagButton entity={collection} />
+					{sortedTags.length > 0 && (
+						<>
+							<span className="text-gray-500 px-2">/</span>
+							<EditTagsButton entity={collection} />
+						</>
+					)}
+				</div>
+			</>
+		),
+		[sortedTags, collection]
+	);
 
 	let statusMessage;
 	if (!collectionData && !collectionError) {
@@ -52,11 +111,6 @@ const ViewCollectionBySlug = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const { collection } = collectionData;
-	const { name, entityType, aliases, description, tags, itmaAtomSlug } =
-		collection;
-	const sortedTags = TagService.sort(tags);
-
 	const shouldShowAudioItems = audioItems.length > 0;
 	const noAudioItemsFound =
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
@@ -65,7 +119,16 @@ const ViewCollectionBySlug = () => {
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<h1 className="mb-6">Audio Items Tagged with "{name}"</h1>
+					<div className="flex flex-row items-center">
+						Collections{" "}
+						<i className="material-icons text-gray-500 text-base">
+							keyboard_arrow_right
+						</i>
+					</div>
+					<h1 className="mb-6">{name}</h1>
+
+					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
+
 					{shouldShowAudioItems && (
 						<>
 							{audioItems.map((audioItem, index) => (
@@ -82,59 +145,21 @@ const ViewCollectionBySlug = () => {
 						</>
 					)}
 					{audioItemsLoading && <LoadingBlock />}
-					{noAudioItemsFound && <div className="text-gray-500">None yet</div>}
+					{noAudioItemsFound && (
+						<div className="text-gray-500">
+							No Audio Items tagged with this yet
+						</div>
+					)}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
 					)}
 				</div>
-				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">About {name}</h3>
-					<div className="mb-4">
-						Entity Type:
-						<br />
-						<span className="text-gray-500">{entityType}</span>
-					</div>
-					<div className="mb-4">
-						Aliases:
-						<br />
-						<span className="text-gray-500">{aliases}</span>
-					</div>
-					{itmaAtomSlug && (
-						<div className="mb-4">
-							View on ITMA:
-							<br />
-							<a
-								href={`https://itma-atom.arkivum.net/index.php/${slug}`}
-								target="_blank"
-							>
-								{name}
-							</a>
-						</div>
-					)}
-					<div className="mb-4">
-						Description:
-						<br />
-						<span className="text-gray-500">{description}</span>
-					</div>
-					<Link href={`/entities/collections/${slug}/edit`}>Edit</Link>
 
+				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+					<h3 className="mb-4">About</h3>
+					{aboutMarkup}
 					<h3 className="mt-8 mb-4">Tags</h3>
-					{sortedTags.map((tag, index) => (
-						<TagWithRelationshipToObject
-							tag={tag}
-							key={index}
-							className="mb-4"
-						/>
-					))}
-					<div>
-						<AddTagButton entity={collection} />
-						{tags.length > 0 && (
-							<>
-								<span className="text-gray-500 px-2">/</span>
-								<EditTagsButton entity={collection} />
-							</>
-						)}
-					</div>
+					{tagsMarkup}
 				</div>
 			</div>
 		</Layout>

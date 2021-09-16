@@ -138,7 +138,7 @@ export const handler = async (
 		try {
 			const tune = Tune.create({
 				name: rawTune.name,
-				slug: EntityService.cleanSlug(`${tuneId}-${rawTune.name}`),
+				slug: EntityService.cleanSlug(tuneId),
 				aliases: rawAliases?.map((rawAlias) => rawAlias.alias).join(", "),
 				theSessionTuneId: tuneId,
 				type: rawTune.type,

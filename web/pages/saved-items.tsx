@@ -29,7 +29,7 @@ const SavedItems = () => {
 		<Layout>
 			<RequireUser>
 				<div className="flex flex-col">
-					<h1 className="mb-4">Saved</h1>
+					<h1 className="mb-4">Saved Items</h1>
 					{error && (
 						<div className="text-red-600 mb-4">Could not fetch saved items</div>
 					)}

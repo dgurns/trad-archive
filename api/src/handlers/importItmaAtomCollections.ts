@@ -95,7 +95,7 @@ interface RawDigitalAudioObject {
 	digital_object: {
 		media_type: string;
 		mime_type: string;
-		url: string;
+		reference_url: string;
 	};
 }
 const fetchDigitalAudioObject = async (
@@ -176,13 +176,16 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 				// It's not in DB, so fetch details and add it
 				const data = await fetchDigitalAudioObject(result.slug);
 				if (
-					data?.publication_status !== "Published" ||
-					data?.digital_object?.media_type !== "Audio" ||
-					data?.digital_object?.mime_type !== "audio/mpeg"
+					!data ||
+					data.publication_status !== "Published" ||
+					!data.digital_object.reference_url ||
+					data.digital_object?.media_type !== "Audio" ||
+					data.digital_object?.mime_type !== "audio/mpeg"
 				) {
 					continue;
 				}
-				const urlSourceSuffix = data.digital_object.url.split("/uploads/")[1];
+				const urlSourceSuffix =
+					data.digital_object.reference_url.split("/uploads/")[1];
 				const urlSource = `${ITMA_ATOM_ORIGIN}/uploads/${urlSourceSuffix}`;
 				const newAudioItem = AudioItem.create({
 					slug: EntityService.cleanSlug(result.slug),

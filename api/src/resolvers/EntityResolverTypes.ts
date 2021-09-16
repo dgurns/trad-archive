@@ -9,6 +9,6 @@ export class SearchEntitiesInput {
 	@Field(() => [EntityType], { nullable: true })
 	entityTypes?: EntityType[];
 
-	@Field(() => Int, { nullable: true, defaultValue: 20 })
+	@Field(() => Int, { nullable: true, defaultValue: 24 })
 	take!: number;
 }

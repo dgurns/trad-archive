@@ -7,17 +7,24 @@ import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
+import { Collection } from "models/entities/Collection";
 import { SearchEntitiesInput } from "resolvers/EntityResolverTypes";
 
 // Entity is a type for representing any entity
-export type Entity = AudioItem | Person | Instrument | Place | Tune;
+export type Entity =
+	| AudioItem
+	| Person
+	| Instrument
+	| Place
+	| Tune
+	| Collection;
 
 // EntityUnionType is a GraphQL union type returned by resolvers. It contains
 // logic for GraphQL clients to distinguish the entity type represented by a
 // value.
 export const EntityUnion = createUnionType({
 	name: "Entity",
-	types: () => [AudioItem, Person, Instrument, Place, Tune],
+	types: () => [AudioItem, Person, Instrument, Place, Tune, Collection],
 	resolveType: (value) => {
 		switch (value.entityType) {
 			case EntityType.AudioItem:
@@ -30,6 +37,8 @@ export const EntityUnion = createUnionType({
 				return Place;
 			case EntityType.Tune:
 				return Tune;
+			case EntityType.Collection:
+				return Collection;
 			default:
 				return undefined;
 		}
@@ -61,6 +70,9 @@ export class EntityResolver {
 				where: [{ id }, { slug }],
 			}),
 			Tune.findOne({
+				where: [{ id }, { slug }],
+			}),
+			Collection.findOne({
 				where: [{ id }, { slug }],
 			}),
 		]);
@@ -140,6 +152,17 @@ export class EntityResolver {
 			})
 			.take(takeFromEach)
 			.getMany();
+		const collectionQuery = entityManager
+			.createQueryBuilder(Collection, "collection")
+			.leftJoinAndSelect("collection.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(collection.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(collection.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.take(takeFromEach)
+			.getMany();
 
 		// Determine which queries to make
 		let queryPromises = [];
@@ -161,6 +184,8 @@ export class EntityResolver {
 					case EntityType.Tune:
 						queryPromises.push(tuneQuery);
 						break;
+					case EntityType.Collection:
+						queryPromises.push(collectionQuery);
 					default:
 						break;
 				}
@@ -172,6 +197,7 @@ export class EntityResolver {
 				placeQuery,
 				audioItemQuery,
 				tuneQuery,
+				collectionQuery,
 			];
 		}
 		// Await the query results and return them

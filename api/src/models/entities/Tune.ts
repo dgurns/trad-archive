@@ -3,6 +3,7 @@ import {
 	Column,
 	OneToMany,
 	JoinColumn,
+	Index,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
@@ -47,5 +48,6 @@ export class Tune extends EntityBaseFields {
 
 	@Field(() => String, { nullable: true })
 	@Column({ nullable: true, default: null })
+	@Index()
 	abc!: string;
 }

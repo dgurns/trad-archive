@@ -106,6 +106,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(person.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const instrumentQuery = entityManager
@@ -117,6 +123,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(instrument.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const placeQuery = entityManager
@@ -128,6 +140,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(place.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const audioItemQuery = entityManager
@@ -139,6 +157,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(audioItem.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const tuneQuery = entityManager
@@ -149,6 +173,9 @@ export class EntityResolver {
 			})
 			.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(tune.abc)) LIKE unaccent(:abc)", {
+				abc: `%${searchTermLowercased}%`,
 			})
 			.take(takeFromEach)
 			.getMany();
@@ -161,6 +188,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(collection.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(collection.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 

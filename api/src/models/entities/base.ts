@@ -57,6 +57,7 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field(() => String, { nullable: true })
 	@Column({ nullable: true, default: null })
+	@Index()
 	description!: string;
 
 	@Field(() => EntityStatus)

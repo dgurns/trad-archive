@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { ScheduledEvent, Context as LambdaContext } from "aws-lambda";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
-import { Connection, Entity } from "typeorm";
+import { Connection } from "typeorm";
 
 import { connectToDatabase } from "db";
 import { Collection } from "models/entities/Collection";
@@ -26,21 +26,20 @@ const headers = {
 	"REST-API-Key": ITMA_ATOM_API_KEY ?? "",
 };
 
-enum PublicationStatus {
+enum RawPublicationStatus {
 	Draft = "Draft",
 	Published = "Published",
 }
-// RawCollectionCreator is the creator record for a given information object
-interface RawCollectionCreator {
+interface RawCreator {
 	history: string;
 }
-// RawCollection is the information object returned for a given collection slug
+// RawCollection is the AtoM information object returned for a collection slug
 interface RawCollection {
 	reference_code: string;
 	title: string;
-	publication_status: PublicationStatus;
+	publication_status: RawPublicationStatus;
 	scope_and_content: string;
-	creators: RawCollectionCreator[];
+	creators: RawCreator[];
 }
 const fetchCollection = async (slug: string): Promise<RawCollection> => {
 	const response = await fetch(
@@ -90,7 +89,7 @@ const fetchCollectionDigitalAudioObjects = async ({
 // audio object slug
 interface RawDigitalAudioObject {
 	title: string;
-	publication_status: PublicationStatus;
+	publication_status: RawPublicationStatus;
 	scope_and_content: string;
 	digital_object: {
 		media_type: string;
@@ -150,6 +149,7 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 		`Found ${total} digital audio objects in ${reference_code}: ${title}`
 	);
 
+	// Get all the digital audio objects for this collection slug
 	let currentSkipValue = 0;
 	let audioItemsAlreadyInDb = 0;
 	let audioItemsAddedToDb = 0;
@@ -165,20 +165,19 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 			limit: 10,
 		});
 		for (const result of response.results) {
-			// Check if this is already in DB
 			const existing = await AudioItem.findOne({
 				where: { itmaAtomSlug: result.slug },
 			});
+			// If raw audio object is already in DB, skip to next. If not, add it.
 			if (existing) {
 				audioItemsAlreadyInDb = audioItemsAlreadyInDb + 1;
 				continue;
 			} else {
-				// It's not in DB, so fetch details and add it
 				const data = await fetchDigitalAudioObject(result.slug);
 				if (
 					!data ||
 					data.publication_status !== "Published" ||
-					!data.digital_object.reference_url ||
+					!data.digital_object?.reference_url ||
 					data.digital_object?.media_type !== "Audio" ||
 					data.digital_object?.mime_type !== "audio/mpeg"
 				) {

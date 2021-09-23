@@ -36,17 +36,8 @@ const ViewTuneBySlug = () => {
 		}
 	);
 	const { tune } = tuneData ?? {};
-	const {
-		name,
-		entityType,
-		aliases,
-		tags,
-		theSessionTuneId,
-		type,
-		mode,
-		meter,
-		abc,
-	} = tune ?? {};
+	const { name, aliases, tags, theSessionTuneId, type, mode, meter, abc } =
+		tune ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	const [

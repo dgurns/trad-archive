@@ -44,6 +44,16 @@ export class AudioItemResolver {
 		});
 	}
 
+	@Query(() => AudioItem, { nullable: true })
+	audioItemRandom() {
+		return getManager()
+			.createQueryBuilder(AudioItem, "a")
+			.leftJoinAndSelect("a.createdByUser", "createdByUser")
+			.leftJoinAndSelect("a.updatedByUser", "updatedByUser")
+			.orderBy("RANDOM()")
+			.getOne();
+	}
+
 	@Query(() => [AudioItem])
 	async audioItems(@Arg("input") input: AudioItemsInput) {
 		const { take, skip, status } = input;
@@ -195,7 +205,7 @@ export class AudioItemResolver {
 
 	@FieldResolver(() => [Comment])
 	comments(@Root() audioItem: AudioItem) {
-		return Tag.find({
+		return Comment.find({
 			where: { parentAudioItemId: In([audioItem.id]) },
 			order: { createdAt: "ASC" },
 		});

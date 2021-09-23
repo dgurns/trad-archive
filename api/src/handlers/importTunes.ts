@@ -7,16 +7,6 @@ import { connectToDatabase } from "db";
 import { Tune } from "models/entities/Tune";
 import EntityService from "services/Entity";
 
-// Store the DB connection outside of the Lambda handler so it can persist
-// between invocations once it is created.
-let dbConnection: Connection | undefined;
-
-const initializeDbConnection = async () => {
-	if (typeof dbConnection === "undefined") {
-		dbConnection = await connectToDatabase();
-	}
-};
-
 interface RawTune {
 	tune_id: string;
 	setting_id: string;
@@ -98,6 +88,8 @@ export const handler = async (
 ) => {
 	const startTime = Date.now();
 
+	const dbConnection = await connectToDatabase();
+
 	console.log("Fetching tunes and aliases data from The Session data dumps...");
 	const [rawTunes, rawAliases] = await Promise.all([
 		fetchTunesData(),
@@ -110,8 +102,6 @@ export const handler = async (
 	const rawDataByTuneId: RawDataByTuneId = {};
 	sortRawTunesById(rawTunes, rawDataByTuneId);
 	sortRawAliasesByTuneId(rawAliases, rawDataByTuneId);
-
-	await initializeDbConnection();
 
 	console.log("Checking tunes already in database...");
 	const tunesInDb =
@@ -155,6 +145,11 @@ export const handler = async (
 				(error as Error).message
 			);
 		}
+	}
+
+	// Clean up the DB connection
+	if (dbConnection) {
+		await dbConnection.close();
 	}
 
 	const totalTunesFoundOnTheSession = keys.length;

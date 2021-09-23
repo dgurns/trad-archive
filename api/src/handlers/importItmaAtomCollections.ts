@@ -15,16 +15,6 @@ import EntityService from "services/Entity";
 const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
 const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY } = process.env;
 
-// Store the DB connection outside of the Lambda handler so it can persist
-// between invocations once it is created.
-let dbConnection: Connection | undefined;
-
-const initializeDbConnection = async () => {
-	if (typeof dbConnection === "undefined") {
-		dbConnection = await connectToDatabase();
-	}
-};
-
 const headers = {
 	"REST-API-Key": ITMA_ATOM_API_KEY ?? "",
 };
@@ -251,6 +241,7 @@ export const handler = async (
 	context: LambdaContext
 ) => {
 	const startTime = Date.now();
+	const dbConnection = await connectToDatabase();
 
 	console.log("Fetching collection summaries from ITMA AtoM API...");
 	const fetchCollectionPromises = COLLECTION_SLUGS_TO_IMPORT.map((slug) =>
@@ -270,8 +261,6 @@ export const handler = async (
 		}
 	});
 
-	await initializeDbConnection();
-
 	console.log("Adding collections to DB if not already present...");
 	const addCollectionPromises = rawCollections.map((rawCollection) =>
 		addCollectionToDbIfNotPresent(rawCollection)
@@ -290,5 +279,10 @@ export const handler = async (
 	console.log(
 		`Finished! Elapsed time: ${Math.round(elapsedTimeMs / 1000)} seconds`
 	);
+
+	// Clean up the DB connection
+	if (dbConnection) {
+		await dbConnection.close();
+	}
 	return;
 };

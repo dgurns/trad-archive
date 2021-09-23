@@ -79,7 +79,7 @@ const SearchEntities = ({
 					input: {
 						searchTerm: cleanedSearchTerm,
 						entityTypes,
-						take: take ?? 30,
+						take: take ?? 24,
 					},
 				},
 			});

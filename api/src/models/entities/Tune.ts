@@ -48,6 +48,5 @@ export class Tune extends EntityBaseFields {
 
 	@Field(() => String, { nullable: true })
 	@Column({ nullable: true, default: null })
-	@Index()
 	abc!: string;
 }

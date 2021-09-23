@@ -104,15 +104,11 @@ export const apolloClient = new ApolloClient({
 			AudioItem: {
 				fields: {
 					tags: {
-						merge(existing, incoming) {
-							// If incoming `tags` field value is `null` or `undefined`, don't
-							// overwrite the existing field value in the cache.
-							return incoming ?? existing;
-						},
+						merge: mergeArrayById,
 					},
 					createdByUser: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},
@@ -138,7 +134,7 @@ export const apolloClient = new ApolloClient({
 					},
 					createdByUser: {
 						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+							return incoming ?? existing;
 						},
 					},
 				},

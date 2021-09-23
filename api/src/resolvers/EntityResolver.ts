@@ -174,9 +174,6 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
-			.orWhere("unaccent(LOWER(tune.abc)) LIKE unaccent(:abc)", {
-				abc: `%${searchTermLowercased}%`,
-			})
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager

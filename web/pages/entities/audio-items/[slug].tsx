@@ -59,13 +59,14 @@ const ViewAudioItemBySlug = () => {
 				)}
 				{itmaAtomSlug && (
 					<div className="mb-4">
-						View on ITMA website:
-						<br />
+						<div className="italic text-gray-500">
+							This was sourced from ITMA's AtoM archival repository.
+						</div>
 						<a
 							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
 							target="_blank"
 						>
-							{name} <i className="material-icons text-sm ml-1">launch</i>
+							View on AtoM <i className="material-icons text-sm">launch</i>
 						</a>
 					</div>
 				)}

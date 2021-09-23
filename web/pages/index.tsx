@@ -287,14 +287,18 @@ export default function Home({
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
 								<div className="mb-1">
-									<Link href={`/users/${createdByUser.id}`}>
-										{createdByUser.username}
-									</Link>
-									{` tagged `}
+									{createdByUser && (
+										<>
+											<Link href={`/users/${createdByUser.id}`}>
+												{createdByUser.username}
+											</Link>
+											{` tagged `}
+										</>
+									)}
 									<Link href={EntityService.makeHrefForView(subjectEntity)}>
 										{subjectEntity.name}
 									</Link>
-									{` with `}
+									{createdByUser ? ` with ` : ` was tagged with `}
 									<Link href={EntityService.makeHrefForView(objectEntity)}>
 										{objectEntity.name}
 									</Link>

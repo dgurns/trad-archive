@@ -145,9 +145,11 @@ const relationshipsToSeed: RelationshipToSeed[] = [
 	...tuneRelationshipsToSeed,
 ];
 
-// seedRelationshipInDb seeds a single relationship in the DB if it doesn't
-// already exist.
-const seedRelationshipInDb = async (relationship: RelationshipToSeed) => {
+// createRelationshipInDbIfNotPresent creates a single relationship in the DB if
+// it doesn't already exist.
+const createRelationshipInDbIfNotPresent = async (
+	relationship: RelationshipToSeed
+) => {
 	const existingInDb = await getManager()
 		.createQueryBuilder(Relationship, "r")
 		.where("r.subjectEntityType = :subjectEntityType", {
@@ -172,34 +174,35 @@ const seedRelationshipInDb = async (relationship: RelationshipToSeed) => {
 	}
 };
 
-// seedRelationshipsInDb seeds a predefined set of Relationships into the DB. If
-// a Relationship already exists, it won't do anything; otherwise it will save a
-// new record.
-export const seedRelationshipsInDb = async () => {
-	// To minimize performance impact, check the DB for the final seed to
-	// determine if seeding has already happened
-	// const example = [...relationshipsToSeed].pop();
-	// if (!example) {
-	// 	return;
-	// }
-	// const exampleInDb = await getManager()
-	// 	.createQueryBuilder(Relationship, "r")
-	// 	.where("r.subjectEntityType = :subjectEntityType", {
-	// 		subjectEntityType: example.subjectEntityType,
-	// 	})
-	// 	.andWhere("r.objectEntityType = :objectEntityType", {
-	// 		objectEntityType: example.objectEntityType,
-	// 	})
-	// 	.andWhere("r.name = :name", {
-	// 		name: example.name,
-	// 	})
-	// 	.getRawOne();
-	// if (Boolean(exampleInDb)) {
-	// 	return;
-	// }
-	// Otherwise, seed the Relationships
+// seedRelationshipsInDbIfNotPresent seeds a predefined set of Relationships
+// into the DB. If a Relationship already exists, it won't do anything;
+// otherwise it will save a new record.
+export const seedRelationshipsInDbIfNotPresent = async () => {
+	// To minimize performance impact, check the DB for the final seed as a spot
+	// check to determine if seeding has already happened
+	const example = [...relationshipsToSeed].pop();
+	if (!example) {
+		return;
+	}
+	const exampleInDb = await getManager()
+		.createQueryBuilder(Relationship, "r")
+		.where("r.subjectEntityType = :subjectEntityType", {
+			subjectEntityType: example.subjectEntityType,
+		})
+		.andWhere("r.objectEntityType = :objectEntityType", {
+			objectEntityType: example.objectEntityType,
+		})
+		.andWhere("r.name = :name", {
+			name: example.name,
+		})
+		.getRawOne();
+	if (Boolean(exampleInDb)) {
+		return;
+	}
+	console.log("TODO: Example not found, seeding relationships...");
+	// Otherwise, create the Relationships
 	const promises = relationshipsToSeed.map((relationship) =>
-		seedRelationshipInDb(relationship)
+		createRelationshipInDbIfNotPresent(relationship)
 	);
 	await Promise.allSettled(promises);
 };

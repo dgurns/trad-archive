@@ -60,7 +60,7 @@ const ViewAudioItemBySlug = () => {
 				{itmaAtomSlug && (
 					<div className="mb-4">
 						<div className="italic text-gray-500">
-							This was sourced from ITMA's AtoM archival repository.
+							This was sourced from ITMA's AtoM archive
 						</div>
 						<a
 							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
@@ -101,6 +101,8 @@ const ViewAudioItemBySlug = () => {
 		statusMessage = <LoadingBlock />;
 	} else if (!audioItemData && audioItemError) {
 		statusMessage = `Error fetching Audio Item with slug ${slug}`;
+	} else if (!audioItem) {
+		statusMessage = "Could not find this Audio Item";
 	}
 
 	if (statusMessage) {

@@ -48,6 +48,19 @@ const ViewCollectionBySlug = () => {
 	const aboutMarkup = useMemo(
 		() => (
 			<>
+				{itmaAtomSlug && (
+					<div className="mb-4">
+						<div className="italic text-gray-500">
+							This was sourced from ITMA's AtoM archive
+						</div>
+						<a
+							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+							target="_blank"
+						>
+							View on AtoM <i className="material-icons text-sm">launch</i>
+						</a>
+					</div>
+				)}
 				{description && (
 					<div className="mb-4">
 						Description:
@@ -60,18 +73,6 @@ const ViewCollectionBySlug = () => {
 						Aliases:
 						<br />
 						<span className="text-gray-500">{aliases}</span>
-					</div>
-				)}
-				{itmaAtomSlug && (
-					<div className="mb-4">
-						View on ITMA website:
-						<br />
-						<a
-							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
-							target="_blank"
-						>
-							{name} <i className="material-icons text-sm ml-1">launch</i>
-						</a>
 					</div>
 				)}
 				<Link href={`/entities/collections/${slug}/edit`}>Edit</Link>

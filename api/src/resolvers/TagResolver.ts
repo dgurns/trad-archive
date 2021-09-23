@@ -37,9 +37,11 @@ export class TagResolver {
 	// connecting other entities to Tommy Peoples.
 	@Query(() => [Tag])
 	tagsToEntity(@Arg("input") input: TagsToEntityInput) {
-		const { entityType, entityId } = input;
+		const { entityType, entityId, take, skip } = input;
 		return Tag.find({
 			where: { [`object${entityType}Id`]: entityId },
+			take,
+			skip,
 			order: { createdAt: "DESC" },
 		});
 	}

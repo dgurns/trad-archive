@@ -104,7 +104,9 @@ export const apolloClient = new ApolloClient({
 			AudioItem: {
 				fields: {
 					tags: {
-						merge: mergeArrayById,
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
 					},
 					createdByUser: {
 						merge(existing, incoming, { mergeObjects }) {
@@ -188,8 +190,8 @@ export const apolloClient = new ApolloClient({
 						},
 					},
 					createdByUser: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},

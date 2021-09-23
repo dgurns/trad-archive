@@ -5,8 +5,11 @@ import { URLSearchParams } from "url";
 import { Connection } from "typeorm";
 
 import { connectToDatabase } from "db";
+import { EntityType } from "models/entities/base";
 import { Collection } from "models/entities/Collection";
 import { AudioItem } from "models/entities/AudioItem";
+import { Relationship } from "models/Relationship";
+import { Tag } from "models/Tag";
 import EntityService from "services/Entity";
 
 const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
@@ -149,6 +152,25 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 		`Found ${total} digital audio objects in ${reference_code}: ${title}`
 	);
 
+	// Get the Collection in DB so we can use it to tag each AudioItem
+	const collectionInDb = await Collection.findOne({
+		where: { itmaAtomSlug: reference_code },
+	});
+	const audioItemToCollectionRelationship = await Relationship.findOne({
+		where: {
+			subjectEntityType: EntityType.AudioItem,
+			objectEntityType: EntityType.Collection,
+			name: "is contained in",
+		},
+	});
+	const collectionToAudioItemRelationship = await Relationship.findOne({
+		where: {
+			subjectEntityType: EntityType.Collection,
+			objectEntityType: EntityType.AudioItem,
+			name: "contains",
+		},
+	});
+
 	// Get all the digital audio objects for this collection slug
 	let currentSkipValue = 0;
 	let audioItemsAlreadyInDb = 0;
@@ -195,6 +217,26 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 				});
 				await newAudioItem.save();
 				audioItemsAddedToDb = audioItemsAddedToDb + 1;
+
+				// Tag this AudioItem with the associated Collection and vice versa
+				if (
+					collectionInDb &&
+					audioItemToCollectionRelationship &&
+					collectionToAudioItemRelationship
+				) {
+					const tag1 = Tag.create({
+						relationship: audioItemToCollectionRelationship,
+						subjectAudioItem: newAudioItem,
+						objectCollection: collectionInDb,
+					});
+					const tag2 = Tag.create({
+						relationship: collectionToAudioItemRelationship,
+						subjectCollection: collectionInDb,
+						objectAudioItem: newAudioItem,
+					});
+					await tag1.save();
+					await tag2.save();
+				}
 			}
 		}
 		currentSkipValue = currentSkipValue + 10;

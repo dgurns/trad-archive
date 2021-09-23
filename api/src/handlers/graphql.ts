@@ -9,7 +9,7 @@ import {
 } from "aws-lambda";
 
 import { connectToDatabase } from "db";
-import { seedRelationshipsInDb } from "seed/relationships";
+import { seedRelationshipsInDbIfNotPresent } from "seed/relationships";
 import { createCustomContext } from "middleware/context";
 const apolloServerPlugins = require("middleware/plugins");
 import { authChecker } from "middleware/authChecker";
@@ -39,7 +39,9 @@ let apolloServer: ApolloServer | undefined;
 const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
-		await seedRelationshipsInDb();
+		const start = Date.now();
+		await seedRelationshipsInDbIfNotPresent();
+		console.log("TODO: SEEDED RELATIONSHIPS, elapsed ms:", Date.now() - start);
 	}
 
 	if (typeof apolloServer === "undefined") {

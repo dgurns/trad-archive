@@ -73,7 +73,7 @@ const CreateCollectionForm = ({ onSuccess }: Props) => {
 				<div className="text-gray-500 mb-8">
 					A Collection is a logical grouping of other entities. For example,
 					"O'Neill's Music of Ireland" would be a Collection of Tunes. Or the
-					"Alan MacWeeney Collection" would be a Collection of AudioItems.
+					"Alen MacWeeney Collection" would be a Collection of AudioItems.
 				</div>
 
 				<form onSubmit={onCreateCollection}>

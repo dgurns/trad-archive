@@ -1,8 +1,8 @@
 import { createConnection, getConnectionManager } from "typeorm";
 import ormConfig, { DB_CONNECTION_NAME } from "ormconfig";
 
-export const connectToDatabase = () => {
-	return createConnection(ormConfig);
+export const connectToDatabase = async () => {
+	const connection = await createConnection(ormConfig);
 
 	// Add 'unaccent' PostgreSQL extension to enable accent-insensitive queries,
 	// for example "unaccent(person.firstName) = Siobhan" would match "Siobhán"
@@ -11,6 +11,8 @@ export const connectToDatabase = () => {
 	// await queryRunner.connect();
 	// await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "unaccent"');
 	// await queryRunner.release();
+
+	return connection;
 };
 
 export const getDatabaseConnection = () => {

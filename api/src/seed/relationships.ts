@@ -178,25 +178,25 @@ const seedRelationshipInDb = async (relationship: RelationshipToSeed) => {
 export const seedRelationshipsInDb = async () => {
 	// To minimize performance impact, check the DB for the final seed to
 	// determine if seeding has already happened
-	const example = [...relationshipsToSeed].pop();
-	if (!example) {
-		return;
-	}
-	const exampleInDb = await getManager()
-		.createQueryBuilder(Relationship, "r")
-		.where("r.subjectEntityType = :subjectEntityType", {
-			subjectEntityType: example.subjectEntityType,
-		})
-		.andWhere("r.objectEntityType = :objectEntityType", {
-			objectEntityType: example.objectEntityType,
-		})
-		.andWhere("r.name = :name", {
-			name: example.name,
-		})
-		.getRawOne();
-	if (Boolean(exampleInDb)) {
-		return;
-	}
+	// const example = [...relationshipsToSeed].pop();
+	// if (!example) {
+	// 	return;
+	// }
+	// const exampleInDb = await getManager()
+	// 	.createQueryBuilder(Relationship, "r")
+	// 	.where("r.subjectEntityType = :subjectEntityType", {
+	// 		subjectEntityType: example.subjectEntityType,
+	// 	})
+	// 	.andWhere("r.objectEntityType = :objectEntityType", {
+	// 		objectEntityType: example.objectEntityType,
+	// 	})
+	// 	.andWhere("r.name = :name", {
+	// 		name: example.name,
+	// 	})
+	// 	.getRawOne();
+	// if (Boolean(exampleInDb)) {
+	// 	return;
+	// }
 	// Otherwise, seed the Relationships
 	const promises = relationshipsToSeed.map((relationship) =>
 		seedRelationshipInDb(relationship)

@@ -199,7 +199,6 @@ export const seedRelationshipsInDbIfNotPresent = async () => {
 	if (Boolean(exampleInDb)) {
 		return;
 	}
-	console.log("TODO: Example not found, seeding relationships...");
 	// Otherwise, create the Relationships
 	const promises = relationshipsToSeed.map((relationship) =>
 		createRelationshipInDbIfNotPresent(relationship)

@@ -39,9 +39,7 @@ let apolloServer: ApolloServer | undefined;
 const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
-		const start = Date.now();
 		await seedRelationshipsInDbIfNotPresent();
-		console.log("TODO: SEEDED RELATIONSHIPS, elapsed ms:", Date.now() - start);
 	}
 
 	if (typeof apolloServer === "undefined") {

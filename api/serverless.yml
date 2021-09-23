@@ -63,8 +63,7 @@ custom:
     prod: https://www.tradarchive.com
   shouldRunImportItmaAtomCollections:
     dev: false
-    # TODO: Run on preview when script is finished
-    preview: false
+    preview: true
     # TODO: Run on prod when environment is deployed
     prod: false
   shouldRunImportTunes:

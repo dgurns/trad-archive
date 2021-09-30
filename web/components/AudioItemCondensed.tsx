@@ -57,7 +57,7 @@ const AudioItemCondensed = ({ audioItem, className }: Props) => {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Link href={`/entities/audio-items/${slug}`}>{name}</Link>
 
-				<div>
+				<div className="text-sm mt-1 mb-1">
 					Tags:{" "}
 					{sortedTags.map((tag, index) => (
 						<>
@@ -71,12 +71,12 @@ const AudioItemCondensed = ({ audioItem, className }: Props) => {
 				</div>
 
 				{description && (
-					<div className="block text-gray-500 h-6 overflow-hidden truncate whitespace-nowrap">
+					<div className="block text-gray-500 text-sm h-5 overflow-hidden truncate whitespace-nowrap">
 						{description}
 					</div>
 				)}
 
-				<div className="border-t border-gray-200 mt-1 pt-1 w-full flex flex-row justify-between items-center">
+				<div className="border-t border-gray-200 mt-2 pt-1 w-full flex flex-row justify-between items-center">
 					<div className="flex flex-row items-center">
 						<ViewCommentsButton audioItem={audioItem} />
 

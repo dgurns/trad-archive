@@ -18,6 +18,7 @@ import TagService from "services/Tag";
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
+import Filters from "components/Filters";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 4;
@@ -239,6 +240,8 @@ export default function Home({
 							<div>Show me something random</div>
 						</a>
 					</Link>
+
+					<Filters className="mb-6" />
 
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>

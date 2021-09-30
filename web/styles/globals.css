@@ -80,6 +80,6 @@
 	}
 
 	select {
-		@apply w-full bg-white p-2 border border-gray-300 rounded focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600;
+		@apply bg-white cursor-pointer border border-gray-300 rounded focus:outline-none focus:border-transparent focus:ring-2 focus:ring-teal-600;
 	}
 }

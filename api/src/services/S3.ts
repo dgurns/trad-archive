@@ -8,6 +8,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const { API_AWS_S3_BUCKET } = process.env;
 
+console.log("REGION", process.env.AWS_REGION);
+console.log("ACCESS KEY", process.env.AWS_ACCESS_KEY_ID);
+
 const s3Client = new S3Client({
 	apiVersion: "2006-03-01",
 });

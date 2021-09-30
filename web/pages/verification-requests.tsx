@@ -146,7 +146,9 @@ const VerificationRequests = () => {
 					{verificationRequestsLoading && <LoadingBlock />}
 					{verificationRequestsError && (
 						<div className="text-red-600">
-							{verificationRequestsError.graphQLErrors.join(", ")}
+							{verificationRequestsError.graphQLErrors
+								.map((error) => error.message)
+								.join(", ")}
 						</div>
 					)}
 					{!verificationRequestsLoading &&

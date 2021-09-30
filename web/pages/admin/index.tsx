@@ -12,7 +12,7 @@ const AdminHome = () => {
 						<a className="block mb-2">Manage Verification Requests</a>
 					</Link>
 					<Link href="/takedown-requests">
-						<a className="block mb-2">Manage Takedown Requests</a>
+						<a className="block mb-6">Manage Takedown Requests</a>
 					</Link>
 					<Link href="/entities/audio-items/new">
 						<a className="block mb-2">Create Audio Item</a>

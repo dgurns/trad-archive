@@ -104,7 +104,7 @@ const ViewInstrumentBySlug = () => {
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
 	return (
-		<Layout>
+		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<div className="flex flex-row items-center">

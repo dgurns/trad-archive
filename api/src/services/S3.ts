@@ -7,20 +7,18 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const {
-	API_AWS_S3_BUCKET,
-	API_AWS_REGION,
-	API_AWS_ACCESS_KEY_ID,
-	API_AWS_SECRET_ACCESS_KEY,
+	API_AWS_S3_BUCKET = "",
+	API_AWS_REGION = "",
+	API_AWS_ACCESS_KEY_ID = "",
+	API_AWS_SECRET_ACCESS_KEY = "",
 } = process.env;
-
-console.log("ACCESS KEY", process.env.AWS_ACCESS_KEY_ID);
 
 const s3Client = new S3Client({
 	apiVersion: "2006-03-01",
-	region: API_AWS_REGION ?? "",
+	region: API_AWS_REGION,
 	credentials: {
-		accessKeyId: API_AWS_ACCESS_KEY_ID ?? "",
-		secretAccessKey: API_AWS_SECRET_ACCESS_KEY ?? "",
+		accessKeyId: API_AWS_ACCESS_KEY_ID,
+		secretAccessKey: API_AWS_SECRET_ACCESS_KEY,
 	},
 });
 

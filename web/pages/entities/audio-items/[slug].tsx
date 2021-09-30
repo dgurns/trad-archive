@@ -110,7 +110,7 @@ const ViewAudioItemBySlug = () => {
 	}
 
 	return (
-		<Layout>
+		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col">
 					<div className="flex flex-row items-center">
@@ -123,7 +123,7 @@ const ViewAudioItemBySlug = () => {
 
 					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
 
-					<AudioItemComponent audioItem={audioItem} />
+					<AudioItemComponent audioItem={audioItem} showTitle={false} />
 				</div>
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">

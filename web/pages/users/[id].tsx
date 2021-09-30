@@ -82,7 +82,7 @@ const ViewUserById = () => {
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
 	return (
-		<Layout>
+		<Layout pageTitle={`Trad Archive - ${username}`}>
 			<div className="flex flex-col-reverse md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<div className="flex flex-row items-center">

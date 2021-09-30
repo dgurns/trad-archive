@@ -226,7 +226,7 @@ export default function Home({
 	}, [fetchedTags, prefetchedTags]);
 
 	return (
-		<Layout>
+		<Layout pageTitle="Trad Archive - Home">
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>

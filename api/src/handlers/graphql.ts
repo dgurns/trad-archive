@@ -9,6 +9,7 @@ import {
 } from "aws-lambda";
 
 import { connectToDatabase } from "db";
+import { seedRelationshipsInDbIfNotPresent } from "seed/relationships";
 import { createCustomContext } from "middleware/context";
 const apolloServerPlugins = require("middleware/plugins");
 import { authChecker } from "middleware/authChecker";
@@ -17,7 +18,7 @@ import { UserResolver } from "resolvers/UserResolver";
 import { TagResolver } from "resolvers/TagResolver";
 import { RelationshipResolver } from "resolvers/RelationshipResolver";
 import { CommentResolver } from "resolvers/CommentResolver";
-import { CollectionEntryResolver } from "resolvers/CollectionEntryResolver";
+import { SavedItemResolver } from "resolvers/SavedItemResolver";
 import { TakedownRequestResolver } from "resolvers/TakedownRequestResolver";
 import { VerificationRequestResolver } from "resolvers/VerificationRequestResolver";
 import { EntityResolver } from "resolvers/EntityResolver";
@@ -26,6 +27,7 @@ import { PersonResolver } from "resolvers/PersonResolver";
 import { InstrumentResolver } from "resolvers/InstrumentResolver";
 import { PlaceResolver } from "resolvers/PlaceResolver";
 import { TuneResolver } from "resolvers/TuneResolver";
+import { CollectionResolver } from "resolvers/CollectionResolver";
 
 const { SERVERLESS_STAGE } = process.env;
 
@@ -37,6 +39,7 @@ let apolloServer: ApolloServer | undefined;
 const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
+		await seedRelationshipsInDbIfNotPresent();
 	}
 
 	if (typeof apolloServer === "undefined") {
@@ -47,7 +50,7 @@ const initializeServer = async () => {
 				TagResolver,
 				RelationshipResolver,
 				CommentResolver,
-				CollectionEntryResolver,
+				SavedItemResolver,
 				TakedownRequestResolver,
 				VerificationRequestResolver,
 				EntityResolver,
@@ -56,6 +59,7 @@ const initializeServer = async () => {
 				InstrumentResolver,
 				PlaceResolver,
 				TuneResolver,
+				CollectionResolver,
 			],
 			dateScalarMode: "isoDate",
 			authChecker,

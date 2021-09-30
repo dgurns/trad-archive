@@ -1,69 +1,67 @@
 import { useEffect, useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Instrument } from "types";
+import { Collection } from "types";
 import { EntityFragments } from "fragments";
 
-const UPDATE_INSTRUMENT_MUTATION = gql`
-	mutation UpdateInstrument($slug: String!, $input: UpdateInstrumentInput!) {
-		updateInstrument(slug: $slug, input: $input) {
-			...Instrument
+const UPDATE_COLLECTION_MUTATION = gql`
+	mutation UpdateCollection($slug: String!, $input: UpdateCollectionInput!) {
+		updateCollection(slug: $slug, input: $input) {
+			...Collection
 		}
 	}
-	${EntityFragments.instrument}
+	${EntityFragments.collection}
 `;
-interface UpdateInstrumentVariables {
+interface UpdateCollectionVariables {
 	slug: string;
 	input: {
-		name?: string;
 		aliases?: string;
 		description?: string;
 	};
 }
 interface Props {
-	instrument: Instrument;
-	onSuccess?: (instrument: Instrument) => void;
+	collection: Collection;
+	onSuccess?: (collection: Collection) => void;
 }
-const EditInstrumentForm = ({ instrument, onSuccess }: Props) => {
+const EditCollectionForm = ({ collection, onSuccess }: Props) => {
 	const router = useRouter();
 
-	const [updateInstrument, { loading, error, data }] = useMutation<
-		{ updateInstrument: Instrument },
-		UpdateInstrumentVariables
-	>(UPDATE_INSTRUMENT_MUTATION, {
+	const [updateCollection, { loading, error, data }] = useMutation<
+		{ updateCollection: Collection },
+		UpdateCollectionVariables
+	>(UPDATE_COLLECTION_MUTATION, {
 		errorPolicy: "all",
 	});
 
-	const [name, setName] = useState(instrument.name);
-	const [aliases, setAliases] = useState(instrument.aliases);
-	const [description, setDescription] = useState(instrument.description);
+	const [name, setName] = useState(collection.name);
+	const [aliases, setAliases] = useState(collection.aliases);
+	const [description, setDescription] = useState(collection.description);
 
-	const onUpdateInstrument = (event) => {
+	const onUpdateCollection = (event) => {
 		event.preventDefault();
 		const input = {
 			name,
 			aliases,
 			description,
 		};
-		updateInstrument({ variables: { slug: instrument.slug, input } });
+		updateCollection({ variables: { slug: collection.slug, input } });
 	};
 
 	useEffect(() => {
-		if (data?.updateInstrument) {
+		if (data?.updateCollection) {
 			if (onSuccess) {
-				return onSuccess(data.updateInstrument);
+				return onSuccess(data.updateCollection);
 			}
-			window.alert("Instrument updated successfully!");
+			window.alert("Collection updated successfully!");
 		}
 	}, [data, router]);
 
 	return (
 		<>
 			<div className="flex flex-col align-start">
-				<form onSubmit={onUpdateInstrument}>
+				<form onSubmit={onUpdateCollection}>
 					<input
 						placeholder="Name"
-						autoFocus
 						className="mb-2"
 						value={name}
 						onChange={(event) => setName(event.target.value)}
@@ -71,12 +69,12 @@ const EditInstrumentForm = ({ instrument, onSuccess }: Props) => {
 					<input
 						placeholder="Aliases"
 						className="mb-2"
-						value={aliases}
+						value={aliases ?? ""}
 						onChange={(event) => setAliases(event.target.value)}
 					/>
 					<div className="text-sm text-gray-400 mb-2 ml-2">
-						A list of comma-separated aliases for this Instrument. For example:{" "}
-						<em>Stomach Steinway, Squeezebox, Belly Organ</em>
+						A list of comma-separated aliases for this Collection. For example:{" "}
+						<em>O'Neill's, 1000 Fiddle Tunes</em>
 					</div>
 					<textarea
 						placeholder="Description"
@@ -99,4 +97,4 @@ const EditInstrumentForm = ({ instrument, onSuccess }: Props) => {
 	);
 };
 
-export default EditInstrumentForm;
+export default EditCollectionForm;

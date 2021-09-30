@@ -14,7 +14,7 @@ import { getManager, getRepository, In } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { AudioItem } from "models/entities/AudioItem";
 import { Comment } from "models/Comment";
-import { CollectionEntry } from "models/CollectionEntry";
+import { SavedItem } from "models/SavedItem";
 import { User, UserPermission } from "models/User";
 import { Tag } from "models/Tag";
 import {
@@ -42,6 +42,16 @@ export class AudioItemResolver {
 		return AudioItem.findOne({
 			where: whereOptions,
 		});
+	}
+
+	@Query(() => AudioItem, { nullable: true })
+	audioItemRandom() {
+		return getManager()
+			.createQueryBuilder(AudioItem, "a")
+			.leftJoinAndSelect("a.createdByUser", "createdByUser")
+			.leftJoinAndSelect("a.updatedByUser", "updatedByUser")
+			.orderBy("RANDOM()")
+			.getOne();
 	}
 
 	@Query(() => [AudioItem])
@@ -195,7 +205,7 @@ export class AudioItemResolver {
 
 	@FieldResolver(() => [Comment])
 	comments(@Root() audioItem: AudioItem) {
-		return Tag.find({
+		return Comment.find({
 			where: { parentAudioItemId: In([audioItem.id]) },
 			order: { createdAt: "ASC" },
 		});
@@ -212,20 +222,17 @@ export class AudioItemResolver {
 	}
 
 	@FieldResolver(() => Boolean)
-	async isAddedToCollection(
-		@Root() audioItem: AudioItem,
-		@Ctx() ctx: CustomContext
-	) {
+	async isSavedByUser(@Root() audioItem: AudioItem, @Ctx() ctx: CustomContext) {
 		if (!ctx.userId) {
 			return false;
 		}
-		const existingCollectionEntry = await getManager()
-			.createQueryBuilder(CollectionEntry, "collectionEntry")
-			.where("collectionEntry.userId = :userId", { userId: ctx.userId })
-			.andWhere("collectionEntry.audioItemId = :audioItemId", {
+		const existingSavedItem = await getManager()
+			.createQueryBuilder(SavedItem, "savedItem")
+			.where("savedItem.userId = :userId", { userId: ctx.userId })
+			.andWhere("savedItem.audioItemId = :audioItemId", {
 				audioItemId: audioItem.id,
 			})
 			.getRawOne();
-		return Boolean(existingCollectionEntry);
+		return Boolean(existingSavedItem);
 	}
 }

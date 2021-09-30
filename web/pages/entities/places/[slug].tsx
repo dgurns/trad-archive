@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
@@ -35,12 +36,74 @@ const ViewPlaceBySlug = () => {
 			fetchPolicy: "cache-and-network",
 		}
 	);
+	const { place } = placeData ?? {};
+	const { name, aliases, description, tags, latitude, longitude } = place ?? {};
+	const sortedTags = TagService.sort(tags);
 
 	const [
 		audioItems = [],
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPageOfAudioItems,
-	] = useAudioItemsTaggedWithEntity({ entity: placeData?.place });
+	] = useAudioItemsTaggedWithEntity({ entity: place });
+
+	const aboutMarkup = useMemo(
+		() => (
+			<>
+				{description && (
+					<div className="mb-4">
+						Description:
+						<br />
+						<span className="text-gray-500">{description}</span>
+					</div>
+				)}
+				{aliases && (
+					<div className="mb-4">
+						Aliases:
+						<br />
+						<span className="text-gray-500">{aliases}</span>
+					</div>
+				)}
+				{latitude && longitude && (
+					<div className="mb-4">
+						Latitude and Longitude:
+						<br />
+						<span className="text-gray-500">
+							{latitude},{longitude}
+						</span>
+						<br />
+						<a
+							href={`https://www.google.com/maps/@?api=1&map_action=map&zoom=12&center=${latitude},${longitude}`}
+							target="_blank"
+						>
+							View on Map
+						</a>
+					</div>
+				)}
+				<Link href={`/entities/places/${slug}/edit`}>Edit</Link>
+			</>
+		),
+		[aliases, description, slug, latitude, longitude]
+	);
+
+	const tagsMarkup = useMemo(
+		() => (
+			<>
+				{sortedTags.map((tag, index) => (
+					<TagWithRelationshipToObject tag={tag} key={index} className="mb-4" />
+				))}
+				<div>
+					<AddTagButton entity={place} />
+					{sortedTags.length > 0 && (
+						<>
+							<span className="text-gray-500 px-2">/</span>
+							<EditTagsButton entity={place} />
+						</>
+					)}
+				</div>
+			</>
+		),
+		[sortedTags, place]
+	);
 
 	let statusMessage;
 	if (!placeData && !placeError) {
@@ -53,11 +116,6 @@ const ViewPlaceBySlug = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const { place } = placeData;
-	const { name, entityType, aliases, description, tags, latitude, longitude } =
-		place;
-	const sortedTags = TagService.sort(tags);
-
 	const shouldShowAudioItems = audioItems.length > 0;
 	const noAudioItemsFound =
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
@@ -66,7 +124,16 @@ const ViewPlaceBySlug = () => {
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<h1 className="mb-6">Audio Items Tagged with "{name}"</h1>
+					<div className="flex flex-row items-center">
+						Places{" "}
+						<i className="material-icons text-gray-500 text-base">
+							keyboard_arrow_right
+						</i>
+					</div>
+					<h1 className="mb-6">{name}</h1>
+
+					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
+
 					{shouldShowAudioItems && (
 						<>
 							{audioItems.map((audioItem, index) => (
@@ -83,61 +150,21 @@ const ViewPlaceBySlug = () => {
 						</>
 					)}
 					{audioItemsLoading && <LoadingBlock />}
-					{noAudioItemsFound && <div className="text-gray-500">None yet</div>}
+					{noAudioItemsFound && (
+						<div className="text-gray-500">
+							No Audio Items tagged with this yet
+						</div>
+					)}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
 					)}
 				</div>
-				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">About {name}</h3>
-					<div className="mb-4">
-						Entity Type:
-						<br />
-						<span className="text-gray-500">{entityType}</span>
-					</div>
-					<div className="mb-4">
-						Aliases:
-						<br />
-						<span className="text-gray-500">{aliases}</span>
-					</div>
-					<div className="mb-4">
-						Latitude and Longitude:
-						<br />
-						<span className="text-gray-500">
-							{latitude},{longitude}
-						</span>
-						<br />
-						<a
-							href={`https://www.google.com/maps/@?api=1&map_action=map&zoom=12&center=${latitude},${longitude}`}
-							target="_blank"
-						>
-							View on Map
-						</a>
-					</div>
-					<div className="mb-4">
-						Description:
-						<br />
-						<span className="text-gray-500">{description}</span>
-					</div>
-					<Link href={`/entities/places/${slug}/edit`}>Edit</Link>
 
+				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+					<h3 className="mb-4">About</h3>
+					{aboutMarkup}
 					<h3 className="mt-8 mb-4">Tags</h3>
-					{sortedTags.map((tag, index) => (
-						<TagWithRelationshipToObject
-							tag={tag}
-							key={index}
-							className="mb-4"
-						/>
-					))}
-					<div>
-						<AddTagButton entity={place} />
-						{tags.length > 0 && (
-							<>
-								<span className="text-gray-500 px-2">/</span>
-								<EditTagsButton entity={place} />
-							</>
-						)}
-					</div>
+					{tagsMarkup}
 				</div>
 			</div>
 		</Layout>

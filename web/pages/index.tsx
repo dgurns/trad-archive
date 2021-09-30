@@ -229,7 +229,17 @@ export default function Home({
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h1 className="mb-6">Explore Audio Items</h1>
+					<h1 className="mb-6">Explore</h1>
+
+					<Link href="/entities/audio-items/random">
+						<a className="flex flex-row items-center mb-6">
+							<div className="block mr-2 h-6">
+								<i className="material-icons">shuffle</i>
+							</div>
+							<div>Show me something random</div>
+						</a>
+					</Link>
+
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}
@@ -287,14 +297,18 @@ export default function Home({
 						return (
 							<div className="mb-4 text-gray-500" key={index}>
 								<div className="mb-1">
-									<Link href={`/users/${createdByUser.id}`}>
-										{createdByUser.username}
-									</Link>
-									{` tagged `}
+									{createdByUser && (
+										<>
+											<Link href={`/users/${createdByUser.id}`}>
+												{createdByUser.username}
+											</Link>
+											{` tagged `}
+										</>
+									)}
 									<Link href={EntityService.makeHrefForView(subjectEntity)}>
 										{subjectEntity.name}
 									</Link>
-									{` with `}
+									{createdByUser ? ` with ` : ` was tagged with `}
 									<Link href={EntityService.makeHrefForView(objectEntity)}>
 										{objectEntity.name}
 									</Link>

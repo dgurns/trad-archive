@@ -4,25 +4,25 @@ import { useMutation, useLazyQuery, gql } from "@apollo/client";
 
 import { AUDIO_ITEM_QUERY } from "hooks/useAudioItem";
 import useRequireLogin from "hooks/useRequireLogin";
-import useCollectionEntriesForUser from "hooks/useCollectionEntriesForUser";
-import { AudioItem, CollectionEntry } from "types";
+import useSavedItemsForUser from "hooks/useSavedItemsForUser";
+import { AudioItem, SavedItem } from "types";
 import EntityService from "services/Entity";
 
-const CREATE_COLLECTION_ENTRY_MUTATION = gql`
-	mutation CreateCollectionEntry($input: CreateCollectionEntryInput!) {
-		createCollectionEntry(input: $input) {
+const CREATE_SAVED_ITEM_MUTATION = gql`
+	mutation CreateSavedItem($input: CreateSavedItemInput!) {
+		createSavedItem(input: $input) {
 			id
 		}
 	}
 `;
-const DELETE_COLLECTION_ENTRY_MUTATION = gql`
-	mutation DeleteCollectionEntry($input: DeleteCollectionEntryInput!) {
-		deleteCollectionEntry(input: $input)
+const DELETE_SAVED_ITEM_MUTATION = gql`
+	mutation DeleteSavedItem($input: DeleteSavedItemInput!) {
+		deleteSavedItem(input: $input)
 	}
 `;
 
 interface CreateMutationData {
-	createCollectionEntry: CollectionEntry;
+	createSavedItem: SavedItem;
 }
 interface CreateMutationVariables {
 	input: {
@@ -30,7 +30,7 @@ interface CreateMutationVariables {
 	};
 }
 interface DeleteMutationData {
-	deleteCollectionEntry: boolean;
+	deleteSavedItem: boolean;
 }
 interface DeleteMutationVariables {
 	input: {
@@ -40,29 +40,28 @@ interface DeleteMutationVariables {
 interface Props {
 	audioItem: AudioItem;
 }
-const AddToCollection = ({ audioItem }: Props) => {
-	const { id, slug, isAddedToCollection } = audioItem;
+const SaveItemButton = ({ audioItem }: Props) => {
+	const { id, slug, isSavedByUser } = audioItem;
 
 	const router = useRouter();
 	const { currentUser, requireLogin } = useRequireLogin();
 	const [refetchAudioItem] = useLazyQuery(AUDIO_ITEM_QUERY, {
 		fetchPolicy: "network-only",
 	});
-	const [, { refetch: refetchCollectionEntriesForUser }] =
-		useCollectionEntriesForUser();
+	const [, { refetch: refetchSavedItemsForUser }] = useSavedItemsForUser();
 
 	const [
-		createCollectionEntry,
+		createSavedItem,
 		{ loading: createLoading, data: createData, error: createError },
 	] = useMutation<CreateMutationData, CreateMutationVariables>(
-		CREATE_COLLECTION_ENTRY_MUTATION,
+		CREATE_SAVED_ITEM_MUTATION,
 		{ errorPolicy: "all" }
 	);
 	const [
-		deleteCollectionEntry,
+		deleteSavedItem,
 		{ loading: deleteLoading, data: deleteData, error: deleteError },
 	] = useMutation<DeleteMutationData, DeleteMutationVariables>(
-		DELETE_COLLECTION_ENTRY_MUTATION,
+		DELETE_SAVED_ITEM_MUTATION,
 		{ errorPolicy: "all" }
 	);
 
@@ -70,77 +69,70 @@ const AddToCollection = ({ audioItem }: Props) => {
 		if (!currentUser) {
 			const redirectTo = EntityService.makeHrefForView(audioItem);
 			return await requireLogin({ redirectTo });
-		} else if (!isAddedToCollection) {
-			createCollectionEntry({
+		} else if (!isSavedByUser) {
+			createSavedItem({
 				variables: {
 					input: { audioItemId: id },
 				},
 			});
-		} else if (isAddedToCollection) {
-			deleteCollectionEntry({
+		} else if (isSavedByUser) {
+			deleteSavedItem({
 				variables: {
 					input: { audioItemId: id },
 				},
 			});
 		}
-	}, [
-		currentUser,
-		router,
-		audioItem,
-		id,
-		createCollectionEntry,
-		deleteCollectionEntry,
-	]);
+	}, [currentUser, router, audioItem, id, createSavedItem, deleteSavedItem]);
 
 	useEffect(() => {
 		if (createData) {
 			// Now that the Audio Item has been added, refetching the updated
-			// Collection Entries will also update the Audio Item in cache
-			refetchCollectionEntriesForUser();
+			// Saved Items will also update the Audio Item in cache
+			refetchSavedItemsForUser();
 		}
-	}, [createData, refetchAudioItem, refetchCollectionEntriesForUser, slug]);
+	}, [createData, refetchAudioItem, refetchSavedItemsForUser, slug]);
 	useEffect(() => {
 		if (createError) {
-			window.alert("Error adding to collection. Please try again.");
+			window.alert("Error saving item. Please try again.");
 		}
 	}, [createError]);
 
 	useEffect(() => {
 		const refetch = async () => {
 			await refetchAudioItem({ variables: { slug } });
-			refetchCollectionEntriesForUser();
+			refetchSavedItemsForUser();
 		};
 		if (deleteData) {
 			refetch();
 		}
-	}, [deleteData, refetchAudioItem, refetchCollectionEntriesForUser, slug]);
+	}, [deleteData, refetchAudioItem, refetchSavedItemsForUser, slug]);
 	useEffect(() => {
 		if (deleteError) {
-			window.alert("Error removing from collection. Please try again.");
+			window.alert("Error removing saved item. Please try again.");
 		}
 	}, [deleteError]);
 
 	return (
 		<button
 			className={`btn-secondary ${
-				isAddedToCollection ? "btn-secondary-active" : ""
+				isSavedByUser ? "btn-secondary-active" : ""
 			} pl-0.5`}
 			onClick={onButtonClicked}
 			disabled={createLoading || deleteLoading}
 		>
-			{isAddedToCollection ? (
+			{isSavedByUser ? (
 				<>
 					<i className="material-icons">bookmark</i>
-					Added<span className="hidden md:block md:pl-1">to Collection</span>
+					Saved
 				</>
 			) : (
 				<>
 					<i className="material-icons">bookmark_border</i>
-					Add<span className="hidden md:block md:pl-1">to Collection</span>
+					Save
 				</>
 			)}
 		</button>
 	);
 };
 
-export default AddToCollection;
+export default SaveItemButton;

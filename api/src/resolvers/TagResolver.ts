@@ -14,6 +14,7 @@ import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
+import { Collection } from "models/entities/Collection";
 import { Relationship } from "models/Relationship";
 
 @Resolver(() => Tag)
@@ -36,9 +37,11 @@ export class TagResolver {
 	// connecting other entities to Tommy Peoples.
 	@Query(() => [Tag])
 	tagsToEntity(@Arg("input") input: TagsToEntityInput) {
-		const { entityType, entityId } = input;
+		const { entityType, entityId, take, skip } = input;
 		return Tag.find({
 			where: { [`object${entityType}Id`]: entityId },
+			take,
+			skip,
 			order: { createdAt: "DESC" },
 		});
 	}
@@ -128,6 +131,14 @@ export class TagResolver {
 					tag.subjectTune = tune;
 					break;
 				}
+			case EntityType.Collection:
+				const collection = await Collection.findOne({
+					where: { id: subjectEntityId },
+				});
+				if (collection) {
+					tag.subjectCollection = collection;
+					break;
+				}
 			// If the entity isn't found and break isn't called, the switch statement
 			// will continue on to the default case and throw an error.
 			default:
@@ -167,6 +178,14 @@ export class TagResolver {
 				const tune = await Tune.findOne({ where: { id: objectEntityId } });
 				if (tune) {
 					tag.objectTune = tune;
+					break;
+				}
+			case EntityType.Collection:
+				const collection = await Collection.findOne({
+					where: { id: objectEntityId },
+				});
+				if (collection) {
+					tag.objectCollection = collection;
 					break;
 				}
 			// If the entity isn't found and break isn't called, the switch statement

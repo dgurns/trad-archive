@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import useCollectionEntriesForUser from "hooks/useCollectionEntriesForUser";
+import useSavedItemsForUser from "hooks/useSavedItemsForUser";
 import usePlayerContext from "hooks/usePlayerContext";
 import { Tag } from "types";
 import EntityService from "services/Entity";
@@ -21,30 +21,30 @@ const TagLink = ({ tag }: TagLinkProps) => {
 	return <Link href={href}>{objectEntity.name}</Link>;
 };
 
-const Collection = () => {
-	const [collectionEntries, { loading, error }] = useCollectionEntriesForUser();
+const SavedItems = () => {
+	const [savedItems, { loading, error }] = useSavedItemsForUser();
 	const { activeAudioItem, setActiveAudioItem } = usePlayerContext();
 
 	return (
 		<Layout>
 			<RequireUser>
 				<div className="flex flex-col">
-					<h1 className="mb-4">Collection</h1>
+					<h1 className="mb-4">Saved Items</h1>
 					{error && (
-						<div className="text-red-600 mb-4">Could not fetch Collection</div>
+						<div className="text-red-600 mb-4">Could not fetch saved items</div>
 					)}
-					{loading && !collectionEntries && (
+					{loading && !savedItems && (
 						<div className="mb-4">
 							<LoadingBlock />
 						</div>
 					)}
-					{collectionEntries?.length === 0 && (
+					{savedItems?.length === 0 && (
 						<div className="text-gray-500">
-							Nothing in your collection yet - try adding some{" "}
+							Nothing saved yet - try browsing some{" "}
 							<Link href="/">Audio Items</Link>!
 						</div>
 					)}
-					{collectionEntries?.map(({ audioItem }, index) => {
+					{savedItems?.map(({ audioItem }, index) => {
 						const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
 						const sortedTags = TagService.sort(audioItem.tags);
 
@@ -85,4 +85,4 @@ const Collection = () => {
 	);
 };
 
-export default Collection;
+export default SavedItems;

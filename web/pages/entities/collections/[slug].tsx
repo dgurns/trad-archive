@@ -4,50 +4,63 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Instrument } from "types";
+import { Collection } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItemComponent from "components/AudioItem";
+import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
 import AddTagButton from "components/AddTagButton";
 import EditTagsButton from "components/EditTagsButton";
-import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
 
-const INSTRUMENT_QUERY = gql`
-	query Instrument($slug: String!) {
-		instrument(slug: $slug) {
-			...Instrument
+const COLLECTION_QUERY = gql`
+	query Collection($slug: String!) {
+		collection(slug: $slug) {
+			...Collection
 		}
 	}
-	${EntityFragments.instrument}
+	${EntityFragments.collection}
 `;
 
-const ViewInstrumentBySlug = () => {
+const ViewCollectionBySlug = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
-	const { data: instrumentData, error: instrumentError } = useQuery<{
-		instrument: Instrument;
-	}>(INSTRUMENT_QUERY, {
+	const { data: collectionData, error: collectionError } = useQuery<{
+		collection: Collection;
+	}>(COLLECTION_QUERY, {
 		variables: { slug },
 		skip: !slug,
 		fetchPolicy: "cache-and-network",
 	});
-	const { instrument } = instrumentData ?? {};
-	const { name, aliases, description, tags } = instrument ?? {};
+	const { collection } = collectionData ?? {};
+	const { name, aliases, description, tags, itmaAtomSlug } = collection ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	const [
 		audioItems = [],
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPageOfAudioItems,
-	] = useAudioItemsTaggedWithEntity({ entity: instrument });
+	] = useAudioItemsTaggedWithEntity({ entity: collection });
 
 	const aboutMarkup = useMemo(
 		() => (
 			<>
+				{itmaAtomSlug && (
+					<div className="mb-4">
+						<div className="italic text-gray-500">
+							This was sourced from ITMA's AtoM archive
+						</div>
+						<a
+							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+							target="_blank"
+						>
+							View on AtoM <i className="material-icons text-sm">launch</i>
+						</a>
+					</div>
+				)}
 				{description && (
 					<div className="mb-4">
 						Description:
@@ -62,10 +75,10 @@ const ViewInstrumentBySlug = () => {
 						<span className="text-gray-500">{aliases}</span>
 					</div>
 				)}
-				<Link href={`/entities/instruments/${slug}/edit`}>Edit</Link>
+				<Link href={`/entities/collections/${slug}/edit`}>Edit</Link>
 			</>
 		),
-		[aliases, description, slug]
+		[aliases, description, slug, itmaAtomSlug]
 	);
 
 	const tagsMarkup = useMemo(
@@ -75,24 +88,24 @@ const ViewInstrumentBySlug = () => {
 					<TagWithRelationshipToObject tag={tag} key={index} className="mb-4" />
 				))}
 				<div>
-					<AddTagButton entity={instrument} />
+					<AddTagButton entity={collection} />
 					{sortedTags.length > 0 && (
 						<>
 							<span className="text-gray-500 px-2">/</span>
-							<EditTagsButton entity={instrument} />
+							<EditTagsButton entity={collection} />
 						</>
 					)}
 				</div>
 			</>
 		),
-		[sortedTags, instrument]
+		[sortedTags, collection]
 	);
 
 	let statusMessage;
-	if (!instrumentData && !instrumentError) {
+	if (!collectionData && !collectionError) {
 		statusMessage = <LoadingBlock />;
-	} else if (!instrumentData && instrumentError) {
-		statusMessage = `Error fetching Instrument with slug ${slug}`;
+	} else if (!collectionData && collectionError) {
+		statusMessage = `Error fetching Collection with slug ${slug}`;
 	}
 
 	if (statusMessage) {
@@ -106,9 +119,9 @@ const ViewInstrumentBySlug = () => {
 	return (
 		<Layout>
 			<div className="flex flex-col md:flex-row">
-				<div className="flex flex-1 flex-col pb-8">
+				<div className="flex flex-1 flex-col mb-8">
 					<div className="flex flex-row items-center">
-						Instruments{" "}
+						Collections{" "}
 						<i className="material-icons text-gray-500 text-base">
 							keyboard_arrow_right
 						</i>
@@ -154,4 +167,4 @@ const ViewInstrumentBySlug = () => {
 	);
 };
 
-export default ViewInstrumentBySlug;
+export default ViewCollectionBySlug;

@@ -18,7 +18,13 @@ export interface User {
 }
 
 // Entity defines a union of all the different Entity types
-export type Entity = AudioItem | Person | Instrument | Place | Tune;
+export type Entity =
+	| AudioItem
+	| Person
+	| Instrument
+	| Place
+	| Tune
+	| Collection;
 
 export enum EntityType {
 	AudioItem = "AudioItem",
@@ -26,6 +32,7 @@ export enum EntityType {
 	Instrument = "Instrument",
 	Place = "Place",
 	Tune = "Tune",
+	Collection = "Collection",
 }
 
 export enum EntityStatus {
@@ -48,6 +55,9 @@ export function isPlace(entity: Entity): entity is Place {
 export function isTune(entity: Entity): entity is Tune {
 	return (entity as Tune).entityType === EntityType.Tune;
 }
+export function isCollection(entity: Entity): entity is Collection {
+	return (entity as Collection).entityType === EntityType.Collection;
+}
 
 interface BaseEntity {
 	id: string;
@@ -67,8 +77,9 @@ export interface AudioItem extends BaseEntity {
 	entityType: EntityType.AudioItem;
 	comments?: Comment[] | null;
 	commentsCount?: number;
+	itmaAtomSlug: string | null;
 	urlSource: string | null;
-	isAddedToCollection?: boolean;
+	isSavedByUser?: boolean;
 }
 
 export interface Person extends BaseEntity {
@@ -96,6 +107,11 @@ export interface Tune extends BaseEntity {
 	meter: string | null;
 	mode: string | null;
 	abc: string | null;
+}
+
+export interface Collection extends BaseEntity {
+	entityType: EntityType.Collection;
+	itmaAtomSlug: string | null;
 }
 
 export interface Relationship {
@@ -128,7 +144,7 @@ export interface Comment {
 	updatedAt: string;
 }
 
-export interface CollectionEntry {
+export interface SavedItem {
 	id: string;
 	audioItem?: AudioItem | null;
 	user?: User | null;

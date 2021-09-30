@@ -7,17 +7,24 @@ import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
+import { Collection } from "models/entities/Collection";
 import { SearchEntitiesInput } from "resolvers/EntityResolverTypes";
 
 // Entity is a type for representing any entity
-export type Entity = AudioItem | Person | Instrument | Place | Tune;
+export type Entity =
+	| AudioItem
+	| Person
+	| Instrument
+	| Place
+	| Tune
+	| Collection;
 
 // EntityUnionType is a GraphQL union type returned by resolvers. It contains
 // logic for GraphQL clients to distinguish the entity type represented by a
 // value.
 export const EntityUnion = createUnionType({
 	name: "Entity",
-	types: () => [AudioItem, Person, Instrument, Place, Tune],
+	types: () => [AudioItem, Person, Instrument, Place, Tune, Collection],
 	resolveType: (value) => {
 		switch (value.entityType) {
 			case EntityType.AudioItem:
@@ -30,6 +37,8 @@ export const EntityUnion = createUnionType({
 				return Place;
 			case EntityType.Tune:
 				return Tune;
+			case EntityType.Collection:
+				return Collection;
 			default:
 				return undefined;
 		}
@@ -63,6 +72,9 @@ export class EntityResolver {
 			Tune.findOne({
 				where: [{ id }, { slug }],
 			}),
+			Collection.findOne({
+				where: [{ id }, { slug }],
+			}),
 		]);
 		let entity;
 		results.forEach((result) => {
@@ -94,6 +106,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(person.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const instrumentQuery = entityManager
@@ -105,6 +123,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(instrument.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const placeQuery = entityManager
@@ -116,6 +140,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(place.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const audioItemQuery = entityManager
@@ -127,6 +157,12 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.orWhere(
+				"unaccent(LOWER(audioItem.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 		const tuneQuery = entityManager
@@ -138,6 +174,23 @@ export class EntityResolver {
 			.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
 				aliases: `%${searchTermLowercased}%`,
 			})
+			.take(takeFromEach)
+			.getMany();
+		const collectionQuery = entityManager
+			.createQueryBuilder(Collection, "collection")
+			.leftJoinAndSelect("collection.createdByUser", "createdByUser")
+			.where("unaccent(LOWER(collection.name)) LIKE unaccent(:name)", {
+				name: `%${searchTermLowercased}%`,
+			})
+			.orWhere("unaccent(LOWER(collection.aliases)) LIKE unaccent(:aliases)", {
+				aliases: `%${searchTermLowercased}%`,
+			})
+			.orWhere(
+				"unaccent(LOWER(collection.description)) LIKE unaccent(:description)",
+				{
+					description: `%${searchTermLowercased}%`,
+				}
+			)
 			.take(takeFromEach)
 			.getMany();
 
@@ -161,6 +214,9 @@ export class EntityResolver {
 					case EntityType.Tune:
 						queryPromises.push(tuneQuery);
 						break;
+					case EntityType.Collection:
+						queryPromises.push(collectionQuery);
+						break;
 					default:
 						break;
 				}
@@ -171,6 +227,7 @@ export class EntityResolver {
 				instrumentQuery,
 				placeQuery,
 				audioItemQuery,
+				collectionQuery,
 				tuneQuery,
 			];
 		}

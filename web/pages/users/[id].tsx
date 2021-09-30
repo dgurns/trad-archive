@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
@@ -32,11 +33,39 @@ const ViewUserById = () => {
 			skip: !id,
 		}
 	);
+	const { username, createdAt, verifiedPerson } = userData?.user ?? {};
 
 	const [
 		audioItems = [],
 		{ loading: audioItemsLoading, error: audioItemsError },
 	] = useAudioItemsCreatedByUser(userData?.user);
+
+	const aboutMarkup = useMemo(
+		() => (
+			<>
+				{verifiedPerson && (
+					<div className="mb-4">
+						<div className="flex flex-row items-center">
+							<i className="material-icons text-base mr-2">verified</i>
+							Verified As Person:
+						</div>
+						<Link href={EntityService.makeHrefForView(verifiedPerson)}>
+							{verifiedPerson.name}
+						</Link>
+					</div>
+				)}
+
+				<div className="mb-4">
+					Account Created:
+					<br />
+					<span className="text-gray-500">
+						{DateTimeService.formatDateYear(createdAt)}
+					</span>
+				</div>
+			</>
+		),
+		[verifiedPerson, createdAt]
+	);
 
 	let statusMessage;
 	if (!userData && !userError) {
@@ -49,44 +78,40 @@ const ViewUserById = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const { username, createdAt, verifiedPerson } = userData.user;
+	const noAudioItemsFound =
+		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
 	return (
 		<Layout>
 			<div className="flex flex-col-reverse md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h1 className="mb-6">Audio Items Added by "{username}"</h1>
+					<div className="flex flex-row items-center">
+						Users{" "}
+						<i className="material-icons text-gray-500 text-base">
+							keyboard_arrow_right
+						</i>
+					</div>
+					<h1 className="mb-6">{username}</h1>
+
+					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
+
 					{audioItemsLoading && <LoadingBlock />}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
+					)}
+					{noAudioItemsFound && (
+						<div className="text-gray-500">
+							{username} hasn't added any Audio Items yet
+						</div>
 					)}
 					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent audioItem={audioItem} key={index} />
 					))}
 				</div>
 
-				<div className="flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">About {username}</h3>
-
-					{verifiedPerson && (
-						<div className="mb-4">
-							<div className="flex flex-row items-center">
-								<i className="material-icons text-base mr-2">verified</i>
-								Verified As Person:
-							</div>
-							<Link href={EntityService.makeHrefForView(verifiedPerson)}>
-								{verifiedPerson.name}
-							</Link>
-						</div>
-					)}
-
-					<div className="mb-4">
-						Account Created:
-						<br />
-						<span className="text-gray-500">
-							{DateTimeService.formatDateYear(createdAt)}
-						</span>
-					</div>
+				<div className="hidden md:flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+					<h3 className="mb-4">About</h3>
+					{aboutMarkup}
 				</div>
 			</div>
 		</Layout>

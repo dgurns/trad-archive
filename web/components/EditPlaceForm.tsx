@@ -111,7 +111,7 @@ const EditPlaceForm = ({ place, onSuccess }: Props) => {
 						placeholder="Description"
 						className="mb-2"
 						value={description}
-						rows={5}
+						rows={10}
 						onChange={(event) => setDescription(event.target.value)}
 					/>
 					<input

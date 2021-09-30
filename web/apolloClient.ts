@@ -1,5 +1,4 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import compareDesc from "date-fns/compareDesc";
 
 const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 
@@ -75,7 +74,7 @@ export const apolloClient = new ApolloClient({
 							return merged;
 						},
 					},
-					collectionEntriesForUser: {
+					savedItemsForUser: {
 						keyArgs: false,
 						merge(existing, incoming) {
 							// Just return incoming results until pagination is implemented
@@ -106,23 +105,21 @@ export const apolloClient = new ApolloClient({
 				fields: {
 					tags: {
 						merge(existing, incoming) {
-							// If incoming `tags` field value is `null` or `undefined`, don't
-							// overwrite the existing field value in the cache.
 							return incoming ?? existing;
 						},
 					},
 					createdByUser: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},
 			},
-			CollectionEntry: {
+			Collection: {
 				fields: {
-					audioItem: {
-						merge(existing, incoming, { mergeObjects }) {
-							return mergeObjects(existing, incoming);
+					tags: {
+						merge(existing, incoming) {
+							return incoming ?? existing;
 						},
 					},
 				},
@@ -139,7 +136,7 @@ export const apolloClient = new ApolloClient({
 					},
 					createdByUser: {
 						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+							return incoming ?? existing;
 						},
 					},
 				},
@@ -171,6 +168,15 @@ export const apolloClient = new ApolloClient({
 					},
 				},
 			},
+			SavedItem: {
+				fields: {
+					audioItem: {
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
+						},
+					},
+				},
+			},
 			Tag: {
 				fields: {
 					subjectEntity: {
@@ -184,8 +190,8 @@ export const apolloClient = new ApolloClient({
 						},
 					},
 					createdByUser: {
-						merge(existing, incoming) {
-							return { ...existing, ...incoming };
+						merge(existing, incoming, { mergeObjects }) {
+							return mergeObjects(existing, incoming);
 						},
 					},
 				},

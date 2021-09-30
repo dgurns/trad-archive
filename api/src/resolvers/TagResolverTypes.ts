@@ -17,6 +17,12 @@ export class TagsToEntityInput {
 
 	@Field()
 	entityId!: string;
+
+	@Field(() => Int, { nullable: true })
+	take?: number;
+
+	@Field(() => Int, { nullable: true, defaultValue: 0 })
+	skip?: number;
 }
 
 @InputType()

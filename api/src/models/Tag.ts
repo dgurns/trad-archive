@@ -16,6 +16,7 @@ import { Person } from "models/entities/Person";
 import { Instrument } from "models/entities/Instrument";
 import { Place } from "models/entities/Place";
 import { Tune } from "models/entities/Tune";
+import { Collection } from "models/entities/Collection";
 import { Relationship } from "models/Relationship";
 import { EntityUnion, Entity } from "resolvers/EntityResolver";
 
@@ -59,6 +60,11 @@ export class Tag extends TypeOrmBaseEntity {
 	@Column({ nullable: true, default: null })
 	subjectTuneId!: string;
 
+	@ManyToOne(() => Collection, { nullable: true, eager: true })
+	subjectCollection!: Collection;
+	@Column({ nullable: true, default: null })
+	subjectCollectionId!: string;
+
 	@ManyToOne(() => AudioItem, { nullable: true, eager: true })
 	objectAudioItem!: AudioItem;
 	@Column({ nullable: true, default: null })
@@ -83,6 +89,11 @@ export class Tag extends TypeOrmBaseEntity {
 	objectTune!: Tune;
 	@Column({ nullable: true, default: null })
 	objectTuneId!: string;
+
+	@ManyToOne(() => Collection, { nullable: true, eager: true })
+	objectCollection!: Collection;
+	@Column({ nullable: true, default: null })
+	objectCollectionId!: string;
 
 	@Field(() => Int, { nullable: true })
 	@Column({ nullable: true, default: null })
@@ -115,7 +126,8 @@ export class Tag extends TypeOrmBaseEntity {
 			this.subjectPerson ??
 			this.subjectInstrument ??
 			this.subjectPlace ??
-			this.subjectTune;
+			this.subjectTune ??
+			this.subjectCollection;
 	}
 
 	@Field(() => EntityUnion)
@@ -127,6 +139,7 @@ export class Tag extends TypeOrmBaseEntity {
 			this.objectPerson ??
 			this.objectInstrument ??
 			this.objectPlace ??
-			this.objectTune;
+			this.objectTune ??
+			this.objectCollection;
 	}
 }

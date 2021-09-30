@@ -53,7 +53,7 @@ const sortByCreatedAtDesc = (tags: Tag[]) => {
  * 	- The sorted Tags
  */
 const sort = (
-	tags: Tag[],
+	tags: Tag[] = [],
 	sortStrategy = TagSortStrategy.CreatedAtThenTimeMarker
 ) => {
 	switch (sortStrategy) {

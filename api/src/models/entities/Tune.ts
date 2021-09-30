@@ -3,6 +3,7 @@ import {
 	Column,
 	OneToMany,
 	JoinColumn,
+	Index,
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 

@@ -4,6 +4,7 @@
 	"description": "",
 	"scripts": {
 		"dev": "NODE_ENV=development sls offline start -s dev",
+		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",
 		"run-import-tunes": "sls invoke local -f importTunes -s dev",
 		"db:generate-migration": "yarn typeorm migration:generate --outputJs -n $NAME",
 		"db:run-migrations": "yarn typeorm migration:run",

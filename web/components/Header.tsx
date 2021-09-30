@@ -49,10 +49,10 @@ const Header = () => {
 		} else if (currentUser) {
 			return (
 				<div className="flex flex-row items-center">
-					<Link href="/collection">
+					<Link href="/saved-items">
 						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
 							<i className="material-icons">bookmark</i>
-							<span className="hidden md:block md:pl-1">Collection</span>
+							<span className="hidden md:block md:pl-1">Saved</span>
 						</a>
 					</Link>
 					{UserService.isAdmin(currentUser) && (

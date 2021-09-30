@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
-import compareAsc from "date-fns/compareAsc";
 
 import { EntityFragments } from "fragments";
 import { AudioItem } from "types";
@@ -37,7 +36,7 @@ const ViewAudioItemBySlug = () => {
 	});
 
 	const { audioItem } = audioItemData ?? {};
-	const { name, entityType, aliases, tags } = audioItem ?? {};
+	const { name, aliases, tags, itmaAtomSlug } = audioItem ?? {};
 
 	// Sort Tags so that non-time-marker Tags appear first in order of createdAt
 	// ASC, followed by the rest in order of time marker ASC.
@@ -48,11 +47,62 @@ const ViewAudioItemBySlug = () => {
 		return TagService.sort(tags);
 	}, [tags]);
 
+	const aboutMarkup = useMemo(
+		() => (
+			<>
+				{aliases && (
+					<div className="mb-4">
+						Aliases:
+						<br />
+						<span className="text-gray-500">{aliases}</span>
+					</div>
+				)}
+				{itmaAtomSlug && (
+					<div className="mb-4">
+						<div className="italic text-gray-500">
+							This was sourced from ITMA's AtoM archive
+						</div>
+						<a
+							href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+							target="_blank"
+						>
+							View on AtoM <i className="material-icons text-sm">launch</i>
+						</a>
+					</div>
+				)}
+				<Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>
+			</>
+		),
+		[aliases, slug]
+	);
+
+	const tagsMarkup = useMemo(
+		() => (
+			<>
+				{sortedTags.map((tag, index) => (
+					<TagWithRelationshipToObject tag={tag} key={index} className="mb-4" />
+				))}
+				<div>
+					<AddTagButton entity={audioItem} />
+					{sortedTags.length > 0 && (
+						<>
+							<span className="text-gray-500 px-2">/</span>
+							<EditTagsButton entity={audioItem} />
+						</>
+					)}
+				</div>
+			</>
+		),
+		[sortedTags, audioItem]
+	);
+
 	let statusMessage;
 	if (!audioItemData && !audioItemError) {
 		statusMessage = <LoadingBlock />;
 	} else if (!audioItemData && audioItemError) {
 		statusMessage = `Error fetching Audio Item with slug ${slug}`;
+	} else if (!audioItem) {
+		statusMessage = "Could not find this Audio Item";
 	}
 
 	if (statusMessage) {
@@ -63,41 +113,24 @@ const ViewAudioItemBySlug = () => {
 		<Layout>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col">
-					<h1 className="mb-6">Audio Item</h1>
+					<div className="flex flex-row items-center">
+						Audio Items{" "}
+						<i className="material-icons text-gray-500 text-base">
+							keyboard_arrow_right
+						</i>
+					</div>
+					<h1 className="mb-6">{name}</h1>
+
+					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
+
 					<AudioItemComponent audioItem={audioItem} />
 				</div>
 
-				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">About {name}</h3>
-					<div className="mb-4">
-						Entity Type:
-						<br />
-						<span className="text-gray-500">{entityType}</span>
-					</div>
-					<div className="mb-4">
-						Aliases:
-						<br />
-						<span className="text-gray-500">{aliases}</span>
-					</div>
-					<Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>
-
+				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+					<h3 className="mb-4">About</h3>
+					{aboutMarkup}
 					<h3 className="mt-8 mb-4">Tags</h3>
-					{sortedTags.map((tag, index) => (
-						<TagWithRelationshipToObject
-							tag={tag}
-							key={index}
-							className="mb-4"
-						/>
-					))}
-					<div>
-						<AddTagButton entity={audioItem} />
-						{sortedTags.length > 0 && (
-							<>
-								<span className="text-gray-500 px-2">/</span>
-								<EditTagsButton entity={audioItem} />
-							</>
-						)}
-					</div>
+					{tagsMarkup}
 				</div>
 			</div>
 		</Layout>

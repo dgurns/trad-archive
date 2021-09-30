@@ -162,8 +162,7 @@ const AccountVerify = () => {
 					yourself to the "Michael Coleman" tag on the site. You'll get a
 					verified badge next to your username, and you'll be able to
 					immediately take down any content that you're tagged in, if you so
-					choose. Verification is completely free and will be done by ITMA
-					staff.
+					choose. Verification is free and will be done by ITMA staff.
 				</div>
 
 				{!personEntity ? (
@@ -197,7 +196,8 @@ const AccountVerify = () => {
 
 				<div className="mb-8">
 					<div className="mb-2">
-						Please attach a photo proving your identity (utility bill, ID, etc):
+						Please attach a photo proving your identity (utility bill, ID, etc;
+						will be deleted after verification):
 					</div>
 					<input
 						type="file"

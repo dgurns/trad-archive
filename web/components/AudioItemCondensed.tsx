@@ -46,11 +46,11 @@ const AudioItemCondensed = ({ audioItem, className }: Props) => {
 
 	return (
 		<div
-			className={`flex flex-row justify-start items-start bg-white shadow-md rounded p-2 pb-1 ${
+			className={`flex flex-row justify-start items-start bg-white shadow-md rounded pt-2 px-3 pb-1 ${
 				className ?? ""
 			}`}
 		>
-			<div className="flex justify-center items-center w-14 mr-2">
+			<div className="flex justify-center items-center w-14 mr-3">
 				{playButtonMarkup}
 			</div>
 

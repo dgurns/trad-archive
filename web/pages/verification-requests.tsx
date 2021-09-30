@@ -173,11 +173,15 @@ const VerificationRequests = () => {
 										<a target="_blank">{person.name}</a>
 									</Link>
 									<br />
-									Proof:{" "}
-									<a href={presignedImageDownloadUrl} target="_blank">
-										Image
-									</a>
-									<br />
+									{presignedImageDownloadUrl && (
+										<>
+											Proof:{" "}
+											<a href={presignedImageDownloadUrl} target="_blank">
+												Image
+											</a>
+											<br />
+										</>
+									)}
 									Email: {createdByUser.email}
 									<br />
 									Status: {status}

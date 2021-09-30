@@ -141,16 +141,26 @@ export class VerificationRequestResolver {
 			throw new Error("Could not find a VerificationRequest with that ID");
 		}
 
+		// Update the status
 		verificationRequest.status = status;
 		verificationRequest.updatedByUser = user;
-		await verificationRequest.save();
 
+		// Now that the status is updated, delete the image for security reasons
+		if (verificationRequest.imageS3Key) {
+			await S3Service.deleteObject(verificationRequest.imageS3Key);
+			verificationRequest.imageS3Key = null;
+		}
+
+		await verificationRequest.save();
 		return verificationRequest;
 	}
 
 	@FieldResolver(() => String, { nullable: true })
 	@Authorized(UserPermission.Admin)
 	presignedImageDownloadUrl(@Root() verificationRequest: VerificationRequest) {
+		if (!verificationRequest.imageS3Key) {
+			return null;
+		}
 		return S3Service.makePresignedGetUrl(verificationRequest.imageS3Key);
 	}
 }

@@ -1,5 +1,5 @@
 const Footer = () => (
-	<div className="flex flex-col items-start w-full p-4 pb-24 bg-gray-900 text-gray-100">
+	<div className="flex flex-col items-start w-full p-4 pt-7 pb-24 bg-gray-900 text-gray-100">
 		<div className="mb-4">
 			This project is a collaboration between the{" "}
 			<a href="https://www.itma.ie/" target="_blank">

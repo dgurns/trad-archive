@@ -24,7 +24,7 @@ const Filters = ({ className }: Props) => {
 					<select className="ml-2" value="1" onChange={() => {}}>
 						<option value="1">Cards</option>
 						<option value="2">Compact</option>
-						<option value="3">Text Only</option>
+						<option value="3">Text only</option>
 					</select>
 				</div>
 			</div>

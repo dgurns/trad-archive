@@ -16,7 +16,7 @@ interface Props {
 	audioItem: AudioItem;
 	className?: string;
 }
-const AudioItemCondensed = ({ audioItem, className }: Props) => {
+const AudioItemCompact = ({ audioItem, className }: Props) => {
 	const { name, slug, description, tags, status } = audioItem;
 	const isTakenDown = status === EntityStatus.TakenDown;
 	const sortedTags = useMemo(() => TagService.sort(tags), [tags]);
@@ -94,4 +94,4 @@ const AudioItemCondensed = ({ audioItem, className }: Props) => {
 	);
 };
 
-export default AudioItemCondensed;
+export default AudioItemCompact;

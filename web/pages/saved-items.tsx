@@ -5,7 +5,7 @@ import useSavedItemsForUser from "hooks/useSavedItemsForUser";
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import LoadingBlock from "components/LoadingBlock";
-import AudioItemCondensed from "components/AudioItemCondensed";
+import AudioItemCompact from "components/AudioItemCompact";
 
 const SavedItems = () => {
 	const [savedItems, { loading, error }] = useSavedItemsForUser();
@@ -32,7 +32,7 @@ const SavedItems = () => {
 					)}
 					{savedItems?.map(({ audioItem }, index) => {
 						return (
-							<AudioItemCondensed
+							<AudioItemCompact
 								audioItem={audioItem}
 								className="mb-4"
 								key={index}

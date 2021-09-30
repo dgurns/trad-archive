@@ -14,7 +14,7 @@ class MyDocument extends Document {
 
 	render() {
 		return (
-			<Html lang="en">
+			<Html lang="en" className="bg-gray-900">
 				<Head>
 					<link rel="icon" href="/favicon.ico" />
 					<link rel="dns-prefetch" href="https://fonts.googleapis.com" />

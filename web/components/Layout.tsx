@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import Head from "next/head";
 import Header from "components/Header";
+import Footer from "components/Footer";
 
 const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 interface Props {
@@ -34,7 +35,10 @@ const Layout = ({ children, pageTitle }: Props) => {
 			)}
 
 			<div className="flex flex-col justify-start items-center">
-				<div className="w-full lg:max-w-5xl py-6 px-4 pb-44">{children}</div>
+				<div className="w-full min-h-screen lg:max-w-5xl py-6 px-4 pb-44">
+					{children}
+				</div>
+				<Footer />
 			</div>
 
 			{/* Add header to the DOM after child content so its modals overlay */}

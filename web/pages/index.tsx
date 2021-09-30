@@ -20,8 +20,8 @@ import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
-const NUM_COMMENTS_TO_FETCH = 2;
-const NUM_TAGS_TO_FETCH = 5;
+const NUM_COMMENTS_TO_FETCH = 4;
+const NUM_TAGS_TO_FETCH = 10;
 interface QueryVariables {
 	input: {
 		take?: number;
@@ -243,7 +243,7 @@ export default function Home({
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}
-					{audioItems?.length === 0 && (
+					{!audioItemsLoading && audioItems?.length === 0 && (
 						<div className="text-gray-500">No Audio Items found</div>
 					)}
 					{audioItems?.map((audioItem, index) => (
@@ -263,7 +263,9 @@ export default function Home({
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Latest Comments</h3>
 					{commentsLoading && <LoadingBlock />}
-					{comments?.length === 0 && <div className="text-gray-500">None</div>}
+					{!commentsLoading && comments?.length === 0 && (
+						<div className="text-gray-500">None</div>
+					)}
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser) {
@@ -288,7 +290,9 @@ export default function Home({
 
 					<h3 className="mt-4 mb-4">Latest Tags</h3>
 					{tagsLoading && <LoadingBlock />}
-					{tags?.length === 0 && <div className="text-gray-500">None</div>}
+					{!tagsLoading && tags?.length === 0 && (
+						<div className="text-gray-500">None</div>
+					)}
 					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						if (!subjectEntity || !objectEntity) {

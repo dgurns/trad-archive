@@ -1,3 +1,18 @@
+export enum FilterType {
+	SortBy = "SORT_BY",
+	ViewAs = "VIEW_AS",
+}
+
+export enum SortBy {
+	RecentlyTagged = "RECENTLY_TAGGED",
+	RecentlyAdded = "RECENTLY_ADDED",
+}
+
+export enum ViewAs {
+	Cards = "CARDS",
+	Compact = "COMPACT",
+}
+
 export enum UserPermission {
 	User = "USER",
 	Admin = "ADMIN",
@@ -211,13 +226,3 @@ export const isApprovedVerificationRequest = (
 export const isDeniedVerificationRequest = (
 	verificationRequest: VerificationRequest
 ) => verificationRequest.status.valueOf() === "Denied";
-
-export enum SortBy {
-	RecentlyTagged = "RECENTLY_TAGGED",
-	RecentlyAdded = "RECENTLY_ADDED",
-}
-
-export enum ViewAs {
-	Cards = "CARDS",
-	Compact = "COMPACT",
-}

@@ -71,9 +71,7 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 				</div>
 
 				{description && (
-					<div className="block text-gray-500 text-sm h-5 overflow-hidden truncate whitespace-nowrap">
-						{description}
-					</div>
+					<div className="text-gray-500 text-sm">{description}</div>
 				)}
 
 				<div className="border-t border-gray-200 mt-2 pt-1 w-full flex flex-row justify-between items-center">

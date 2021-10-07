@@ -123,7 +123,11 @@ const ViewAudioItemBySlug = () => {
 
 					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
 
-					<AudioItemComponent audioItem={audioItem} showTitle={false} />
+					<AudioItemComponent
+						audioItem={audioItem}
+						showTitle={false}
+						className="mb-8"
+					/>
 				</div>
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">

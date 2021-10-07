@@ -7,9 +7,17 @@ import {
 import Link from "next/link";
 
 import { API_URL, apolloClient } from "apolloClient";
-import { AudioItem, Tag, Comment, EntityStatus } from "types";
+import {
+	AudioItem,
+	Tag,
+	Comment,
+	EntityStatus,
+	FilterType,
+	ViewAs,
+} from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
+import useFilters from "hooks/useFilters";
 import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
 import CommentService from "services/Comment";
@@ -17,8 +25,8 @@ import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
+import AudioItemCompact from "components/AudioItemCompact";
 import LoadingBlock from "components/LoadingBlock";
-import Filters from "components/Filters";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 4;
@@ -226,22 +234,43 @@ export default function Home({
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
 
+	// TODO: Add SortBy filter
+	const { Filters, filtersProps, viewAsValue } = useFilters({
+		types: [FilterType.ViewAs],
+	});
+
 	return (
 		<Layout pageTitle="Trad Archive - Home">
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>
 
-					<Filters className="mb-6" />
+					<Filters {...filtersProps} className="mb-6" />
+
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}
 					{!audioItemsLoading && audioItems?.length === 0 && (
 						<div className="text-gray-500">No Audio Items found</div>
 					)}
-					{audioItems?.map((audioItem, index) => (
-						<AudioItemComponent audioItem={audioItem} key={index} />
-					))}
+					{audioItems?.map((audioItem, index) => {
+						if (viewAsValue === ViewAs.Compact) {
+							return (
+								<AudioItemCompact
+									audioItem={audioItem}
+									key={index + "compact"}
+									className="mb-6"
+								/>
+							);
+						}
+						return (
+							<AudioItemComponent
+								audioItem={audioItem}
+								key={index}
+								className="mb-8"
+							/>
+						);
+					})}
 					{!audioItemsLoading ? (
 						<div className="flex flex-row justify-center">
 							<button className="btn-text" onClick={fetchNextPage}>

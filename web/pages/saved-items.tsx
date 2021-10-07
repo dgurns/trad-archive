@@ -1,20 +1,30 @@
 import Link from "next/link";
 
 import useSavedItemsForUser from "hooks/useSavedItemsForUser";
+import useFilters from "hooks/useFilters";
+import { FilterType, ViewAs } from "types";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import LoadingBlock from "components/LoadingBlock";
+import AudioItem from "components/AudioItem";
 import AudioItemCompact from "components/AudioItemCompact";
 
 const SavedItems = () => {
 	const [savedItems, { loading, error }] = useSavedItemsForUser();
+
+	const { Filters, filtersProps, viewAsValue } = useFilters({
+		types: [FilterType.ViewAs],
+		defaultViewAsValue: ViewAs.Compact,
+	});
 
 	return (
 		<Layout>
 			<RequireUser>
 				<div className="flex flex-col">
 					<h1 className="mb-6">Saved Items</h1>
+
+					{savedItems?.length && <Filters {...filtersProps} className="mb-6" />}
 
 					{error && (
 						<div className="text-red-600 mb-4">Could not fetch saved items</div>
@@ -31,11 +41,16 @@ const SavedItems = () => {
 						</div>
 					)}
 					{savedItems?.map(({ audioItem }, index) => {
+						if (viewAsValue === ViewAs.Cards) {
+							return (
+								<AudioItem audioItem={audioItem} key={index} className="mb-8" />
+							);
+						}
 						return (
 							<AudioItemCompact
 								audioItem={audioItem}
-								className="mb-4"
 								key={index}
+								className="mb-6"
 							/>
 						);
 					})}

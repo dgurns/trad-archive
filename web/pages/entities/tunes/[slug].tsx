@@ -156,7 +156,11 @@ const ViewTuneBySlug = () => {
 					{shouldShowAudioItems && (
 						<>
 							{audioItems.map((audioItem, index) => (
-								<AudioItemComponent audioItem={audioItem} key={index} />
+								<AudioItemComponent
+									audioItem={audioItem}
+									key={index}
+									className="mb-8"
+								/>
 							))}
 							{!audioItemsLoading && (
 								<button

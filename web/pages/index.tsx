@@ -23,6 +23,7 @@ import LoadingBlock from "components/LoadingBlock";
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 4;
 const NUM_TAGS_TO_FETCH = 10;
+
 interface QueryVariables {
 	input: {
 		take?: number;

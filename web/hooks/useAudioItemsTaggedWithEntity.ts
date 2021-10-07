@@ -36,7 +36,7 @@ interface HookArgs {
 
 const useAudioItemsTaggedWithEntity = ({
 	entity,
-	resultsPerPage = 10,
+	resultsPerPage = 15,
 	queryOptions = {},
 }: HookArgs): [
 	AudioItem[] | undefined,

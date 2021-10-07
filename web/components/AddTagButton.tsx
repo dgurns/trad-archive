@@ -56,7 +56,13 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 				onSuccess(tag);
 			}
 		},
-		[getParentEntity, setAddTagModalIsVisible, entity]
+		[
+			getParentEntity,
+			setAddTagModalIsVisible,
+			refetchAudioItems,
+			onSuccess,
+			entity,
+		]
 	);
 
 	const onAddTagClicked = useCallback(async () => {

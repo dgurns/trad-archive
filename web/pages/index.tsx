@@ -7,9 +7,10 @@ import {
 import Link from "next/link";
 
 import { API_URL, apolloClient } from "apolloClient";
-import { AudioItem, Tag, Comment, EntityStatus } from "types";
+import { AudioItem, Tag, Comment, EntityStatus, FilterType } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
+import useFilters from "hooks/useFilters";
 import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
 import CommentService from "services/Comment";
@@ -20,8 +21,8 @@ import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
-const NUM_COMMENTS_TO_FETCH = 2;
-const NUM_TAGS_TO_FETCH = 5;
+const NUM_COMMENTS_TO_FETCH = 4;
+const NUM_TAGS_TO_FETCH = 10;
 interface QueryVariables {
 	input: {
 		take?: number;
@@ -225,29 +226,31 @@ export default function Home({
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
 
+	const { Filters, filtersProps, viewAsValue } = useFilters({
+		types: [FilterType.ViewAs],
+	});
+
 	return (
-		<Layout>
+		<Layout pageTitle="Trad Archive - Home">
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>
 
-					<Link href="/entities/audio-items/random">
-						<a className="flex flex-row items-center mb-6">
-							<div className="block mr-2 h-6">
-								<i className="material-icons">shuffle</i>
-							</div>
-							<div>Show me something random</div>
-						</a>
-					</Link>
+					<Filters {...filtersProps} className="mb-6" />
 
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}
-					{audioItems?.length === 0 && (
+					{!audioItemsLoading && audioItems?.length === 0 && (
 						<div className="text-gray-500">No Audio Items found</div>
 					)}
 					{audioItems?.map((audioItem, index) => (
-						<AudioItemComponent audioItem={audioItem} key={index} />
+						<AudioItemComponent
+							viewAs={viewAsValue}
+							audioItem={audioItem}
+							key={index}
+							className="mb-6"
+						/>
 					))}
 					{!audioItemsLoading ? (
 						<div className="flex flex-row justify-center">
@@ -263,7 +266,9 @@ export default function Home({
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Latest Comments</h3>
 					{commentsLoading && <LoadingBlock />}
-					{comments?.length === 0 && <div className="text-gray-500">None</div>}
+					{!commentsLoading && comments?.length === 0 && (
+						<div className="text-gray-500">None</div>
+					)}
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser) {
@@ -288,7 +293,9 @@ export default function Home({
 
 					<h3 className="mt-4 mb-4">Latest Tags</h3>
 					{tagsLoading && <LoadingBlock />}
-					{tags?.length === 0 && <div className="text-gray-500">None</div>}
+					{!tagsLoading && tags?.length === 0 && (
+						<div className="text-gray-500">None</div>
+					)}
 					{tags?.map((tag, index) => {
 						const { createdByUser, subjectEntity, objectEntity } = tag;
 						if (!subjectEntity || !objectEntity) {

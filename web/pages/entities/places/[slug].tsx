@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Place } from "types";
+import { Place, FilterType } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
+import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import AudioItemComponent from "components/AudioItem";
+import AudioItem from "components/AudioItem";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
 import AddTagButton from "components/AddTagButton";
 import EditTagsButton from "components/EditTagsButton";
@@ -45,6 +46,10 @@ const ViewPlaceBySlug = () => {
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPageOfAudioItems,
 	] = useAudioItemsTaggedWithEntity({ entity: place });
+
+	const { Filters, filtersProps, viewAsValue } = useFilters({
+		types: [FilterType.ViewAs],
+	});
 
 	const aboutMarkup = useMemo(
 		() => (
@@ -121,7 +126,7 @@ const ViewPlaceBySlug = () => {
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
 	return (
-		<Layout>
+		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
 					<div className="flex flex-row items-center">
@@ -136,8 +141,15 @@ const ViewPlaceBySlug = () => {
 
 					{shouldShowAudioItems && (
 						<>
+							<Filters {...filtersProps} className="mb-6" />
+
 							{audioItems.map((audioItem, index) => (
-								<AudioItemComponent audioItem={audioItem} key={index} />
+								<AudioItem
+									viewAs={viewAsValue}
+									audioItem={audioItem}
+									key={index}
+									className="mb-8"
+								/>
 							))}
 							{!audioItemsLoading && (
 								<button

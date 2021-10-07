@@ -58,8 +58,8 @@ export class VerificationRequest extends TypeOrmBaseEntity {
 	})
 	copyrightPermissionStatus!: CopyrightPermissionStatus;
 
-	@Column()
-	imageS3Key!: string;
+	@Column({ type: "varchar", nullable: true, default: null })
+	imageS3Key!: string | null;
 
 	@Field(() => User)
 	@ManyToOne(() => User, { eager: true })

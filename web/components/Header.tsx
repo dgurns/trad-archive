@@ -109,6 +109,14 @@ const Header = () => {
 						<span className="hidden md:block md:pl-1">Search</span>
 						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
 					</button>
+					<Link href="/entities/audio-items/random">
+						<a className="flex flex-row items-center link-bare text-current text-white hover:text-gray-400 ml-4">
+							<div className="block h-6">
+								<i className="material-icons">shuffle</i>
+							</div>
+							<div className="md:pl-2 hidden md:block">Random</div>
+						</a>
+					</Link>
 				</div>
 
 				{userActions}

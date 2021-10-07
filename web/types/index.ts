@@ -211,3 +211,13 @@ export const isApprovedVerificationRequest = (
 export const isDeniedVerificationRequest = (
 	verificationRequest: VerificationRequest
 ) => verificationRequest.status.valueOf() === "Denied";
+
+export enum SortBy {
+	RecentlyTagged = "RECENTLY_TAGGED",
+	RecentlyAdded = "RECENTLY_ADDED",
+}
+
+export enum ViewAs {
+	Cards = "CARDS",
+	Compact = "COMPACT",
+}

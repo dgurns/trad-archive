@@ -232,17 +232,7 @@ export default function Home({
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>
 
-					<Link href="/entities/audio-items/random">
-						<a className="flex flex-row items-center mb-6">
-							<div className="block mr-2 h-6">
-								<i className="material-icons">shuffle</i>
-							</div>
-							<div>Show me something random</div>
-						</a>
-					</Link>
-
 					<Filters className="mb-6" />
-
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>
 					)}

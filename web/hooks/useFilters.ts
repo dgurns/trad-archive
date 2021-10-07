@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { FilterType, SortBy, ViewAs } from "types";
+import { FilterType, SortByValue, ViewAsValue } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
 	types?: Array<FilterType>;
-	defaultSortByValue?: SortBy;
-	defaultViewAsValue?: ViewAs;
+	defaultSortByValue?: SortByValue;
+	defaultViewAsValue?: ViewAsValue;
 }
 interface ReturnValue {
 	Filters: (props: FiltersProps) => React.ReactElement;
 	filtersProps: FiltersProps;
-	sortByValue?: SortBy;
-	viewAsValue?: ViewAs;
+	sortByValue?: SortByValue;
+	viewAsValue?: ViewAsValue;
 }
 
 // useFilters takes default values for sortBy and viewAs and returns the Filters
@@ -20,28 +20,24 @@ interface ReturnValue {
 // viewAsValue.
 const useFilters = ({
 	types = [],
-	defaultSortByValue = SortBy.RecentlyTagged,
-	defaultViewAsValue = ViewAs.Cards,
+	defaultSortByValue = SortByValue.RecentlyTagged,
+	defaultViewAsValue = ViewAsValue.Card,
 }: Args = {}): ReturnValue => {
 	const [sortByValue, setSortByValue] = useState(defaultSortByValue);
 	const [viewAsValue, setViewAsValue] = useState(defaultViewAsValue);
 
 	const onChangeSortBy = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setSortByValue(event.target.value as SortBy);
+		setSortByValue(event.target.value as SortByValue);
 	const onChangeViewAs = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setViewAsValue(event.target.value as ViewAs);
+		setViewAsValue(event.target.value as ViewAsValue);
 
-	const filtersProps = {};
-	for (const filterType of types) {
-		if (filterType === FilterType.SortBy) {
-			filtersProps["sortByValue"] = sortByValue;
-			filtersProps["onChangeSortBy"] = onChangeSortBy;
-		}
-		if (filterType === FilterType.ViewAs) {
-			filtersProps["viewAsValue"] = viewAsValue;
-			filtersProps["onChangeViewAs"] = onChangeViewAs;
-		}
-	}
+	const filtersProps = {
+		types,
+		sortByValue,
+		onChangeSortBy,
+		viewAsValue,
+		onChangeViewAs,
+	};
 
 	return { Filters, filtersProps, sortByValue, viewAsValue };
 };

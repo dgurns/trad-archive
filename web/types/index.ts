@@ -3,13 +3,13 @@ export enum FilterType {
 	ViewAs = "VIEW_AS",
 }
 
-export enum SortBy {
+export enum SortByValue {
 	RecentlyTagged = "RECENTLY_TAGGED",
 	RecentlyAdded = "RECENTLY_ADDED",
 }
 
-export enum ViewAs {
-	Cards = "CARDS",
+export enum ViewAsValue {
+	Card = "CARD",
 	Compact = "COMPACT",
 }
 

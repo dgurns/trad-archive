@@ -2,20 +2,19 @@ import Link from "next/link";
 
 import useSavedItemsForUser from "hooks/useSavedItemsForUser";
 import useFilters from "hooks/useFilters";
-import { FilterType, ViewAs } from "types";
+import { FilterType, ViewAsValue } from "types";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItem from "components/AudioItem";
-import AudioItemCompact from "components/AudioItemCompact";
 
 const SavedItems = () => {
 	const [savedItems, { loading, error }] = useSavedItemsForUser();
 
 	const { Filters, filtersProps, viewAsValue } = useFilters({
 		types: [FilterType.ViewAs],
-		defaultViewAsValue: ViewAs.Compact,
+		defaultViewAsValue: ViewAsValue.Compact,
 	});
 
 	return (
@@ -40,20 +39,14 @@ const SavedItems = () => {
 							<Link href="/">Audio Items</Link>!
 						</div>
 					)}
-					{savedItems?.map(({ audioItem }, index) => {
-						if (viewAsValue === ViewAs.Cards) {
-							return (
-								<AudioItem audioItem={audioItem} key={index} className="mb-8" />
-							);
-						}
-						return (
-							<AudioItemCompact
-								audioItem={audioItem}
-								key={index}
-								className="mb-6"
-							/>
-						);
-					})}
+					{savedItems?.map(({ audioItem }, index) => (
+						<AudioItem
+							viewAs={viewAsValue}
+							audioItem={audioItem}
+							key={index}
+							className="mb-8"
+						/>
+					))}
 				</div>
 			</RequireUser>
 		</Layout>

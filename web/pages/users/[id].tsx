@@ -4,14 +4,15 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { UserFragments } from "fragments";
-import { User } from "types";
+import { User, FilterType } from "types";
 import DateTimeService from "services/DateTime";
 import EntityService from "services/Entity";
 import useAudioItemsCreatedByUser from "hooks/useAudioItemsCreatedByUser";
+import useFilters from "hooks/useFilters";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import AudioItemComponent from "components/AudioItem";
+import AudioItem from "components/AudioItem";
 
 const USER_QUERY = gql`
 	query User($id: String!) {
@@ -39,6 +40,10 @@ const ViewUserById = () => {
 		audioItems = [],
 		{ loading: audioItemsLoading, error: audioItemsError },
 	] = useAudioItemsCreatedByUser(userData?.user);
+
+	const { Filters, filtersProps, viewAsValue } = useFilters({
+		types: [FilterType.ViewAs],
+	});
 
 	const aboutMarkup = useMemo(
 		() => (
@@ -104,13 +109,19 @@ const ViewUserById = () => {
 							{username} hasn't added any Audio Items yet
 						</div>
 					)}
-					{audioItems.map((audioItem, index) => (
-						<AudioItemComponent
-							audioItem={audioItem}
-							key={index}
-							className="mb-8"
-						/>
-					))}
+					{audioItems.length > 0 && (
+						<>
+							<Filters {...filtersProps} className="mb-6" />
+							{audioItems.map((audioItem, index) => (
+								<AudioItem
+									viewAs={viewAsValue}
+									audioItem={audioItem}
+									key={index}
+									className="mb-8"
+								/>
+							))}
+						</>
+					)}
 				</div>
 
 				<div className="hidden md:flex flex-col items-start pb-8 md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">

@@ -7,14 +7,7 @@ import {
 import Link from "next/link";
 
 import { API_URL, apolloClient } from "apolloClient";
-import {
-	AudioItem,
-	Tag,
-	Comment,
-	EntityStatus,
-	FilterType,
-	ViewAs,
-} from "types";
+import { AudioItem, Tag, Comment, EntityStatus, FilterType } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useFilters from "hooks/useFilters";
@@ -25,7 +18,6 @@ import TagService from "services/Tag";
 
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
-import AudioItemCompact from "components/AudioItemCompact";
 import LoadingBlock from "components/LoadingBlock";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
@@ -234,7 +226,6 @@ export default function Home({
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
 
-	// TODO: Add SortBy filter
 	const { Filters, filtersProps, viewAsValue } = useFilters({
 		types: [FilterType.ViewAs],
 	});
@@ -253,24 +244,14 @@ export default function Home({
 					{!audioItemsLoading && audioItems?.length === 0 && (
 						<div className="text-gray-500">No Audio Items found</div>
 					)}
-					{audioItems?.map((audioItem, index) => {
-						if (viewAsValue === ViewAs.Compact) {
-							return (
-								<AudioItemCompact
-									audioItem={audioItem}
-									key={index + "compact"}
-									className="mb-6"
-								/>
-							);
-						}
-						return (
-							<AudioItemComponent
-								audioItem={audioItem}
-								key={index}
-								className="mb-8"
-							/>
-						);
-					})}
+					{audioItems?.map((audioItem, index) => (
+						<AudioItemComponent
+							viewAs={viewAsValue}
+							audioItem={audioItem}
+							key={index}
+							className="mb-6"
+						/>
+					))}
 					{!audioItemsLoading ? (
 						<div className="flex flex-row justify-center">
 							<button className="btn-text" onClick={fetchNextPage}>

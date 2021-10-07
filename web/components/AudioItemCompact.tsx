@@ -57,15 +57,15 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Link href={`/entities/audio-items/${slug}`}>{name}</Link>
 
-				<div className="text-sm mt-1 mb-1">
-					Tags:{" "}
+				<div className="flex flex-row text-sm mt-1 mb-1">
+					Tags:
 					{sortedTags.map((tag, index) => (
-						<>
+						<div key={index} className="ml-1">
 							<Link href={EntityService.makeHrefForView(tag.objectEntity)}>
 								{tag.objectEntity.name}
 							</Link>
 							{index !== sortedTags.length - 1 && ", "}
-						</>
+						</div>
 					))}
 					<AddTagButton entity={audioItem} className="ml-2" />
 				</div>

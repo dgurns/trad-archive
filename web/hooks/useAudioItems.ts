@@ -5,7 +5,7 @@ import {
 	LazyQueryHookOptions,
 	LazyQueryResult,
 } from "@apollo/client";
-import { AudioItem, EntityStatus } from "types";
+import { AudioItem, EntityStatus, SortBy } from "types";
 import { EntityFragments } from "fragments";
 
 export const AUDIO_ITEMS_QUERY = gql`
@@ -25,14 +25,20 @@ interface QueryVariables {
 		take?: number;
 		skip?: number;
 		status?: EntityStatus;
+		sortBy?: SortBy;
 	};
 }
 interface HookArgs {
+	sortBy?: SortBy;
 	resultsPerPage?: number;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
 
-const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
+const useAudioItems = ({
+	sortBy = SortBy.RecentlyTagged,
+	resultsPerPage,
+	queryOptions = {},
+}: HookArgs = {}): [
 	AudioItem[] | undefined,
 	LazyQueryResult<QueryData, {}>,
 	() => void
@@ -47,12 +53,13 @@ const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
 		getAudioItems({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage,
 					status: EntityStatus.Published,
 				},
 			},
 		});
-	}, [getAudioItems, resultsPerPage]);
+	}, [getAudioItems, resultsPerPage, sortBy]);
 
 	const audioItems = data?.audioItems;
 
@@ -60,12 +67,13 @@ const useAudioItems = ({ resultsPerPage, queryOptions = {} }: HookArgs = {}): [
 		fetchMore({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage,
 					skip: audioItems?.length ?? 0,
 				},
 			},
 		});
-	}, [fetchMore, resultsPerPage, audioItems]);
+	}, [fetchMore, resultsPerPage, audioItems, sortBy]);
 
 	return [audioItemsQuery.data?.audioItems, audioItemsQuery, fetchNextPage];
 };

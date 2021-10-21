@@ -49,7 +49,7 @@ export const apolloClient = new ApolloClient({
 			Query: {
 				fields: {
 					audioItems: {
-						keyArgs: false,
+						keyArgs: (args) => args.input.sortBy,
 						// When new results are received for this query via fetchMore
 						// pagination, specify how to merge them with cached results
 						merge(existing = [], incoming, { args: { input } }) {

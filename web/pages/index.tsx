@@ -7,7 +7,14 @@ import {
 import Link from "next/link";
 
 import { API_URL, apolloClient } from "apolloClient";
-import { AudioItem, Tag, Comment, EntityStatus, FilterType } from "types";
+import {
+	AudioItem,
+	Tag,
+	Comment,
+	EntityStatus,
+	FilterType,
+	SortBy,
+} from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useFilters from "hooks/useFilters";
@@ -19,13 +26,16 @@ import TagService from "services/Tag";
 import Layout from "components/Layout";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
+import LoadingCircle from "components/LoadingCircle";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 4;
 const NUM_TAGS_TO_FETCH = 10;
+const DEFAULT_SORT_BY = SortBy.RecentlyTagged;
 
 interface QueryVariables {
 	input: {
+		sortBy?: SortBy;
 		take?: number;
 		status?: EntityStatus;
 	};
@@ -63,6 +73,7 @@ export async function getStaticProps() {
 			query: AUDIO_ITEMS_QUERY,
 			variables: {
 				input: {
+					sortBy: DEFAULT_SORT_BY,
 					take: NUM_AUDIO_ITEMS_TO_FETCH,
 					status: EntityStatus.Published,
 				},
@@ -123,6 +134,7 @@ export default function Home({
 				query: AUDIO_ITEMS_QUERY,
 				variables: {
 					input: {
+						sortBy: DEFAULT_SORT_BY,
 						take: NUM_AUDIO_ITEMS_TO_FETCH,
 						status: EntityStatus.Published,
 					},
@@ -190,6 +202,11 @@ export default function Home({
 		}
 	}, [prefetchedAudioItems, prefetchedComments, prefetchedTags]);
 
+	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
+		types: [FilterType.SortBy, FilterType.ViewAs],
+		defaultSortBy: DEFAULT_SORT_BY,
+	});
+
 	// These queries skip the initial network request if the cache is
 	// pre-populated
 	const [
@@ -197,6 +214,7 @@ export default function Home({
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPage,
 	] = useAudioItems({
+		sortBy,
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
 	});
 	const {
@@ -227,17 +245,16 @@ export default function Home({
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
 
-	const { Filters, filtersProps, viewAs } = useFilters({
-		types: [FilterType.ViewAs],
-	});
-
 	return (
 		<Layout pageTitle="Trad Archive - Home">
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>
 
-					<Filters {...filtersProps} className="mb-6" />
+					<div className="flex flex-row justify-start items-center mb-6">
+						<Filters {...filtersProps} />
+						{audioItemsLoading && <LoadingCircle />}
+					</div>
 
 					{!audioItems && audioItemsError && (
 						<div className="text-red-600">{audioItemsError.message}</div>

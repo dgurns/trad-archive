@@ -15,7 +15,7 @@ export class AudioItemsInput {
 
 	@Field(() => SortBy, {
 		nullable: true,
-		defaultValue: SortBy.RecentlyAdded,
+		defaultValue: SortBy.RecentlyTagged,
 	})
 	sortBy?: SortBy;
 }
@@ -36,7 +36,7 @@ export class AudioItemsTaggedWithEntityInput {
 
 	@Field(() => SortBy, {
 		nullable: true,
-		defaultValue: SortBy.RecentlyAdded,
+		defaultValue: SortBy.RecentlyTagged,
 	})
 	sortBy?: SortBy;
 }

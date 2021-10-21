@@ -69,6 +69,18 @@ export class AudioItemResolver {
 
 		let audioItems: AudioItem[] = [];
 		switch (sortBy) {
+			case SortBy.RecentlyTagged:
+				const results = await getManager().query(
+					`SELECT a.*, max(t."createdAt") AS "tagCreatedAt"
+					FROM audio_item a
+					INNER JOIN tag t ON t."subjectAudioItemId" = a.id
+					GROUP BY a.id
+					ORDER BY "tagCreatedAt" DESC
+					OFFSET ${skip}
+					LIMIT ${take};`
+				);
+				audioItems = results as AudioItem[];
+				break;
 			case SortBy.RecentlyAdded:
 				audioItems = await AudioItem.find({
 					where: whereOptions,
@@ -76,18 +88,6 @@ export class AudioItemResolver {
 					skip,
 					order: { createdAt: "DESC" },
 				});
-				break;
-			case SortBy.RecentlyTagged:
-				const results = await getManager().query(
-					`select a.*, max(t."createdAt") as "tagCreatedAt"
-						from audio_item a
-						inner join tag t on t."subjectAudioItemId" = a.id
-						group by a.id
-						order by "tagCreatedAt" desc
-						offset ${skip}
-						limit ${take};`
-				);
-				audioItems = results as AudioItem[];
 				break;
 			default:
 				break;
@@ -110,13 +110,22 @@ export class AudioItemResolver {
 				"relevantTag",
 				`relevantTag.object${entityType}Id = :entityId`,
 				{ entityId }
-			)
-			.orderBy("relevantTag.createdAt", "DESC");
+			);
 		if (take) {
 			query.take(take);
 		}
 		if (skip) {
 			query.skip(skip);
+		}
+		switch (sortBy) {
+			case SortBy.RecentlyTagged:
+				query.orderBy("relevantTag.createdAt", "DESC");
+				break;
+			case SortBy.RecentlyAdded:
+				query.orderBy("audioItem.createdAt", "DESC");
+				break;
+			default:
+				break;
 		}
 		return query.getMany();
 	}

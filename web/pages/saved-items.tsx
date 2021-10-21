@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import useSavedItemsForUser from "hooks/useSavedItemsForUser";
 import useFilters from "hooks/useFilters";
-import { FilterType, ViewAsValue } from "types";
+import { FilterType, ViewAs } from "types";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
@@ -12,9 +12,9 @@ import AudioItem from "components/AudioItem";
 const SavedItems = () => {
 	const [savedItems, { loading, error }] = useSavedItemsForUser();
 
-	const { Filters, filtersProps, viewAsValue } = useFilters({
+	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
-		defaultViewAsValue: ViewAsValue.Compact,
+		defaultViewAs: ViewAs.Compact,
 	});
 
 	return (
@@ -41,7 +41,7 @@ const SavedItems = () => {
 					)}
 					{savedItems?.map(({ audioItem }, index) => (
 						<AudioItem
-							viewAs={viewAsValue}
+							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
 							className="mb-8"

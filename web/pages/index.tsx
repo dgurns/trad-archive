@@ -227,7 +227,7 @@ export default function Home({
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
 
-	const { Filters, filtersProps, viewAsValue } = useFilters({
+	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
 	});
 
@@ -247,7 +247,7 @@ export default function Home({
 					)}
 					{audioItems?.map((audioItem, index) => (
 						<AudioItemComponent
-							viewAs={viewAsValue}
+							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
 							className="mb-6"

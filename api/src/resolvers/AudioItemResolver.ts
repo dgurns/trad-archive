@@ -26,6 +26,7 @@ import {
 } from "resolvers/AudioItemResolverTypes";
 import EntityService from "services/Entity";
 import { EntityStatus } from "models/entities/base";
+import { SortBy } from "./commonTypes";
 
 @Resolver(() => AudioItem)
 export class AudioItemResolver {
@@ -56,7 +57,7 @@ export class AudioItemResolver {
 
 	@Query(() => [AudioItem])
 	async audioItems(@Arg("input") input: AudioItemsInput) {
-		const { take, skip, status } = input;
+		const { take, skip, status, sortBy } = input;
 
 		type AudioItemsWhereOptions = {
 			status?: EntityStatus;
@@ -65,12 +66,32 @@ export class AudioItemResolver {
 		if (status) {
 			whereOptions.status = status;
 		}
-		const audioItems = await AudioItem.find({
-			where: whereOptions,
-			take,
-			skip,
-			order: { createdAt: "DESC" },
-		});
+
+		let audioItems: AudioItem[] = [];
+		switch (sortBy) {
+			case SortBy.RecentlyAdded:
+				audioItems = await AudioItem.find({
+					where: whereOptions,
+					take,
+					skip,
+					order: { createdAt: "DESC" },
+				});
+				break;
+			case SortBy.RecentlyTagged:
+				const results = await getManager().query(
+					`select a.*, max(t."createdAt") as "tagCreatedAt"
+						from audio_item a
+						inner join tag t on t."subjectAudioItemId" = a.id
+						group by a.id
+						order by "tagCreatedAt" desc
+						offset ${skip}
+						limit ${take};`
+				);
+				audioItems = results as AudioItem[];
+				break;
+			default:
+				break;
+		}
 		return audioItems;
 	}
 
@@ -78,7 +99,7 @@ export class AudioItemResolver {
 	async audioItemsTaggedWithEntity(
 		@Arg("input") input: AudioItemsTaggedWithEntityInput
 	) {
-		const { entityType, entityId, take, skip } = input;
+		const { entityType, entityId, take, skip, sortBy } = input;
 
 		const query = getManager()
 			.createQueryBuilder(AudioItem, "audioItem")

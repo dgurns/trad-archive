@@ -1,45 +1,45 @@
 import React, { useState } from "react";
-import { FilterType, SortByValue, ViewAsValue } from "types";
+import { FilterType, SortBy, ViewAs } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
 	types?: Array<FilterType>;
-	defaultSortByValue?: SortByValue;
-	defaultViewAsValue?: ViewAsValue;
+	defaultSortBy?: SortBy;
+	defaultViewAs?: ViewAs;
 }
 interface ReturnValue {
 	Filters: (props: FiltersProps) => React.ReactElement;
 	filtersProps: FiltersProps;
-	sortByValue?: SortByValue;
-	viewAsValue?: ViewAsValue;
+	sortBy?: SortBy;
+	viewAs?: ViewAs;
 }
 
 // useFilters takes default values for sortBy and viewAs and returns the Filters
-// component along with props to pass to it, plus the output sortByValue and
-// viewAsValue.
+// component along with props to pass to it, plus the output sortBy and
+// viewAs.
 const useFilters = ({
 	types = [],
-	defaultSortByValue = SortByValue.RecentlyTagged,
-	defaultViewAsValue = ViewAsValue.Card,
+	defaultSortBy = SortBy.RecentlyTagged,
+	defaultViewAs = ViewAs.Card,
 }: Args = {}): ReturnValue => {
-	const [sortByValue, setSortByValue] = useState(defaultSortByValue);
-	const [viewAsValue, setViewAsValue] = useState(defaultViewAsValue);
+	const [sortBy, setSortBy] = useState(defaultSortBy);
+	const [viewAs, setViewAs] = useState(defaultViewAs);
 
 	const onChangeSortBy = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setSortByValue(event.target.value as SortByValue);
+		setSortBy(event.target.value as SortBy);
 	const onChangeViewAs = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setViewAsValue(event.target.value as ViewAsValue);
+		setViewAs(event.target.value as ViewAs);
 
 	const filtersProps = {
 		types,
-		sortByValue,
+		sortBy,
 		onChangeSortBy,
-		viewAsValue,
+		viewAs,
 		onChangeViewAs,
 	};
 
-	return { Filters, filtersProps, sortByValue, viewAsValue };
+	return { Filters, filtersProps, sortBy, viewAs };
 };
 
 export default useFilters;

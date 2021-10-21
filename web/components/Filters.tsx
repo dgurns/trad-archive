@@ -1,20 +1,20 @@
 import React, { useCallback } from "react";
-import { FilterType, SortByValue, ViewAsValue } from "types";
+import { FilterType, SortBy, ViewAs } from "types";
 
 export interface Props {
 	types?: Array<FilterType>;
-	sortByValue?: SortByValue;
+	sortBy?: SortBy;
 	onChangeSortBy?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-	viewAsValue?: ViewAsValue;
+	viewAs?: ViewAs;
 	onChangeViewAs?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	className?: string;
 }
 
 const Filters = ({
 	types = [],
-	sortByValue,
+	sortBy,
 	onChangeSortBy,
-	viewAsValue,
+	viewAs,
 	onChangeViewAs,
 	className,
 }: Props) => {
@@ -24,10 +24,7 @@ const Filters = ({
 
 	const renderSortBy = useCallback(
 		(key) => {
-			if (
-				!types.includes(FilterType.SortBy) ||
-				(!sortByValue && !onChangeSortBy)
-			) {
+			if (!types.includes(FilterType.SortBy) || (!sortBy && !onChangeSortBy)) {
 				return null;
 			}
 			return (
@@ -38,26 +35,19 @@ const Filters = ({
 					key={key}
 				>
 					Sort by
-					<select
-						className="ml-2"
-						value={sortByValue}
-						onChange={onChangeSortBy}
-					>
-						<option value={SortByValue.RecentlyTagged}>Recently tagged</option>
-						<option value={SortByValue.RecentlyAdded}>Recently added</option>
+					<select className="ml-2" value={sortBy} onChange={onChangeSortBy}>
+						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
+						<option value={SortBy.RecentlyAdded}>Recently added</option>
 					</select>
 				</div>
 			);
 		},
-		[types, sortByValue, onChangeSortBy]
+		[types, sortBy, onChangeSortBy]
 	);
 
 	const renderViewAs = useCallback(
 		(key) => {
-			if (
-				!types.includes(FilterType.ViewAs) ||
-				(!viewAsValue && !onChangeViewAs)
-			) {
+			if (!types.includes(FilterType.ViewAs) || (!viewAs && !onChangeViewAs)) {
 				return null;
 			}
 			return (
@@ -68,18 +58,14 @@ const Filters = ({
 					key={key}
 				>
 					View as
-					<select
-						className="ml-2"
-						value={viewAsValue}
-						onChange={onChangeViewAs}
-					>
-						<option value={ViewAsValue.Card}>Cards</option>
-						<option value={ViewAsValue.Compact}>Compact</option>
+					<select className="ml-2" value={viewAs} onChange={onChangeViewAs}>
+						<option value={ViewAs.Card}>Cards</option>
+						<option value={ViewAs.Compact}>Compact</option>
 					</select>
 				</div>
 			);
 		},
-		[types, viewAsValue, onChangeViewAs]
+		[types, viewAs, onChangeViewAs]
 	);
 
 	return (

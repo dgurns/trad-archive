@@ -46,7 +46,10 @@ const useAudioItems = ({
 	const [getAudioItems, audioItemsQuery] = useLazyQuery<
 		QueryData,
 		QueryVariables
-	>(AUDIO_ITEMS_QUERY, { notifyOnNetworkStatusChange: true, ...queryOptions });
+	>(AUDIO_ITEMS_QUERY, {
+		notifyOnNetworkStatusChange: true,
+		...queryOptions,
+	});
 	const { data, fetchMore } = audioItemsQuery;
 
 	useEffect(() => {
@@ -69,13 +72,14 @@ const useAudioItems = ({
 				input: {
 					sortBy,
 					take: resultsPerPage,
+					status: EntityStatus.Published,
 					skip: audioItems?.length ?? 0,
 				},
 			},
 		});
 	}, [fetchMore, resultsPerPage, audioItems, sortBy]);
 
-	return [audioItemsQuery.data?.audioItems, audioItemsQuery, fetchNextPage];
+	return [audioItems, audioItemsQuery, fetchNextPage];
 };
 
 export default useAudioItems;

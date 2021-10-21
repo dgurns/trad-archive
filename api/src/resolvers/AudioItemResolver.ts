@@ -70,15 +70,16 @@ export class AudioItemResolver {
 		let audioItems: AudioItem[] = [];
 		switch (sortBy) {
 			case SortBy.RecentlyTagged:
-				const results = await getManager().query(
-					`SELECT a.*, max(t."createdAt") AS "tagCreatedAt"
-					FROM audio_item a
-					INNER JOIN tag t ON t."subjectAudioItemId" = a.id
-					GROUP BY a.id
-					ORDER BY "tagCreatedAt" DESC
-					OFFSET ${skip}
-					LIMIT ${take};`
-				);
+				const results = await getManager()
+					.createQueryBuilder(AudioItem, "a")
+					.leftJoinAndSelect("a.createdByUser", "u")
+					.innerJoin(Tag, "t", "a.id = t.subjectAudioItemId")
+					.addSelect("max(t.createdAt)", "tc")
+					.groupBy("a.id, u.id")
+					.orderBy("tc", "DESC")
+					.skip(skip)
+					.take(take)
+					.getMany();
 				audioItems = results as AudioItem[];
 				break;
 			case SortBy.RecentlyAdded:

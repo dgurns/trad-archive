@@ -42,7 +42,6 @@ interface Props {
 }
 const SaveItemButton = ({ audioItem }: Props) => {
 	const { id, slug, isSavedByUser } = audioItem;
-
 	const router = useRouter();
 	const { currentUser, requireLogin } = useRequireLogin();
 	const [refetchAudioItem] = useLazyQuery(AUDIO_ITEM_QUERY, {

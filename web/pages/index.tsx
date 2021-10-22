@@ -194,7 +194,7 @@ export default function Home({
 					data: { audioItems: prefetchedRecentlyAddedAudioItems },
 					variables: {
 						input: {
-							// sortBy: SortBy.RecentlyAdded,
+							sortBy: SortBy.RecentlyAdded,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
 							status: EntityStatus.Published,
 						},
@@ -249,11 +249,11 @@ export default function Home({
 			}
 		}
 	}, [
+		apolloClient,
 		prefetchedRecentlyTaggedAudioItems,
 		prefetchedRecentlyAddedAudioItems,
 		prefetchedComments,
 		prefetchedTags,
-		apolloClient,
 	]);
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
@@ -282,7 +282,7 @@ export default function Home({
 		tagsQuery: { loading: tagsLoading },
 	} = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
 
-	const audioItems = fetchedAudioItems ?? prefetchedRecentlyTaggedAudioItems;
+	const audioItems = fetchedAudioItems;
 
 	const comments = useMemo(() => {
 		const data = fetchedComments ?? prefetchedComments ?? [];

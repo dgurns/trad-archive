@@ -19,6 +19,7 @@ functions:
     environment:
       SERVERLESS_STAGE: ${opt:stage}
       WEB_ORIGIN: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
+    timeout: 15
     events:
       - http:
           path: graphql

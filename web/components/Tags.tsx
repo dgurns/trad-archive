@@ -6,6 +6,7 @@ import EntityService from "services/Entity";
 import TagService from "services/Tag";
 
 import AddTagButton from "components/AddTagButton";
+import EditTagsButton from "components/EditTagsButton";
 
 interface TagProps {
 	tag: Tag;
@@ -45,9 +46,17 @@ const Tags = ({ entity }: TagsProps) => {
 					<TagLink tag={tag} />
 				</div>
 			))}
+
 			<div className={tags?.length > 0 ? "mb-2 ml-1" : undefined}>
 				<AddTagButton entity={entity} />
 			</div>
+
+			{tags?.length > 0 && (
+				<div className="flex ml-1 mb-2">
+					<span className="text-gray-500 mr-1">/</span>
+					<EditTagsButton entity={entity} />
+				</div>
+			)}
 		</div>
 	);
 };

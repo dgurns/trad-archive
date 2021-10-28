@@ -108,9 +108,14 @@ export const apolloClient = new ApolloClient({
 							return incoming ?? existing;
 						},
 					},
+					isSavedByUser: {
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
+					},
 					createdByUser: {
-						merge(existing, incoming, { mergeObjects }) {
-							return mergeObjects(existing, incoming);
+						merge(existing, incoming) {
+							return incoming ?? existing;
 						},
 					},
 				},

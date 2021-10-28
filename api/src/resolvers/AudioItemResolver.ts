@@ -26,6 +26,7 @@ import {
 } from "resolvers/AudioItemResolverTypes";
 import EntityService from "services/Entity";
 import { EntityStatus } from "models/entities/base";
+import { SortBy } from "./commonTypes";
 
 @Resolver(() => AudioItem)
 export class AudioItemResolver {
@@ -56,7 +57,7 @@ export class AudioItemResolver {
 
 	@Query(() => [AudioItem])
 	async audioItems(@Arg("input") input: AudioItemsInput) {
-		const { take, skip, status } = input;
+		const { take, skip, status, sortBy } = input;
 
 		type AudioItemsWhereOptions = {
 			status?: EntityStatus;
@@ -65,12 +66,32 @@ export class AudioItemResolver {
 		if (status) {
 			whereOptions.status = status;
 		}
-		const audioItems = await AudioItem.find({
-			where: whereOptions,
-			take,
-			skip,
-			order: { createdAt: "DESC" },
-		});
+
+		let audioItems: AudioItem[] = [];
+		switch (sortBy) {
+			case SortBy.RecentlyTagged:
+				audioItems = await getManager()
+					.createQueryBuilder(AudioItem, "a")
+					.leftJoinAndSelect("a.createdByUser", "u")
+					.innerJoin(Tag, "t", "a.id = t.subjectAudioItemId")
+					.addSelect("max(t.createdAt)", "tc")
+					.orderBy("tc", "DESC")
+					.groupBy("a.id,u.id")
+					.skip(skip)
+					.take(take)
+					.getMany();
+				break;
+			case SortBy.RecentlyAdded:
+				audioItems = await AudioItem.find({
+					where: whereOptions,
+					take,
+					skip,
+					order: { createdAt: "DESC" },
+				});
+				break;
+			default:
+				break;
+		}
 		return audioItems;
 	}
 
@@ -78,7 +99,7 @@ export class AudioItemResolver {
 	async audioItemsTaggedWithEntity(
 		@Arg("input") input: AudioItemsTaggedWithEntityInput
 	) {
-		const { entityType, entityId, take, skip } = input;
+		const { entityType, entityId, take, skip, sortBy } = input;
 
 		const query = getManager()
 			.createQueryBuilder(AudioItem, "audioItem")
@@ -89,13 +110,22 @@ export class AudioItemResolver {
 				"relevantTag",
 				`relevantTag.object${entityType}Id = :entityId`,
 				{ entityId }
-			)
-			.orderBy("relevantTag.createdAt", "DESC");
+			);
 		if (take) {
 			query.take(take);
 		}
 		if (skip) {
 			query.skip(skip);
+		}
+		switch (sortBy) {
+			case SortBy.RecentlyTagged:
+				query.orderBy("relevantTag.createdAt", "DESC");
+				break;
+			case SortBy.RecentlyAdded:
+				query.orderBy("audioItem.createdAt", "DESC");
+				break;
+			default:
+				break;
 		}
 		return query.getMany();
 	}

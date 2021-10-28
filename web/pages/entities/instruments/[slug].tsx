@@ -46,7 +46,7 @@ const ViewInstrumentBySlug = () => {
 		fetchNextPageOfAudioItems,
 	] = useAudioItemsTaggedWithEntity({ entity: instrument });
 
-	const { Filters, filtersProps, viewAsValue } = useFilters({
+	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
 	});
 
@@ -128,7 +128,7 @@ const ViewInstrumentBySlug = () => {
 
 							{audioItems.map((audioItem, index) => (
 								<AudioItem
-									viewAs={viewAsValue}
+									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
 									className="mb-8"

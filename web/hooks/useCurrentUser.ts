@@ -5,7 +5,7 @@ import { User } from "types";
 import { UserFragments } from "fragments";
 
 export const CURRENT_USER_QUERY = gql`
-	query {
+	query CurrentUser {
 		currentUser {
 			...CurrentUser
 		}

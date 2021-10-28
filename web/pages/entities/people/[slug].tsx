@@ -44,7 +44,7 @@ const ViewPersonBySlug = () => {
 		fetchNextPageOfAudioItems,
 	] = useAudioItemsTaggedWithEntity({ entity: personData?.person });
 
-	const { Filters, filtersProps, viewAsValue } = useFilters({
+	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
 	});
 
@@ -142,7 +142,7 @@ const ViewPersonBySlug = () => {
 
 							{audioItems.map((audioItem, index) => (
 								<AudioItem
-									viewAs={viewAsValue}
+									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
 									className="mb-8"

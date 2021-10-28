@@ -1,16 +1,16 @@
 export enum FilterType {
-	SortBy = "SORT_BY",
-	ViewAs = "VIEW_AS",
+	SortBy = "SortBy",
+	ViewAs = "ViewAs",
 }
 
-export enum SortByValue {
-	RecentlyTagged = "RECENTLY_TAGGED",
-	RecentlyAdded = "RECENTLY_ADDED",
+export enum SortBy {
+	RecentlyTagged = "RecentlyTagged",
+	RecentlyAdded = "RecentlyAdded",
 }
 
-export enum ViewAsValue {
-	Card = "CARD",
-	Compact = "COMPACT",
+export enum ViewAs {
+	Card = "Card",
+	Compact = "Compact",
 }
 
 export enum UserPermission {

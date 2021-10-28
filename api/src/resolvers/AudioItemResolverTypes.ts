@@ -1,5 +1,6 @@
 import { InputType, Field, Int } from "type-graphql";
 import { EntityStatus, EntityType } from "models/entities/base";
+import { SortBy } from "resolvers/commonTypes";
 
 @InputType()
 export class AudioItemsInput {
@@ -11,6 +12,12 @@ export class AudioItemsInput {
 
 	@Field(() => EntityStatus, { nullable: true })
 	status?: EntityStatus;
+
+	@Field(() => SortBy, {
+		nullable: true,
+		defaultValue: SortBy.RecentlyTagged,
+	})
+	sortBy?: SortBy;
 }
 
 @InputType()
@@ -26,6 +33,12 @@ export class AudioItemsTaggedWithEntityInput {
 
 	@Field(() => Int, { nullable: true, defaultValue: 0 })
 	skip?: number;
+
+	@Field(() => SortBy, {
+		nullable: true,
+		defaultValue: SortBy.RecentlyTagged,
+	})
+	sortBy?: SortBy;
 }
 
 @InputType()

@@ -202,20 +202,20 @@ export class EntityResolver {
 					case EntityType.Person:
 						queryPromises.push(personQuery);
 						break;
+					case EntityType.Tune:
+						queryPromises.push(tuneQuery);
+						break;
 					case EntityType.Instrument:
 						queryPromises.push(instrumentQuery);
 						break;
 					case EntityType.Place:
 						queryPromises.push(placeQuery);
 						break;
-					case EntityType.AudioItem:
-						queryPromises.push(audioItemQuery);
-						break;
-					case EntityType.Tune:
-						queryPromises.push(tuneQuery);
-						break;
 					case EntityType.Collection:
 						queryPromises.push(collectionQuery);
+						break;
+					case EntityType.AudioItem:
+						queryPromises.push(audioItemQuery);
 						break;
 					default:
 						break;
@@ -224,11 +224,11 @@ export class EntityResolver {
 		} else {
 			queryPromises = [
 				personQuery,
+				tuneQuery,
 				instrumentQuery,
 				placeQuery,
-				audioItemQuery,
 				collectionQuery,
-				tuneQuery,
+				audioItemQuery,
 			];
 		}
 		// Await the query results and return them

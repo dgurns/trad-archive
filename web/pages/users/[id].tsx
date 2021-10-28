@@ -41,7 +41,7 @@ const ViewUserById = () => {
 		{ loading: audioItemsLoading, error: audioItemsError },
 	] = useAudioItemsCreatedByUser(userData?.user);
 
-	const { Filters, filtersProps, viewAsValue } = useFilters({
+	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
 	});
 
@@ -114,7 +114,7 @@ const ViewUserById = () => {
 							<Filters {...filtersProps} className="mb-6" />
 							{audioItems.map((audioItem, index) => (
 								<AudioItem
-									viewAs={viewAsValue}
+									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
 									className="mb-8"

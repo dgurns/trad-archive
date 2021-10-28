@@ -7,7 +7,14 @@ import {
 import Link from "next/link";
 
 import { API_URL, apolloClient } from "apolloClient";
-import { AudioItem, Tag, Comment, EntityStatus, FilterType } from "types";
+import {
+	AudioItem,
+	Tag,
+	Comment,
+	EntityStatus,
+	FilterType,
+	SortBy,
+} from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
 import useFilters from "hooks/useFilters";
@@ -23,8 +30,11 @@ import LoadingBlock from "components/LoadingBlock";
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 4;
 const NUM_TAGS_TO_FETCH = 10;
+const DEFAULT_SORT_BY = SortBy.RecentlyTagged;
+
 interface QueryVariables {
 	input: {
+		sortBy?: SortBy;
 		take?: number;
 		status?: EntityStatus;
 	};
@@ -37,7 +47,8 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 // getStaticProps fetches data server-side and pre-renders a static HTML page.
 // It will regenerate the static HTML at most once per second.
 export async function getStaticProps() {
-	let audioItems: AudioItem[] | undefined;
+	let recentlyTaggedAudioItems: AudioItem[] | undefined;
+	let recentlyAddedAudioItems: AudioItem[] | undefined;
 	let comments: Comment[] | undefined;
 	let tags: Tag[] | undefined;
 
@@ -55,18 +66,37 @@ export async function getStaticProps() {
 				},
 			});
 		}
-		const audioItemsQuery = await serverSideApolloClient.query<
-			{ audioItems: AudioItem[] },
-			QueryVariables
-		>({
-			query: AUDIO_ITEMS_QUERY,
-			variables: {
-				input: {
-					take: NUM_AUDIO_ITEMS_TO_FETCH,
-					status: EntityStatus.Published,
-				},
-			},
-		});
+
+		const [recentlyTaggedAudioItemsQuery, recentlyAddedAudioItemsQuery] =
+			await Promise.all([
+				serverSideApolloClient.query<
+					{ audioItems: AudioItem[] },
+					QueryVariables
+				>({
+					query: AUDIO_ITEMS_QUERY,
+					variables: {
+						input: {
+							sortBy: SortBy.RecentlyTagged,
+							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							status: EntityStatus.Published,
+						},
+					},
+				}),
+				serverSideApolloClient.query<
+					{ audioItems: AudioItem[] },
+					QueryVariables
+				>({
+					query: AUDIO_ITEMS_QUERY,
+					variables: {
+						input: {
+							sortBy: SortBy.RecentlyAdded,
+							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							status: EntityStatus.Published,
+						},
+					},
+				}),
+			]);
+
 		const [commentsQuery, tagsQuery] = await Promise.all([
 			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
 				query: COMMENTS_QUERY,
@@ -86,7 +116,8 @@ export async function getStaticProps() {
 			}),
 		]);
 
-		audioItems = audioItemsQuery?.data?.audioItems;
+		recentlyTaggedAudioItems = recentlyTaggedAudioItemsQuery?.data?.audioItems;
+		recentlyAddedAudioItems = recentlyAddedAudioItemsQuery?.data?.audioItems;
 		comments = commentsQuery?.data?.comments;
 		tags = tagsQuery?.data?.tags;
 	} catch {
@@ -95,7 +126,8 @@ export async function getStaticProps() {
 
 	return {
 		props: {
-			prefetchedAudioItems: audioItems ?? null,
+			prefetchedRecentlyTaggedAudioItems: recentlyTaggedAudioItems ?? null,
+			prefetchedRecentlyAddedAudioItems: recentlyAddedAudioItems ?? null,
 			prefetchedComments: comments ?? null,
 			prefetchedTags: tags ?? null,
 		},
@@ -104,36 +136,67 @@ export async function getStaticProps() {
 }
 
 interface Props {
-	prefetchedAudioItems?: AudioItem[];
+	prefetchedRecentlyTaggedAudioItems?: AudioItem[];
+	prefetchedRecentlyAddedAudioItems?: AudioItem[];
 	prefetchedComments?: Comment[];
 	prefetchedTags?: Tag[];
 }
 
 export default function Home({
-	prefetchedAudioItems,
+	prefetchedRecentlyTaggedAudioItems,
+	prefetchedRecentlyAddedAudioItems,
 	prefetchedComments,
 	prefetchedTags,
 }: Props) {
 	// If there is prefetched data and the cache is not yet populated, populate it
 	useEffect(() => {
-		if (prefetchedAudioItems) {
-			// Check if there are already AudioItems in the cache
-			const cachedAudioItems = apolloClient.readQuery({
+		if (prefetchedRecentlyTaggedAudioItems) {
+			// Check if there are already "Recently Tagged" AudioItems in the cache
+			const cachedRecentlyTaggedAudioItems = apolloClient.readQuery({
 				query: AUDIO_ITEMS_QUERY,
 				variables: {
 					input: {
+						sortBy: SortBy.RecentlyTagged,
 						take: NUM_AUDIO_ITEMS_TO_FETCH,
 						status: EntityStatus.Published,
 					},
 				},
 			});
 			// If not, add the prefetched AudioItems to the cache
-			if (!cachedAudioItems) {
+			if (!cachedRecentlyTaggedAudioItems) {
 				apolloClient.writeQuery({
 					query: AUDIO_ITEMS_QUERY,
-					data: { audioItems: prefetchedAudioItems },
+					data: { audioItems: prefetchedRecentlyTaggedAudioItems },
 					variables: {
 						input: {
+							sortBy: SortBy.RecentlyTagged,
+							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							status: EntityStatus.Published,
+						},
+					},
+				});
+			}
+		}
+		if (prefetchedRecentlyAddedAudioItems) {
+			// Check if there are already "Recently Added" AudioItems in the cache
+			const cachedRecentlyAddedAudioItems = apolloClient.readQuery({
+				query: AUDIO_ITEMS_QUERY,
+				variables: {
+					input: {
+						sortBy: SortBy.RecentlyAdded,
+						take: NUM_AUDIO_ITEMS_TO_FETCH,
+						status: EntityStatus.Published,
+					},
+				},
+			});
+			// If not, add the prefetched AudioItems to the cache
+			if (!cachedRecentlyAddedAudioItems) {
+				apolloClient.writeQuery({
+					query: AUDIO_ITEMS_QUERY,
+					data: { audioItems: prefetchedRecentlyAddedAudioItems },
+					variables: {
+						input: {
+							sortBy: SortBy.RecentlyAdded,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
 							status: EntityStatus.Published,
 						},
@@ -187,15 +250,27 @@ export default function Home({
 				});
 			}
 		}
-	}, [prefetchedAudioItems, prefetchedComments, prefetchedTags]);
+	}, [
+		apolloClient,
+		prefetchedRecentlyTaggedAudioItems,
+		prefetchedRecentlyAddedAudioItems,
+		prefetchedComments,
+		prefetchedTags,
+	]);
 
-	// These queries skip the initial network request if the cache is
-	// pre-populated
+	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
+		types: [FilterType.SortBy, FilterType.ViewAs],
+		defaultSortBy: DEFAULT_SORT_BY,
+	});
+
+	// These queries skip the initial network request if the cache was
+	// pre-populated via static props
 	const [
 		fetchedAudioItems,
 		{ loading: audioItemsLoading, error: audioItemsError },
 		fetchNextPage,
 	] = useAudioItems({
+		sortBy,
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
 	});
 	const {
@@ -209,7 +284,11 @@ export default function Home({
 		tagsQuery: { loading: tagsLoading },
 	} = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
 
-	const audioItems = fetchedAudioItems ?? prefetchedAudioItems;
+	const defaultAudioItems =
+		sortBy === SortBy.RecentlyTagged
+			? prefetchedRecentlyTaggedAudioItems
+			: prefetchedRecentlyAddedAudioItems;
+	const audioItems = fetchedAudioItems ?? defaultAudioItems;
 
 	const comments = useMemo(() => {
 		const data = fetchedComments ?? prefetchedComments ?? [];
@@ -225,10 +304,6 @@ export default function Home({
 		);
 		return sorted.slice(0, NUM_TAGS_TO_FETCH);
 	}, [fetchedTags, prefetchedTags]);
-
-	const { Filters, filtersProps, viewAsValue } = useFilters({
-		types: [FilterType.ViewAs],
-	});
 
 	return (
 		<Layout pageTitle="Trad Archive - Home">
@@ -246,7 +321,7 @@ export default function Home({
 					)}
 					{audioItems?.map((audioItem, index) => (
 						<AudioItemComponent
-							viewAs={viewAsValue}
+							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
 							className="mb-6"
@@ -265,7 +340,7 @@ export default function Home({
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Latest Comments</h3>
-					{commentsLoading && <LoadingBlock />}
+					{commentsLoading && comments?.length === 0 && <LoadingBlock />}
 					{!commentsLoading && comments?.length === 0 && (
 						<div className="text-gray-500">None</div>
 					)}
@@ -292,7 +367,7 @@ export default function Home({
 					})}
 
 					<h3 className="mt-4 mb-4">Latest Tags</h3>
-					{tagsLoading && <LoadingBlock />}
+					{tagsLoading && tags?.length === 0 && <LoadingBlock />}
 					{!tagsLoading && tags?.length === 0 && (
 						<div className="text-gray-500">None</div>
 					)}

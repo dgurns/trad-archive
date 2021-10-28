@@ -1,10 +1,10 @@
-import { AudioItem, ViewAsValue } from "types";
+import { AudioItem, ViewAs } from "types";
 
 import AudioItemCard from "components/AudioItemCard";
 import AudioItemCompact from "components/AudioItemCompact";
 
 interface Props {
-	viewAs?: ViewAsValue;
+	viewAs?: ViewAs;
 	audioItem: AudioItem;
 	showTitle?: boolean;
 	className?: string;
@@ -13,12 +13,12 @@ interface Props {
 // AudioItem handles wrapping the different variants of AudioItem components. It
 // returns the variant requested in the `viewAs` prop. Default is Card.
 const AudioItemComponent = ({
-	viewAs = ViewAsValue.Card,
+	viewAs = ViewAs.Card,
 	audioItem,
 	showTitle,
 	className,
 }: Props) => {
-	if (viewAs === ViewAsValue.Card) {
+	if (viewAs === ViewAs.Card) {
 		return (
 			<AudioItemCard
 				audioItem={audioItem}
@@ -26,7 +26,7 @@ const AudioItemComponent = ({
 				className={className}
 			/>
 		);
-	} else if (viewAs === ViewAsValue.Compact) {
+	} else if (viewAs === ViewAs.Compact) {
 		return <AudioItemCompact audioItem={audioItem} className={className} />;
 	} else {
 		return null;

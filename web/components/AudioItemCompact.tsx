@@ -7,6 +7,7 @@ import TagService from "services/Tag";
 import usePlayerContext from "hooks/usePlayerContext";
 
 import AddTagButton from "components/AddTagButton";
+import EditTagsButton from "components/EditTagsButton";
 import Menu from "components/Menu";
 import SaveItemButton from "components/SaveItemButton";
 import ViewCommentsButton from "components/ViewCommentsButton";
@@ -57,10 +58,10 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Link href={`/entities/audio-items/${slug}`}>{name}</Link>
 
-				<div className="flex flex-row text-sm mt-1 mb-1">
+				<div className="flex flex-row flex-wrap text-sm mt-1 mb-1">
 					Tags:
 					{sortedTags.map((tag, index) => (
-						<div key={index} className="ml-1">
+						<div key={index} className="ml-1 whitespace-pre">
 							<Link href={EntityService.makeHrefForView(tag.objectEntity)}>
 								{tag.objectEntity.name}
 							</Link>
@@ -68,6 +69,12 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 						</div>
 					))}
 					<AddTagButton entity={audioItem} className="ml-2" />
+					{tags?.length > 0 && (
+						<div className="flex ml-1">
+							<span className="text-gray-500 mr-1">/</span>
+							<EditTagsButton entity={audioItem} />
+						</div>
+					)}
 				</div>
 
 				{description && (

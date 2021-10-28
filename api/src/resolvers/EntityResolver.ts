@@ -92,105 +92,80 @@ export class EntityResolver {
 		if (searchTerm.length < 3) {
 			throw new Error("Must include a search term of at least 3 letters");
 		}
-		const searchTermLowercased = searchTerm.toLowerCase();
+		// Remove accents and quotes from search term and convert to lower case
+		// https://stackoverflow.com/a/37511463/7426333
+		const cleanedSearchTerm = searchTerm
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "")
+			.replace(/["']/g, "")
+			.toLowerCase();
 		const takeFromEach = Math.round(take / (entityTypes?.length ?? 5));
 		const entityManager = getManager();
 
 		// Prepare the queries for each Entity type
+		const personSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const personQuery = entityManager
 			.createQueryBuilder(Person, "person")
 			.leftJoinAndSelect("person.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(person.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(person.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
-			.orWhere(
-				"unaccent(LOWER(person.description)) LIKE unaccent(:description)",
-				{
-					description: `%${searchTermLowercased}%`,
-				}
-			)
+			.addSelect(personSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orWhere("description % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
 			.take(takeFromEach)
 			.getMany();
+		const instrumentSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const instrumentQuery = entityManager
 			.createQueryBuilder(Instrument, "instrument")
 			.leftJoinAndSelect("instrument.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(instrument.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(instrument.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
-			.orWhere(
-				"unaccent(LOWER(instrument.description)) LIKE unaccent(:description)",
-				{
-					description: `%${searchTermLowercased}%`,
-				}
-			)
+			.addSelect(instrumentSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orWhere("description % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
 			.take(takeFromEach)
 			.getMany();
+		const placeSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const placeQuery = entityManager
 			.createQueryBuilder(Place, "place")
 			.leftJoinAndSelect("place.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(place.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(place.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
-			.orWhere(
-				"unaccent(LOWER(place.description)) LIKE unaccent(:description)",
-				{
-					description: `%${searchTermLowercased}%`,
-				}
-			)
+			.addSelect(placeSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orWhere("description % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
 			.take(takeFromEach)
 			.getMany();
-		const audioItemQuery = entityManager
-			.createQueryBuilder(AudioItem, "audioItem")
-			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(audioItem.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(audioItem.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
-			.orWhere(
-				"unaccent(LOWER(audioItem.description)) LIKE unaccent(:description)",
-				{
-					description: `%${searchTermLowercased}%`,
-				}
-			)
-			.take(takeFromEach)
-			.getMany();
+		const tuneSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases))`;
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(tune.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(tune.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
+			.addSelect(tuneSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
 			.take(takeFromEach)
 			.getMany();
+		const collectionSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const collectionQuery = entityManager
 			.createQueryBuilder(Collection, "collection")
 			.leftJoinAndSelect("collection.createdByUser", "createdByUser")
-			.where("unaccent(LOWER(collection.name)) LIKE unaccent(:name)", {
-				name: `%${searchTermLowercased}%`,
-			})
-			.orWhere("unaccent(LOWER(collection.aliases)) LIKE unaccent(:aliases)", {
-				aliases: `%${searchTermLowercased}%`,
-			})
-			.orWhere(
-				"unaccent(LOWER(collection.description)) LIKE unaccent(:description)",
-				{
-					description: `%${searchTermLowercased}%`,
-				}
-			)
+			.addSelect(collectionSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orWhere("description % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
+			.take(takeFromEach)
+			.getMany();
+		const audioItemSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
+		const audioItemQuery = entityManager
+			.createQueryBuilder(AudioItem, "audioItem")
+			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
+			.addSelect(audioItemSimilarity, "sml")
+			.where("name % :term", { term: cleanedSearchTerm })
+			.orWhere("aliases % :term", { term: cleanedSearchTerm })
+			.orWhere("description % :term", { term: cleanedSearchTerm })
+			.orderBy("sml", "DESC")
 			.take(takeFromEach)
 			.getMany();
 
@@ -224,9 +199,9 @@ export class EntityResolver {
 		} else {
 			queryPromises = [
 				personQuery,
-				tuneQuery,
 				instrumentQuery,
 				placeQuery,
+				tuneQuery,
 				collectionQuery,
 				audioItemQuery,
 			];

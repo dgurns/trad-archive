@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-lambda";
 import { Connection } from "typeorm";
-import { buildSchema } from "type-graphql";
 import {
 	APIGatewayProxyCallback,
 	APIGatewayProxyEvent,
@@ -9,25 +8,7 @@ import {
 } from "aws-lambda";
 
 import { connectToDatabase } from "db";
-import { seedRelationshipsInDbIfNotPresent } from "seed/relationships";
-import { createCustomContext } from "middleware/context";
-const apolloServerPlugins = require("middleware/plugins");
-import { authChecker } from "middleware/authChecker";
-import { AuthResolver } from "resolvers/AuthResolver";
-import { UserResolver } from "resolvers/UserResolver";
-import { TagResolver } from "resolvers/TagResolver";
-import { RelationshipResolver } from "resolvers/RelationshipResolver";
-import { CommentResolver } from "resolvers/CommentResolver";
-import { SavedItemResolver } from "resolvers/SavedItemResolver";
-import { TakedownRequestResolver } from "resolvers/TakedownRequestResolver";
-import { VerificationRequestResolver } from "resolvers/VerificationRequestResolver";
-import { EntityResolver } from "resolvers/EntityResolver";
-import { AudioItemResolver } from "resolvers/AudioItemResolver";
-import { PersonResolver } from "resolvers/PersonResolver";
-import { InstrumentResolver } from "resolvers/InstrumentResolver";
-import { PlaceResolver } from "resolvers/PlaceResolver";
-import { TuneResolver } from "resolvers/TuneResolver";
-import { CollectionResolver } from "resolvers/CollectionResolver";
+import { initializeApolloServerLambda } from "server";
 
 const { SERVERLESS_STAGE } = process.env;
 
@@ -39,40 +20,10 @@ let apolloServer: ApolloServer | undefined;
 const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
-		await seedRelationshipsInDbIfNotPresent();
 	}
-
 	if (typeof apolloServer === "undefined") {
-		const schema = await buildSchema({
-			resolvers: [
-				AuthResolver,
-				UserResolver,
-				TagResolver,
-				RelationshipResolver,
-				CommentResolver,
-				SavedItemResolver,
-				TakedownRequestResolver,
-				VerificationRequestResolver,
-				EntityResolver,
-				AudioItemResolver,
-				PersonResolver,
-				InstrumentResolver,
-				PlaceResolver,
-				TuneResolver,
-				CollectionResolver,
-			],
-			dateScalarMode: "isoDate",
-			authChecker,
-			authMode: "null",
-		});
-
-		apolloServer = new ApolloServer({
-			schema,
-			plugins: apolloServerPlugins,
-			context: ({ event, context }) => createCustomContext(event, context),
-		});
+		apolloServer = await initializeApolloServerLambda();
 	}
-
 	return apolloServer;
 };
 

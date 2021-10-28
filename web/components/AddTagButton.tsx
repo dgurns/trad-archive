@@ -67,7 +67,7 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 	return (
 		<>
 			<button
-				className={`btn-text ${className ?? ""}`}
+				className={`btn-text whitespace-pre ${className ?? ""}`}
 				onClick={onAddTagClicked}
 			>
 				{children ?? "+ Add Tag"}

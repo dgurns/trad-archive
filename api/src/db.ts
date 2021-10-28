@@ -5,7 +5,7 @@ export const connectToDatabase = async () => {
 	const connection = await createConnection(ormConfig);
 
 	// Set up Postgres extensions and search indexes if they don't already exist
-	//  - `unaccent` extension for stripping accents, ie. Siobhán
+	//  - `unaccent` extension for stripping accents, for example Siobhán
 	//  - `pg_trgm` extension for fuzzy text searching
 	//  - gin indexes on tables to enable fuzzy text searching on each one
 	const queryRunner = connection.createQueryRunner();

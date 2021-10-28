@@ -1,5 +1,6 @@
 import { createConnection, getConnectionManager } from "typeorm";
 import ormConfig, { DB_CONNECTION_NAME } from "ormconfig";
+import { seedRelationshipsInDbIfNotPresent } from "seed/relationships";
 
 export const connectToDatabase = async () => {
 	const connection = await createConnection(ormConfig);
@@ -31,6 +32,8 @@ export const connectToDatabase = async () => {
 		"create index if not exists idx_gin_collection_search on collection using gin (name gin_trgm_ops, aliases gin_trgm_ops, description gin_trgm_ops)"
 	);
 	await queryRunner.release();
+
+	await seedRelationshipsInDbIfNotPresent();
 
 	return connection;
 };

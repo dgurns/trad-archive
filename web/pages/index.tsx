@@ -66,14 +66,13 @@ export async function getStaticProps() {
 				},
 			});
 		}
-		const [
-			recentlyTaggedAudioItemsQuery,
-			recentlyAddedAudioItemsQuery,
-			commentsQuery,
-			tagsQuery,
-		] = await Promise.all([
-			serverSideApolloClient.query<{ audioItems: AudioItem[] }, QueryVariables>(
-				{
+
+		const [recentlyTaggedAudioItemsQuery, recentlyAddedAudioItemsQuery] =
+			await Promise.all([
+				serverSideApolloClient.query<
+					{ audioItems: AudioItem[] },
+					QueryVariables
+				>({
 					query: AUDIO_ITEMS_QUERY,
 					variables: {
 						input: {
@@ -82,10 +81,11 @@ export async function getStaticProps() {
 							status: EntityStatus.Published,
 						},
 					},
-				}
-			),
-			serverSideApolloClient.query<{ audioItems: AudioItem[] }, QueryVariables>(
-				{
+				}),
+				serverSideApolloClient.query<
+					{ audioItems: AudioItem[] },
+					QueryVariables
+				>({
 					query: AUDIO_ITEMS_QUERY,
 					variables: {
 						input: {
@@ -94,8 +94,10 @@ export async function getStaticProps() {
 							status: EntityStatus.Published,
 						},
 					},
-				}
-			),
+				}),
+			]);
+
+		const [commentsQuery, tagsQuery] = await Promise.all([
 			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
 				query: COMMENTS_QUERY,
 				variables: {
@@ -282,7 +284,11 @@ export default function Home({
 		tagsQuery: { loading: tagsLoading },
 	} = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
 
-	const audioItems = fetchedAudioItems;
+	const defaultAudioItems =
+		sortBy === SortBy.RecentlyTagged
+			? prefetchedRecentlyTaggedAudioItems
+			: prefetchedRecentlyAddedAudioItems;
+	const audioItems = fetchedAudioItems ?? defaultAudioItems;
 
 	const comments = useMemo(() => {
 		const data = fetchedComments ?? prefetchedComments ?? [];

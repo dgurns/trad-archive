@@ -24,6 +24,13 @@ const ormConfig: ConnectionOptions = {
 	username: process.env.DATABASE_USERNAME ?? "postgres",
 	password: process.env.DATABASE_PASSWORD ?? "password",
 	database: process.env.DATABASE_NAME ?? "postgres",
+	extra: {
+		// Set max_connections to 2 so that we don't exceed the DB's limit when
+		// multiple Lambdas are handling requests in parallel
+		max: 2,
+		// Close connections after 1 second of idleness
+		idleTimeoutMillis: 1000,
+	},
 	logging: false,
 	entities: [
 		User,

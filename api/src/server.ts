@@ -55,7 +55,3 @@ export const initializeApolloServerLambda = async () => {
 		context: ({ event, context }) => createCustomContext(event, context),
 	});
 };
-
-export const initializeApolloServerExpress = () => {
-	//
-};

@@ -28,8 +28,8 @@ const ormConfig: ConnectionOptions = {
 		// Set max_connections to 2 so that we don't exceed the DB's limit when
 		// multiple Lambdas are handling requests in parallel
 		max: 2,
-		// Close connections after 1 second of idleness
-		idleTimeoutMillis: 1000,
+		// Close connections after 5 minutes of idleness
+		idleTimeoutMillis: 1000 * 60 * 5,
 	},
 	logging: false,
 	entities: [

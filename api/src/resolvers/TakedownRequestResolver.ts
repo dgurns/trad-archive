@@ -9,6 +9,10 @@ import {
 } from "resolvers/TakedownRequestResolverTypes";
 import { TakedownRequest, TakedownRequestStatus } from "models/TakedownRequest";
 import { User, UserPermission } from "models/User";
+import {
+	VerificationRequest,
+	VerificationRequestStatus,
+} from "models/VerificationRequest";
 import { EntityStatus, EntityType } from "models/entities/base";
 import { AudioItem } from "models/entities/AudioItem";
 
@@ -76,18 +80,51 @@ export class TakedownRequestResolver {
 		if (entityType === EntityType.AudioItem) {
 			audioItem = await AudioItem.findOne({
 				where: { id: entityId },
-				relations: ["tags"],
+				relations: ["tags", "tags.objectPerson"],
 			});
 		}
+		if (!audioItem) {
+			throw new Error("Could not find the AudioItem for this TakedownRequest");
+		}
 
+		// Auto-approve this TakedownRequest if User is verified as a Person and
+		// that Person is tagged in the AudioItem
+		let shouldAutoApproveTakedownRequest = false;
+		const successfulVerificationRequest = await VerificationRequest.findOne({
+			where: {
+				createdByUserId: user.id,
+				status: VerificationRequestStatus.Approved,
+			},
+		});
+		if (successfulVerificationRequest) {
+			const tags = audioItem.tags ?? [];
+			for (const tag of tags) {
+				if (tag.objectPerson?.id === successfulVerificationRequest.person.id) {
+					shouldAutoApproveTakedownRequest = true;
+					break;
+				}
+			}
+		}
+
+		const status = shouldAutoApproveTakedownRequest
+			? TakedownRequestStatus.Approved
+			: TakedownRequestStatus.Pending;
 		const takedownRequest = TakedownRequest.create({
 			audioItem,
 			type,
 			message,
 			createdByUser: user,
 			updatedByUser: user,
+			status,
 		});
 		await takedownRequest.save();
+
+		// If auto-approved, update the affected Entity's status
+		if (status === TakedownRequestStatus.Approved) {
+			audioItem.status = EntityStatus.TakenDown;
+			await audioItem.save();
+		}
+
 		return takedownRequest;
 	}
 

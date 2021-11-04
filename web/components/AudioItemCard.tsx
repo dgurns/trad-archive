@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import { AudioItem, EntityStatus, Tag } from "types";
+import {
+	AudioItem,
+	EntityStatus,
+	Tag,
+	TakedownRequest,
+	TakedownRequestStatus,
+} from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
+import useAudioItem from "hooks/useAudioItem";
 
 import Tags from "components/Tags";
 import Menu from "components/Menu";
@@ -20,6 +27,8 @@ interface Props {
 const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	const { name, slug, description, tags, status, createdByUser, createdAt } =
 		audioItem;
+
+	const [_, { refetch }] = useAudioItem({ slug });
 
 	const {
 		activeAudioItem,
@@ -52,6 +61,15 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			setShouldShowTimeMarkers(true);
 		}
 	}, [audioItemIsInPlayer, tagsWithTimeMarkers]);
+
+	const onTakedownRequestCreated = useCallback(
+		(takedownRequest: TakedownRequest) => {
+			if (takedownRequest.status === TakedownRequestStatus.Approved) {
+				refetch();
+			}
+		},
+		[refetch]
+	);
 
 	const shouldShowPositionAndDuration =
 		audioItemIsInPlayer &&
@@ -165,7 +183,12 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 				</div>
 
 				<Menu>
-					{!isTakenDown && <RequestTakedownButton entity={audioItem} />}
+					{!isTakenDown && (
+						<RequestTakedownButton
+							entity={audioItem}
+							onTakedownRequestCreated={onTakedownRequestCreated}
+						/>
+					)}
 				</Menu>
 			</div>
 		</div>

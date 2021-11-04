@@ -48,9 +48,7 @@ const useFilters = ({
 		[types, sortBy, onChangeSortBy, viewAs, onChangeViewAs]
 	);
 
-	const FiltersMemoized = React.memo(Filters);
-
-	return { Filters: FiltersMemoized, filtersProps, sortBy, viewAs };
+	return { Filters, filtersProps, sortBy, viewAs };
 };
 
 export default useFilters;

@@ -43,9 +43,12 @@ const useAudioItems = ({
 	LazyQueryResult<QueryData, {}>,
 	() => void
 ] => {
-	// Reset the skip value when sortBy changes
 	const [skip, setSkip] = useState(0);
+	const [audioItems, setAudioItems] = useState<AudioItem[] | undefined>();
+
+	// Reset values when sortBy changes
 	useEffect(() => {
+		setAudioItems(undefined);
 		setSkip(0);
 	}, [sortBy]);
 
@@ -57,7 +60,15 @@ const useAudioItems = ({
 		...queryOptions,
 	});
 	const { data, fetchMore } = audioItemsQuery;
-	const audioItems = data?.audioItems;
+	useEffect(() => {
+		// Avoid bug with Apollo Client where it makes an extra network request
+		// with original variables after `fetchMore` is called, thus leading to
+		// `data` briefly being `undefined`.
+		// https://github.com/apollographql/apollo-client/issues/6916
+		if (data?.audioItems) {
+			setAudioItems(data.audioItems);
+		}
+	}, [data]);
 
 	useEffect(() => {
 		getAudioItems({
@@ -73,17 +84,18 @@ const useAudioItems = ({
 	}, [getAudioItems, resultsPerPage, sortBy, skip]);
 
 	const fetchNextPage = useCallback(async () => {
+		const numToSkip = audioItems?.length ?? 0;
 		await fetchMore({
 			variables: {
 				input: {
 					sortBy,
 					take: resultsPerPage,
 					status: EntityStatus.Published,
-					skip: audioItems?.length ?? 0,
+					skip: numToSkip,
 				},
 			},
 		});
-		setSkip(audioItems?.length ?? 0);
+		setSkip(numToSkip);
 	}, [fetchMore, resultsPerPage, audioItems, sortBy]);
 
 	return [audioItems, audioItemsQuery, fetchNextPage];

@@ -15,15 +15,17 @@ const PARENT_ENTITY_QUERY = gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
+			...Collection
 			...Person
-			...Instrument
 			...Place
+			...Instrument
 			...Tune
 		}
 	}
 	${EntityFragments.audioItem}
-	${EntityFragments.person}
+	${EntityFragments.collection}
 	${EntityFragments.instrument}
+	${EntityFragments.person}
 	${EntityFragments.place}
 	${EntityFragments.tune}
 `;
@@ -55,7 +57,7 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 				onSuccess(tag);
 			}
 		},
-		[getParentEntity, setAddTagModalIsVisible, onSuccess, entity]
+		[getParentEntity, setAddTagModalIsVisible, onSuccess]
 	);
 
 	const onAddTagClicked = useCallback(async () => {

@@ -102,7 +102,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
 				{isTakenDown ? (
 					<div className="flex flex-row items-center px-4 py-6 text-gray-500">
-						This AudioItem has been removed via an approved Takedown Request
+						This Audio Item has been removed via an approved Takedown Request
 					</div>
 				) : (
 					<>

@@ -120,7 +120,12 @@ export class PlaceResolver {
 	@FieldResolver(() => [Tag])
 	tags(@Root() place: Place) {
 		return Tag.find({
-			where: { subjectPlaceId: In([place.id]) },
+			where: {
+				subjectPlaceId: In([place.id]),
+				// Don't return AudioItem tags here for efficiency reasons. Instead use
+				// audioItemsTaggedWithEntity query.
+				objectAudioItemId: null,
+			},
 		});
 	}
 }

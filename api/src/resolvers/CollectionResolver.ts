@@ -121,7 +121,12 @@ export class CollectionResolver {
 	@FieldResolver(() => [Tag])
 	tags(@Root() collection: Collection) {
 		return Tag.find({
-			where: { subjectCollectionId: In([collection.id]) },
+			where: {
+				subjectCollectionId: In([collection.id]),
+				// Don't return AudioItem tags here for efficiency reasons. Instead use
+				// audioItemsTaggedWithEntity query.
+				objectAudioItemId: null,
+			},
 		});
 	}
 }

@@ -15,15 +15,19 @@ const PARENT_ENTITY_QUERY = gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
+			...Collection
 			...Person
-			...Instrument
 			...Place
+			...Instrument
+			...Tune
 		}
 	}
 	${EntityFragments.audioItem}
-	${EntityFragments.person}
+	${EntityFragments.collection}
 	${EntityFragments.instrument}
+	${EntityFragments.person}
 	${EntityFragments.place}
+	${EntityFragments.tune}
 `;
 
 const DELETE_TAG_MUTATION = gql`

@@ -48,7 +48,7 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 
 	const onCreateTagSuccess = useCallback(
 		async (tag: Tag) => {
-			// Refetch parent entity so it's updated with the new Tag
+			// Refetch parent entity so it is updated with the new Tag
 			getParentEntity();
 			setAddTagModalIsVisible(false);
 			if (onSuccess) {

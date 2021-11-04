@@ -5,6 +5,7 @@ import { Entity, Tag } from "types";
 import { EntityFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
 import EntityService from "services/Entity";
+import { apolloClient } from "apolloClient";
 
 import Modal from "components/Modal";
 import LoadingBlock from "components/LoadingBlock";
@@ -45,8 +46,9 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 		fetchPolicy: "network-only",
 	});
 
-	const refetchParentEntityAndClose = useCallback(
+	const onCreateTagSuccess = useCallback(
 		async (tag: Tag) => {
+			// Refetch parent entity so it's updated with the new Tag
 			getParentEntity();
 			setAddTagModalIsVisible(false);
 			if (onSuccess) {
@@ -81,10 +83,7 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 				{parentEntityLoading ? (
 					<LoadingBlock />
 				) : (
-					<CreateTagForm
-						entity={entity}
-						onSuccess={refetchParentEntityAndClose}
-					/>
+					<CreateTagForm entity={entity} onSuccess={onCreateTagSuccess} />
 				)}
 			</Modal>
 		</>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { FilterType, SortBy, ViewAs } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
@@ -26,20 +26,31 @@ const useFilters = ({
 	const [sortBy, setSortBy] = useState(defaultSortBy);
 	const [viewAs, setViewAs] = useState(defaultViewAs);
 
-	const onChangeSortBy = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setSortBy(event.target.value as SortBy);
-	const onChangeViewAs = (event: React.ChangeEvent<HTMLSelectElement>) =>
-		setViewAs(event.target.value as ViewAs);
+	const onChangeSortBy = useCallback(
+		(event: React.ChangeEvent<HTMLSelectElement>) =>
+			setSortBy(event.target.value as SortBy),
+		[]
+	);
+	const onChangeViewAs = useCallback(
+		(event: React.ChangeEvent<HTMLSelectElement>) =>
+			setViewAs(event.target.value as ViewAs),
+		[]
+	);
 
-	const filtersProps = {
-		types,
-		sortBy,
-		onChangeSortBy,
-		viewAs,
-		onChangeViewAs,
-	};
+	const filtersProps = useMemo(
+		() => ({
+			types,
+			sortBy,
+			onChangeSortBy,
+			viewAs,
+			onChangeViewAs,
+		}),
+		[types, sortBy, onChangeSortBy, viewAs, onChangeViewAs]
+	);
 
-	return { Filters, filtersProps, sortBy, viewAs };
+	const FiltersMemoized = React.memo(Filters);
+
+	return { Filters: FiltersMemoized, filtersProps, sortBy, viewAs };
 };
 
 export default useFilters;

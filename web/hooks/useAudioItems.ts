@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
 	useLazyQuery,
 	gql,
@@ -7,7 +7,6 @@ import {
 } from "@apollo/client";
 import { AudioItem, EntityStatus, SortBy } from "types";
 import { EntityFragments } from "fragments";
-import { apolloClient } from "apolloClient";
 
 export const AUDIO_ITEMS_QUERY = gql`
 	query AudioItems($input: AudioItemsInput!) {
@@ -37,13 +36,19 @@ interface HookArgs {
 
 const useAudioItems = ({
 	sortBy = SortBy.RecentlyTagged,
-	resultsPerPage,
+	resultsPerPage = 10,
 	queryOptions = {},
 }: HookArgs = {}): [
 	AudioItem[] | undefined,
 	LazyQueryResult<QueryData, {}>,
 	() => void
 ] => {
+	// Reset the skip value when sortBy changes
+	const [skip, setSkip] = useState(0);
+	useEffect(() => {
+		setSkip(0);
+	}, [sortBy]);
+
 	const [getAudioItems, audioItemsQuery] = useLazyQuery<
 		QueryData,
 		QueryVariables
@@ -52,23 +57,23 @@ const useAudioItems = ({
 		...queryOptions,
 	});
 	const { data, fetchMore } = audioItemsQuery;
+	const audioItems = data?.audioItems;
 
 	useEffect(() => {
 		getAudioItems({
 			variables: {
 				input: {
 					sortBy,
-					take: resultsPerPage,
+					take: resultsPerPage + skip,
+					skip: 0,
 					status: EntityStatus.Published,
 				},
 			},
 		});
-	}, [getAudioItems, resultsPerPage, sortBy]);
+	}, [getAudioItems, resultsPerPage, sortBy, skip]);
 
-	const audioItems = data?.audioItems;
-
-	const fetchNextPage = useCallback(() => {
-		fetchMore({
+	const fetchNextPage = useCallback(async () => {
+		await fetchMore({
 			variables: {
 				input: {
 					sortBy,
@@ -78,6 +83,7 @@ const useAudioItems = ({
 				},
 			},
 		});
+		setSkip(audioItems?.length ?? 0);
 	}, [fetchMore, resultsPerPage, audioItems, sortBy]);
 
 	return [audioItems, audioItemsQuery, fetchNextPage];

@@ -36,6 +36,7 @@ interface QueryVariables {
 	input: {
 		sortBy?: SortBy;
 		take?: number;
+		skip?: number;
 		status?: EntityStatus;
 	};
 }
@@ -78,6 +79,7 @@ export async function getStaticProps() {
 						input: {
 							sortBy: SortBy.RecentlyTagged,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							skip: 0,
 							status: EntityStatus.Published,
 						},
 					},
@@ -91,6 +93,7 @@ export async function getStaticProps() {
 						input: {
 							sortBy: SortBy.RecentlyAdded,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							skip: 0,
 							status: EntityStatus.Published,
 						},
 					},
@@ -158,6 +161,7 @@ export default function Home({
 					input: {
 						sortBy: SortBy.RecentlyTagged,
 						take: NUM_AUDIO_ITEMS_TO_FETCH,
+						skip: 0,
 						status: EntityStatus.Published,
 					},
 				},
@@ -171,6 +175,7 @@ export default function Home({
 						input: {
 							sortBy: SortBy.RecentlyTagged,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							skip: 0,
 							status: EntityStatus.Published,
 						},
 					},
@@ -185,6 +190,7 @@ export default function Home({
 					input: {
 						sortBy: SortBy.RecentlyAdded,
 						take: NUM_AUDIO_ITEMS_TO_FETCH,
+						skip: 0,
 						status: EntityStatus.Published,
 					},
 				},
@@ -198,6 +204,7 @@ export default function Home({
 						input: {
 							sortBy: SortBy.RecentlyAdded,
 							take: NUM_AUDIO_ITEMS_TO_FETCH,
+							skip: 0,
 							status: EntityStatus.Published,
 						},
 					},

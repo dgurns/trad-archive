@@ -51,6 +51,15 @@ functions:
       - schedule:
           rate: rate(24 hours)
           enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
+  keepWarm:
+    handler: src/handlers/keepWarm.handler
+    environment:
+      SERVERLESS_STAGE: ${opt:stage}
+    timeout: 15
+    events:
+      - schedule:
+          rate: rate(5 minutes)
+          enabled: ${self:custom.shouldRunKeepWarm.${opt:stage}, self:custom.shouldRunKeepWarm.preview}
 
 plugins:
   - serverless-webpack
@@ -68,6 +77,11 @@ custom:
     # TODO: Run on prod when environment is deployed
     prod: false
   shouldRunImportTunes:
+    dev: false
+    preview: true
+    # TODO: Run on prod when environment is deployed
+    prod: false
+  shouldRunKeepWarm:
     dev: false
     preview: true
     # TODO: Run on prod when environment is deployed

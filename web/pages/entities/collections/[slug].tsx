@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";

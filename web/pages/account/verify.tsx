@@ -152,6 +152,9 @@ const AccountVerify = () => {
 		}
 	};
 
+	const shouldPromptToChoosePerson =
+		!personEntity && imageFile && copyrightPermissionIsGranted;
+
 	return (
 		<Layout>
 			<RequireUser>
@@ -168,7 +171,7 @@ const AccountVerify = () => {
 				{!personEntity ? (
 					<>
 						<div className="mb-2">
-							Search for your name and click the Person if found. If it doesn't
+							Search for your name and select the Person if found. If it doesn't
 							exist yet, go ahead and create a new one.
 						</div>
 						<div className="flex flex-col max-w-xs">
@@ -239,6 +242,10 @@ const AccountVerify = () => {
 					>
 						Submit
 					</button>
+				)}
+
+				{shouldPromptToChoosePerson && (
+					<div className="text-red-600 mt-6">Please select a Person above</div>
 				)}
 			</RequireUser>
 		</Layout>

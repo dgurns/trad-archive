@@ -49,6 +49,11 @@ const collectionRelationshipsToSeed: RelationshipToSeed[] = [
 	},
 	{
 		subjectEntityType: EntityType.Collection,
+		objectEntityType: EntityType.Place,
+		name: "was collected in",
+	},
+	{
+		subjectEntityType: EntityType.Collection,
 		objectEntityType: EntityType.Tune,
 		name: "contains",
 	},
@@ -105,6 +110,11 @@ const placeRelationshipsToSeed: RelationshipToSeed[] = [
 		subjectEntityType: EntityType.Place,
 		objectEntityType: EntityType.AudioItem,
 		name: "is recording location of",
+	},
+	{
+		subjectEntityType: EntityType.Place,
+		objectEntityType: EntityType.Collection,
+		name: "is collection location of",
 	},
 	{
 		subjectEntityType: EntityType.Place,
@@ -178,25 +188,25 @@ const createRelationshipInDbIfNotPresent = async (
 // into the DB. If a Relationship already exists, it won't do anything;
 // otherwise it will save a new record.
 export const seedRelationshipsInDbIfNotPresent = async () => {
-	// To minimize performance impact, check the DB for the final seed as a spot
-	// check to determine if seeding has already happened
-	const example = [...relationshipsToSeed].pop();
-	if (!example) {
+	// To minimize performance impact, check the DB for the most recent seed as a
+	// spot check to determine if seeding has already happened
+	const mostRecentSeed = placeRelationshipsToSeed[1];
+	if (!mostRecentSeed) {
 		return;
 	}
-	const exampleInDb = await getManager()
+	const mostRecentSeedInDb = await getManager()
 		.createQueryBuilder(Relationship, "r")
 		.where("r.subjectEntityType = :subjectEntityType", {
-			subjectEntityType: example.subjectEntityType,
+			subjectEntityType: mostRecentSeed.subjectEntityType,
 		})
 		.andWhere("r.objectEntityType = :objectEntityType", {
-			objectEntityType: example.objectEntityType,
+			objectEntityType: mostRecentSeed.objectEntityType,
 		})
 		.andWhere("r.name = :name", {
-			name: example.name,
+			name: mostRecentSeed.name,
 		})
 		.getRawOne();
-	if (Boolean(exampleInDb)) {
+	if (Boolean(mostRecentSeedInDb)) {
 		return;
 	}
 	// Otherwise, create the Relationships

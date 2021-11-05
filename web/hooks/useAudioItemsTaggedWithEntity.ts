@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
 	useLazyQuery,
 	gql,
@@ -36,22 +36,33 @@ interface HookArgs {
 
 const useAudioItemsTaggedWithEntity = ({
 	entity,
-	resultsPerPage = 15,
+	resultsPerPage = 10,
 	queryOptions = {},
 }: HookArgs): [
 	AudioItem[] | undefined,
 	LazyQueryResult<QueryData, QueryVariables>,
 	() => void
 ] => {
+	const [skip, setSkip] = useState(0);
+	const [audioItems, setAudioItems] = useState<AudioItem[] | undefined>();
+
 	const [makeQuery, query] = useLazyQuery<QueryData, QueryVariables>(
 		AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY,
 		{
 			notifyOnNetworkStatusChange: true,
-			fetchPolicy: "cache-and-network",
 			...queryOptions,
 		}
 	);
 	const { data, fetchMore } = query;
+	useEffect(() => {
+		// Avoid bug with Apollo Client where it makes an extra network request
+		// with original variables after `fetchMore` is called, thus leading to
+		// `data` briefly being `undefined`.
+		// https://github.com/apollographql/apollo-client/issues/6916
+		if (data?.audioItemsTaggedWithEntity) {
+			setAudioItems(data.audioItemsTaggedWithEntity);
+		}
+	}, [data]);
 
 	useEffect(() => {
 		if (entity) {
@@ -60,26 +71,26 @@ const useAudioItemsTaggedWithEntity = ({
 					input: {
 						entityType: entity.entityType,
 						entityId: entity.id,
-						take: resultsPerPage,
+						take: resultsPerPage + skip,
 					},
 				},
 			});
 		}
-	}, [makeQuery, entity]);
+	}, [makeQuery, entity, skip, resultsPerPage]);
 
-	const audioItems = data?.audioItemsTaggedWithEntity;
-
-	const fetchNextPage = useCallback(() => {
-		fetchMore({
+	const fetchNextPage = useCallback(async () => {
+		const numToSkip = audioItems?.length ?? 0;
+		await fetchMore({
 			variables: {
 				input: {
 					entityType: entity.entityType,
 					entityId: entity.id,
 					take: resultsPerPage,
-					skip: audioItems.length ?? 0,
+					skip: numToSkip,
 				},
 			},
 		});
+		setSkip(numToSkip);
 	}, [fetchMore, resultsPerPage, entity, audioItems]);
 
 	return [audioItems, query, fetchNextPage];

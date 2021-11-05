@@ -5,6 +5,7 @@ import { Entity, Tag } from "types";
 import { EntityFragments } from "fragments";
 import useRequireLogin from "hooks/useRequireLogin";
 import EntityService from "services/Entity";
+import { apolloClient } from "apolloClient";
 
 import Modal from "components/Modal";
 import LoadingBlock from "components/LoadingBlock";
@@ -14,15 +15,17 @@ const PARENT_ENTITY_QUERY = gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
+			...Collection
 			...Person
-			...Instrument
 			...Place
+			...Instrument
 			...Tune
 		}
 	}
 	${EntityFragments.audioItem}
-	${EntityFragments.person}
+	${EntityFragments.collection}
 	${EntityFragments.instrument}
+	${EntityFragments.person}
 	${EntityFragments.place}
 	${EntityFragments.tune}
 `;
@@ -45,15 +48,16 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 		fetchPolicy: "network-only",
 	});
 
-	const refetchParentEntityAndClose = useCallback(
+	const onCreateTagSuccess = useCallback(
 		async (tag: Tag) => {
+			// Refetch parent entity so it is updated with the new Tag
 			getParentEntity();
 			setAddTagModalIsVisible(false);
 			if (onSuccess) {
 				onSuccess(tag);
 			}
 		},
-		[getParentEntity, setAddTagModalIsVisible, onSuccess, entity]
+		[getParentEntity, setAddTagModalIsVisible, onSuccess]
 	);
 
 	const onAddTagClicked = useCallback(async () => {
@@ -81,10 +85,7 @@ const AddTagButton = ({ entity, onSuccess, className, children }: Props) => {
 				{parentEntityLoading ? (
 					<LoadingBlock />
 				) : (
-					<CreateTagForm
-						entity={entity}
-						onSuccess={refetchParentEntityAndClose}
-					/>
+					<CreateTagForm entity={entity} onSuccess={onCreateTagSuccess} />
 				)}
 			</Modal>
 		</>

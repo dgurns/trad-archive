@@ -34,7 +34,12 @@ export class TuneResolver {
 	@FieldResolver(() => [Tag])
 	tags(@Root() tune: Tune) {
 		return Tag.find({
-			where: { subjectTuneId: In([tune.id]) },
+			where: {
+				subjectTuneId: In([tune.id]),
+				// Don't return AudioItem tags here for efficiency reasons. Instead use
+				// audioItemsTaggedWithEntity query.
+				objectAudioItemId: null,
+			},
 		});
 	}
 }

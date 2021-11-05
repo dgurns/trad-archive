@@ -51,12 +51,17 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] =
 		useState("");
 
-	const [createTag, { loading, data, error }] = useMutation<
+	const [createTag, { data, error }] = useMutation<
 		{ createTag: Tag },
 		{ input: CreateTagInput }
 	>(CREATE_TAG_MUTATION, {
 		errorPolicy: "all",
 	});
+	const [tagsAreCreating, setTagsAreCreating] = useState(false);
+	const [primaryCreatedTag, setPrimaryCreatedTag] = useState<Tag | undefined>(
+		undefined
+	);
+	const [tagsAreCreated, setTagsAreCreated] = useState(false);
 
 	const {
 		tagsQuery: { refetch: refetchTopLevelTags },
@@ -65,17 +70,20 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	});
 
 	useEffect(() => {
-		const onTagCreated = async (tag: Tag) => {
+		if (!tagsAreCreated) {
+			return;
+		}
+		const onCreateSuccess = async (tag: Tag) => {
 			// Now that a new Tag has been created, refetch the top-level `tags` query
 			if (refetchTopLevelTags) {
 				await refetchTopLevelTags();
 			}
-			onSuccess(tag);
+			await onSuccess(tag);
 		};
-		if (data?.createTag) {
-			onTagCreated(data.createTag);
+		if (primaryCreatedTag) {
+			onCreateSuccess(primaryCreatedTag);
 		}
-	}, [data, refetchTopLevelTags, onSuccess]);
+	}, [data, refetchTopLevelTags, onSuccess, tagsAreCreated, primaryCreatedTag]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {
@@ -125,6 +133,8 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	);
 
 	const onCreateTagClicked = useCallback(async () => {
+		setTagsAreCreating(true);
+
 		let subjectTimeMarkerSeconds: number | undefined;
 		if (shouldAddTimeMarker && !isNaN(timeMarkerValue)) {
 			subjectTimeMarkerSeconds = timeMarkerValue;
@@ -137,7 +147,8 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			objectEntityId: selectedEntity.id,
 			subjectTimeMarkerSeconds,
 		};
-		await createTag({ variables: { input: tagInput } });
+		const primaryTagQuery = await createTag({ variables: { input: tagInput } });
+		setPrimaryCreatedTag(primaryTagQuery.data?.createTag);
 
 		if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
 			const inverseTagInput = {
@@ -150,6 +161,9 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			};
 			await createTag({ variables: { input: inverseTagInput } });
 		}
+
+		setTagsAreCreating(false);
+		setTagsAreCreated(true);
 	}, [
 		selectedRelationshipId,
 		shouldCreateInverseRelationship,
@@ -237,7 +251,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			<button
 				className="btn mt-6"
 				onClick={onCreateTagClicked}
-				disabled={loading || !selectedRelationshipId}
+				disabled={tagsAreCreating || !selectedRelationshipId}
 			>
 				Save
 			</button>

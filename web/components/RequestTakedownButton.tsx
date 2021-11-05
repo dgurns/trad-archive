@@ -16,6 +16,7 @@ import Modal from "components/Modal";
 import CreateTakedownRequestForm from "components/CreateTakedownRequestForm";
 import LoadingBlock from "components/LoadingBlock";
 import DateTimeService from "services/DateTime";
+import useAudioItem from "hooks/useAudioItem";
 
 const TAKEDOWN_REQUESTS_FOR_ENTITY = gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
@@ -37,9 +38,10 @@ interface QueryVariables {
 }
 interface Props {
 	entity: Entity;
+	onTakedownRequestCreated?: (takedownRequest: TakedownRequest) => void;
 }
 
-const RequestTakedownButton = ({ entity }: Props) => {
+const RequestTakedownButton = ({ entity, onTakedownRequestCreated }: Props) => {
 	const { currentUser, requireLogin } = useRequireLogin();
 
 	const [modalIsVisible, setModalIsVisible] = useState(false);
@@ -67,6 +69,20 @@ const RequestTakedownButton = ({ entity }: Props) => {
 			setModalIsVisible(true);
 		}
 	}, [currentUser, entity, requireLogin]);
+
+	const onSuccess = useCallback(
+		async (takedownRequest: TakedownRequest) => {
+			try {
+				await refetch();
+				if (onTakedownRequestCreated) {
+					await onTakedownRequestCreated(takedownRequest);
+				}
+			} catch {
+				//
+			}
+		},
+		[refetch, onTakedownRequestCreated]
+	);
 
 	const modalContent = useMemo(() => {
 		const pendingTakedown = takedownRequests.find(isPendingTakedownRequest);
@@ -103,10 +119,7 @@ const RequestTakedownButton = ({ entity }: Props) => {
 					takedown using this form. We will be in touch to verify details.
 				</div>
 
-				<CreateTakedownRequestForm
-					entity={entity}
-					onSuccess={() => refetch()}
-				/>
+				<CreateTakedownRequestForm entity={entity} onSuccess={onSuccess} />
 			</>
 		);
 	}, [loading, error, takedownRequests, refetch, entity]);

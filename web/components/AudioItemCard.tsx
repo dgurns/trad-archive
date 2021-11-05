@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
-import { AudioItem, EntityStatus, Tag } from "types";
+import {
+	AudioItem,
+	EntityStatus,
+	Tag,
+	TakedownRequest,
+	TakedownRequestStatus,
+} from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
+import useAudioItem from "hooks/useAudioItem";
 
 import Tags from "components/Tags";
 import Menu from "components/Menu";
@@ -20,6 +27,8 @@ interface Props {
 const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	const { name, slug, description, tags, status, createdByUser, createdAt } =
 		audioItem;
+
+	const [_, { refetch }] = useAudioItem({ slug });
 
 	const {
 		activeAudioItem,
@@ -53,6 +62,15 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		}
 	}, [audioItemIsInPlayer, tagsWithTimeMarkers]);
 
+	const onTakedownRequestCreated = useCallback(
+		(takedownRequest: TakedownRequest) => {
+			if (takedownRequest.status === TakedownRequestStatus.Approved) {
+				refetch();
+			}
+		},
+		[refetch]
+	);
+
 	const shouldShowPositionAndDuration =
 		audioItemIsInPlayer &&
 		typeof playbackPositionSeconds === "number" &&
@@ -84,7 +102,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
 				{isTakenDown ? (
 					<div className="flex flex-row items-center px-4 py-6 text-gray-500">
-						This AudioItem has been removed via an approved Takedown Request
+						This Audio Item has been removed via an approved Takedown Request
 					</div>
 				) : (
 					<>
@@ -165,7 +183,12 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 				</div>
 
 				<Menu>
-					{!isTakenDown && <RequestTakedownButton entity={audioItem} />}
+					{!isTakenDown && (
+						<RequestTakedownButton
+							entity={audioItem}
+							onTakedownRequestCreated={onTakedownRequestCreated}
+						/>
+					)}
 				</Menu>
 			</div>
 		</div>

@@ -205,7 +205,24 @@ export class TagResolver {
 			throw new Error("Must be logged in to delete a Tag");
 		}
 
-		await Tag.delete(id);
+		const tag = await Tag.findOne({ where: { id } });
+		if (!tag) {
+			throw new Error("Could not find a Tag with that ID");
+		}
+
+		// Also find the inverse Tag, if it exists, and delete that too
+		const { subjectEntity, objectEntity } = tag;
+		const inverseTag = await Tag.findOne({
+			where: {
+				[`subject${objectEntity.entityType}Id`]: objectEntity.id,
+				[`object${subjectEntity.entityType}Id`]: subjectEntity.id,
+			},
+		});
+
+		await Tag.delete(tag.id);
+		if (inverseTag) {
+			await Tag.delete(inverseTag.id);
+		}
 		return true;
 	}
 }

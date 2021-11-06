@@ -8,7 +8,7 @@ import {
 	AfterLoad,
 	Column,
 } from "typeorm";
-import { ObjectType, Field, FieldResolver, Int } from "type-graphql";
+import { ObjectType, Field, Int } from "type-graphql";
 
 import { User } from "models/User";
 import { AudioItem } from "models/entities/AudioItem";

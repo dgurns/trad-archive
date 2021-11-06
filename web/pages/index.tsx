@@ -281,17 +281,28 @@ export default function Home({
 	] = useAudioItems({
 		sortBy,
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
 	});
 	const {
 		comments: fetchedComments,
 		commentsQuery: { loading: commentsLoading },
 	} = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
 	});
 	const {
 		collections: fetchedCollections,
 		collectionsQuery: { loading: collectionsLoading },
-	} = useCollections({ resultsPerPage: NUM_COLLECTIONS_TO_FETCH });
+	} = useCollections({
+		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
+	});
 
 	const defaultAudioItems =
 		sortBy === SortBy.RecentlyTagged

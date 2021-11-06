@@ -14,6 +14,7 @@ import {
 	EntityStatus,
 	FilterType,
 	SortBy,
+	ViewAs,
 } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
@@ -250,7 +251,7 @@ export default function Home({
 			if (!cachedCollections) {
 				apolloClient.writeQuery({
 					query: COLLECTIONS_QUERY,
-					data: { tags: prefetchedCollections },
+					data: { collections: prefetchedCollections },
 					variables: {
 						input: {
 							take: NUM_COLLECTIONS_TO_FETCH,
@@ -340,7 +341,7 @@ export default function Home({
 							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
-							className="mb-6"
+							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 						/>
 					))}
 					{!audioItemsLoading ? (

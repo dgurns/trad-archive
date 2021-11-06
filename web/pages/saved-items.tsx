@@ -14,7 +14,7 @@ const SavedItems = () => {
 
 	const { Filters, filtersProps, viewAs } = useFilters({
 		types: [FilterType.ViewAs],
-		defaultViewAs: ViewAs.Compact,
+		defaultViewAs: ViewAs.List,
 	});
 
 	return (
@@ -44,7 +44,7 @@ const SavedItems = () => {
 							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
-							className="mb-8"
+							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 						/>
 					))}
 				</div>

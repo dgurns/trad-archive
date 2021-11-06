@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Person, FilterType } from "types";
+import { Person, FilterType, ViewAs } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
@@ -145,7 +145,7 @@ const ViewPersonBySlug = () => {
 									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
-									className="mb-8"
+									className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 								/>
 							))}
 							{!audioItemsLoading && (

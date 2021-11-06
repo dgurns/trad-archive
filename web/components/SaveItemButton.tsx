@@ -84,10 +84,12 @@ const SaveItemButton = ({ audioItem }: Props) => {
 	}, [currentUser, router, audioItem, id, createSavedItem, deleteSavedItem]);
 
 	useEffect(() => {
-		if (createData) {
-			// Now that the Audio Item has been added, refetching the updated
-			// Saved Items will also update the Audio Item in cache
+		const refetch = async () => {
+			await refetchAudioItem({ variables: { slug } });
 			refetchSavedItemsForUser();
+		};
+		if (createData) {
+			refetch();
 		}
 	}, [createData, refetchAudioItem, refetchSavedItemsForUser, slug]);
 	useEffect(() => {

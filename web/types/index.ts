@@ -11,6 +11,7 @@ export enum SortBy {
 export enum ViewAs {
 	Card = "Card",
 	Compact = "Compact",
+	List = "List",
 }
 
 export enum UserPermission {

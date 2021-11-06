@@ -2,6 +2,7 @@ import { AudioItem, ViewAs } from "types";
 
 import AudioItemCard from "components/AudioItemCard";
 import AudioItemCompact from "components/AudioItemCompact";
+import AudioItemTextOnly from "components/AudioItemTextOnly";
 
 interface Props {
 	viewAs?: ViewAs;
@@ -28,6 +29,8 @@ const AudioItemComponent = ({
 		);
 	} else if (viewAs === ViewAs.Compact) {
 		return <AudioItemCompact audioItem={audioItem} className={className} />;
+	} else if (viewAs === ViewAs.List) {
+		return <AudioItemTextOnly audioItem={audioItem} className={className} />;
 	} else {
 		return null;
 	}

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Tune, FilterType } from "types";
+import { Tune, FilterType, ViewAs } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
@@ -167,7 +167,7 @@ const ViewTuneBySlug = () => {
 									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
-									className="mb-8"
+									className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 								/>
 							))}
 							{!audioItemsLoading && (

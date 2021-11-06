@@ -10,6 +10,7 @@ const { SERVERLESS_STAGE } = process.env;
 const makeKeepWarmRequests = async () => {
 	let url: string | undefined;
 	switch (SERVERLESS_STAGE) {
+		case "dev":
 		case "prod":
 			url = "https://api-master.tradarchive.com/graphql";
 			break;
@@ -31,13 +32,12 @@ const makeKeepWarmRequests = async () => {
 		}),
 	};
 
-	// Make 4 simultaneous requests to warm up 4 Lambda instances
-	const promises = [
-		fetch(url, options),
-		fetch(url, options),
-		fetch(url, options),
-		fetch(url, options),
-	];
+	// Make parallel requests to warm up Lambda instances
+	const NUM_PARALLEL_REQUESTS = 8;
+	const promises = [];
+	for (let i = 0; i < NUM_PARALLEL_REQUESTS; i++) {
+		promises.push(fetch(url, options));
+	}
 	await Promise.all(promises);
 	return;
 };
@@ -48,11 +48,6 @@ export const handler = (
 	callback: APIGatewayProxyCallback
 ) => {
 	context.callbackWaitsForEmptyEventLoop = false;
-
-	// Do nothing and return immediately in dev environment
-	if (SERVERLESS_STAGE === "dev") {
-		return callback(null);
-	}
 
 	makeKeepWarmRequests()
 		.then(() => callback(null))

@@ -19,6 +19,7 @@ functions:
     environment:
       SERVERLESS_STAGE: ${opt:stage}
       WEB_ORIGIN: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
+    memorySize: 2048
     timeout: 15
     events:
       - http:
@@ -37,6 +38,7 @@ functions:
     handler: src/handlers/importItmaAtomCollections.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
+    memorySize: 1024
     timeout: 600
     events:
       - schedule:
@@ -46,6 +48,7 @@ functions:
     handler: src/handlers/importTunes.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
+    memorySize: 1024
     timeout: 240
     events:
       - schedule:
@@ -55,6 +58,7 @@ functions:
     handler: src/handlers/keepWarm.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
+    memorySize: 512
     timeout: 15
     events:
       - schedule:

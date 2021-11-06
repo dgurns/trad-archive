@@ -14,6 +14,7 @@ import { Collection } from "models/entities/Collection";
 import { User } from "models/User";
 import { Tag } from "models/Tag";
 import {
+	CollectionsInput,
 	CreateCollectionInput,
 	UpdateCollectionInput,
 } from "resolvers/CollectionResolverTypes";
@@ -36,10 +37,8 @@ export class CollectionResolver {
 	}
 
 	@Query(() => [Collection])
-	collections(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
+	collections(@Arg("input") input: CollectionsInput) {
+		const { take, skip } = input;
 		return Collection.find({
 			take,
 			skip,

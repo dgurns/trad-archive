@@ -1,4 +1,13 @@
-import { InputType, Field } from "type-graphql";
+import { InputType, Field, Int } from "type-graphql";
+
+@InputType()
+export class CollectionsInput {
+	@Field(() => Int, { nullable: true, defaultValue: 10 })
+	take?: number;
+
+	@Field(() => Int, { nullable: true, defaultValue: 0 })
+	skip?: number;
+}
 
 @InputType()
 export class CreateCollectionInput {

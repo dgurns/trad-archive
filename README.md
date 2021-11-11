@@ -2,8 +2,14 @@
 
 # Trad Archive
 
-_Under active development._ 
+_Under active development._
 
 _Collaborators welcome! Please reach out to dan [at] dangurney [dot] net, or comment on an issue/PR._
 
-This is an open source experiment in collaboration with the Irish Traditional Music Archive. It will allow community members to tag previously unreleased archival recordings. 
+This is an open source experiment in collaboration with the Irish Traditional Music Archive.
+
+With this project, community members can...
+
+- Listen to previously unreleased archival recordings
+- Help by tagging each recording with People, Places, Tunes, Instruments, and Collections
+- Save favorites to listen later

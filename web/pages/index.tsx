@@ -119,6 +119,7 @@ export async function getStaticProps() {
 				variables: {
 					input: {
 						take: NUM_COLLECTIONS_TO_FETCH,
+						sortBy: SortBy.RecentlyAdded,
 					},
 				},
 			}),
@@ -246,6 +247,7 @@ export default function Home({
 				variables: {
 					input: {
 						take: NUM_COLLECTIONS_TO_FETCH,
+						sortBy: SortBy.RecentlyAdded,
 					},
 				},
 			});
@@ -257,6 +259,7 @@ export default function Home({
 					variables: {
 						input: {
 							take: NUM_COLLECTIONS_TO_FETCH,
+							sortBy: SortBy.RecentlyAdded,
 						},
 					},
 				});
@@ -299,6 +302,7 @@ export default function Home({
 	});
 	const [fetchedCollections, { loading: collectionsLoading }] = useCollections({
 		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
+		sortBy: SortBy.RecentlyAdded,
 		queryOptions: {
 			fetchPolicy: "cache-only",
 		},
@@ -389,7 +393,7 @@ export default function Home({
 						<a className="mb-2">Collections</a>
 					</Link>
 
-					<h3 className="mt-8 mb-4">Latest Collections</h3>
+					<h3 className="mt-6 mb-4">Latest Collections</h3>
 					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
 					{!collectionsLoading && collections?.length === 0 && (
 						<div className="text-gray-500">None</div>
@@ -408,7 +412,7 @@ export default function Home({
 						);
 					})}
 
-					<h3 className="mt-4 mb-4">Latest Comments</h3>
+					<h3 className="mt-6 mb-4">Latest Comments</h3>
 					{commentsLoading && comments?.length === 0 && <LoadingBlock />}
 					{!commentsLoading && comments?.length === 0 && (
 						<div className="text-gray-500">None</div>

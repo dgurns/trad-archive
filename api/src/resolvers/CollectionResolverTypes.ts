@@ -1,4 +1,5 @@
 import { InputType, Field, Int } from "type-graphql";
+import { SortBy } from "resolvers/commonTypes";
 
 @InputType()
 export class CollectionsInput {
@@ -7,6 +8,12 @@ export class CollectionsInput {
 
 	@Field(() => Int, { nullable: true, defaultValue: 0 })
 	skip?: number;
+
+	@Field(() => SortBy, {
+		nullable: true,
+		defaultValue: SortBy.AToZ,
+	})
+	sortBy?: SortBy;
 }
 
 @InputType()

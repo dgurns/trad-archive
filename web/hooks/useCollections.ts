@@ -5,7 +5,7 @@ import {
 	LazyQueryResult,
 	LazyQueryHookOptions,
 } from "@apollo/client";
-import { Collection } from "types";
+import { Collection, SortBy } from "types";
 import { EntityFragments } from "fragments";
 
 export const COLLECTIONS_QUERY = gql`
@@ -24,9 +24,11 @@ interface QueryVariables {
 	input: {
 		take?: number;
 		skip?: number;
+		sortBy?: SortBy;
 	};
 }
 interface HookArgs {
+	sortBy?: SortBy;
 	resultsPerPage?: number;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
@@ -37,6 +39,7 @@ type HookReturnValue = [
 ];
 
 const useCollections = ({
+	sortBy = SortBy.AToZ,
 	resultsPerPage = 20,
 	queryOptions = {},
 }: HookArgs = {}): HookReturnValue => {
@@ -67,10 +70,11 @@ const useCollections = ({
 				input: {
 					take: resultsPerPage + skip,
 					skip: 0,
+					sortBy,
 				},
 			},
 		});
-	}, [getCollections, resultsPerPage]);
+	}, [getCollections, resultsPerPage, sortBy]);
 
 	const fetchNextPageOfCollections = useCallback(async () => {
 		const numToSkip = collections?.length ?? 0;
@@ -79,11 +83,12 @@ const useCollections = ({
 				input: {
 					take: resultsPerPage,
 					skip: numToSkip,
+					sortBy,
 				},
 			},
 		});
 		setSkip(numToSkip);
-	}, [fetchMore, resultsPerPage, collections]);
+	}, [fetchMore, resultsPerPage, collections, sortBy]);
 
 	return [collections, collectionsQuery, fetchNextPageOfCollections];
 };

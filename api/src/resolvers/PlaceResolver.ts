@@ -7,7 +7,7 @@ import {
 	FieldResolver,
 	Root,
 } from "type-graphql";
-import { In } from "typeorm";
+import { FindManyOptions, In } from "typeorm";
 
 import { CustomContext } from "middleware/context";
 import { Place } from "models/entities/Place";
@@ -15,8 +15,10 @@ import { User } from "models/User";
 import { Tag } from "models/Tag";
 import {
 	CreatePlaceInput,
+	PlacesInput,
 	UpdatePlaceInput,
 } from "resolvers/PlaceResolverTypes";
+import { SortBy } from "resolvers/commonTypes";
 import EntityService from "services/Entity";
 
 @Resolver(() => Place)
@@ -36,15 +38,25 @@ export class PlaceResolver {
 	}
 
 	@Query(() => [Place])
-	places(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
-		return Place.find({
+	places(@Arg("input") input: PlacesInput) {
+		const { take, skip, sortBy } = input;
+		const options: FindManyOptions<Place> = {
 			take,
 			skip,
-			order: { createdAt: "DESC" },
-		});
+			order: {},
+		};
+		switch (sortBy) {
+			case SortBy.AToZ:
+				if (options.order) {
+					options.order.name = "ASC";
+				}
+				break;
+			default:
+				if (options.order) {
+					options.order.createdAt = "DESC";
+				}
+		}
+		return Place.find(options);
 	}
 
 	@Mutation(() => Place)

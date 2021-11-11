@@ -24,6 +24,7 @@ import EntityService from "services/Entity";
 import CommentService from "services/Comment";
 
 import Layout from "components/Layout";
+import ProjectIntro from "components/ProjectIntro";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
@@ -324,6 +325,8 @@ export default function Home({
 
 	return (
 		<Layout pageTitle="Trad Archive - Home">
+			<ProjectIntro className="mb-10" />
+
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>

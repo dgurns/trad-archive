@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import {
 	ApolloClient,
 	InMemoryCache,
@@ -22,6 +22,7 @@ import useCollections, { COLLECTIONS_QUERY } from "hooks/useCollections";
 import useFilters from "hooks/useFilters";
 import EntityService from "services/Entity";
 import CommentService from "services/Comment";
+import LocalStorageService from "services/LocalStorage";
 
 import Layout from "components/Layout";
 import ProjectIntro from "components/ProjectIntro";
@@ -323,9 +324,24 @@ export default function Home({
 		return data.slice(0, NUM_COLLECTIONS_TO_FETCH);
 	}, [fetchedCollections, prefetchedCollections]);
 
+	// Due to static rendering, we need to check localStorage for intro status
+	// after client-side hydration.
+	const [shouldShowIntro, setShouldShowIntro] = useState(false);
+	useEffect(() => {
+		if (LocalStorageService.getItem("SHOULD_SHOW_INTRO") !== "false") {
+			setShouldShowIntro(true);
+		}
+	}, []);
+	const onCloseIntro = useCallback(() => {
+		LocalStorageService.setItem("SHOULD_SHOW_INTRO", "false");
+		setShouldShowIntro(false);
+	}, []);
+
 	return (
 		<Layout pageTitle="Trad Archive - Home">
-			<ProjectIntro className="mb-10" />
+			{shouldShowIntro && (
+				<ProjectIntro className="mb-10" onClose={onCloseIntro} />
+			)}
 
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">

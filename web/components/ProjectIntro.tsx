@@ -6,7 +6,7 @@ interface Props {
 const ProjectIntro = ({ className, onClose }: Props) => {
 	return (
 		<div
-			className={`flex flex-col flex-grow bg-gray-200 rounded p-4 pl-16 lg:pl-20 relative text-sm md:text-base ${
+			className={`flex flex-col flex-grow bg-gray-200 rounded p-4 pl-16 lg:pl-20 relative ${
 				className ?? ""
 			}`}
 		>

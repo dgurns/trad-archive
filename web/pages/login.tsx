@@ -36,7 +36,10 @@ const Login = () => {
 
 	const onLogIn = (event) => {
 		event.preventDefault();
-		logIn({ variables: { input: { email: email.trim(), redirectTo } } });
+		const cleanedEmail = email.trim().toLowerCase();
+		logIn({
+			variables: { input: { email: cleanedEmail, redirectTo } },
+		});
 	};
 
 	useEffect(() => {

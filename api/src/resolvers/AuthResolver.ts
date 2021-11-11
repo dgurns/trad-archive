@@ -34,16 +34,17 @@ export class AuthResolver {
 		if (!AuthService.isValidEmail(email)) {
 			throw new Error("Invalid email address");
 		}
+		const cleanedEmail = AuthService.cleanEmail(email);
 
 		const existingUser = await getManager()
 			.createQueryBuilder(User, "user")
 			.where("user.email = :email OR user.username = :username", {
-				email,
+				email: cleanedEmail,
 				username,
 			})
 			.getOne();
 		if (existingUser) {
-			const emailAlreadyExists = existingUser.email === email;
+			const emailAlreadyExists = existingUser.email === cleanedEmail;
 			throw new Error(
 				emailAlreadyExists
 					? "There is already an account under that email address. Please log in"
@@ -55,7 +56,7 @@ export class AuthResolver {
 			await AuthService.createAutoLoginToken();
 
 		const user = User.create({
-			email: email.trim(),
+			email: cleanedEmail,
 			username: username.trim(),
 			autoLoginTokenHashed: tokenHashed,
 			autoLoginTokenExpiry: tokenExpiry,
@@ -144,10 +145,6 @@ export class AuthResolver {
 		} else {
 			throw new Error("This auto-login token is no longer valid");
 		}
-
-		// Invalidate the auto-login token now that the user has logged in
-		user.autoLoginTokenExpiry = AuthService.makeInvalidAutoLoginTokenExpiry();
-		await user.save();
 
 		return user;
 	}

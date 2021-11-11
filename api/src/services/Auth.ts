@@ -21,6 +21,10 @@ const isValidEmail = (email?: string) => {
 	return validityRegex.test(email);
 };
 
+const cleanEmail = (email: string) => {
+	return email.trim().toLowerCase();
+};
+
 type AutoLoginToken = {
 	tokenUnhashed: string;
 	tokenHashed: string;
@@ -91,12 +95,6 @@ export interface JwtCookie {
 const COOKIE_NAME = "jwt";
 
 const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
-	let sameSite: "none" | "lax" | "strict" = "none";
-	if (SERVERLESS_STAGE === "dev") {
-		sameSite = "lax";
-	} else if (SERVERLESS_STAGE === "prod") {
-		sameSite = "strict";
-	}
 	return {
 		name: COOKIE_NAME,
 		value: token,
@@ -104,8 +102,8 @@ const makeJwtCookie = (token: string, expirationDate: Date): JwtCookie => {
 			path: "/",
 			expires: expirationDate,
 			httpOnly: true,
-			sameSite,
-			secure: SERVERLESS_STAGE === "dev" ? false : true,
+			sameSite: "none",
+			secure: true,
 		},
 	};
 };
@@ -122,6 +120,7 @@ const makeInvalidJwtCookie = (): JwtCookie => {
 
 export default {
 	isValidEmail,
+	cleanEmail,
 	createAutoLoginToken,
 	makeInvalidAutoLoginTokenExpiry,
 	makeAutoLoginUrl,

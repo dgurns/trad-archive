@@ -109,7 +109,7 @@ const AutoLogin = () => {
 		);
 	}
 
-	if (authenticateLoading || data || currentUserLoading) {
+	if (authenticateLoading || currentUserLoading) {
 		return (
 			<Layout>
 				<div className="flex flex-row items-center justify-center">

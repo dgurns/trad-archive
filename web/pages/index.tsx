@@ -341,7 +341,10 @@ export default function Home({
 	return (
 		<Layout pageTitle="Trad Archive - Home">
 			{shouldShowIntro && (
-				<ProjectIntro className="mb-10" onClose={onCloseIntro} />
+				<ProjectIntro
+					className="mb-8 md:mt-4 md:mb-12"
+					onClose={onCloseIntro}
+				/>
 			)}
 
 			<div className="flex flex-col md:flex-row">

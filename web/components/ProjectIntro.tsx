@@ -6,10 +6,14 @@ interface Props {
 const ProjectIntro = ({ className, onClose }: Props) => {
 	return (
 		<div
-			className={`flex flex-col flex-grow bg-gray-200 rounded p-4 relative ${
+			className={`flex flex-col flex-grow bg-gray-200 rounded p-4 pl-16 lg:pl-20 relative text-sm ${
 				className ?? ""
 			}`}
 		>
+			<img
+				src="/logo-square.png"
+				className="absolute top-5 -left-1 lg:-left-8 w-12 lg:w-20 -rotate-12"
+			/>
 			<strong>Welcome!</strong>
 			<br />
 			Trad Archive is an open source experiment by the Irish Traditional Music

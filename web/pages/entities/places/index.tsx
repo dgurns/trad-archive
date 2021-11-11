@@ -7,7 +7,9 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 
 const Places = () => {
-	const [places, { loading, error }, fetchNextPage] = usePlaces();
+	const [places, { loading, error }, fetchNextPage] = usePlaces({
+		resultsPerPage: 50,
+	});
 
 	return (
 		<Layout pageTitle={`Trad Archive - Places`}>

@@ -7,7 +7,9 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 
 const Instruments = () => {
-	const [instruments, { loading, error }, fetchNextPage] = useInstruments();
+	const [instruments, { loading, error }, fetchNextPage] = useInstruments({
+		resultsPerPage: 50,
+	});
 
 	return (
 		<Layout pageTitle={`Trad Archive - Instruments`}>

@@ -7,7 +7,9 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 
 const Tunes = () => {
-	const [tunes, { loading, error }, fetchNextPage] = useTunes();
+	const [tunes, { loading, error }, fetchNextPage] = useTunes({
+		resultsPerPage: 50,
+	});
 
 	return (
 		<Layout pageTitle={`Trad Archive - Tunes`}>

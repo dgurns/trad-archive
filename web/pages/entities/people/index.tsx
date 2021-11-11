@@ -7,7 +7,9 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 
 const People = () => {
-	const [people, { loading, error }, fetchNextPage] = usePeople();
+	const [people, { loading, error }, fetchNextPage] = usePeople({
+		resultsPerPage: 50,
+	});
 
 	return (
 		<Layout pageTitle={`Trad Archive - People`}>

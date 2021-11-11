@@ -7,7 +7,9 @@ import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 
 const Collections = () => {
-	const [collections, { loading, error }, fetchNextPage] = useCollections();
+	const [collections, { loading, error }, fetchNextPage] = useCollections({
+		resultsPerPage: 50,
+	});
 
 	return (
 		<Layout pageTitle={`Trad Archive - Collections`}>

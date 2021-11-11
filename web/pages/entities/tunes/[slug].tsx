@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
@@ -148,8 +149,10 @@ const ViewTuneBySlug = () => {
 		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<div className="flex flex-row items-center">
-						Tunes{" "}
+					<div className="flex flex-row items-center mb-1">
+						<Link href="/entities/tunes">
+							<a className="mr-1">Tunes</a>
+						</Link>
 						<i className="material-icons text-gray-500 text-base">
 							keyboard_arrow_right
 						</i>

@@ -2,90 +2,101 @@ import { useEffect, useCallback, useState } from "react";
 import {
 	useLazyQuery,
 	gql,
-	LazyQueryResult,
 	LazyQueryHookOptions,
+	LazyQueryResult,
 } from "@apollo/client";
-import { Collection } from "types";
+import { Tune, SortBy } from "types";
 import { EntityFragments } from "fragments";
 
-export const COLLECTIONS_QUERY = gql`
-	query Collections($input: CollectionsInput!) {
-		collections(input: $input) {
-			...Collection
+export const TUNES_QUERY = gql`
+	query Tunes($input: TunesInput!) {
+		tunes(input: $input) {
+			...Tune
 		}
 	}
-	${EntityFragments.collection}
+	${EntityFragments.tune}
 `;
 
 interface QueryData {
-	collections: Collection[];
+	tunes: Tune[];
 }
 interface QueryVariables {
 	input: {
 		take?: number;
 		skip?: number;
+		sortBy?: SortBy;
 	};
 }
 interface HookArgs {
+	sortBy?: SortBy;
 	resultsPerPage?: number;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
 type HookReturnValue = [
-	Collection[] | undefined,
+	Tune[] | undefined,
 	LazyQueryResult<QueryData, {}>,
 	() => void
 ];
 
-const useCollections = ({
+const useTunes = ({
+	sortBy = SortBy.AToZ,
 	resultsPerPage = 20,
 	queryOptions = {},
 }: HookArgs = {}): HookReturnValue => {
 	const [skip, setSkip] = useState(0);
-	const [collections, setCollections] = useState<Collection[] | undefined>();
+	const [tunes, setTunes] = useState<Tune[] | undefined>();
 
-	const [getCollections, collectionsQuery] = useLazyQuery<
-		QueryData,
-		QueryVariables
-	>(COLLECTIONS_QUERY, {
-		notifyOnNetworkStatusChange: true,
-		...queryOptions,
-	});
-	const { data, fetchMore } = collectionsQuery;
+	// Reset values when sortBy changes
+	useEffect(() => {
+		setTunes(undefined);
+		setSkip(0);
+	}, [sortBy]);
+
+	const [getTunes, tunesQuery] = useLazyQuery<QueryData, QueryVariables>(
+		TUNES_QUERY,
+		{
+			notifyOnNetworkStatusChange: true,
+			...queryOptions,
+		}
+	);
+	const { data, fetchMore } = tunesQuery;
 	useEffect(() => {
 		// Avoid bug with Apollo Client where it makes an extra network request
 		// with original variables after `fetchMore` is called, thus leading to
 		// `data` briefly being `undefined`.
 		// https://github.com/apollographql/apollo-client/issues/6916
-		if (data?.collections) {
-			setCollections(data.collections);
+		if (data?.tunes) {
+			setTunes(data.tunes);
 		}
 	}, [data]);
 
 	useEffect(() => {
-		getCollections({
+		getTunes({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage + skip,
 					skip: 0,
 				},
 			},
 		});
-	}, [getCollections, resultsPerPage]);
+	}, [getTunes, resultsPerPage, sortBy, skip]);
 
-	const fetchNextPageOfCollections = useCallback(async () => {
-		const numToSkip = collections?.length ?? 0;
+	const fetchNextPage = useCallback(async () => {
+		const numToSkip = tunes?.length ?? 0;
 		await fetchMore({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage,
 					skip: numToSkip,
 				},
 			},
 		});
 		setSkip(numToSkip);
-	}, [fetchMore, resultsPerPage, collections]);
+	}, [fetchMore, resultsPerPage, tunes, sortBy]);
 
-	return [collections, collectionsQuery, fetchNextPageOfCollections];
+	return [tunes, tunesQuery, fetchNextPage];
 };
 
-export default useCollections;
+export default useTunes;

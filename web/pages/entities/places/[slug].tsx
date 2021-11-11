@@ -129,8 +129,10 @@ const ViewPlaceBySlug = () => {
 		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<div className="flex flex-row items-center">
-						Places{" "}
+					<div className="flex flex-row items-center mb-1">
+						<Link href="/entities/places">
+							<a className="mr-1">Places</a>
+						</Link>
 						<i className="material-icons text-gray-500 text-base">
 							keyboard_arrow_right
 						</i>

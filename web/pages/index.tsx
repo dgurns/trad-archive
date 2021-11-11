@@ -297,10 +297,7 @@ export default function Home({
 			fetchPolicy: "cache-only",
 		},
 	});
-	const {
-		collections: fetchedCollections,
-		collectionsQuery: { loading: collectionsLoading },
-	} = useCollections({
+	const [fetchedCollections, { loading: collectionsLoading }] = useCollections({
 		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
 		queryOptions: {
 			fetchPolicy: "cache-only",

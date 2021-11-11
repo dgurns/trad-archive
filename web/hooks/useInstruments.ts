@@ -2,90 +2,101 @@ import { useEffect, useCallback, useState } from "react";
 import {
 	useLazyQuery,
 	gql,
-	LazyQueryResult,
 	LazyQueryHookOptions,
+	LazyQueryResult,
 } from "@apollo/client";
-import { Collection } from "types";
+import { Instrument, SortBy } from "types";
 import { EntityFragments } from "fragments";
 
-export const COLLECTIONS_QUERY = gql`
-	query Collections($input: CollectionsInput!) {
-		collections(input: $input) {
-			...Collection
+export const INSTRUMENTS_QUERY = gql`
+	query Instruments($input: InstrumentsInput!) {
+		instruments(input: $input) {
+			...Instrument
 		}
 	}
-	${EntityFragments.collection}
+	${EntityFragments.instrument}
 `;
 
 interface QueryData {
-	collections: Collection[];
+	instruments: Instrument[];
 }
 interface QueryVariables {
 	input: {
 		take?: number;
 		skip?: number;
+		sortBy?: SortBy;
 	};
 }
 interface HookArgs {
+	sortBy?: SortBy;
 	resultsPerPage?: number;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
 }
 type HookReturnValue = [
-	Collection[] | undefined,
+	Instrument[] | undefined,
 	LazyQueryResult<QueryData, {}>,
 	() => void
 ];
 
-const useCollections = ({
+const useInstruments = ({
+	sortBy = SortBy.AToZ,
 	resultsPerPage = 20,
 	queryOptions = {},
 }: HookArgs = {}): HookReturnValue => {
 	const [skip, setSkip] = useState(0);
-	const [collections, setCollections] = useState<Collection[] | undefined>();
+	const [instruments, setInstruments] = useState<Instrument[] | undefined>();
 
-	const [getCollections, collectionsQuery] = useLazyQuery<
+	// Reset values when sortBy changes
+	useEffect(() => {
+		setInstruments(undefined);
+		setSkip(0);
+	}, [sortBy]);
+
+	const [getInstruments, instrumentsQuery] = useLazyQuery<
 		QueryData,
 		QueryVariables
-	>(COLLECTIONS_QUERY, {
+	>(INSTRUMENTS_QUERY, {
 		notifyOnNetworkStatusChange: true,
 		...queryOptions,
 	});
-	const { data, fetchMore } = collectionsQuery;
+	const { data, fetchMore } = instrumentsQuery;
 	useEffect(() => {
 		// Avoid bug with Apollo Client where it makes an extra network request
 		// with original variables after `fetchMore` is called, thus leading to
 		// `data` briefly being `undefined`.
 		// https://github.com/apollographql/apollo-client/issues/6916
-		if (data?.collections) {
-			setCollections(data.collections);
+		if (data?.instruments) {
+			setInstruments(data.instruments);
 		}
 	}, [data]);
 
 	useEffect(() => {
-		getCollections({
+		getInstruments({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage + skip,
 					skip: 0,
 				},
 			},
 		});
-	}, [getCollections, resultsPerPage]);
+	}, [getInstruments, resultsPerPage, sortBy, skip]);
 
-	const fetchNextPageOfCollections = useCallback(async () => {
-		const numToSkip = collections?.length ?? 0;
+	const fetchNextPage = useCallback(async () => {
+		const numToSkip = instruments?.length ?? 0;
 		await fetchMore({
 			variables: {
 				input: {
+					sortBy,
 					take: resultsPerPage,
 					skip: numToSkip,
 				},
 			},
 		});
 		setSkip(numToSkip);
-	}, [fetchMore, resultsPerPage, collections]);
+	}, [fetchMore, resultsPerPage, instruments, sortBy]);
 
-	return [collections, collectionsQuery, fetchNextPageOfCollections];
+	return [instruments, instrumentsQuery, fetchNextPage];
 };
 
-export default useCollections;
+export default useInstruments;

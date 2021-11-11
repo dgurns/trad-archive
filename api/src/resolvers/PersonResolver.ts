@@ -7,7 +7,7 @@ import {
 	Root,
 	FieldResolver,
 } from "type-graphql";
-import { In } from "typeorm";
+import { FindManyOptions, In } from "typeorm";
 
 import { CustomContext } from "middleware/context";
 import { Person } from "models/entities/Person";
@@ -18,10 +18,12 @@ import {
 } from "models/VerificationRequest";
 import { Tag } from "models/Tag";
 import {
+	PeopleInput,
 	CreatePersonInput,
 	UpdatePersonInput,
 } from "resolvers/PersonResolverTypes";
 import EntityService from "services/Entity";
+import { SortBy } from "./commonTypes";
 
 @Resolver(() => Person)
 export class PersonResolver {
@@ -40,15 +42,25 @@ export class PersonResolver {
 	}
 
 	@Query(() => [Person])
-	people(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
-		return Person.find({
+	people(@Arg("input") input: PeopleInput) {
+		const { take, skip, sortBy } = input;
+		const options: FindManyOptions<Person> = {
 			take,
 			skip,
-			order: { createdAt: "DESC" },
-		});
+			order: {},
+		};
+		switch (sortBy) {
+			case SortBy.AToZ:
+				if (options.order) {
+					options.order.name = "ASC";
+				}
+				break;
+			default:
+				if (options.order) {
+					options.order.createdAt = "DESC";
+				}
+		}
+		return Person.find(options);
 	}
 
 	@Mutation(() => Person)

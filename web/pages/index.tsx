@@ -375,7 +375,24 @@ export default function Home({
 				</div>
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">Latest Collections</h3>
+					<h3 className="mb-4">Browse</h3>
+					<Link href="/entities/people">
+						<a className="mb-2">People</a>
+					</Link>
+					<Link href="/entities/instruments">
+						<a className="mb-2">Instruments</a>
+					</Link>
+					<Link href="/entities/places">
+						<a className="mb-2">Places</a>
+					</Link>
+					<Link href="/entities/tunes">
+						<a className="mb-2">Tunes</a>
+					</Link>
+					<Link href="/entities/collections">
+						<a className="mb-2">Collections</a>
+					</Link>
+
+					<h3 className="mt-8 mb-4">Latest Collections</h3>
 					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
 					{!collectionsLoading && collections?.length === 0 && (
 						<div className="text-gray-500">None</div>
@@ -386,7 +403,7 @@ export default function Home({
 							return null;
 						}
 						return (
-							<div className="mb-4 text-gray-500" key={index}>
+							<div className="mb-2 text-gray-500" key={index}>
 								<Link href={EntityService.makeHrefForView(collection)}>
 									{collection.name}
 								</Link>

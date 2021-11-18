@@ -1,8 +1,11 @@
 import { Resolver, Query, Arg, FieldResolver, Root } from "type-graphql";
-import { In } from "typeorm";
+import { FindManyOptions, In } from "typeorm";
 
 import { Tune } from "models/entities/Tune";
 import { Tag } from "models/Tag";
+import { TunesInput } from "resolvers/TuneResolverTypes";
+import { SortBy } from "resolvers/commonTypes";
+
 @Resolver(() => Tune)
 export class TuneResolver {
 	@Query(() => Tune, { nullable: true })
@@ -20,15 +23,25 @@ export class TuneResolver {
 	}
 
 	@Query(() => [Tune])
-	tunes(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
-		return Tune.find({
+	tunes(@Arg("input") input: TunesInput) {
+		const { take, skip, sortBy } = input;
+		const options: FindManyOptions<Tune> = {
 			take,
 			skip,
-			order: { createdAt: "DESC" },
-		});
+			order: {},
+		};
+		switch (sortBy) {
+			case SortBy.AToZ:
+				if (options.order) {
+					options.order.name = "ASC";
+				}
+				break;
+			default:
+				if (options.order) {
+					options.order.createdAt = "DESC";
+				}
+		}
+		return Tune.find(options);
 	}
 
 	@FieldResolver(() => [Tag])

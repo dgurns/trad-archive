@@ -6,11 +6,13 @@ export enum FilterType {
 export enum SortBy {
 	RecentlyTagged = "RecentlyTagged",
 	RecentlyAdded = "RecentlyAdded",
+	AToZ = "AToZ",
 }
 
 export enum ViewAs {
 	Card = "Card",
 	Compact = "Compact",
+	List = "List",
 }
 
 export enum UserPermission {

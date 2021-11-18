@@ -61,6 +61,7 @@ const Filters = ({
 					<select className="ml-2" value={viewAs} onChange={onChangeViewAs}>
 						<option value={ViewAs.Card}>Cards</option>
 						<option value={ViewAs.Compact}>Compact</option>
+						<option value={ViewAs.List}>List</option>
 					</select>
 				</div>
 			);

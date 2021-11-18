@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
 import {
 	ApolloClient,
 	InMemoryCache,
@@ -9,27 +9,29 @@ import Link from "next/link";
 import { API_URL, apolloClient } from "apolloClient";
 import {
 	AudioItem,
-	Tag,
 	Comment,
+	Collection,
 	EntityStatus,
 	FilterType,
 	SortBy,
+	ViewAs,
 } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
+import useCollections, { COLLECTIONS_QUERY } from "hooks/useCollections";
 import useFilters from "hooks/useFilters";
-import useTags, { TAGS_QUERY } from "hooks/useTags";
 import EntityService from "services/Entity";
 import CommentService from "services/Comment";
-import TagService from "services/Tag";
+import LocalStorageService from "services/LocalStorage";
 
 import Layout from "components/Layout";
+import ProjectIntro from "components/ProjectIntro";
 import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
-const NUM_COMMENTS_TO_FETCH = 4;
-const NUM_TAGS_TO_FETCH = 10;
+const NUM_COMMENTS_TO_FETCH = 5;
+const NUM_COLLECTIONS_TO_FETCH = 5;
 const DEFAULT_SORT_BY = SortBy.RecentlyTagged;
 
 interface QueryVariables {
@@ -51,7 +53,7 @@ export async function getStaticProps() {
 	let recentlyTaggedAudioItems: AudioItem[] | undefined;
 	let recentlyAddedAudioItems: AudioItem[] | undefined;
 	let comments: Comment[] | undefined;
-	let tags: Tag[] | undefined;
+	let collections: Collection[] | undefined;
 
 	try {
 		if (!serverSideApolloClient) {
@@ -100,7 +102,7 @@ export async function getStaticProps() {
 				}),
 			]);
 
-		const [commentsQuery, tagsQuery] = await Promise.all([
+		const [commentsQuery, collectionsQuery] = await Promise.all([
 			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
 				query: COMMENTS_QUERY,
 				variables: {
@@ -109,11 +111,15 @@ export async function getStaticProps() {
 					},
 				},
 			}),
-			serverSideApolloClient.query<{ tags: Tag[] }, QueryVariables>({
-				query: TAGS_QUERY,
+			serverSideApolloClient.query<
+				{ collections: Collection[] },
+				QueryVariables
+			>({
+				query: COLLECTIONS_QUERY,
 				variables: {
 					input: {
-						take: NUM_TAGS_TO_FETCH,
+						take: NUM_COLLECTIONS_TO_FETCH,
+						sortBy: SortBy.RecentlyAdded,
 					},
 				},
 			}),
@@ -122,7 +128,7 @@ export async function getStaticProps() {
 		recentlyTaggedAudioItems = recentlyTaggedAudioItemsQuery?.data?.audioItems;
 		recentlyAddedAudioItems = recentlyAddedAudioItemsQuery?.data?.audioItems;
 		comments = commentsQuery?.data?.comments;
-		tags = tagsQuery?.data?.tags;
+		collections = collectionsQuery?.data?.collections;
 	} catch {
 		//
 	}
@@ -132,7 +138,7 @@ export async function getStaticProps() {
 			prefetchedRecentlyTaggedAudioItems: recentlyTaggedAudioItems ?? null,
 			prefetchedRecentlyAddedAudioItems: recentlyAddedAudioItems ?? null,
 			prefetchedComments: comments ?? null,
-			prefetchedTags: tags ?? null,
+			prefetchedCollections: collections ?? null,
 		},
 		revalidate: 1,
 	};
@@ -142,14 +148,14 @@ interface Props {
 	prefetchedRecentlyTaggedAudioItems?: AudioItem[];
 	prefetchedRecentlyAddedAudioItems?: AudioItem[];
 	prefetchedComments?: Comment[];
-	prefetchedTags?: Tag[];
+	prefetchedCollections?: Collection[];
 }
 
 export default function Home({
 	prefetchedRecentlyTaggedAudioItems,
 	prefetchedRecentlyAddedAudioItems,
 	prefetchedComments,
-	prefetchedTags,
+	prefetchedCollections,
 }: Props) {
 	// If there is prefetched data and the cache is not yet populated, populate it
 	useEffect(() => {
@@ -234,24 +240,26 @@ export default function Home({
 				});
 			}
 		}
-		if (prefetchedTags) {
+		if (prefetchedCollections) {
 			// Check if there are already Tags in the cache
-			const cachedTags = apolloClient.readQuery({
-				query: TAGS_QUERY,
+			const cachedCollections = apolloClient.readQuery({
+				query: COLLECTIONS_QUERY,
 				variables: {
 					input: {
-						take: NUM_TAGS_TO_FETCH,
+						take: NUM_COLLECTIONS_TO_FETCH,
+						sortBy: SortBy.RecentlyAdded,
 					},
 				},
 			});
 			// If not, add the prefetched Tags to the cache
-			if (!cachedTags) {
+			if (!cachedCollections) {
 				apolloClient.writeQuery({
-					query: TAGS_QUERY,
-					data: { tags: prefetchedTags },
+					query: COLLECTIONS_QUERY,
+					data: { collections: prefetchedCollections },
 					variables: {
 						input: {
-							take: NUM_TAGS_TO_FETCH,
+							take: NUM_COLLECTIONS_TO_FETCH,
+							sortBy: SortBy.RecentlyAdded,
 						},
 					},
 				});
@@ -262,7 +270,7 @@ export default function Home({
 		prefetchedRecentlyTaggedAudioItems,
 		prefetchedRecentlyAddedAudioItems,
 		prefetchedComments,
-		prefetchedTags,
+		prefetchedCollections,
 	]);
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
@@ -279,17 +287,26 @@ export default function Home({
 	] = useAudioItems({
 		sortBy,
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
 	});
 	const {
 		comments: fetchedComments,
 		commentsQuery: { loading: commentsLoading },
 	} = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
 	});
-	const {
-		tags: fetchedTags,
-		tagsQuery: { loading: tagsLoading },
-	} = useTags({ resultsPerPage: NUM_TAGS_TO_FETCH });
+	const [fetchedCollections, { loading: collectionsLoading }] = useCollections({
+		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
+		sortBy: SortBy.RecentlyAdded,
+		queryOptions: {
+			fetchPolicy: "cache-only",
+		},
+	});
 
 	const defaultAudioItems =
 		sortBy === SortBy.RecentlyTagged
@@ -303,17 +320,33 @@ export default function Home({
 		return sorted.slice(0, NUM_COMMENTS_TO_FETCH);
 	}, [fetchedComments, prefetchedComments]);
 
-	const tags = useMemo(() => {
-		const data = fetchedTags ?? prefetchedTags ?? [];
-		const sorted = TagService.sort(
-			data,
-			TagService.TagSortStrategy.CreatedAtDesc
-		);
-		return sorted.slice(0, NUM_TAGS_TO_FETCH);
-	}, [fetchedTags, prefetchedTags]);
+	const collections = useMemo(() => {
+		const data = fetchedCollections ?? prefetchedCollections ?? [];
+		return data.slice(0, NUM_COLLECTIONS_TO_FETCH);
+	}, [fetchedCollections, prefetchedCollections]);
+
+	// Due to static rendering, we need to check localStorage for intro status
+	// after client-side hydration.
+	const [shouldShowIntro, setShouldShowIntro] = useState(false);
+	useEffect(() => {
+		if (LocalStorageService.getItem("SHOULD_SHOW_INTRO") !== "false") {
+			setShouldShowIntro(true);
+		}
+	}, []);
+	const onCloseIntro = useCallback(() => {
+		LocalStorageService.setItem("SHOULD_SHOW_INTRO", "false");
+		setShouldShowIntro(false);
+	}, []);
 
 	return (
 		<Layout pageTitle="Trad Archive - Home">
+			{shouldShowIntro && (
+				<ProjectIntro
+					className="mb-8 md:mt-4 md:mb-12"
+					onClose={onCloseIntro}
+				/>
+			)}
+
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
 					<h1 className="mb-6">Explore</h1>
@@ -331,7 +364,7 @@ export default function Home({
 							viewAs={viewAs}
 							audioItem={audioItem}
 							key={index}
-							className="mb-6"
+							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 						/>
 					))}
 					{!audioItemsLoading ? (
@@ -346,7 +379,43 @@ export default function Home({
 				</div>
 
 				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">Latest Comments</h3>
+					<h3 className="mb-4">Browse</h3>
+					<Link href="/entities/people">
+						<a className="mb-2">People</a>
+					</Link>
+					<Link href="/entities/instruments">
+						<a className="mb-2">Instruments</a>
+					</Link>
+					<Link href="/entities/places">
+						<a className="mb-2">Places</a>
+					</Link>
+					<Link href="/entities/tunes">
+						<a className="mb-2">Tunes</a>
+					</Link>
+					<Link href="/entities/collections">
+						<a className="mb-2">Collections</a>
+					</Link>
+
+					<h3 className="mt-6 mb-4">Latest Collections</h3>
+					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
+					{!collectionsLoading && collections?.length === 0 && (
+						<div className="text-gray-500">None</div>
+					)}
+					{collections?.map((collection, index) => {
+						const { name } = collection;
+						if (!name) {
+							return null;
+						}
+						return (
+							<div className="mb-2 text-gray-500" key={index}>
+								<Link href={EntityService.makeHrefForView(collection)}>
+									{collection.name}
+								</Link>
+							</div>
+						);
+					})}
+
+					<h3 className="mt-6 mb-4">Latest Comments</h3>
 					{commentsLoading && comments?.length === 0 && <LoadingBlock />}
 					{!commentsLoading && comments?.length === 0 && (
 						<div className="text-gray-500">None</div>
@@ -369,39 +438,6 @@ export default function Home({
 									{":"}
 								</div>
 								<div className="whitespace-pre-line text-sm">{text}</div>
-							</div>
-						);
-					})}
-
-					<h3 className="mt-4 mb-4">Latest Tags</h3>
-					{tagsLoading && tags?.length === 0 && <LoadingBlock />}
-					{!tagsLoading && tags?.length === 0 && (
-						<div className="text-gray-500">None</div>
-					)}
-					{tags?.map((tag, index) => {
-						const { createdByUser, subjectEntity, objectEntity } = tag;
-						if (!subjectEntity || !objectEntity) {
-							return null;
-						}
-						return (
-							<div className="mb-4 text-gray-500" key={index}>
-								<div className="mb-1">
-									{createdByUser && (
-										<>
-											<Link href={`/users/${createdByUser.id}`}>
-												{createdByUser.username}
-											</Link>
-											{` tagged `}
-										</>
-									)}
-									<Link href={EntityService.makeHrefForView(subjectEntity)}>
-										{subjectEntity.name}
-									</Link>
-									{createdByUser ? ` with ` : ` was tagged with `}
-									<Link href={EntityService.makeHrefForView(objectEntity)}>
-										{objectEntity.name}
-									</Link>
-								</div>
 							</div>
 						);
 					})}

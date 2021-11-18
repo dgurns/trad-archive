@@ -7,16 +7,18 @@ import {
 	Root,
 	FieldResolver,
 } from "type-graphql";
-import { In } from "typeorm";
+import { FindManyOptions, In } from "typeorm";
 
 import { CustomContext } from "middleware/context";
 import { Collection } from "models/entities/Collection";
 import { User } from "models/User";
 import { Tag } from "models/Tag";
 import {
+	CollectionsInput,
 	CreateCollectionInput,
 	UpdateCollectionInput,
 } from "resolvers/CollectionResolverTypes";
+import { SortBy } from "resolvers/commonTypes";
 import EntityService from "services/Entity";
 
 @Resolver(() => Collection)
@@ -36,15 +38,25 @@ export class CollectionResolver {
 	}
 
 	@Query(() => [Collection])
-	collections(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
-		return Collection.find({
+	collections(@Arg("input") input: CollectionsInput) {
+		const { take, skip, sortBy } = input;
+		const options: FindManyOptions<Collection> = {
 			take,
 			skip,
-			order: { createdAt: "DESC" },
-		});
+			order: {},
+		};
+		switch (sortBy) {
+			case SortBy.AToZ:
+				if (options.order) {
+					options.order.name = "ASC";
+				}
+				break;
+			default:
+				if (options.order) {
+					options.order.createdAt = "DESC";
+				}
+		}
+		return Collection.find(options);
 	}
 
 	@Mutation(() => Collection)

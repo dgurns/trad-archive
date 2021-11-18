@@ -35,10 +35,17 @@ const AutoLogin = () => {
 	const router = useRouter();
 	const { tokenUnhashed, userEmail, redirectTo } = router.query;
 
-	const [currentUser, { refetch: refetchCurrentUser }] = useCurrentUser();
+	const [
+		currentUser,
+		{ loading: currentUserLoading, refetch: refetchCurrentUser },
+	] = useCurrentUser();
 
-	const [authenticateWithAutoLoginToken, { loading, data, error }] =
-		useMutation<MutationData, MutationVars>(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
+	const [
+		authenticateWithAutoLoginToken,
+		{ loading: authenticateLoading, data, error },
+	] = useMutation<MutationData, MutationVars>(
+		AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN
+	);
 
 	// When a token and email are present in query params, attempt to authenticate
 	useEffect(() => {
@@ -65,13 +72,56 @@ const AutoLogin = () => {
 		}
 	}, [data, refetchCurrentUser]);
 
-	// If the current user is logged in, redirect if applicable or go to homepage
+	// If the current user is logged in or there is no token/email set, redirect.
+	useEffect(() => {
+		if (currentUser) {
+			router.push(typeof redirectTo === "string" ? redirectTo : "/");
+		}
+	}, [currentUser]);
+
+	// Return a loading indicator while the redirect is happening
 	if (currentUser) {
-		router.push(typeof redirectTo === "string" ? redirectTo : "/");
+		return (
+			<Layout>
+				<div className="flex flex-row items-center justify-center">
+					<LoadingCircle className="mr-4" />
+					<span className="text-gray-500">Loading...</span>
+				</div>
+			</Layout>
+		);
 	}
 
-	const checkYourEmailContent = (
-		<>
+	if (error) {
+		return (
+			<Layout>
+				<div className="text-red-600 mb-4">
+					Error: {error?.graphQLErrors?.map(({ message }) => message)}
+				</div>
+				<Link
+					href={{
+						pathname: "/login",
+						query: redirectTo ? { redirectTo } : undefined,
+					}}
+				>
+					Send a new login link
+				</Link>
+			</Layout>
+		);
+	}
+
+	if (authenticateLoading || currentUserLoading) {
+		return (
+			<Layout>
+				<div className="flex flex-row items-center justify-center">
+					<LoadingCircle className="mr-4" />
+					<span className="text-gray-500">Loading...</span>
+				</div>
+			</Layout>
+		);
+	}
+
+	return (
+		<Layout>
 			<h1 className="mb-3">Check your email</h1>
 			<div className="flex flex-row mb-6">
 				<i className="material-icons mr-2">mail_outline</i>
@@ -88,37 +138,6 @@ const AutoLogin = () => {
 					send a new one
 				</Link>
 			</div>
-		</>
-	);
-
-	const loadingContent = (
-		<div className="flex flex-row items-center justify-center">
-			<LoadingCircle className="mr-4" />
-			<span className="text-gray-500">Authenticating...</span>
-		</div>
-	);
-
-	const errorContent = (
-		<>
-			<div className="text-red-600 mb-4">
-				Error: {error?.graphQLErrors?.map(({ message }) => message)}
-			</div>
-			<Link
-				href={{
-					pathname: "/login",
-					query: redirectTo ? { redirectTo } : undefined,
-				}}
-			>
-				Send a new login link
-			</Link>
-		</>
-	);
-
-	return (
-		<Layout>
-			{!loading && !error && checkYourEmailContent}
-			{loading && loadingContent}
-			{error && errorContent}
 		</Layout>
 	);
 };

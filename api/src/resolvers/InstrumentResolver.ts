@@ -7,15 +7,17 @@ import {
 	FieldResolver,
 	Root,
 } from "type-graphql";
-import { In } from "typeorm";
+import { FindManyOptions, In } from "typeorm";
 import { CustomContext } from "middleware/context";
 import { Instrument } from "models/entities/Instrument";
 import { User } from "models/User";
 import { Tag } from "models/Tag";
 import {
 	CreateInstrumentInput,
+	InstrumentsInput,
 	UpdateInstrumentInput,
 } from "resolvers/InstrumentResolverTypes";
+import { SortBy } from "resolvers/commonTypes";
 import EntityService from "services/Entity";
 
 @Resolver(() => Instrument)
@@ -35,15 +37,25 @@ export class InstrumentResolver {
 	}
 
 	@Query(() => [Instrument])
-	instruments(
-		@Arg("take", { defaultValue: 20 }) take?: number,
-		@Arg("skip", { defaultValue: 0 }) skip?: number
-	) {
-		return Instrument.find({
+	instruments(@Arg("input") input: InstrumentsInput) {
+		const { take, skip, sortBy } = input;
+		const options: FindManyOptions<Instrument> = {
 			take,
 			skip,
-			order: { createdAt: "DESC" },
-		});
+			order: {},
+		};
+		switch (sortBy) {
+			case SortBy.AToZ:
+				if (options.order) {
+					options.order.name = "ASC";
+				}
+				break;
+			default:
+				if (options.order) {
+					options.order.createdAt = "DESC";
+				}
+		}
+		return Instrument.find(options);
 	}
 
 	@Mutation(() => Instrument)

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Person, FilterType } from "types";
+import { Person, FilterType, ViewAs } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
@@ -126,8 +126,10 @@ const ViewPersonBySlug = () => {
 		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<div className="flex flex-row items-center">
-						People{" "}
+					<div className="flex flex-row items-center mb-1">
+						<Link href="/entities/people">
+							<a className="mr-1">People</a>
+						</Link>
 						<i className="material-icons text-gray-500 text-base">
 							keyboard_arrow_right
 						</i>
@@ -145,7 +147,7 @@ const ViewPersonBySlug = () => {
 									viewAs={viewAs}
 									audioItem={audioItem}
 									key={index}
-									className="mb-8"
+									className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 								/>
 							))}
 							{!audioItemsLoading && (

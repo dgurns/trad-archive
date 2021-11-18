@@ -75,11 +75,18 @@ export const apolloClient = new ApolloClient({
 							return merged;
 						},
 					},
-					savedItemsForUser: {
-						keyArgs: false,
-						merge(existing, incoming) {
-							// Just return incoming results until pagination is implemented
-							return incoming ?? existing;
+					collections: {
+						// Cache separately based on the sortBy value
+						keyArgs: ["input", ["sortBy"]],
+						// When new results are received for this query via fetchMore
+						// pagination, specify how to merge them with cached results
+						merge(existing = [], incoming, { args: { input } }) {
+							const { skip = 0 } = input;
+							const merged = existing ? existing.slice(0) : [];
+							for (let i = 0; i < incoming.length; ++i) {
+								merged[skip + i] = incoming[i];
+							}
+							return merged;
 						},
 					},
 					comments: {
@@ -94,10 +101,73 @@ export const apolloClient = new ApolloClient({
 							return mergeObjects(existing, incoming);
 						},
 					},
+					instruments: {
+						// Cache separately based on the sortBy value
+						keyArgs: ["input", ["sortBy"]],
+						// When new results are received for this query via fetchMore
+						// pagination, specify how to merge them with cached results
+						merge(existing = [], incoming, { args: { input } }) {
+							const { skip = 0 } = input;
+							const merged = existing ? existing.slice(0) : [];
+							for (let i = 0; i < incoming.length; ++i) {
+								merged[skip + i] = incoming[i];
+							}
+							return merged;
+						},
+					},
+					people: {
+						// Cache people separately based on the sortBy value
+						keyArgs: ["input", ["sortBy"]],
+						// When new results are received for this query via fetchMore
+						// pagination, specify how to merge them with cached results
+						merge(existing = [], incoming, { args: { input } }) {
+							const { skip = 0 } = input;
+							const merged = existing ? existing.slice(0) : [];
+							for (let i = 0; i < incoming.length; ++i) {
+								merged[skip + i] = incoming[i];
+							}
+							return merged;
+						},
+					},
+					places: {
+						// Cache separately based on the sortBy value
+						keyArgs: ["input", ["sortBy"]],
+						// When new results are received for this query via fetchMore
+						// pagination, specify how to merge them with cached results
+						merge(existing = [], incoming, { args: { input } }) {
+							const { skip = 0 } = input;
+							const merged = existing ? existing.slice(0) : [];
+							for (let i = 0; i < incoming.length; ++i) {
+								merged[skip + i] = incoming[i];
+							}
+							return merged;
+						},
+					},
+					savedItemsForUser: {
+						keyArgs: false,
+						merge(existing, incoming) {
+							// Just return incoming results until pagination is implemented
+							return incoming ?? existing;
+						},
+					},
 					tags: {
 						keyArgs: false,
 						merge(_, incoming) {
 							return incoming;
+						},
+					},
+					tunes: {
+						// Cache separately based on the sortBy value
+						keyArgs: ["input", ["sortBy"]],
+						// When new results are received for this query via fetchMore
+						// pagination, specify how to merge them with cached results
+						merge(existing = [], incoming, { args: { input } }) {
+							const { skip = 0 } = input;
+							const merged = existing ? existing.slice(0) : [];
+							for (let i = 0; i < incoming.length; ++i) {
+								merged[skip + i] = incoming[i];
+							}
+							return merged;
 						},
 					},
 				},

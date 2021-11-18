@@ -38,9 +38,10 @@ const SignUp = () => {
 	const onSignUp = (event) => {
 		event.preventDefault();
 		setValidationError("");
+		const cleanedEmail = email.trim().toLowerCase();
 		signUp({
 			variables: {
-				input: { email, username, redirectTo },
+				input: { email: cleanedEmail, username, redirectTo },
 			},
 		});
 	};

@@ -1,11 +1,8 @@
 {
 	"jsc": {
-		"baseUrl": ".",
-		"paths": {
-			"~/*": ["./src/*"]
-		},
 		"parser": {
 			"syntax": "typescript",
+			"tsx": false,
 			"decorators": true
 		},
 		"transform": {

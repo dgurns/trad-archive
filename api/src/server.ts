@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { ApolloServer as ApolloServerLambda } from "apollo-server-lambda";
-import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
 import { createCustomContext } from "./middleware/context";
@@ -23,7 +22,7 @@ import { PlaceResolver } from "./resolvers/PlaceResolver";
 import { TuneResolver } from "./resolvers/TuneResolver";
 import { CollectionResolver } from "./resolvers/CollectionResolver";
 
-const makeSchema = () => {
+export const makeSchema = () => {
 	return buildSchema({
 		resolvers: [
 			AuthResolver,
@@ -53,18 +52,6 @@ export const initializeApolloServerLambda = async () => {
 	return new ApolloServerLambda({
 		schema,
 		plugins: apolloServerPlugins,
-		context: ({ event, context }) => createCustomContext(event, context),
-	});
-};
-
-export const initializeApolloServer = async () => {
-	const schema = await makeSchema();
-	return new ApolloServer({
-		schema,
-		plugins: apolloServerPlugins,
-		context: (args) => {
-			console.log(args);
-		},
-		// TODO: cors:
+		context: createCustomContext,
 	});
 };

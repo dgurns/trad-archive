@@ -9,10 +9,10 @@ import {
 } from "type-graphql";
 import { FindManyOptions, In } from "typeorm";
 
-import { CustomContext } from "middleware/context";
-import { Place } from "models/entities/Place";
-import { User } from "models/User";
-import { Tag } from "models/Tag";
+import { CustomContext } from "../middleware/context";
+import { Place } from "../models/entities/Place";
+import { User } from "../models/User";
+import { Tag } from "../models/Tag";
 import {
 	CreatePlaceInput,
 	PlacesInput,

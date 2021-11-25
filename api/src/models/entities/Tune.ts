@@ -20,7 +20,7 @@ import { Tag } from "../Tag";
 @TypeOrmEntity()
 export class Tune extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.Tune })
+	@Column({ type: "simple-enum", nullable: true, default: EntityType.Tune })
 	entityType!: EntityType.Tune;
 
 	@Field(() => [Tag], { defaultValue: [] })

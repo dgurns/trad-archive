@@ -14,7 +14,7 @@ import { Tag } from "../Tag";
 @TypeOrmEntity()
 export class Person extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.Person })
+	@Column({ type: "simple-enum", nullable: true, default: EntityType.Person })
 	entityType!: EntityType.Person;
 
 	@Field(() => [Tag], { defaultValue: [] })

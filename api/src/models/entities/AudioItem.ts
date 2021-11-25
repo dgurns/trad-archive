@@ -10,7 +10,11 @@ import { Comment } from "../Comment";
 @TypeOrmEntity()
 export class AudioItem extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.AudioItem })
+	@Column({
+		type: "simple-enum",
+		nullable: true,
+		default: EntityType.AudioItem,
+	})
 	entityType!: EntityType.AudioItem;
 
 	@Field(() => [Tag], { defaultValue: [] })

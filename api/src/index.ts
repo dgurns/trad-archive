@@ -1,4 +1,6 @@
+require("dotenv").config();
 import "reflect-metadata";
+
 import { connectToDatabase } from "./db";
 import { initializeApolloServer } from "./server";
 

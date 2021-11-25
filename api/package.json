@@ -7,7 +7,7 @@
 		"start:dev": "NODE_ENV=development node .build/src/index.js",
 		"start:prod": "NODE_ENV=production node .build/src/index.js",
 		"dev": "nodemon -e ts --exec \"yarn run build && yarn run start:dev\"",
-		"dev:lambda": "NODE_ENV=development sls offline start -s dev",
+		"dev:serverless": "NODE_ENV=development sls offline start -s dev",
 		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",
 		"run-import-tunes": "sls invoke local -f importTunes -s dev",
 		"run-keep-warm": "sls invoke local -f keepWarm -s dev",

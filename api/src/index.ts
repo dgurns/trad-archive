@@ -9,6 +9,8 @@ import compression from "compression";
 import depthLimit from "graphql-depth-limit";
 
 import { makeSchema } from "./server";
+import { createCustomContext } from "./middleware/context";
+const apolloServerPlugins = require("./middleware/plugins");
 import { connectToDatabase } from "./db";
 
 let dbConnection: Connection;
@@ -25,7 +27,11 @@ const start = async () => {
 		const server = new ApolloServer({
 			schema,
 			validationRules: [depthLimit(7)],
-			plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+			context: createCustomContext,
+			plugins: [
+				ApolloServerPluginDrainHttpServer({ httpServer }),
+				...apolloServerPlugins,
+			],
 		});
 		await server.start();
 

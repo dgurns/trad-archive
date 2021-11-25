@@ -9,7 +9,7 @@ import addMinutes from "date-fns/addMinutes";
 
 import { User } from "../models/User";
 
-const { SERVERLESS_STAGE, WEB_ORIGIN } = process.env;
+const { WEB_ORIGIN, RENDER_GIT_BRANCH } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? "my-jwt-secret-key";
 
 const isValidEmail = (email?: string) => {
@@ -62,7 +62,8 @@ const makeAutoLoginUrl = ({
 	if (redirectTo) {
 		params.set("redirectTo", redirectTo);
 	}
-	return `${WEB_ORIGIN}/auto-login?${params.toString()}`;
+	const origin = WEB_ORIGIN ?? RENDER_GIT_BRANCH ?? "http://localhost:3000";
+	return `${origin}/auto-login?${params.toString()}`;
 };
 
 const createJwt = (user: User) => {

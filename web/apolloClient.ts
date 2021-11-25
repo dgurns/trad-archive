@@ -5,8 +5,7 @@ const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 let graphqlPath = "/graphql";
 let apiUrl = `http://localhost:4000${graphqlPath}`;
 if (typeof NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "string") {
-	// apiUrl = `https://api-${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}.tradarchive.com${graphqlPath}`;
-	apiUrl = "https://trad-archive-pr-47.onrender.com/graphql";
+	apiUrl = `https://api-${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}.tradarchive.com${graphqlPath}`;
 }
 export const API_URL = apiUrl;
 

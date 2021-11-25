@@ -43,24 +43,24 @@ const start = async () => {
 
 		server.applyMiddleware({
 			app,
-			cors: {
-				// This cors policy only applies to requests going to the GraphQL API
-				origin: function (origin, callback) {
-					if (process.env.NODE_ENV === "development") {
-						return callback(null, true);
-					} else if (
-						origin &&
-						(origin.includes("https://www.tradarchive.com") ||
-							origin.includes("https://tradarchive.com") ||
-							origin.includes("-dangurney.vercel.app"))
-					) {
-						return callback(null, true);
-					} else {
-						return callback(new Error("Request blocked by CORS"));
-					}
-				},
-				credentials: true,
-			},
+			// cors: {
+			// 	// This cors policy only applies to requests going to the GraphQL API
+			// 	origin: function (origin, callback) {
+			// 		if (process.env.NODE_ENV === "development") {
+			// 			return callback(null, true);
+			// 		} else if (
+			// 			origin &&
+			// 			(origin.includes("https://www.tradarchive.com") ||
+			// 				origin.includes("https://tradarchive.com") ||
+			// 				origin.includes("-dangurney.vercel.app"))
+			// 		) {
+			// 			return callback(null, true);
+			// 		} else {
+			// 			return callback(new Error("Request blocked by CORS"));
+			// 		}
+			// 	},
+			// 	credentials: true,
+			// },
 		});
 
 		const port = process.env.PORT ?? 4000;

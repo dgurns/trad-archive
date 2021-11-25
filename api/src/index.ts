@@ -1,4 +1,10 @@
-require("dotenv").config();
+const { NODE_ENV } = process.env;
+const dotenv = require("dotenv");
+const path = require("path");
+const envPath =
+	NODE_ENV === "development" ? path.resolve(".env") : "/etc/secrets/.env";
+dotenv.config({ path: envPath });
+
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";

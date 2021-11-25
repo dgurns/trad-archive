@@ -9,20 +9,20 @@ import {
 } from "type-graphql";
 import { FindManyOptions, In } from "typeorm";
 
-import { CustomContext } from "middleware/context";
-import { Person } from "models/entities/Person";
-import { User } from "models/User";
+import { CustomContext } from "../middleware/context";
+import { Person } from "../models/entities/Person";
+import { User } from "../models/User";
 import {
 	VerificationRequest,
 	VerificationRequestStatus,
-} from "models/VerificationRequest";
-import { Tag } from "models/Tag";
+} from "../models/VerificationRequest";
+import { Tag } from "../models/Tag";
 import {
 	PeopleInput,
 	CreatePersonInput,
 	UpdatePersonInput,
-} from "resolvers/PersonResolverTypes";
-import EntityService from "services/Entity";
+} from "./PersonResolverTypes";
+import EntityService from "../services/Entity";
 import { SortBy } from "./commonTypes";
 
 @Resolver(() => Person)

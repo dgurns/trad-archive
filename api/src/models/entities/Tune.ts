@@ -7,8 +7,8 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityBaseFields, EntityType } from "models/entities/base";
-import { Tag } from "models/Tag";
+import { EntityBaseFields, EntityType } from "./base";
+import { Tag } from "../Tag";
 
 // Tune represents a unique tune. Each Tune can have multiple settings. The data
 // is drawn from TheSession.org database. Therefore new tunes must be added at

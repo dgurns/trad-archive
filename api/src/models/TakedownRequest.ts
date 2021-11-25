@@ -10,9 +10,9 @@ import {
 	AfterLoad,
 } from "typeorm";
 import { ObjectType, Field, registerEnumType } from "type-graphql";
-import { AudioItem } from "models/entities/AudioItem";
-import { User } from "models/User";
-import { Entity, EntityUnion } from "resolvers/EntityResolver";
+import { AudioItem } from "./entities/AudioItem";
+import { User } from "./User";
+import { Entity, EntityUnion } from "../resolvers/EntityResolver";
 
 export enum TakedownRequestType {
 	Copyright = "COPYRIGHT",

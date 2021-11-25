@@ -1,6 +1,6 @@
 import { getManager } from "typeorm";
-import { EntityType } from "models/entities/base";
-import { Relationship } from "models/Relationship";
+import { EntityType } from "../models/entities/base";
+import { Relationship } from "../models/Relationship";
 
 interface RelationshipToSeed {
 	subjectEntityType: EntityType;

@@ -1,18 +1,18 @@
 import path from "path";
 import { ConnectionOptions } from "typeorm";
-import { User } from "models/User";
-import { Tag } from "models/Tag";
-import { Comment } from "models/Comment";
-import { SavedItem } from "models/SavedItem";
-import { Relationship } from "models/Relationship";
-import { AudioItem } from "models/entities/AudioItem";
-import { Person } from "models/entities/Person";
-import { Instrument } from "models/entities/Instrument";
-import { Place } from "models/entities/Place";
-import { Tune } from "models/entities/Tune";
-import { Collection } from "models/entities/Collection";
-import { TakedownRequest } from "models/TakedownRequest";
-import { VerificationRequest } from "models/VerificationRequest";
+import { User } from "./models/User";
+import { Tag } from "./models/Tag";
+import { Comment } from "./models/Comment";
+import { SavedItem } from "./models/SavedItem";
+import { Relationship } from "./models/Relationship";
+import { AudioItem } from "./models/entities/AudioItem";
+import { Person } from "./models/entities/Person";
+import { Instrument } from "./models/entities/Instrument";
+import { Place } from "./models/entities/Place";
+import { Tune } from "./models/entities/Tune";
+import { Collection } from "./models/entities/Collection";
+import { TakedownRequest } from "./models/TakedownRequest";
+import { VerificationRequest } from "./models/VerificationRequest";
 
 export const DB_CONNECTION_NAME = "default";
 

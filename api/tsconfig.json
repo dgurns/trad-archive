@@ -12,6 +12,9 @@
 		"preserveConstEnums": true,
 		"rootDir": "./",
 		"baseUrl": "./src",
+		"paths": {
+			"*": ["./*"]
+		},
 		"target": "es6",
 		"removeComments": true,
 		"skipLibCheck": true,

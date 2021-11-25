@@ -17,9 +17,9 @@ import {
 	CreatePlaceInput,
 	PlacesInput,
 	UpdatePlaceInput,
-} from "resolvers/PlaceResolverTypes";
-import { SortBy } from "resolvers/commonTypes";
-import EntityService from "services/Entity";
+} from "./PlaceResolverTypes";
+import { SortBy } from "./commonTypes";
+import EntityService from "../services/Entity";
 
 @Resolver(() => Place)
 export class PlaceResolver {

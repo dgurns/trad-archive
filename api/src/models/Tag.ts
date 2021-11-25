@@ -10,15 +10,15 @@ import {
 } from "typeorm";
 import { ObjectType, Field, Int } from "type-graphql";
 
-import { User } from "models/User";
-import { AudioItem } from "models/entities/AudioItem";
-import { Person } from "models/entities/Person";
-import { Instrument } from "models/entities/Instrument";
-import { Place } from "models/entities/Place";
-import { Tune } from "models/entities/Tune";
-import { Collection } from "models/entities/Collection";
-import { Relationship } from "models/Relationship";
-import { EntityUnion, Entity } from "resolvers/EntityResolver";
+import { User } from "./User";
+import { AudioItem } from "./entities/AudioItem";
+import { Person } from "./entities/Person";
+import { Instrument } from "./entities/Instrument";
+import { Place } from "./entities/Place";
+import { Tune } from "./entities/Tune";
+import { Collection } from "./entities/Collection";
+import { Relationship } from "./Relationship";
+import { EntityUnion, Entity } from "../resolvers/EntityResolver";
 
 // Tag represents a connection between two entities and specifies the
 // relationship between them.

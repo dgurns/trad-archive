@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { connectToDatabase } from "db";
-import { initializeApolloServer } from "server";
+import { connectToDatabase } from "./db";
+import { initializeApolloServer } from "./server";
 
 const start = async () => {
 	const dbConnection = await connectToDatabase();

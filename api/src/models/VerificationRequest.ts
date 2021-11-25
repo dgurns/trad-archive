@@ -8,14 +8,9 @@ import {
 	ManyToOne,
 	Index,
 } from "typeorm";
-import {
-	ObjectType,
-	Field,
-	registerEnumType,
-	FieldResolver,
-} from "type-graphql";
-import { User, CopyrightPermissionStatus } from "models/User";
-import { Person } from "models/entities/Person";
+import { ObjectType, Field, registerEnumType } from "type-graphql";
+import { User, CopyrightPermissionStatus } from "./User";
+import { Person } from "./entities/Person";
 
 export enum VerificationRequestStatus {
 	Pending = "Pending",

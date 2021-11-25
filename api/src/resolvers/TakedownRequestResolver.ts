@@ -1,20 +1,24 @@
 import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
 import { getManager, SelectQueryBuilder } from "typeorm";
-import { CustomContext } from "middleware/context";
+
+import { CustomContext } from "../middleware/context";
 import {
 	TakedownRequestsInput,
 	TakedownRequestsForEntityInput,
 	CreateTakedownRequestInput,
 	UpdateTakedownRequestStatusInput,
-} from "resolvers/TakedownRequestResolverTypes";
-import { TakedownRequest, TakedownRequestStatus } from "models/TakedownRequest";
-import { User, UserPermission } from "models/User";
+} from "./TakedownRequestResolverTypes";
+import {
+	TakedownRequest,
+	TakedownRequestStatus,
+} from "../models/TakedownRequest";
+import { User, UserPermission } from "../models/User";
 import {
 	VerificationRequest,
 	VerificationRequestStatus,
-} from "models/VerificationRequest";
-import { EntityStatus, EntityType } from "models/entities/base";
-import { AudioItem } from "models/entities/AudioItem";
+} from "../models/VerificationRequest";
+import { EntityStatus, EntityType } from "../models/entities/base";
+import { AudioItem } from "../models/entities/AudioItem";
 
 const addRelationsToQueryBuilder = (
 	query: SelectQueryBuilder<TakedownRequest>

@@ -1,11 +1,12 @@
 import { Resolver, Arg, Root, Ctx, Query, FieldResolver } from "type-graphql";
-import { CustomContext } from "middleware/context";
-import { User } from "models/User";
+
+import { CustomContext } from "../middleware/context";
+import { User } from "../models/User";
 import {
 	VerificationRequest,
 	VerificationRequestStatus,
-} from "models/VerificationRequest";
-import { Person } from "models/entities/Person";
+} from "../models/VerificationRequest";
+import { Person } from "../models/entities/Person";
 
 @Resolver(() => User)
 export class UserResolver {

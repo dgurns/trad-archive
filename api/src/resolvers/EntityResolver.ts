@@ -1,14 +1,14 @@
 import { Resolver, Query, Arg, createUnionType } from "type-graphql";
 import { Entity, getManager } from "typeorm";
 
-import { EntityType } from "models/entities/base";
-import { AudioItem } from "models/entities/AudioItem";
-import { Person } from "models/entities/Person";
-import { Instrument } from "models/entities/Instrument";
-import { Place } from "models/entities/Place";
-import { Tune } from "models/entities/Tune";
-import { Collection } from "models/entities/Collection";
-import { SearchEntitiesInput } from "resolvers/EntityResolverTypes";
+import { EntityType } from "../models/entities/base";
+import { AudioItem } from "../models/entities/AudioItem";
+import { Person } from "../models/entities/Person";
+import { Instrument } from "../models/entities/Instrument";
+import { Place } from "../models/entities/Place";
+import { Tune } from "../models/entities/Tune";
+import { Collection } from "../models/entities/Collection";
+import { SearchEntitiesInput } from "./EntityResolverTypes";
 
 // Entity is a type for representing any entity
 export type Entity =

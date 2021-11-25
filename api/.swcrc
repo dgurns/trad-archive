@@ -1,6 +1,9 @@
 {
 	"jsc": {
 		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./src/*"]
+		},
 		"parser": {
 			"syntax": "typescript",
 			"decorators": true
@@ -9,5 +12,8 @@
 			"legacyDecorator": true,
 			"decoratorMetadata": true
 		}
+	},
+	"module": {
+		"type": "commonjs"
 	}
 }

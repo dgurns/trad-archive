@@ -7,7 +7,7 @@ import addDays from "date-fns/addDays";
 import subYears from "date-fns/subYears";
 import addMinutes from "date-fns/addMinutes";
 
-import { User } from "models/User";
+import { User } from "../models/User";
 
 const { SERVERLESS_STAGE, WEB_ORIGIN } = process.env;
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY ?? "my-jwt-secret-key";

@@ -1,10 +1,10 @@
 import { Resolver, Query, Arg, FieldResolver, Root } from "type-graphql";
 import { FindManyOptions, In } from "typeorm";
 
-import { Tune } from "models/entities/Tune";
-import { Tag } from "models/Tag";
-import { TunesInput } from "resolvers/TuneResolverTypes";
-import { SortBy } from "resolvers/commonTypes";
+import { Tune } from "../models/entities/Tune";
+import { Tag } from "../models/Tag";
+import { TunesInput } from "./TuneResolverTypes";
+import { SortBy } from "./commonTypes";
 
 @Resolver(() => Tune)
 export class TuneResolver {

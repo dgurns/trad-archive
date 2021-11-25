@@ -1,13 +1,9 @@
 import { Entity as TypeOrmEntity, Column, OneToMany, AfterLoad } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import {
-	EntityBaseFields,
-	EntityType,
-	EntityStatus,
-} from "models/entities/base";
-import { Tag } from "models/Tag";
-import { Comment } from "models/Comment";
+import { EntityBaseFields, EntityType, EntityStatus } from "../entities/base";
+import { Tag } from "../Tag";
+import { Comment } from "../Comment";
 
 // AudioItem represents a unique audio source file in the archive
 @ObjectType()

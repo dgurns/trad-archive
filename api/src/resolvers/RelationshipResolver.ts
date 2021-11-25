@@ -8,15 +8,16 @@ import {
 	Authorized,
 } from "type-graphql";
 import { ObjectLiteral } from "typeorm";
-import { CustomContext } from "middleware/context";
-import { User } from "models/User";
+
+import { CustomContext } from "../middleware/context";
+import { User } from "../models/User";
 import {
 	CreateRelationshipInput,
 	SearchRelationshipsArgs,
-} from "resolvers/RelationshipResolverTypes";
-import { Relationship } from "models/Relationship";
-import { UserPermission } from "models/User";
-import RelationshipService from "services/Relationship";
+} from "./RelationshipResolverTypes";
+import { Relationship } from "../models/Relationship";
+import { UserPermission } from "../models/User";
+import RelationshipService from "../services/Relationship";
 
 @Resolver(() => Relationship)
 export class RelationshipResolver {

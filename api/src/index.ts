@@ -63,11 +63,10 @@ const start = async () => {
 			},
 		});
 
-		await new Promise<void>((resolve) =>
-			httpServer.listen({ port: 4000 }, resolve)
-		);
+		const port = process.env.PORT ?? 4000;
+		await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 		console.log(
-			`🚀 GraphQL server ready on port 4000 at ${server.graphqlPath}`
+			`🚀 GraphQL server ready on port ${port} at ${server.graphqlPath}`
 		);
 	} catch (error) {
 		console.log(error);

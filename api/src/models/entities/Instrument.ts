@@ -16,6 +16,7 @@ export class Instrument extends EntityBaseFields {
 	@Field(() => String)
 	@Column({
 		type: "simple-enum",
+		enum: EntityType,
 		nullable: true,
 		default: EntityType.Instrument,
 	})

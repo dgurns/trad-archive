@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server-lambda";
+import { ApolloServer as ApolloServerLambda } from "apollo-server-lambda";
+import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 
 import { createCustomContext } from "middleware/context";
@@ -49,9 +50,21 @@ const makeSchema = () => {
 
 export const initializeApolloServerLambda = async () => {
 	const schema = await makeSchema();
-	return new ApolloServer({
+	return new ApolloServerLambda({
 		schema,
 		plugins: apolloServerPlugins,
 		context: ({ event, context }) => createCustomContext(event, context),
+	});
+};
+
+export const initializeApolloServer = async () => {
+	const schema = await makeSchema();
+	return new ApolloServer({
+		schema,
+		plugins: apolloServerPlugins,
+		context: (args) => {
+			console.log(args);
+		},
+		// TODO: cors:
 	});
 };

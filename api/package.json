@@ -3,7 +3,8 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"dev": "NODE_ENV=development sls offline start -s dev",
+		"build": "npx swc ./src -d dist",
+		"dev:lambda": "NODE_ENV=development sls offline start -s dev",
 		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",
 		"run-import-tunes": "sls invoke local -f importTunes -s dev",
 		"run-keep-warm": "sls invoke local -f keepWarm -s dev",
@@ -11,12 +12,14 @@
 		"db:run-migrations": "yarn typeorm migration:run",
 		"typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./src/ormconfig.ts"
 	},
-	"author": "",
+	"type": "module",
+	"author": "Dan Gurney",
 	"license": "ISC",
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.34.0",
 		"@aws-sdk/s3-request-presigner": "^3.34.0",
 		"@sendgrid/mail": "^7.4.4",
+		"apollo-server": "^3.5.0",
 		"apollo-server-lambda": "^2.19.1",
 		"apollo-server-plugin-http-headers": "^0.1.4",
 		"bcrypt": "^5.0.0",
@@ -28,11 +31,14 @@
 		"node-fetch": "^2.6.1",
 		"pg": "^8.5.1",
 		"reflect-metadata": "^0.1.13",
+		"regenerator-runtime": "^0.13.9",
 		"type-graphql": "^1.1.1",
 		"typeorm": "^0.2.36",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
+		"@swc/cli": "^0.1.52",
+		"@swc/core": "^1.2.112",
 		"@types/bcrypt": "^3.0.0",
 		"@types/cookie": "^0.4.0",
 		"@types/jsonwebtoken": "^8.5.0",

@@ -91,7 +91,7 @@ custom:
     # TODO: Run on prod when environment is deployed
     prod: false
   webpack:
-    webpackConfig: "webpack.config.js"
+    webpackConfig: "webpack.config.serverless.js"
     includeModules:
       forceInclude:
         - pg

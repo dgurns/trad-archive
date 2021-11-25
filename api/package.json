@@ -3,8 +3,8 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"build": "npx swc ./src -d dist",
-		"start": "node -r dotenv/config dist/index.js",
+		"build": "tsc -p .",
+		"start": "node -r dotenv/config .build/src/index.js",
 		"dev": "nodemon -e ts --exec \"yarn run build && yarn run start\"",
 		"dev:lambda": "NODE_ENV=development sls offline start -s dev",
 		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",

@@ -9,8 +9,8 @@ export interface CustomContext {
 
 // createCustomContext checks for a JWT Access Token in the requests's
 // Authorization Header. If there is a token and it's valid, this function sets
-// the user on context. In a serverless Lambda environment, `event` will be
-// passed as an arg; in a persistent Node environment, `req` will be passed.
+// the user on context. In a serverless/Lambda environment, `event` will be
+// passed as an arg; in a persistent/Express environment, `req` will be passed.
 interface Args {
 	event?: APIGatewayProxyEvent;
 	req?: {
@@ -21,6 +21,7 @@ export const createCustomContext = ({ event, req }: Args): CustomContext => {
 	let userId: string | undefined;
 	let setResponseJwtCookie: JwtCookie | undefined;
 
+	// Pull the request cookie off `event` or `req` as appropriate
 	let requestCookie: string | undefined;
 	if (event) {
 		requestCookie = event.headers["Cookie"] ?? event.headers["cookie"];

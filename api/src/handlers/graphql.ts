@@ -7,8 +7,8 @@ import {
 	Context as LambdaContext,
 } from "aws-lambda";
 
-import { connectToDatabase } from "db";
-import { initializeApolloServerLambda } from "server";
+import { connectToDatabase } from "../db";
+import { initializeApolloServerLambda } from "../apollo";
 
 const { SERVERLESS_STAGE } = process.env;
 

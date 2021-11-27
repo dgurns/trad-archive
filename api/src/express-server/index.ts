@@ -8,10 +8,10 @@ import http from "http";
 import compression from "compression";
 import depthLimit from "graphql-depth-limit";
 
-import { makeSchema } from "./server";
-import { createCustomContext } from "./middleware/context";
-const apolloServerPlugins = require("./middleware/plugins");
-import { connectToDatabase } from "./db";
+import { makeSchema } from "../apollo";
+import { createCustomContext } from "../middleware/context";
+const apolloServerPlugins = require("../middleware/plugins");
+import { connectToDatabase } from "../db";
 
 let dbConnection: Connection;
 

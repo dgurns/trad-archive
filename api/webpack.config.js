@@ -11,7 +11,7 @@ module.exports = {
 			{
 				exclude: /node_modules/,
 				test: /\.ts$/,
-				use: "swc-loader",
+				use: "ts-loader",
 			},
 		],
 	},

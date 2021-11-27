@@ -39,6 +39,7 @@
 		"pg": "^8.5.1",
 		"reflect-metadata": "^0.1.13",
 		"regenerator-runtime": "^0.13.9",
+		"ts-loader": "^9.2.6",
 		"type-graphql": "^1.1.1",
 		"typeorm": "^0.2.36",
 		"uuid": "^8.3.2"
@@ -60,7 +61,6 @@
 		"serverless-domain-manager": "^5.1.0",
 		"serverless-offline": "^8.0.0",
 		"serverless-webpack": "^5.4.2",
-		"swc-loader": "^0.1.15",
 		"ts-node": "^10.4.0",
 		"tsconfig-paths": "^3.12.0",
 		"typescript": "^4.3.5",

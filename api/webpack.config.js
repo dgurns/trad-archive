@@ -11,6 +11,9 @@ module.exports = {
 			{
 				exclude: /node_modules/,
 				test: /\.ts$/,
+				// swc-loader *almost* works, but FieldResolvers don't get called.
+				// Keep an eye on swc-loader, @swc/cli, and @swc/core as they evolve.
+				// https://github.com/MichalLytek/type-graphql/issues/1006
 				use: "ts-loader",
 			},
 		],

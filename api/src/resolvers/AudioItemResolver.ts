@@ -105,7 +105,7 @@ export class AudioItemResolver {
 			.createQueryBuilder(AudioItem, "audioItem")
 			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
 			.leftJoinAndSelect("audioItem.updatedByUser", "updatedByUser")
-			.innerJoinAndSelect(
+			.leftJoinAndSelect(
 				"audioItem.tags",
 				"relevantTag",
 				`relevantTag.object${entityType}Id = :entityId`,

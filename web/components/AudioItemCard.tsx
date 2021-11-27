@@ -38,11 +38,14 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	} = usePlayerContext();
 
 	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
-	const tagsWithTimeMarkers: Tag[] = useMemo(
-		() =>
-			tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds === "number"),
-		[tags]
-	);
+	const tagsWithTimeMarkers: Tag[] = useMemo(() => {
+		if (!Array.isArray(tags)) {
+			return [];
+		}
+		return tags.filter(
+			(tag) => typeof tag.subjectTimeMarkerSeconds === "number"
+		);
+	}, [tags]);
 	const shouldShowTimeMarkersIcon = tagsWithTimeMarkers.length > 0;
 
 	const [shouldShowTimeMarkers, setShouldShowTimeMarkers] = useState(false);

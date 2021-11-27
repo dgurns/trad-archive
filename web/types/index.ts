@@ -82,7 +82,7 @@ interface BaseEntity {
 	slug: string;
 	aliases: string | null;
 	description: string | null;
-	tags: Tag[];
+	tags: Tag[] | null;
 	createdByUser: User | null;
 	lastUpdatedByUser: User | null;
 	status?: EntityStatus;

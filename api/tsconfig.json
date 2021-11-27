@@ -15,7 +15,7 @@
 		"paths": {
 			"*": ["./*"]
 		},
-		"target": "es6",
+		"target": "es2018",
 		"removeComments": true,
 		"skipLibCheck": true,
 		"sourceMap": true,

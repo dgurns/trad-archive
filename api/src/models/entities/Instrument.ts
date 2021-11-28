@@ -22,6 +22,7 @@ export class Instrument extends EntityBaseFields {
 	})
 	entityType!: EntityType.Instrument;
 
+	// Resolver is defined with a FieldResolver in InstrumentResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectInstrument)
 	@JoinColumn()
 	tags!: Tag[];

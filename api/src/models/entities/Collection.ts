@@ -22,6 +22,7 @@ export class Collection extends EntityBaseFields {
 	})
 	entityType!: EntityType.Collection;
 
+	// Resolver is defined with a FieldResolver in CollectionResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectCollection)
 	@JoinColumn()
 	tags!: Tag[];

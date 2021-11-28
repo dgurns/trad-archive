@@ -23,6 +23,7 @@ export class Place extends EntityBaseFields {
 	})
 	entityType!: EntityType.Place;
 
+	// Resolver is defined with a FieldResolver in PlaceResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectPlace)
 	@JoinColumn()
 	tags!: Tag[];

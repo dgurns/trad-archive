@@ -28,6 +28,7 @@ export class Tune extends EntityBaseFields {
 	})
 	entityType!: EntityType.Tune;
 
+	// Resolver is defined with a FieldResolver in TuneResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectTune)
 	@JoinColumn()
 	tags!: Tag[];

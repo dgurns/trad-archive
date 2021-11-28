@@ -22,6 +22,7 @@ export class Person extends EntityBaseFields {
 	})
 	entityType!: EntityType.Person;
 
+	// Resolver is defined with a FieldResolver in PersonResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectPerson)
 	@JoinColumn()
 	tags!: Tag[];

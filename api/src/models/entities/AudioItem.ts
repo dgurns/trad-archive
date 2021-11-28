@@ -18,6 +18,7 @@ export class AudioItem extends EntityBaseFields {
 	})
 	entityType!: EntityType.AudioItem;
 
+	// Resolver is defined with a FieldResolver in AudioItemResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectAudioItem)
 	tags!: Tag[];
 

@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityType } from "models/entities/base";
-import { User } from "models/User";
+import { EntityType } from "./entities/base";
+import { User } from "./User";
 
 // Relationship represents a type of relationship between two entity types, for
 // example when a person (subject) "plays" an instrument (object).

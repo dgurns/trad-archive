@@ -12,7 +12,10 @@
 		"preserveConstEnums": true,
 		"rootDir": "./",
 		"baseUrl": "./src",
-		"target": "es6",
+		"paths": {
+			"*": ["./*"]
+		},
+		"target": "es2018",
 		"removeComments": true,
 		"skipLibCheck": true,
 		"sourceMap": true,

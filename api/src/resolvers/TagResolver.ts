@@ -1,21 +1,22 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from "type-graphql";
 import { getManager } from "typeorm";
-import { CustomContext } from "middleware/context";
-import { Tag } from "models/Tag";
-import { User } from "models/User";
+
+import { CustomContext } from "../middleware/context";
+import { Tag } from "../models/Tag";
+import { User } from "../models/User";
 import {
 	TagsInput,
 	TagsToEntityInput,
 	CreateTagInput,
-} from "resolvers/TagResolverTypes";
-import { EntityType } from "models/entities/base";
-import { AudioItem } from "models/entities/AudioItem";
-import { Person } from "models/entities/Person";
-import { Instrument } from "models/entities/Instrument";
-import { Place } from "models/entities/Place";
-import { Tune } from "models/entities/Tune";
-import { Collection } from "models/entities/Collection";
-import { Relationship } from "models/Relationship";
+} from "./TagResolverTypes";
+import { EntityType } from "../models/entities/base";
+import { AudioItem } from "../models/entities/AudioItem";
+import { Person } from "../models/entities/Person";
+import { Instrument } from "../models/entities/Instrument";
+import { Place } from "../models/entities/Place";
+import { Tune } from "../models/entities/Tune";
+import { Collection } from "../models/entities/Collection";
+import { Relationship } from "../models/Relationship";
 
 @Resolver(() => Tag)
 export class TagResolver {

@@ -1,26 +1,26 @@
-import { InputType, Field, ArgsType } from 'type-graphql';
-import { EntityType } from 'models/entities/base';
+import { InputType, Field, ArgsType } from "type-graphql";
+import { EntityType } from "../models/entities/base";
 
 @ArgsType()
 export class SearchRelationshipsArgs {
-  @Field(() => String)
-  subjectEntityType!: EntityType;
+	@Field(() => String)
+	subjectEntityType!: EntityType;
 
-  @Field(() => String, { nullable: true })
-  objectEntityType!: EntityType;
+	@Field(() => String, { nullable: true })
+	objectEntityType!: EntityType;
 }
 
 @InputType()
 export class CreateRelationshipInput {
-  @Field(() => String)
-  name!: string;
+	@Field(() => String)
+	name!: string;
 
-  @Field(() => String, { nullable: true })
-  nameReversed!: string;
+	@Field(() => String, { nullable: true })
+	nameReversed!: string;
 
-  @Field(() => EntityType)
-  subjectEntityType!: EntityType;
+	@Field(() => EntityType)
+	subjectEntityType!: EntityType;
 
-  @Field(() => EntityType)
-  objectEntityType!: EntityType;
+	@Field(() => EntityType)
+	objectEntityType!: EntityType;
 }

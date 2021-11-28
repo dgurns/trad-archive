@@ -8,8 +8,8 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { User } from "models/User";
-import { AudioItem } from "models/entities/AudioItem";
+import { User } from "./User";
+import { AudioItem } from "./entities/AudioItem";
 
 // SavedItem represents an AudioItem that has been saved to a user's
 // personal collection

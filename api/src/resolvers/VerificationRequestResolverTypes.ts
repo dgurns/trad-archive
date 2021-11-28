@@ -1,6 +1,7 @@
 import { InputType, ObjectType, Field, Int } from "type-graphql";
-import { VerificationRequestStatus } from "models/VerificationRequest";
-import { CopyrightPermissionStatus } from "models/User";
+
+import { VerificationRequestStatus } from "../models/VerificationRequest";
+import { CopyrightPermissionStatus } from "../models/User";
 
 @InputType()
 export class VerificationRequestsInput {

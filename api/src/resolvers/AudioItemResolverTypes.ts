@@ -1,6 +1,6 @@
 import { InputType, Field, Int } from "type-graphql";
-import { EntityStatus, EntityType } from "models/entities/base";
-import { SortBy } from "resolvers/commonTypes";
+import { EntityStatus, EntityType } from "../models/entities/base";
+import { SortBy } from "./commonTypes";
 
 @InputType()
 export class AudioItemsInput {

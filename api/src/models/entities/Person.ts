@@ -6,18 +6,23 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityBaseFields, EntityType } from "models/entities/base";
-import { Tag } from "models/Tag";
+import { EntityBaseFields, EntityType } from "./base";
+import { Tag } from "../Tag";
 
 // Person represents a unique human, for example Seamus Ennis
 @ObjectType()
 @TypeOrmEntity()
 export class Person extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.Person })
+	@Column({
+		type: "simple-enum",
+		enum: EntityType,
+		nullable: true,
+		default: EntityType.Person,
+	})
 	entityType!: EntityType.Person;
 
-	@Field(() => [Tag], { defaultValue: [] })
+	// Resolver is defined with a FieldResolver in PersonResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectPerson)
 	@JoinColumn()
 	tags!: Tag[];

@@ -8,17 +8,18 @@ import {
 	Root,
 } from "type-graphql";
 import { FindManyOptions, In } from "typeorm";
-import { CustomContext } from "middleware/context";
-import { Instrument } from "models/entities/Instrument";
-import { User } from "models/User";
-import { Tag } from "models/Tag";
+
+import { CustomContext } from "../middleware/context";
+import { Instrument } from "../models/entities/Instrument";
+import { User } from "../models/User";
+import { Tag } from "../models/Tag";
 import {
 	CreateInstrumentInput,
 	InstrumentsInput,
 	UpdateInstrumentInput,
-} from "resolvers/InstrumentResolverTypes";
-import { SortBy } from "resolvers/commonTypes";
-import EntityService from "services/Entity";
+} from "./InstrumentResolverTypes";
+import { SortBy } from "./commonTypes";
+import EntityService from "../services/Entity";
 
 @Resolver(() => Instrument)
 export class InstrumentResolver {

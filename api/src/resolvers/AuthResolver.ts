@@ -8,11 +8,11 @@ import {
 	SignUpInput,
 	LogInInput,
 	AuthenticateWithAutoLoginTokenInput,
-} from "resolvers/AuthResolverTypes";
-import { User } from "models/User";
-import { CustomContext } from "middleware/context";
-import AuthService from "services/Auth";
-import MailerService from "services/Mailer";
+} from "./AuthResolverTypes";
+import { User } from "../models/User";
+import { CustomContext } from "../middleware/context";
+import AuthService from "../services/Auth";
+import MailerService from "../services/Mailer";
 
 @Resolver()
 export class AuthResolver {

@@ -1,6 +1,6 @@
 import { createConnection, getConnectionManager } from "typeorm";
-import ormConfig, { DB_CONNECTION_NAME } from "ormconfig";
-import { seedRelationshipsInDbIfNotPresent } from "seed/relationships";
+import ormConfig, { DB_CONNECTION_NAME } from "./ormconfig";
+import { seedRelationshipsInDbIfNotPresent } from "./seed/relationships";
 
 export const connectToDatabase = async () => {
 	const connection = await createConnection(ormConfig);

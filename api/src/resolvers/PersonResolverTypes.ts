@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from "type-graphql";
-import { SortBy } from "resolvers/commonTypes";
+import { SortBy } from "./commonTypes";
 
 @InputType()
 export class PeopleInput {

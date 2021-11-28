@@ -1,5 +1,5 @@
 import { InputType, Field, Int } from "type-graphql";
-import { EntityType } from "models/entities/base";
+import { EntityType } from "../models/entities/base";
 
 @InputType()
 export class CommentsInput {

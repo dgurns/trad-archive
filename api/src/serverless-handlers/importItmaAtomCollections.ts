@@ -2,15 +2,14 @@ import "reflect-metadata";
 import { ScheduledEvent, Context as LambdaContext } from "aws-lambda";
 import fetch from "node-fetch";
 import { URLSearchParams } from "url";
-import { Connection } from "typeorm";
 
-import { connectToDatabase } from "db";
-import { EntityType } from "models/entities/base";
-import { Collection } from "models/entities/Collection";
-import { AudioItem } from "models/entities/AudioItem";
-import { Relationship } from "models/Relationship";
-import { Tag } from "models/Tag";
-import EntityService from "services/Entity";
+import { connectToDatabase } from "../db";
+import { EntityType } from "../models/entities/base";
+import { Collection } from "../models/entities/Collection";
+import { AudioItem } from "../models/entities/AudioItem";
+import { Relationship } from "../models/Relationship";
+import { Tag } from "../models/Tag";
+import EntityService from "../services/Entity";
 
 const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
 const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY } = process.env;

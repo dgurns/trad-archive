@@ -1,12 +1,13 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from "type-graphql";
-import { CustomContext } from "middleware/context";
-import { User } from "models/User";
+
+import { CustomContext } from "../middleware/context";
+import { User } from "../models/User";
 import {
 	CreateSavedItemInput,
 	DeleteSavedItemInput,
-} from "resolvers/SavedItemResolverTypes";
-import { SavedItem } from "models/SavedItem";
-import { AudioItem } from "models/entities/AudioItem";
+} from "./SavedItemResolverTypes";
+import { SavedItem } from "../models/SavedItem";
+import { AudioItem } from "../models/entities/AudioItem";
 
 @Resolver(() => SavedItem)
 export class SavedItemResolver {

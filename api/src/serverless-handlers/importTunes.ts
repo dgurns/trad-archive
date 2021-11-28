@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import { ScheduledEvent, Context as LambdaContext } from "aws-lambda";
 import fetch from "node-fetch";
-import { Connection, getManager } from "typeorm";
+import { getManager } from "typeorm";
 
-import { connectToDatabase } from "db";
-import { Tune } from "models/entities/Tune";
-import EntityService from "services/Entity";
+import { connectToDatabase } from "../db";
+import { Tune } from "../models/entities/Tune";
+import EntityService from "../services/Entity";
 
 interface RawTune {
 	tune_id: string;

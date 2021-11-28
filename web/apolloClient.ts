@@ -174,6 +174,11 @@ export const apolloClient = new ApolloClient({
 			},
 			AudioItem: {
 				fields: {
+					comments: {
+						merge(existing, incoming) {
+							return incoming ?? existing;
+						},
+					},
 					tags: {
 						merge(existing, incoming) {
 							return incoming ?? existing;

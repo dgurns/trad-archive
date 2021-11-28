@@ -1,14 +1,15 @@
 import { Resolver, Mutation, Ctx, Arg, Query } from "type-graphql";
 import { getManager } from "typeorm";
-import { CustomContext } from "middleware/context";
-import { User } from "models/User";
+
+import { CustomContext } from "../middleware/context";
+import { User } from "../models/User";
 import {
 	CommentsInput,
 	CommentsForParentEntityInput,
 	CreateCommentInput,
-} from "resolvers/CommentResolverTypes";
-import { AudioItem } from "models/entities/AudioItem";
-import { Comment } from "models/Comment";
+} from "./CommentResolverTypes";
+import { AudioItem } from "../models/entities/AudioItem";
+import { Comment } from "../models/Comment";
 
 @Resolver(() => Comment)
 export class CommentResolver {

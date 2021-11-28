@@ -11,21 +11,21 @@ import {
 } from "type-graphql";
 import { getManager, getRepository, In } from "typeorm";
 
-import { CustomContext } from "middleware/context";
-import { AudioItem } from "models/entities/AudioItem";
-import { Comment } from "models/Comment";
-import { SavedItem } from "models/SavedItem";
-import { User, UserPermission } from "models/User";
-import { Tag } from "models/Tag";
+import { CustomContext } from "../middleware/context";
+import { AudioItem } from "../models/entities/AudioItem";
+import { Comment } from "../models/Comment";
+import { SavedItem } from "../models/SavedItem";
+import { User, UserPermission } from "../models/User";
+import { Tag } from "../models/Tag";
 import {
 	AudioItemsInput,
 	AudioItemsTaggedWithEntityInput,
 	AudioItemsCreatedByUserInput,
 	CreateAudioItemInput,
 	UpdateAudioItemInput,
-} from "resolvers/AudioItemResolverTypes";
-import EntityService from "services/Entity";
-import { EntityStatus } from "models/entities/base";
+} from "./AudioItemResolverTypes";
+import EntityService from "../services/Entity";
+import { EntityStatus } from "../models/entities/base";
 import { SortBy } from "./commonTypes";
 
 @Resolver(() => AudioItem)
@@ -105,7 +105,7 @@ export class AudioItemResolver {
 			.createQueryBuilder(AudioItem, "audioItem")
 			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
 			.leftJoinAndSelect("audioItem.updatedByUser", "updatedByUser")
-			.innerJoinAndSelect(
+			.leftJoinAndSelect(
 				"audioItem.tags",
 				"relevantTag",
 				`relevantTag.object${entityType}Id = :entityId`,

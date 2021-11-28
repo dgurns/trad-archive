@@ -7,8 +7,8 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityBaseFields, EntityType } from "models/entities/base";
-import { Tag } from "models/Tag";
+import { EntityBaseFields, EntityType } from "./base";
+import { Tag } from "../Tag";
 
 // Tune represents a unique tune. Each Tune can have multiple settings. The data
 // is drawn from TheSession.org database. Therefore new tunes must be added at
@@ -20,10 +20,15 @@ import { Tag } from "models/Tag";
 @TypeOrmEntity()
 export class Tune extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.Tune })
+	@Column({
+		type: "simple-enum",
+		enum: EntityType,
+		nullable: true,
+		default: EntityType.Tune,
+	})
 	entityType!: EntityType.Tune;
 
-	@Field(() => [Tag], { defaultValue: [] })
+	// Resolver is defined with a FieldResolver in TuneResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectTune)
 	@JoinColumn()
 	tags!: Tag[];

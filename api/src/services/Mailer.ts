@@ -1,6 +1,6 @@
 import sendgrid, { MailDataRequired } from "@sendgrid/mail";
-import { User } from "models/User";
-import AuthService from "services/Auth";
+import { User } from "../models/User";
+import AuthService from "./Auth";
 
 const { SENDGRID_API_KEY } = process.env;
 

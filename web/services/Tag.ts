@@ -13,7 +13,7 @@ enum TagSortStrategy {
  *   2) Tags with time markers, sorted by time marker ASC
  */
 const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
-	const sortedTags = [...tags];
+	const sortedTags = [...(tags ?? [])];
 	sortedTags.sort((a, b) => {
 		if (
 			typeof a.subjectTimeMarkerSeconds !== "number" &&
@@ -36,7 +36,7 @@ const sortByCreatedAtThenTimeMarker = (tags: Tag[]) => {
  * Sort Tags by `createdAt` DESC
  */
 const sortByCreatedAtDesc = (tags: Tag[]) => {
-	const sortedTags = [...tags];
+	const sortedTags = [...(tags ?? [])];
 	sortedTags.sort((a, b) => {
 		return compareDesc(new Date(a.createdAt), new Date(b.createdAt));
 	});

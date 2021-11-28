@@ -6,18 +6,23 @@ import {
 } from "typeorm";
 import { ObjectType, Field } from "type-graphql";
 
-import { EntityBaseFields, EntityType } from "models/entities/base";
-import { Tag } from "models/Tag";
+import { EntityBaseFields, EntityType } from "./base";
+import { Tag } from "../Tag";
 
 // Collection represents a logical grouping of other Entities
 @ObjectType()
 @TypeOrmEntity()
 export class Collection extends EntityBaseFields {
 	@Field(() => String)
-	@Column({ nullable: true, default: EntityType.Collection })
+	@Column({
+		type: "simple-enum",
+		enum: EntityType,
+		nullable: true,
+		default: EntityType.Collection,
+	})
 	entityType!: EntityType.Collection;
 
-	@Field(() => [Tag], { defaultValue: [] })
+	// Resolver is defined with a FieldResolver in CollectionResolver.ts
 	@OneToMany(() => Tag, (tag) => tag.subjectCollection)
 	@JoinColumn()
 	tags!: Tag[];

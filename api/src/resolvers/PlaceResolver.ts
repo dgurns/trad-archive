@@ -9,17 +9,17 @@ import {
 } from "type-graphql";
 import { FindManyOptions, In } from "typeorm";
 
-import { CustomContext } from "middleware/context";
-import { Place } from "models/entities/Place";
-import { User } from "models/User";
-import { Tag } from "models/Tag";
+import { CustomContext } from "../middleware/context";
+import { Place } from "../models/entities/Place";
+import { User } from "../models/User";
+import { Tag } from "../models/Tag";
 import {
 	CreatePlaceInput,
 	PlacesInput,
 	UpdatePlaceInput,
-} from "resolvers/PlaceResolverTypes";
-import { SortBy } from "resolvers/commonTypes";
-import EntityService from "services/Entity";
+} from "./PlaceResolverTypes";
+import { SortBy } from "./commonTypes";
+import EntityService from "../services/Entity";
 
 @Resolver(() => Place)
 export class PlaceResolver {

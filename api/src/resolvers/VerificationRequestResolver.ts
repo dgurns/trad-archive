@@ -10,20 +10,20 @@ import {
 } from "type-graphql";
 import { FindManyOptions } from "typeorm";
 
-import S3Service from "services/S3";
-import { CustomContext } from "middleware/context";
+import S3Service from "../services/S3";
+import { CustomContext } from "../middleware/context";
 import {
 	VerificationRequestsInput,
 	CreatePresignedUploadUrlForVerificationImageResponse,
 	CreateVerificationRequestInput,
 	UpdateVerificationRequestStatusInput,
-} from "resolvers/VerificationRequestResolverTypes";
+} from "./VerificationRequestResolverTypes";
 import {
 	VerificationRequest,
 	VerificationRequestStatus,
-} from "models/VerificationRequest";
-import { User, UserPermission } from "models/User";
-import { Person } from "models/entities/Person";
+} from "../models/VerificationRequest";
+import { User, UserPermission } from "../models/User";
+import { Person } from "../models/entities/Person";
 
 @Resolver(() => VerificationRequest)
 export class VerificationRequestResolver {

@@ -15,7 +15,7 @@ provider:
 
 functions:
   graphql:
-    handler: src/handlers/graphql.handler
+    handler: src/serverless-handlers/graphql.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
       WEB_ORIGIN: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
@@ -35,7 +35,7 @@ functions:
             origin: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
             allowCredentials: true
   importItmaAtomCollections:
-    handler: src/handlers/importItmaAtomCollections.handler
+    handler: src/serverless-handlers/importItmaAtomCollections.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     memorySize: 1024
@@ -45,7 +45,7 @@ functions:
           rate: rate(24 hours)
           enabled: ${self:custom.shouldRunImportItmaAtomCollections.${opt:stage}, self:custom.shouldRunImportItmaAtomCollections.preview}
   importTunes:
-    handler: src/handlers/importTunes.handler
+    handler: src/serverless-handlers/importTunes.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     memorySize: 1024
@@ -55,7 +55,7 @@ functions:
           rate: rate(24 hours)
           enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
   keepWarm:
-    handler: src/handlers/keepWarm.handler
+    handler: src/serverless-handlers/keepWarm.handler
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     memorySize: 512

@@ -8,7 +8,7 @@ import {
 	UpdateDateColumn,
 } from "typeorm";
 import { ObjectType, Field, registerEnumType } from "type-graphql";
-import { User } from "models/User";
+import { User } from "../User";
 
 // EntityType is an enum which defines the possible types for an Entity
 export enum EntityType {

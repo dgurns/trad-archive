@@ -54,24 +54,24 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 	});
 	const comments = data?.commentsForParentEntity ?? [];
 
-	const fetchCommentsForParent = useCallback(() => {
-		getCommentsForParentEntity({
+	const fetchCommentsForParent = useCallback(async () => {
+		await getCommentsForParentEntity({
 			variables: {
 				input: { parentEntityType: entityType, parentEntityId: id },
 			},
 		});
-	}, [getCommentsForParentEntity]);
+	}, [getCommentsForParentEntity, entityType, id]);
 
-	const onViewCommentsButtonClicked = useCallback(() => {
-		if (commentsCount !== comments.length) {
-			fetchCommentsForParent();
-		}
+	const onViewCommentsButtonClicked = useCallback(async () => {
 		setModalIsVisible(true);
+		await fetchCommentsForParent();
 	}, [fetchCommentsForParent, commentsCount, comments]);
 
 	const onCreateCommentSuccess = useCallback(async () => {
-		fetchCommentsForParent();
-		refetchParentAudioItem({ slug });
+		await Promise.allSettled([
+			fetchCommentsForParent(),
+			refetchParentAudioItem({ slug }),
+		]);
 	}, [fetchCommentsForParent, refetchParentAudioItem]);
 
 	const onCloseModal = useCallback(() => setModalIsVisible(false), []);

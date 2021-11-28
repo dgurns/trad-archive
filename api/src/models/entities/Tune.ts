@@ -28,7 +28,6 @@ export class Tune extends EntityBaseFields {
 	})
 	entityType!: EntityType.Tune;
 
-	@Field(() => [Tag], { defaultValue: [] })
 	@OneToMany(() => Tag, (tag) => tag.subjectTune)
 	@JoinColumn()
 	tags!: Tag[];

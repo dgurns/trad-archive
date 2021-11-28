@@ -22,7 +22,6 @@ export class Collection extends EntityBaseFields {
 	})
 	entityType!: EntityType.Collection;
 
-	@Field(() => [Tag], { defaultValue: [] })
 	@OneToMany(() => Tag, (tag) => tag.subjectCollection)
 	@JoinColumn()
 	tags!: Tag[];

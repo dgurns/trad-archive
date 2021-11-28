@@ -22,7 +22,6 @@ export class Instrument extends EntityBaseFields {
 	})
 	entityType!: EntityType.Instrument;
 
-	@Field(() => [Tag], { defaultValue: [] })
 	@OneToMany(() => Tag, (tag) => tag.subjectInstrument)
 	@JoinColumn()
 	tags!: Tag[];

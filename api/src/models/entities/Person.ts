@@ -22,7 +22,6 @@ export class Person extends EntityBaseFields {
 	})
 	entityType!: EntityType.Person;
 
-	@Field(() => [Tag], { defaultValue: [] })
 	@OneToMany(() => Tag, (tag) => tag.subjectPerson)
 	@JoinColumn()
 	tags!: Tag[];

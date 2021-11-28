@@ -23,7 +23,6 @@ export class Place extends EntityBaseFields {
 	})
 	entityType!: EntityType.Place;
 
-	@Field(() => [Tag], { defaultValue: [] })
 	@OneToMany(() => Tag, (tag) => tag.subjectPlace)
 	@JoinColumn()
 	tags!: Tag[];

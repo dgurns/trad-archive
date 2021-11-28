@@ -25,11 +25,9 @@ const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
 	}
-	const start = Date.now();
 	if (typeof graphQLSchema === "undefined") {
 		graphQLSchema = await makeSchema();
 	}
-	console.log("Made or fetched GraphQL schema, took ms:", Date.now() - start);
 	if (typeof apolloServer === "undefined") {
 		apolloServer = new ApolloServer({
 			schema: graphQLSchema,

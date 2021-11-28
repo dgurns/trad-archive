@@ -1,0 +1,17 @@
+{
+	"module": {
+		"type": "commonjs"
+	},
+	"jsc": {
+		"baseUrl": ".",
+		"parser": {
+			"syntax": "typescript",
+			"decorators": true
+		},
+		"target": "es2018",
+		"transform": {
+			"legacyDecorator": true,
+			"decoratorMetadata": true
+		}
+	}
+}

@@ -11,9 +11,9 @@
 		"db:run-migrations": "yarn typeorm migration:run",
 		"typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./src/ormconfig.ts",
 		"dev:express": "nodemon -e ts --exec \"yarn run build:express && yarn run start:express:dev\"",
-		"build:express": "tsc",
-		"start:express:dev": "NODE_ENV=development node .build/src/express-server/index.js",
-		"start:express:prod": "NODE_ENV=production node .build/src/express-server/index.js"
+		"build:express": "npx swc src -d .express-server-dist",
+		"start:express:dev": "NODE_ENV=development node .express-server-dist/express-server/index.js",
+		"start:express:prod": "NODE_ENV=production node .express-server-dist/express-server/index.js"
 	},
 	"author": "Dan Gurney",
 	"license": "ISC",
@@ -39,12 +39,13 @@
 		"pg": "^8.5.1",
 		"reflect-metadata": "^0.1.13",
 		"regenerator-runtime": "^0.13.9",
-		"ts-loader": "^9.2.6",
 		"type-graphql": "^1.1.1",
 		"typeorm": "^0.2.36",
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
+		"@swc/cli": "^0.1.52",
+		"@swc/core": "^1.2.113",
 		"@types/bcrypt": "^3.0.0",
 		"@types/compression": "^1.7.2",
 		"@types/cookie": "^0.4.0",
@@ -59,7 +60,7 @@
 		"serverless-domain-manager": "^5.1.0",
 		"serverless-offline": "^8.0.0",
 		"serverless-webpack": "^5.4.2",
-		"tsconfig-paths": "^3.12.0",
+		"swc-loader": "^0.1.15",
 		"typescript": "^4.3.5",
 		"webpack": "^5.11.1",
 		"webpack-node-externals": "^2.5.2"

@@ -1,11 +1,7 @@
 import "reflect-metadata";
-import { ApolloServer as ApolloServerLambda } from "apollo-server-lambda";
 import { buildSchema } from "type-graphql";
 
-import { createCustomContext } from "./middleware/context";
-const apolloServerPlugins = require("./middleware/plugins");
 import { authChecker } from "./middleware/authChecker";
-
 import { AuthResolver } from "./resolvers/AuthResolver";
 import { UserResolver } from "./resolvers/UserResolver";
 import { TagResolver } from "./resolvers/TagResolver";
@@ -44,14 +40,5 @@ export const makeSchema = () => {
 		dateScalarMode: "isoDate",
 		authChecker,
 		authMode: "null",
-	});
-};
-
-export const initializeApolloServerLambda = async () => {
-	const schema = await makeSchema();
-	return new ApolloServerLambda({
-		schema,
-		plugins: apolloServerPlugins,
-		context: createCustomContext,
 	});
 };

@@ -11,8 +11,12 @@ module.exports = {
 			{
 				exclude: /node_modules/,
 				test: /\.ts$/,
-				// swc-loader *almost* works, but FieldResolvers don't get called.
+				// swc-loader *almost* works, but something goes wrong when compiling
+				// TypeGraphQL, and FieldResolvers don't get called. This doesn't happen
+				// with tsc/ts-loader.
 				// Keep an eye on swc-loader, @swc/cli, and @swc/core as they evolve.
+				// Another solution is removing TypeGraphQL and TypeORM from the project
+				// completely so that we don't use decorators at all.
 				// https://github.com/MichalLytek/type-graphql/issues/1006
 				use: "ts-loader",
 			},

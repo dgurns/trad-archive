@@ -11,9 +11,9 @@
 		"db:run-migrations": "yarn typeorm migration:run",
 		"typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./src/ormconfig.ts",
 		"dev:express": "nodemon -e ts --exec \"yarn run build:express && yarn run start:express:dev\"",
-		"build:express": "npx swc src -d .express-server-dist",
-		"start:express:dev": "NODE_ENV=development node .express-server-dist/express-server/index.js",
-		"start:express:prod": "NODE_ENV=production node .express-server-dist/express-server/index.js"
+		"build:express": "tsc",
+		"start:express:dev": "NODE_ENV=development node .build/src/express-server/index.js",
+		"start:express:prod": "NODE_ENV=production node .build/src/express-server/index.js"
 	},
 	"author": "Dan Gurney",
 	"license": "ISC",
@@ -45,8 +45,6 @@
 		"uuid": "^8.3.2"
 	},
 	"devDependencies": {
-		"@swc/cli": "^0.1.52",
-		"@swc/core": "^1.2.113",
 		"@types/bcrypt": "^3.0.0",
 		"@types/compression": "^1.7.2",
 		"@types/cookie": "^0.4.0",

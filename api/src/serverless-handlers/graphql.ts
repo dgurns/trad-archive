@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-lambda";
+import { GraphQLSchema } from "graphql";
 import { Connection } from "typeorm";
 import {
 	APIGatewayProxyCallback,
@@ -7,22 +8,32 @@ import {
 	Context as LambdaContext,
 } from "aws-lambda";
 
+import { createCustomContext } from "../middleware/context";
+const apolloServerPlugins = require("../middleware/plugins");
 import { connectToDatabase } from "../db";
-import { initializeApolloServerLambda } from "../apollo";
+import { makeSchema } from "../apollo";
 
 const { SERVERLESS_STAGE } = process.env;
 
-// Store the DB and server outside of the Lambda handler so they can persist
-// between invocations once they are created.
+// Store variables outside of the Lambda handler so they can persist between
+// invocations once they are created.
 let dbConnection: Connection | undefined;
+let graphQLSchema: GraphQLSchema | undefined;
 let apolloServer: ApolloServer | undefined;
 
 const initializeServer = async () => {
 	if (typeof dbConnection === "undefined") {
 		dbConnection = await connectToDatabase();
 	}
+	if (typeof graphQLSchema === "undefined") {
+		graphQLSchema = await makeSchema();
+	}
 	if (typeof apolloServer === "undefined") {
-		apolloServer = await initializeApolloServerLambda();
+		apolloServer = new ApolloServer({
+			schema: graphQLSchema,
+			plugins: apolloServerPlugins,
+			context: createCustomContext,
+		});
 	}
 	return apolloServer;
 };

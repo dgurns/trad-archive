@@ -11,7 +11,7 @@ import { Relationship } from "../models/Relationship";
 import { Tag } from "../models/Tag";
 import EntityService from "../services/Entity";
 
-const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
+const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718", "lqu-18762"];
 const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY } = process.env;
 
 const headers = {

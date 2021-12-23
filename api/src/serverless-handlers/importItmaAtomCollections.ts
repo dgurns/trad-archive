@@ -14,10 +14,10 @@ import EntityService from "../services/Entity";
 const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY, SERVERLESS_STAGE } = process.env;
 
 let COLLECTION_SLUGS_TO_IMPORT: string[] = [];
-if (SERVERLESS_STAGE === "dev" || SERVERLESS_STAGE === "preview") {
-	COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718", "lqu-18762"];
-} else if (SERVERLESS_STAGE === "prod") {
+if (SERVERLESS_STAGE === "prod") {
 	COLLECTION_SLUGS_TO_IMPORT = [];
+} else {
+	COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718", "lqu-18762"];
 }
 
 const headers = {

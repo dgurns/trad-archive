@@ -42,7 +42,7 @@ functions:
     timeout: 900
     events:
       - schedule:
-          rate: rate(24 hours)
+          rate: rate(5 minutes)
           enabled: ${self:custom.shouldRunImportItmaAtomCollections.${opt:stage}, self:custom.shouldRunImportItmaAtomCollections.preview}
   importTunes:
     handler: src/serverless-handlers/importTunes.handler

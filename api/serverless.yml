@@ -39,7 +39,7 @@ functions:
     environment:
       SERVERLESS_STAGE: ${opt:stage}
     memorySize: 1024
-    timeout: 600
+    timeout: 900
     events:
       - schedule:
           rate: rate(24 hours)

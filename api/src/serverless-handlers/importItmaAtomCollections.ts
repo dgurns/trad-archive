@@ -234,6 +234,8 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 						await tag2.save();
 					}
 				} catch {
+					// If anything failed in the fetch + save process, continue on to the
+					// next item.
 					continue;
 				}
 			}

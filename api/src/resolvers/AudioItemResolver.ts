@@ -96,7 +96,7 @@ export class AudioItemResolver {
 	}
 
 	@Query(() => [AudioItem])
-	async audioItemsTaggedWithEntity(
+	audioItemsTaggedWithEntity(
 		@Arg("input") input: AudioItemsTaggedWithEntityInput
 	) {
 		const { entityType, entityId, take, skip, sortBy } = input;
@@ -105,7 +105,7 @@ export class AudioItemResolver {
 			.createQueryBuilder(AudioItem, "audioItem")
 			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
 			.leftJoinAndSelect("audioItem.updatedByUser", "updatedByUser")
-			.leftJoinAndSelect(
+			.innerJoinAndSelect(
 				"audioItem.tags",
 				"relevantTag",
 				`relevantTag.object${entityType}Id = :entityId`,

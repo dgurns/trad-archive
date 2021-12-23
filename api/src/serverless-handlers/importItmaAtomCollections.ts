@@ -97,7 +97,7 @@ interface RawDigitalAudioObject {
 }
 const fetchDigitalAudioObject = async (
 	slug: string
-): Promise<RawDigitalAudioObject | undefined> => {
+): Promise<RawDigitalAudioObject> => {
 	const response = await fetch(
 		`${ITMA_ATOM_ORIGIN}/api/informationobjects/${slug}`,
 		{

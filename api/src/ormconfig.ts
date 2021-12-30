@@ -14,17 +14,29 @@ import { Collection } from "./models/entities/Collection";
 import { TakedownRequest } from "./models/TakedownRequest";
 import { VerificationRequest } from "./models/VerificationRequest";
 
+const {
+	SERVERLESS_STAGE,
+	NODE_ENV,
+	DATABASE_HOST,
+	DATABASE_PORT,
+	DATABASE_USERNAME,
+	DATABASE_PASSWORD,
+	DATABASE_NAME,
+} = process.env;
+
 export const DB_CONNECTION_NAME = "default";
+
+const isDevelopment = SERVERLESS_STAGE === "dev" || NODE_ENV === "development";
 
 const ormConfig: ConnectionOptions = {
 	name: DB_CONNECTION_NAME,
 	type: "mysql",
-	host: process.env.DATABASE_HOST ?? "localhost",
-	ssl: {},
-	port: parseInt(process.env.DATABASE_PORT ?? "3306"),
-	username: process.env.DATABASE_USERNAME ?? "admin",
-	password: process.env.DATABASE_PASSWORD ?? "password",
-	database: process.env.DATABASE_NAME ?? "trad_archive",
+	host: DATABASE_HOST ?? "localhost",
+	ssl: isDevelopment ? undefined : {},
+	port: parseInt(DATABASE_PORT ?? "3306"),
+	username: DATABASE_USERNAME ?? "admin",
+	password: DATABASE_PASSWORD ?? "password",
+	database: DATABASE_NAME ?? "trad_archive",
 	logging: false,
 	entities: [
 		User,

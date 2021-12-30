@@ -16,7 +16,7 @@ import {
 	SearchRelationshipsArgs,
 } from "./RelationshipResolverTypes";
 import { Relationship } from "../models/Relationship";
-import { UserPermission } from "../models/User";
+import { UserRole } from "../models/User";
 import RelationshipService from "../services/Relationship";
 
 @Resolver(() => Relationship)
@@ -45,7 +45,7 @@ export class RelationshipResolver {
 	// CreateRelationship creates a relationship between two entity types. It also
 	// creates the reversed version if `nameReversed` is specified.
 	@Mutation(() => Relationship)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	async createRelationship(
 		@Arg("input") input: CreateRelationshipInput,
 		@Ctx() ctx: CustomContext

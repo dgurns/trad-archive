@@ -12,7 +12,7 @@ import {
 	TakedownRequest,
 	TakedownRequestStatus,
 } from "../models/TakedownRequest";
-import { User, UserPermission } from "../models/User";
+import { User, UserRole } from "../models/User";
 import {
 	VerificationRequest,
 	VerificationRequestStatus,
@@ -133,7 +133,7 @@ export class TakedownRequestResolver {
 	}
 
 	@Mutation(() => TakedownRequest)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	async updateTakedownRequestStatus(
 		@Arg("input") input: UpdateTakedownRequestStatusInput,
 		@Ctx() ctx: CustomContext

@@ -15,7 +15,7 @@ export enum ViewAs {
 	List = "List",
 }
 
-export enum UserPermission {
+export enum UserRole {
 	User = "USER",
 	Admin = "ADMIN",
 }
@@ -25,7 +25,7 @@ export enum CopyrightPermissionStatus {
 }
 export interface User {
 	id: string;
-	permissions?: UserPermission[];
+	role?: UserRole;
 	email?: string;
 	username: string;
 	copyrightPermissionStatus?: CopyrightPermissionStatus | null;

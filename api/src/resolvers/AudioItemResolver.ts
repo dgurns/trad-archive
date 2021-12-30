@@ -15,7 +15,7 @@ import { CustomContext } from "../middleware/context";
 import { AudioItem } from "../models/entities/AudioItem";
 import { Comment } from "../models/Comment";
 import { SavedItem } from "../models/SavedItem";
-import { User, UserPermission } from "../models/User";
+import { User, UserRole } from "../models/User";
 import { Tag } from "../models/Tag";
 import {
 	AudioItemsInput,
@@ -156,7 +156,7 @@ export class AudioItemResolver {
 	}
 
 	@Mutation(() => AudioItem)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	async createAudioItem(
 		@Arg("input") input: CreateAudioItemInput,
 		@Ctx() ctx: CustomContext

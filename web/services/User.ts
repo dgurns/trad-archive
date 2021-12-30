@@ -1,13 +1,13 @@
-import { User, UserPermission } from 'types';
+import { User, UserRole } from "types";
 
 const isAdmin = (user?: User) => {
-  if (!user) return false;
-
-  const { permissions } = user;
-  return Object.values(permissions).includes('Admin' as UserPermission);
+	if (!user) {
+		return false;
+	}
+	return user.role === UserRole.Admin;
 };
 
 const UserService = {
-  isAdmin,
+	isAdmin,
 };
 export default UserService;

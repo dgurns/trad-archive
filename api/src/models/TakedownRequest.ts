@@ -67,7 +67,7 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	createdByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt!: Date;
 
 	@Field(() => User, { nullable: true })
@@ -77,7 +77,7 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	updatedByUserId!: string;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt!: Date;
 
 	// Generated fields make this model easier to consume via the GraphQL API.

@@ -18,7 +18,7 @@ export const UserFragments = {
 	currentUser: gql`
 		fragment CurrentUser on User {
 			id
-			permissions
+			role
 			email
 			username
 			copyrightPermissionStatus

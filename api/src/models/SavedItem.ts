@@ -33,6 +33,6 @@ export class SavedItem extends TypeOrmBaseEntity {
 	userId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt!: Date;
 }

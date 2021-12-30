@@ -22,13 +22,13 @@ import {
 	VerificationRequest,
 	VerificationRequestStatus,
 } from "../models/VerificationRequest";
-import { User, UserPermission } from "../models/User";
+import { User, UserRole } from "../models/User";
 import { Person } from "../models/entities/Person";
 
 @Resolver(() => VerificationRequest)
 export class VerificationRequestResolver {
 	@Query(() => [VerificationRequest])
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	verificationRequests(@Arg("input") input: VerificationRequestsInput) {
 		const { take, skip, status } = input;
 		const findOptions: FindManyOptions<VerificationRequest> = {
@@ -77,7 +77,7 @@ export class VerificationRequestResolver {
 
 	// Only admins can download verification images
 	@Mutation(() => String)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	createPresignedDownloadUrlForVerificationImage(
 		@Arg("s3Key") s3Key: string,
 		@Ctx() ctx: CustomContext
@@ -123,7 +123,7 @@ export class VerificationRequestResolver {
 	}
 
 	@Mutation(() => VerificationRequest)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	async updateVerificationRequestStatus(
 		@Arg("input") input: UpdateVerificationRequestStatusInput,
 		@Ctx() ctx: CustomContext
@@ -156,7 +156,7 @@ export class VerificationRequestResolver {
 	}
 
 	@FieldResolver(() => String, { nullable: true })
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	presignedImageDownloadUrl(@Root() verificationRequest: VerificationRequest) {
 		if (!verificationRequest.imageS3Key) {
 			return null;

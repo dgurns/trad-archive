@@ -18,19 +18,12 @@ export const DB_CONNECTION_NAME = "default";
 
 const ormConfig: ConnectionOptions = {
 	name: DB_CONNECTION_NAME,
-	type: "postgres",
+	type: "mysql",
 	host: process.env.DATABASE_HOST ?? "localhost",
-	port: parseInt(process.env.DATABASE_PORT ?? "5432"),
-	username: process.env.DATABASE_USERNAME ?? "postgres",
+	port: parseInt(process.env.DATABASE_PORT ?? "3306"),
+	username: process.env.DATABASE_USERNAME ?? "admin",
 	password: process.env.DATABASE_PASSWORD ?? "password",
-	database: process.env.DATABASE_NAME ?? "postgres",
-	extra: {
-		// Set max_connections to 2 so that we don't exceed the DB's limit when
-		// multiple Lambdas are handling requests in parallel
-		max: 2,
-		// Close connections after 1 second of idleness
-		idleTimeoutMillis: 1000,
-	},
+	database: process.env.DATABASE_NAME ?? "trad-archive",
 	logging: false,
 	entities: [
 		User,

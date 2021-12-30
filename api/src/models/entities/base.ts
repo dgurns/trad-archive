@@ -47,7 +47,6 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field(() => String)
 	@Column({ unique: true })
-	@Index()
 	slug!: string;
 
 	@Field(() => String, { nullable: true })
@@ -76,10 +75,10 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	updatedByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt!: Date;
 }

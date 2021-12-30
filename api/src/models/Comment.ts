@@ -36,10 +36,10 @@ export class Comment extends TypeOrmBaseEntity {
 	createdByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt!: Date;
 }

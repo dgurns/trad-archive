@@ -39,10 +39,6 @@ export class User extends TypeOrmBaseEntity {
 	})
 	role!: UserRole;
 
-	@Field(() => String)
-	@Column()
-	dummyField!: string;
-
 	@Authorized()
 	@Field(() => String, { nullable: true })
 	@Column({ unique: true })

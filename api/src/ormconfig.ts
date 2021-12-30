@@ -55,6 +55,9 @@ const ormConfig: ConnectionOptions = {
 	],
 	synchronize: false,
 	migrationsRun: false,
+	cli: {
+		migrationsDir: __dirname + "/migrations",
+	},
 };
 
 export default ormConfig;

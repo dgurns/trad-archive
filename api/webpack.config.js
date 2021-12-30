@@ -1,6 +1,5 @@
 const nodeExternals = require("webpack-node-externals");
 const serverlessWebpack = require("serverless-webpack");
-const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	devtool: "inline-cheap-module-source-map",
@@ -15,16 +14,6 @@ module.exports = {
 			},
 		],
 	},
-	plugins: [
-		new CopyPlugin({
-			patterns: [
-				{
-					from: "src/migrations",
-					to: "src/migrations",
-				},
-			],
-		}),
-	],
 	node: false,
 	externals: [nodeExternals()],
 	optimization: {

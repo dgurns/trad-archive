@@ -51,7 +51,7 @@ export class AudioItemResolver {
 			.createQueryBuilder(AudioItem, "a")
 			.leftJoinAndSelect("a.createdByUser", "createdByUser")
 			.leftJoinAndSelect("a.updatedByUser", "updatedByUser")
-			.orderBy("RANDOM()")
+			.orderBy("RAND()")
 			.getOne();
 	}
 
@@ -248,7 +248,7 @@ export class AudioItemResolver {
 			.select("COUNT(id)")
 			.where("comment.parentAudioItemId = :id", { id: audioItem.id })
 			.getRawOne();
-		return parseInt(count);
+		return parseInt(count ?? 0);
 	}
 
 	@FieldResolver(() => Boolean)

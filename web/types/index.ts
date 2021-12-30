@@ -16,8 +16,8 @@ export enum ViewAs {
 }
 
 export enum UserRole {
-	User = "USER",
-	Admin = "ADMIN",
+	User = "User",
+	Admin = "Admin",
 }
 
 export enum CopyrightPermissionStatus {

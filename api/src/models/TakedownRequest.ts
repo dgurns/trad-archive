@@ -48,7 +48,7 @@ export class TakedownRequest extends TypeOrmBaseEntity {
 	type!: TakedownRequestType;
 
 	@Field(() => String)
-	@Column()
+	@Column({ type: "text" })
 	message!: string;
 
 	@Field(() => TakedownRequestStatus, { nullable: true })

@@ -50,12 +50,11 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	slug!: string;
 
 	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
-	@Index()
+	@Column({ type: "text", nullable: true, default: null })
 	aliases!: string;
 
 	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
+	@Column({ type: "text", nullable: true, default: null })
 	description!: string;
 
 	@Field(() => EntityStatus)

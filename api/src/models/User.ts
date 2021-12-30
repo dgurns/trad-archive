@@ -5,13 +5,12 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
-	Index,
 } from "typeorm";
 import { ObjectType, Authorized, Field, registerEnumType } from "type-graphql";
 
 export enum UserRole {
-	User = "USER",
-	Admin = "ADMIN",
+	User = "User",
+	Admin = "Admin",
 }
 registerEnumType(UserRole, {
 	name: "UserRole",

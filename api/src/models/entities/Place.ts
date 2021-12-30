@@ -16,7 +16,7 @@ import { Tag } from "../Tag";
 export class Place extends EntityBaseFields {
 	@Field(() => String)
 	@Column({
-		type: "simple-enum",
+		type: "enum",
 		enum: EntityType,
 		nullable: true,
 		default: EntityType.Place,

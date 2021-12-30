@@ -26,7 +26,7 @@ export class Comment extends TypeOrmBaseEntity {
 	parentAudioItemId!: string;
 
 	@Field(() => String)
-	@Column()
+	@Column({ type: "text" })
 	text!: string;
 
 	@Field(() => User, { nullable: true })

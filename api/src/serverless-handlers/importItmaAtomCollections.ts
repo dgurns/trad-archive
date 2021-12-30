@@ -11,8 +11,14 @@ import { Relationship } from "../models/Relationship";
 import { Tag } from "../models/Tag";
 import EntityService from "../services/Entity";
 
-const COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718"];
-const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY } = process.env;
+const { ITMA_ATOM_ORIGIN, ITMA_ATOM_API_KEY, SERVERLESS_STAGE } = process.env;
+
+let COLLECTION_SLUGS_TO_IMPORT: string[] = [];
+if (SERVERLESS_STAGE === "prod") {
+	COLLECTION_SLUGS_TO_IMPORT = [];
+} else {
+	COLLECTION_SLUGS_TO_IMPORT = ["amw-18694", "dml-18718", "lqu-18762"];
+}
 
 const headers = {
 	"REST-API-Key": ITMA_ATOM_API_KEY ?? "",
@@ -184,47 +190,53 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 				audioItemsAlreadyInDb = audioItemsAlreadyInDb + 1;
 				continue;
 			} else {
-				const data = await fetchDigitalAudioObject(result.slug);
-				if (
-					!data ||
-					data.publication_status !== "Published" ||
-					!data.digital_object?.reference_url ||
-					data.digital_object?.media_type !== "Audio" ||
-					data.digital_object?.mime_type !== "audio/mpeg"
-				) {
-					continue;
-				}
-				const urlSourceSuffix =
-					data.digital_object.reference_url.split("/uploads/")[1];
-				const urlSource = `${ITMA_ATOM_ORIGIN}/uploads/${urlSourceSuffix}`;
-				const newAudioItem = AudioItem.create({
-					slug: EntityService.cleanSlug(result.slug),
-					name: data.title,
-					description: data.scope_and_content,
-					urlSource,
-					itmaAtomSlug: result.slug,
-				});
-				await newAudioItem.save();
-				audioItemsAddedToDb = audioItemsAddedToDb + 1;
+				try {
+					const data = await fetchDigitalAudioObject(result.slug);
+					if (
+						!data ||
+						data.publication_status !== "Published" ||
+						!data.digital_object?.reference_url ||
+						data.digital_object?.media_type !== "Audio" ||
+						data.digital_object?.mime_type !== "audio/mpeg"
+					) {
+						continue;
+					}
+					const urlSourceSuffix =
+						data.digital_object.reference_url.split("/uploads/")[1];
+					const urlSource = `${ITMA_ATOM_ORIGIN}/uploads/${urlSourceSuffix}`;
+					const newAudioItem = AudioItem.create({
+						slug: EntityService.cleanSlug(result.slug),
+						name: data.title,
+						description: data.scope_and_content,
+						urlSource,
+						itmaAtomSlug: result.slug,
+					});
+					await newAudioItem.save();
+					audioItemsAddedToDb = audioItemsAddedToDb + 1;
 
-				// Tag this AudioItem with the associated Collection and vice versa
-				if (
-					collectionInDb &&
-					audioItemToCollectionRelationship &&
-					collectionToAudioItemRelationship
-				) {
-					const tag1 = Tag.create({
-						relationship: audioItemToCollectionRelationship,
-						subjectAudioItem: newAudioItem,
-						objectCollection: collectionInDb,
-					});
-					const tag2 = Tag.create({
-						relationship: collectionToAudioItemRelationship,
-						subjectCollection: collectionInDb,
-						objectAudioItem: newAudioItem,
-					});
-					await tag1.save();
-					await tag2.save();
+					// Tag this AudioItem with the associated Collection and vice versa
+					if (
+						collectionInDb &&
+						audioItemToCollectionRelationship &&
+						collectionToAudioItemRelationship
+					) {
+						const tag1 = Tag.create({
+							relationship: audioItemToCollectionRelationship,
+							subjectAudioItem: newAudioItem,
+							objectCollection: collectionInDb,
+						});
+						const tag2 = Tag.create({
+							relationship: collectionToAudioItemRelationship,
+							subjectCollection: collectionInDb,
+							objectAudioItem: newAudioItem,
+						});
+						await tag1.save();
+						await tag2.save();
+					}
+				} catch {
+					// If anything failed in the fetch + save process, continue on to the
+					// next item.
+					continue;
 				}
 			}
 		}
@@ -242,37 +254,31 @@ export const handler = async (
 	const startTime = Date.now();
 	const dbConnection = await connectToDatabase();
 
-	console.log("Fetching collection summaries from ITMA AtoM API...");
-	const fetchCollectionPromises = COLLECTION_SLUGS_TO_IMPORT.map((slug) =>
-		fetchCollection(slug)
-	);
-	const collectionPromiseResults = await Promise.allSettled(
-		fetchCollectionPromises
-	);
 	const rawCollections: RawCollection[] = [];
-	collectionPromiseResults.forEach((result) => {
-		if (result.status === "fulfilled") {
-			const { reference_code, title } = result.value;
+
+	console.log("Fetching collection summaries from ITMA AtoM API...");
+	for (const slug of COLLECTION_SLUGS_TO_IMPORT) {
+		try {
+			const rawCollection = await fetchCollection(slug);
+			const { reference_code, title } = rawCollection;
 			console.log(`Got collection summary for ${reference_code}: ${title}`);
-			rawCollections.push(result.value);
-		} else if (result.status === "rejected") {
-			console.log("Error fetching a collection summary:", result.reason);
+			rawCollections.push(rawCollection);
+		} catch (error) {
+			console.log("Error fetching a collection summary:", error);
 		}
-	});
+	}
 
 	console.log("Adding collections to DB if not already present...");
-	const addCollectionPromises = rawCollections.map((rawCollection) =>
-		addCollectionToDbIfNotPresent(rawCollection)
-	);
-	await Promise.allSettled(addCollectionPromises);
+	for (const rawCollection of rawCollections) {
+		await addCollectionToDbIfNotPresent(rawCollection);
+	}
 
 	console.log(
 		"Looping through collections and adding digital audio objects to DB if not already present..."
 	);
-	const addDigitalAudioObjectsPromises = rawCollections.map((rawCollection) =>
-		addCollectionDigitalAudioObjectsToDbIfNotPresent(rawCollection)
-	);
-	await Promise.allSettled(addDigitalAudioObjectsPromises);
+	for (const rawCollection of rawCollections) {
+		await addCollectionDigitalAudioObjectsToDbIfNotPresent(rawCollection);
+	}
 
 	const elapsedTimeMs = Date.now() - startTime;
 	console.log(

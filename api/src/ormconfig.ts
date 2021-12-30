@@ -53,7 +53,7 @@ const ormConfig: ConnectionOptions = {
 		Tune,
 		Collection,
 	],
-	synchronize: true,
+	synchronize: false,
 	migrationsRun: false,
 };
 

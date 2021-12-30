@@ -42,7 +42,7 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field(() => String)
 	@Column()
-	@Index()
+	@Index(["idx_base_entity_name"], { fulltext: true, parser: "ngram" })
 	name!: string;
 
 	@Field(() => String)
@@ -51,10 +51,12 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field(() => String, { nullable: true })
 	@Column({ type: "text", nullable: true, default: null })
+	@Index(["idx_base_entity_aliases"], { fulltext: true, parser: "ngram" })
 	aliases!: string;
 
 	@Field(() => String, { nullable: true })
 	@Column({ type: "text", nullable: true, default: null })
+	@Index(["idx_base_entity_description"], { fulltext: true, parser: "ngram" })
 	description!: string;
 
 	@Field(() => EntityStatus)

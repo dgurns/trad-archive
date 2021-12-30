@@ -367,14 +367,13 @@ export default function Home({
 							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 						/>
 					))}
-					{!audioItemsLoading ? (
+					{audioItemsLoading && <LoadingBlock />}
+					{!audioItemsLoading && audioItems?.length > 0 && (
 						<div className="flex flex-row justify-center">
 							<button className="btn-text" onClick={fetchNextPage}>
 								Load More
 							</button>
 						</div>
-					) : (
-						<LoadingBlock />
 					)}
 				</div>
 

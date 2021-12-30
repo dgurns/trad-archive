@@ -23,7 +23,7 @@ const ormConfig: ConnectionOptions = {
 	port: parseInt(process.env.DATABASE_PORT ?? "3306"),
 	username: process.env.DATABASE_USERNAME ?? "admin",
 	password: process.env.DATABASE_PASSWORD ?? "password",
-	database: process.env.DATABASE_NAME ?? "trad-archive",
+	database: process.env.DATABASE_NAME ?? "trad_archive",
 	logging: false,
 	entities: [
 		User,

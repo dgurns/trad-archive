@@ -103,69 +103,88 @@ export class EntityResolver {
 		const entityManager = getManager();
 
 		// Prepare the queries for each Entity type
-		const personSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const personQuery = entityManager
 			.createQueryBuilder(Person, "person")
 			.leftJoinAndSelect("person.createdByUser", "createdByUser")
-			.addSelect(personSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orWhere("description % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
-		const instrumentSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const instrumentQuery = entityManager
 			.createQueryBuilder(Instrument, "instrument")
 			.leftJoinAndSelect("instrument.createdByUser", "createdByUser")
-			.addSelect(instrumentSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orWhere("description % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
-		const placeSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const placeQuery = entityManager
 			.createQueryBuilder(Place, "place")
 			.leftJoinAndSelect("place.createdByUser", "createdByUser")
-			.addSelect(placeSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orWhere("description % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
-		const tuneSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases))`;
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-			.addSelect(tuneSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
-		const collectionSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const collectionQuery = entityManager
 			.createQueryBuilder(Collection, "collection")
 			.leftJoinAndSelect("collection.createdByUser", "createdByUser")
-			.addSelect(collectionSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orWhere("description % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
-		const audioItemSimilarity = `(similarity('${cleanedSearchTerm}', name) + similarity('${cleanedSearchTerm}', aliases) + similarity('${cleanedSearchTerm}', description))`;
 		const audioItemQuery = entityManager
 			.createQueryBuilder(AudioItem, "audioItem")
 			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
-			.addSelect(audioItemSimilarity, "sml")
-			.where("name % :term", { term: cleanedSearchTerm })
-			.orWhere("aliases % :term", { term: cleanedSearchTerm })
-			.orWhere("description % :term", { term: cleanedSearchTerm })
-			.orderBy("sml", "DESC")
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
+			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: cleanedSearchTerm,
+			})
 			.take(takeFromEach)
 			.getMany();
 

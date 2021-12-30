@@ -94,7 +94,7 @@ custom:
     webpackConfig: "webpack.config.js"
     includeModules:
       forceInclude:
-        - pg
+        - mysql2
     packager: yarn
   customDomain:
     domainName: api-${opt:stage}.tradarchive.com

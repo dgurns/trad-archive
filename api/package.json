@@ -7,8 +7,6 @@
 		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",
 		"run-import-tunes": "sls invoke local -f importTunes -s dev",
 		"run-keep-warm": "sls invoke local -f keepWarm -s dev",
-		"db:generate-migration": "yarn typeorm migration:generate --outputJs -n $NAME",
-		"db:run-migrations": "yarn typeorm migration:run",
 		"typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./src/ormconfig.ts",
 		"dev:express": "nodemon -e ts --exec \"yarn run build:express && yarn run start:express:dev\"",
 		"build:express": "npx swc src -d .express-server-dist",

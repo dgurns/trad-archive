@@ -41,12 +41,8 @@ const ormConfig: ConnectionOptions = {
 		Tune,
 		Collection,
 	],
-	synchronize: false,
-	migrationsRun: true,
-	migrations: [path.resolve(__dirname, "../migrations/**/*.js")],
-	cli: {
-		migrationsDir: __dirname + "/migrations",
-	},
+	synchronize: true,
+	migrationsRun: false,
 };
 
 export default ormConfig;

@@ -20,6 +20,7 @@ const ormConfig: ConnectionOptions = {
 	name: DB_CONNECTION_NAME,
 	type: "mysql",
 	host: process.env.DATABASE_HOST ?? "localhost",
+	ssl: {},
 	port: parseInt(process.env.DATABASE_PORT ?? "3306"),
 	username: process.env.DATABASE_USERNAME ?? "admin",
 	password: process.env.DATABASE_PASSWORD ?? "password",

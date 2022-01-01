@@ -2,19 +2,6 @@
 	"name": "trad-archive-api",
 	"version": "1.0.0",
 	"description": "",
-	"scripts": {
-		"dev": "NODE_ENV=development sls offline start -s dev",
-		"run-import-itma-atom-collections": "sls invoke local -f importItmaAtomCollections -s dev",
-		"run-import-tunes": "sls invoke local -f importTunes -s dev",
-		"run-keep-warm": "sls invoke local -f keepWarm -s dev",
-		"db:update-schema:dev": "NODE_ENV=development yarn typeorm schema:sync",
-		"db:update-schema:prod": "NODE_ENV=production yarn typeorm schema:sync",
-		"typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm --config ./src/ormconfig.ts",
-		"dev:express": "nodemon -e ts --exec \"yarn run build:express && yarn run start:express:dev\"",
-		"build:express": "npx swc src -d .express-server-dist",
-		"start:express:dev": "NODE_ENV=development node .express-server-dist/express-server/index.js",
-		"start:express:prod": "NODE_ENV=production node .express-server-dist/express-server/index.js"
-	},
 	"author": "Dan Gurney",
 	"license": "ISC",
 	"dependencies": {

@@ -1,0 +1,1 @@
+-- Run this migration against your PlanetScale branch via `make run-migration`

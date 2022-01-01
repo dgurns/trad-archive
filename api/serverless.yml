@@ -14,11 +14,6 @@ provider:
   lambdaHashingVersion: "20201221"
   environment:
     SERVERLESS_STAGE: ${opt:stage}
-    DATABASE_HOST: ${self:custom.databaseHost.${opt:stage}, self:custom.databaseHost.preview}
-    DATABASE_PORT: ${self:custom.databasePort.${opt:stage}, self:custom.databasePort.preview}
-    DATABASE_USERNAME: ${self:custom.databaseUsername.${opt:stage}, self:custom.databaseUsername.preview}
-    DATABASE_PASSWORD: ${self:custom.databasePassword.${opt:stage}, self:custom.databasePassword.preview}
-    DATABASE_NAME: ${self:custom.databaseName.${opt:stage}, self:custom.databaseName.preview}
 
 functions:
   graphql:
@@ -71,26 +66,6 @@ plugins:
   - serverless-offline
 
 custom:
-  databaseHost:
-    dev: ${env:DATABASE_HOST}
-    preview: ${ssm:/${opt:stage}/DATABASE_HOST}
-    prod: ${ssm:/master/DATABASE_HOST}
-  databasePort:
-    dev: ${env:DATABASE_PORT}
-    preview: ${ssm:/${opt:stage}/DATABASE_PORT}
-    prod: ${ssm:/master/DATABASE_PORT}
-  databaseUsername:
-    dev: ${env:DATABASE_USERNAME}
-    preview: ${ssm:/${opt:stage}/DATABASE_USERNAME}
-    prod: ${ssm:/master/DATABASE_USERNAME}
-  databasePassword:
-    dev: ${env:DATABASE_PASSWORD}
-    preview: ${ssm:/${opt:stage}/DATABASE_PASSWORD}
-    prod: ${ssm:/master/DATABASE_PASSWORD}
-  databaseName:
-    dev: ${env:DATABASE_NAME}
-    preview: ${ssm:/${opt:stage}/DATABASE_NAME}
-    prod: ${ssm:/master/DATABASE_NAME}
   webOrigin:
     dev: http://localhost:3000
     preview: https://trad-archive-git-${opt:stage}-dangurney.vercel.app

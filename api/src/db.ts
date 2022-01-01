@@ -3,6 +3,7 @@ import ormConfig, { DB_CONNECTION_NAME } from "./ormconfig";
 import { seedRelationshipsInDbIfNotPresent } from "./seed/relationships";
 
 export const connectToDatabase = async () => {
+	console.log("DB HOST", process.env.DATABASE_HOST);
 	const connection = await createConnection(ormConfig);
 	await seedRelationshipsInDbIfNotPresent();
 	return connection;

@@ -10,7 +10,7 @@ GIT_BRANCH := $(shell git branch --show-current)
 
 .PHONY: run-migration run-migration-local create-pscale-deploy-request
 
-# Default `make` target which runs the DB and API simultaneously
+# Default `make` target which runs PlanetScale DB branch and API simultaneously
 default:
 	make -j 2 db api
 

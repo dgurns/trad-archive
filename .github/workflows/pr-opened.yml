@@ -19,4 +19,7 @@ jobs:
         run: |
           wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
           sudo dpkg -i pscale_0.88.0_linux_amd64.deb
-          pscale --version
+
+      - name: Open pscale deploy request for this branch
+        run: |
+          make create-pscale-dr

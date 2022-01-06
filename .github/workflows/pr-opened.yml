@@ -31,10 +31,10 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            const { repo: { owner, repo }, sha, payload } = context;
+            const { repo: { owner, repo }, payload } = context;
             const { pull_request } = payload;
 
-            await github.rest.git.createComment({
+            await github.rest.issues.createComment({
               owner,
               repo,
               issueNumber: pull_request.number,

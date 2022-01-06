@@ -1,0 +1,22 @@
+name: PR - Opened
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  create-planetscale-deploy-request:
+    name: Create PlanetScale deploy request for this branch
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up pscale CLI
+        run: |
+          wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_386.deb
+          sudo dpkg -i pscale_0.88.0_linux_386.deb
+          pscale --version

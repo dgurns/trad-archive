@@ -37,8 +37,24 @@ keep-warm:
 migrate:
 	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
 
-create-pscale-deploy-request:
+# PlanetScale deploy request commands: Create, list, diff, approve, deploy
+
+create-pscale-dr:
 	pscale dr create trad_archive ${GIT_BRANCH} --deploy-to master
+
+list-pscale-drs:
+	pscale dr list trad_archive
+
+diff-pscale-dr:
+	pscale dr diff trad_archive $$NUMBER
+
+approve-pscale-dr:
+	pscale dr review trad_archive $$NUMBER --approve
+
+deploy-pscale-dr:
+	pscale dr deploy trad_archive $$NUMBER
+
+# Commands for running the API as an Express server
 
 express-build:
 	npx swc src -d .express-server-dist

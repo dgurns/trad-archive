@@ -65,22 +65,37 @@ export const makeOrmConfigWithSSMEnvs =
 	async (): Promise<ConnectionOptions> => {
 		const { Parameters } = await SSMService.getParameters([
 			`/${SERVERLESS_STAGE}/DATABASE_HOST`,
+			`/${SERVERLESS_STAGE}/DATABASE_NAME`,
+			`/${SERVERLESS_STAGE}/DATABASE_PASSWORD`,
 			`/${SERVERLESS_STAGE}/DATABASE_PORT`,
 			`/${SERVERLESS_STAGE}/DATABASE_USERNAME`,
-			`/${SERVERLESS_STAGE}/DATABASE_PASSWORD`,
-			`/${SERVERLESS_STAGE}/DATABASE_NAME`,
 		]);
 		if (!Parameters) {
 			throw new Error("Error fetching SSM parameters");
 		}
-		const [dbHost, dbPort, dbUsername, dbPassword, dbName] = Parameters;
+		// The order of the Parameters may not be deterministic, so we'll make sure
+		const dbHost = Parameters.find(
+			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_HOST`
+		);
+		const dbName = Parameters.find(
+			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_NAME`
+		);
+		const dbPassword = Parameters.find(
+			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_PASSWORD`
+		);
+		const dbPort = Parameters.find(
+			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_PORT`
+		);
+		const dbUsername = Parameters.find(
+			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_USERNAME`
+		);
 		return {
 			...staticOrmConfig,
-			host: dbHost.Value,
-			port: parseInt(dbPort.Value ?? ""),
-			username: dbUsername.Value,
-			password: dbPassword.Value,
-			database: dbName.Value,
+			host: dbHost?.Value,
+			port: parseInt(dbPort?.Value ?? ""),
+			username: dbUsername?.Value,
+			password: dbPassword?.Value,
+			database: dbName?.Value,
 		};
 	};
 

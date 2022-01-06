@@ -25,7 +25,6 @@ export const connectToDatabase = async () => {
 	) {
 		ormConfigToUse = await makeOrmConfigWithSSMEnvs();
 	}
-	console.log("ORM CONFIG", ormConfigToUse);
 	const connection = await createConnection(ormConfigToUse);
 	await seedRelationshipsInDbIfNotPresent();
 	return connection;

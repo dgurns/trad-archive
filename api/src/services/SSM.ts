@@ -1,4 +1,8 @@
-import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm";
+import {
+	SSMClient,
+	GetParameterCommand,
+	GetParametersCommand,
+} from "@aws-sdk/client-ssm";
 
 const {
 	API_AWS_REGION = "",
@@ -23,7 +27,16 @@ const getParameter = (parameterName: string) => {
 	return ssmClient.send(command);
 };
 
+const getParameters = (parameterNames: string[]) => {
+	const command = new GetParametersCommand({
+		Names: parameterNames,
+		WithDecryption: true,
+	});
+	return ssmClient.send(command);
+};
+
 const SSMService = {
 	getParameter,
+	getParameters,
 };
 export default SSMService;

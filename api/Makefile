@@ -15,6 +15,10 @@ default:
 	make -j 2 db api
 
 db:
+	@if [ ${GIT_BRANCH} = "master" ]; then\
+    echo "Please checkout a new Git branch for development";\
+		exit 1;\
+  fi
 	-pscale branch create trad_archive ${GIT_BRANCH} --region ${PSCALE_REGION}
 	pscale connect trad_archive ${GIT_BRANCH}
 
@@ -31,7 +35,7 @@ keep-warm:
 	sls invoke local -f keepWarm -s dev
 
 migrate:
-	pscale shell trad_archive ${GIT_BRANCH} < src/migrate.sql
+	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
 
 create-pscale-deploy-request:
 	pscale dr create trad_archive ${GIT_BRANCH} --deploy-to master

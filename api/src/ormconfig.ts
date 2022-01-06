@@ -1,4 +1,3 @@
-import path from "path";
 import { ConnectionOptions } from "typeorm";
 import { User } from "./models/User";
 import { Tag } from "./models/Tag";
@@ -13,6 +12,7 @@ import { Tune } from "./models/entities/Tune";
 import { Collection } from "./models/entities/Collection";
 import { TakedownRequest } from "./models/TakedownRequest";
 import { VerificationRequest } from "./models/VerificationRequest";
+import SSMService from "./services/SSM";
 
 const {
 	SERVERLESS_STAGE,
@@ -28,15 +28,10 @@ export const DB_CONNECTION_NAME = "default";
 
 const isDevelopment = SERVERLESS_STAGE === "dev" || NODE_ENV === "development";
 
-const ormConfig: ConnectionOptions = {
+const staticOrmConfig: ConnectionOptions = {
 	name: DB_CONNECTION_NAME,
 	type: "mysql",
-	host: DATABASE_HOST ?? "localhost",
 	ssl: isDevelopment ? undefined : {},
-	port: parseInt(DATABASE_PORT ?? "3306"),
-	username: DATABASE_USERNAME ?? "admin",
-	password: DATABASE_PASSWORD ?? "password",
-	database: DATABASE_NAME ?? "trad_archive",
 	logging: false,
 	entities: [
 		User,
@@ -55,6 +50,42 @@ const ormConfig: ConnectionOptions = {
 	],
 	synchronize: false,
 	migrationsRun: false,
+};
+
+const ormConfig: ConnectionOptions = {
+	...staticOrmConfig,
+	host: DATABASE_HOST ?? "localhost",
+	port: parseInt(DATABASE_PORT ?? "3306"),
+	username: DATABASE_USERNAME ?? "admin",
+	password: DATABASE_PASSWORD ?? "password",
+	database: DATABASE_NAME ?? "trad_archive",
+};
+
+interface MakeOrmConfigWithSSMEnvsArgs {
+	prefix: string;
+}
+export const makeOrmConfigWithSSMEnvs = async ({
+	prefix,
+}: MakeOrmConfigWithSSMEnvsArgs): Promise<ConnectionOptions> => {
+	const { Parameters } = await SSMService.getParameters([
+		`/${prefix}/DATABASE_HOST`,
+		`/${prefix}/DATABASE_PORT`,
+		`/${prefix}/DATABASE_USERNAME`,
+		`/${prefix}/DATABASE_PASSWORD`,
+		`/${prefix}/DATABASE_NAME`,
+	]);
+	if (!Parameters) {
+		throw new Error("Error fetching SSM parameters");
+	}
+	const [dbHost, dbPort, dbUsername, dbPassword, dbName] = Parameters;
+	return {
+		...staticOrmConfig,
+		host: dbHost.Value,
+		port: parseInt(dbPort.Value ?? ""),
+		username: dbUsername.Value,
+		password: dbPassword.Value,
+		database: dbName.Value,
+	};
 };
 
 export default ormConfig;

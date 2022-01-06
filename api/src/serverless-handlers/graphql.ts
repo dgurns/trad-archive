@@ -15,8 +15,6 @@ import { makeSchema } from "../apollo";
 
 const { SERVERLESS_STAGE } = process.env;
 
-// TODO: Fetch AWS SSM env variables and pass them to ormConfig
-
 // Store variables outside of the Lambda handler so they can persist between
 // invocations once they are created.
 let dbConnection: Connection | undefined;

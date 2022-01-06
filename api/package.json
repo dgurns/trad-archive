@@ -4,6 +4,9 @@
 	"description": "",
 	"author": "Dan Gurney",
 	"license": "ISC",
+	"scripts": {
+		"db:sync-local-schema": "NODE_ENV=development yarn typeorm schema:sync"
+	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.34.0",
 		"@aws-sdk/client-ssm": "^3.45.0",

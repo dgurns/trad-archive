@@ -34,9 +34,17 @@ jobs:
             const { repo: { owner, repo }, payload } = context;
             const { pull_request } = payload;
 
+            const commentBody = `\
+            PlanetScale deploy request created for this DB branch! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests. 
+
+            **The deploy request must be MANUALLY DEPLOYED before merging this PR.**
+
+            Try the preview app at https://trad-archive-git-${{ github.head_ref }}-dangurney.vercel.app
+            `;
+
             await github.rest.issues.createComment({
               owner,
               repo,
               issue_number: pull_request.number,
-              body: 'PlanetScale deploy request created for this branch! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests'
+              body: commentBody
             });

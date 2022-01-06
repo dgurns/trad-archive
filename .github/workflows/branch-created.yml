@@ -39,11 +39,13 @@ jobs:
       - name: Create a password for this DB branch
         id: create-password
         run: |
-          echo "::set-output name=dbPasswordJson::$(pscale password create trad_archive ${{ github.head_ref }} cicd3 --org tradarchive -f json)"
+          echo "::set-output name=dbPasswordJson::$(pscale password create trad_archive ${{ github.head_ref }} cicd --org tradarchive -f json)"
 
       - name: Parse DB connection info
         id: parse
         run: |
+          echo ${{ outputs.create-password.dbPasswordJson }}
+
           echo "::set-output name=dbHost::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.database_branch.access_host_url')"
           echo "::set-output name=dbUsername::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.id')"
           echo "::set-output name=dbPassword::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.plain_text')"

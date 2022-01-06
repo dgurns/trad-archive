@@ -33,4 +33,10 @@ jobs:
           script: |
             const { repo: { owner, repo }, payload } = context;
             const { pull_request } = payload;
-            console.log(pull_request)
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pull_request.number,
+              body: 'PlanetScale deploy request created! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests'
+            });

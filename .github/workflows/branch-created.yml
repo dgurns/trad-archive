@@ -39,21 +39,15 @@ jobs:
       - name: Create a password for this DB branch
         id: create-password
         run: |
-          echo "::set-output name=dbPasswordJson::$(pscale password create trad_archive ${{ github.head_ref }} cicd --org tradarchive -f json)"
-
-      - name: Parse DB connection info
-        id: parse
-        run: |
-          echo ${{ steps.create-password.outputs.dbPasswordJson }}
-
-          echo "::set-output name=dbHost::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.database_branch.access_host_url')"
-          echo "::set-output name=dbUsername::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.id')"
-          echo "::set-output name=dbPassword::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.plain_text')"
+          JSON=$(pscale password create trad_archive ${{ github.head_ref }} ${{ github.sha }} --org tradarchive -f json)
+          echo "::set-output name=dbHost::$(echo "${JSON}" | jq '.database_branch.access_host_url')"
+          echo "::set-output name=dbUsername::$(echo "${JSON}" | jq '.id')"
+          echo "::set-output name=dbPassword::$(echo "${JSON}" | jq '.plain_text')"
 
       - name: Save DB connection info as AWS SSM params
         run: |
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_HOST --value "${{ steps.parse.outputs.dbHost }}" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_USERNAME --value "${{ steps.parse.outputs.dbUsername }}" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_PASSWORD --value "${{ steps.parse.outputs.dbPassword }}" --type SecureString
+          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_HOST --value "${{ steps.create-password.outputs.dbHost }}" --type SecureString
+          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_USERNAME --value "${{ steps.create-password.outputs.dbUsername }}" --type SecureString
+          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_PASSWORD --value "${{ steps.create-password.outputs.dbPassword }}" --type SecureString
           aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_PORT --value "3306" --type SecureString
           aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_NAME --value "trad_archive" --type SecureString

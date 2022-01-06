@@ -21,7 +21,9 @@ jobs:
           sudo dpkg -i pscale_0.88.0_linux_amd64.deb
 
       - name: Open pscale deploy request for this branch
+        env:
+          PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PSCALE_SERVICE_TOKEN }}
         run: |
-          pscale org show --service-token-name ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }} --service-token ${{ secrets.PSCALE_SERVICE_TOKEN }}
-          pscale database list --service-token-name ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }} --service-token ${{ secrets.PSCALE_SERVICE_TOKEN }}
-          pscale dr create trad_archive ${{ github.head_ref }} --deploy-to master --service-token-name ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }} --service-token ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          pscale database list --org tradarchive --service-token-name  --service-token
+          pscale dr create trad_archive ${{ github.head_ref }} --deploy-to master --service-token-name --service-token

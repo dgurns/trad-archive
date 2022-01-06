@@ -44,8 +44,6 @@ jobs:
       - name: Parse DB connection info
         id: parse
         run: |
-          echo "${{ steps.create-password.outputs.dbPasswordJson}}"
-
           echo "::set-output name=dbHost::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.database_branch.access_host_url')"
           echo "::set-output name=dbUsername::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.id')"
           echo "::set-output name=dbPassword::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.plain_text')"

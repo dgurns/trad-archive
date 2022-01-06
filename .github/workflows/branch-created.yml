@@ -1,14 +1,10 @@
 name: Branch - Created
 
-# on: create
-
-on:
-  pull_request:
-    types: [synchronize]
+on: create
 
 jobs:
   create-planetscale-db-branch-and-set-ssm-envs:
-    name: Create PlanetScale DB branch and set connection env vars in AWS SSM
+    name: Create PlanetScale DB branch and set connection variables in AWS SSM
     runs-on: ubuntu-latest
     env:
       PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
@@ -32,11 +28,11 @@ jobs:
           wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
           sudo dpkg -i pscale_0.88.0_linux_amd64.deb
 
-      # - name: Create pscale DB branch
-      #   run: |
-      #     pscale branch create trad_archive ${{ github.head_ref }} --org tradarchive --region us-east-1
+      - name: Create pscale DB branch
+        run: |
+          pscale branch create trad_archive ${{ github.head_ref }} --org tradarchive --region us-east-1
 
-      - name: Create a password for this DB branch
+      - name: Create connection info for this DB branch
         id: create-password
         run: |
           JSON=$(pscale password create trad_archive ${{ github.head_ref }} ${{ github.sha }} --org tradarchive -f json)

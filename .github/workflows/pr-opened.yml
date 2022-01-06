@@ -2,7 +2,7 @@ name: PR - Opened
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened]
 
 jobs:
   create-planetscale-deploy-request:
@@ -15,17 +15,17 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      # - name: Set up pscale CLI
-      #   run: |
-      #     wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
-      #     sudo dpkg -i pscale_0.88.0_linux_amd64.deb
+      - name: Set up pscale CLI
+        run: |
+          wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
+          sudo dpkg -i pscale_0.88.0_linux_amd64.deb
 
-      # - name: Open pscale deploy request for this branch
-      #   env:
-      #     PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
-      #     PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
-      #   run: |
-      #     pscale dr create trad_archive ${{ github.head_ref }} --org tradarchive --deploy-to master
+      - name: Open pscale deploy request for this branch
+        env:
+          PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          pscale dr create trad_archive ${{ github.head_ref }} --org tradarchive --deploy-to master
 
       - name: Leave comment on PR with a link to deploy request
         uses: actions/github-script@v5
@@ -38,5 +38,5 @@ jobs:
               owner,
               repo,
               issue_number: pull_request.number,
-              body: 'PlanetScale deploy request created! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests'
+              body: 'PlanetScale deploy request created for this branch! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests'
             });

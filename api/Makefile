@@ -10,20 +10,20 @@ GIT_BRANCH := $(shell git branch --show-current)
 
 .PHONY: run-migration run-migration-local create-pscale-deploy-request
 
-# Default `make` target which runs PlanetScale DB branch and API simultaneously
 default:
 	make -j 2 db api
 
+# Make this branch's pscale DB accessible on localhost
 db:
-	@if [ ${GIT_BRANCH} = "master" ]; then\
-    echo "Please checkout a new Git branch for development";\
-		exit 1;\
-  fi
-	-pscale branch create trad_archive ${GIT_BRANCH} --region ${PSCALE_REGION}
 	pscale connect trad_archive ${GIT_BRANCH}
 
 api:
 	NODE_ENV=development sls offline start -s dev
+
+# Run the migration currently defined in `migration-scratchpad.sql` against the
+# branch's pscale DB
+migrate:
+	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
 
 import-itma-atom-collections:
 	sls invoke local -f importItmaAtomCollections -s dev
@@ -34,27 +34,6 @@ import-tunes:
 keep-warm:
 	sls invoke local -f keepWarm -s dev
 
-migrate:
-	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
-
-# PlanetScale deploy request commands: Create, list, diff, approve, deploy
-
-create-pscale-dr:
-	pscale dr create trad_archive ${GIT_BRANCH} --deploy-to master
-
-list-pscale-drs:
-	pscale dr list trad_archive
-
-diff-pscale-dr:
-	pscale dr diff trad_archive $$NUMBER
-
-approve-pscale-dr:
-	pscale dr review trad_archive $$NUMBER --approve
-
-deploy-pscale-dr:
-	pscale dr deploy trad_archive $$NUMBER
-
-# Commands for running the API as an Express server
 
 express-build:
 	npx swc src -d .express-server-dist
@@ -62,9 +41,11 @@ express-build:
 express-run:
 	NODE_ENV=${NODE_ENV} node .express-server-dist/express-server/index.js
 
+# Run the API as an Express server locally
 express-dev:
 	nodemon -e ts --exec "make express-build && make express-run NODE_ENV=development"
 
+# Build and run the API as an Express server for production
 express-prod:
 	make express-build
 	make express-run NODE_ENV=production

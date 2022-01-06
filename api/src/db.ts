@@ -6,7 +6,6 @@ import ormConfig, {
 import { seedRelationshipsInDbIfNotPresent } from "./seed/relationships";
 
 const {
-	SERVERLESS_STAGE,
 	DATABASE_HOST,
 	DATABASE_PORT,
 	DATABASE_NAME,
@@ -24,10 +23,9 @@ export const connectToDatabase = async () => {
 		!DATABASE_USERNAME ||
 		!DATABASE_PASSWORD
 	) {
-		ormConfigToUse = await makeOrmConfigWithSSMEnvs({
-			prefix: SERVERLESS_STAGE ?? "",
-		});
+		ormConfigToUse = await makeOrmConfigWithSSMEnvs();
 	}
+	console.log("ORM CONFIG", ormConfigToUse);
 	const connection = await createConnection(ormConfigToUse);
 	await seedRelationshipsInDbIfNotPresent();
 	return connection;

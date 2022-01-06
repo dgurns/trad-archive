@@ -61,31 +61,27 @@ const ormConfig: ConnectionOptions = {
 	database: DATABASE_NAME ?? "trad_archive",
 };
 
-interface MakeOrmConfigWithSSMEnvsArgs {
-	prefix: string;
-}
-export const makeOrmConfigWithSSMEnvs = async ({
-	prefix,
-}: MakeOrmConfigWithSSMEnvsArgs): Promise<ConnectionOptions> => {
-	const { Parameters } = await SSMService.getParameters([
-		`/${prefix}/DATABASE_HOST`,
-		`/${prefix}/DATABASE_PORT`,
-		`/${prefix}/DATABASE_USERNAME`,
-		`/${prefix}/DATABASE_PASSWORD`,
-		`/${prefix}/DATABASE_NAME`,
-	]);
-	if (!Parameters) {
-		throw new Error("Error fetching SSM parameters");
-	}
-	const [dbHost, dbPort, dbUsername, dbPassword, dbName] = Parameters;
-	return {
-		...staticOrmConfig,
-		host: dbHost.Value,
-		port: parseInt(dbPort.Value ?? ""),
-		username: dbUsername.Value,
-		password: dbPassword.Value,
-		database: dbName.Value,
+export const makeOrmConfigWithSSMEnvs =
+	async (): Promise<ConnectionOptions> => {
+		const { Parameters } = await SSMService.getParameters([
+			`/${SERVERLESS_STAGE}/DATABASE_HOST`,
+			`/${SERVERLESS_STAGE}/DATABASE_PORT`,
+			`/${SERVERLESS_STAGE}/DATABASE_USERNAME`,
+			`/${SERVERLESS_STAGE}/DATABASE_PASSWORD`,
+			`/${SERVERLESS_STAGE}/DATABASE_NAME`,
+		]);
+		if (!Parameters) {
+			throw new Error("Error fetching SSM parameters");
+		}
+		const [dbHost, dbPort, dbUsername, dbPassword, dbName] = Parameters;
+		return {
+			...staticOrmConfig,
+			host: dbHost.Value,
+			port: parseInt(dbPort.Value ?? ""),
+			username: dbUsername.Value,
+			password: dbPassword.Value,
+			database: dbName.Value,
+		};
 	};
-};
 
 export default ormConfig;

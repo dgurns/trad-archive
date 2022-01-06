@@ -34,16 +34,18 @@ jobs:
 
       # - name: Create pscale DB branch
       #   run: |
-      #     pscale branch create trad_archive ${{ github.head_ref }} --region us-east-1
+      #     pscale branch create trad_archive ${{ github.head_ref }} --org tradarchive --region us-east-1
 
       - name: Create a password for this DB branch
         id: create-password
         run: |
-          echo "::set-output name=dbPasswordJson::$(pscale password create trad_archive ${{ github.head_ref }} cicd -f json)"
+          echo "::set-output name=dbPasswordJson::$(pscale password create trad_archive ${{ github.head_ref }} cicd --org tradarchive -f json)"
 
       - name: Parse DB connection info
         id: parse
         run: |
+          echo "${{ steps.create-password.outputs.dbPasswordJson}}"
+
           echo "::set-output name=dbHost::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.database_branch.access_host_url')"
           echo "::set-output name=dbUsername::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.id')"
           echo "::set-output name=dbPassword::$(echo ${{ steps.create-password.outputs.dbPasswordJson }} | jq '.plain_text')"
@@ -56,6 +58,8 @@ jobs:
 
       - name: Save DB connection info as AWS SSM params
         run: |
+          echo "${{ steps.parse.outputs.dbPassword }}"
+
           aws ssm put-parameter --name /test/DATABASE_HOST --value "${{ steps.parse.outputs.dbHost }}" --type SecureString
           aws ssm put-parameter --name /test/DATABASE_USERNAME --value "${{ steps.parse.outputs.dbUsername }}" --type SecureString
           aws ssm put-parameter --name /test/DATABASE_PASSWORD --value "${{ steps.parse.outputs.dbPassword }}" --type SecureString

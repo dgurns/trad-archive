@@ -25,5 +25,4 @@ jobs:
           PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
           PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
         run: |
-          pscale org switch tradarchive
           pscale dr create trad_archive ${{ github.head_ref }} --deploy-to master --service-token-name --service-token

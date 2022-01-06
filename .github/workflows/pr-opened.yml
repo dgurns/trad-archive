@@ -22,4 +22,4 @@ jobs:
 
       - name: Open pscale deploy request for this branch
         run: |
-          pscale dr create trad_archive ${{ github.head_ref }} --org tradarchive --deploy-to master --service-token-name ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }} --service-token ${{ secrets.PSCALE_SERVICE_TOKEN }}
+          pscale dr create trad_archive ${{ github.head_ref }} --deploy-to master --service-token-name ${{ secrets.PSCALE_SERVICE_TOKEN_NAME }} --service-token ${{ secrets.PSCALE_SERVICE_TOKEN }}

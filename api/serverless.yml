@@ -73,18 +73,15 @@ custom:
   shouldRunImportItmaAtomCollections:
     dev: false
     preview: true
-    # TODO: Run on prod when environment is deployed
-    prod: false
+    prod: true
   shouldRunImportTunes:
     dev: false
     preview: true
-    # TODO: Run on prod when environment is deployed
-    prod: false
+    prod: true
   shouldRunKeepWarm:
     dev: false
     preview: true
-    # TODO: Run on prod when environment is deployed
-    prod: false
+    prod: true
   webpack:
     webpackConfig: "webpack.config.js"
     includeModules:

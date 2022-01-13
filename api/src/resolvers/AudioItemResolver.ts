@@ -243,12 +243,12 @@ export class AudioItemResolver {
 
 	@FieldResolver(() => Int)
 	async commentsCount(@Root() audioItem: AudioItem) {
-		const { count } = await getRepository(Comment)
+		const result = await getRepository(Comment)
 			.createQueryBuilder("comment")
 			.select("COUNT(id)")
 			.where("comment.parentAudioItemId = :id", { id: audioItem.id })
 			.getRawOne();
-		return parseInt(count ?? 0);
+		return parseInt(result["COUNT(id)"], 10);
 	}
 
 	@FieldResolver(() => Boolean)

@@ -12,12 +12,13 @@ provider:
   apiGateway:
     shouldStartNameWithService: true
   lambdaHashingVersion: "20201221"
+  environment:
+    SERVERLESS_STAGE: ${opt:stage}
 
 functions:
   graphql:
     handler: src/serverless-handlers/graphql.handler
     environment:
-      SERVERLESS_STAGE: ${opt:stage}
       WEB_ORIGIN: ${self:custom.webOrigin.${opt:stage}, self:custom.webOrigin.preview}
     memorySize: 2048
     timeout: 15
@@ -36,8 +37,6 @@ functions:
             allowCredentials: true
   importItmaAtomCollections:
     handler: src/serverless-handlers/importItmaAtomCollections.handler
-    environment:
-      SERVERLESS_STAGE: ${opt:stage}
     memorySize: 1024
     timeout: 900
     events:
@@ -46,8 +45,6 @@ functions:
           enabled: ${self:custom.shouldRunImportItmaAtomCollections.${opt:stage}, self:custom.shouldRunImportItmaAtomCollections.preview}
   importTunes:
     handler: src/serverless-handlers/importTunes.handler
-    environment:
-      SERVERLESS_STAGE: ${opt:stage}
     memorySize: 1024
     timeout: 240
     events:
@@ -56,8 +53,6 @@ functions:
           enabled: ${self:custom.shouldRunImportTunes.${opt:stage}, self:custom.shouldRunImportTunes.preview}
   keepWarm:
     handler: src/serverless-handlers/keepWarm.handler
-    environment:
-      SERVERLESS_STAGE: ${opt:stage}
     memorySize: 512
     timeout: 15
     events:
@@ -94,7 +89,7 @@ custom:
     webpackConfig: "webpack.config.js"
     includeModules:
       forceInclude:
-        - pg
+        - mysql2
     packager: yarn
   customDomain:
     domainName: api-${opt:stage}.tradarchive.com

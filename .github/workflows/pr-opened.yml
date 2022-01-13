@@ -1,0 +1,50 @@
+name: PR - Opened
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  create-planetscale-deploy-request:
+    name: Create PlanetScale deploy request for this branch
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up pscale CLI
+        run: |
+          wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
+          sudo dpkg -i pscale_0.88.0_linux_amd64.deb
+
+      - name: Open pscale deploy request for this branch
+        env:
+          PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
+          PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+        run: |
+          pscale dr create trad_archive ${{ github.head_ref }} --org tradarchive --deploy-to master
+
+      - name: Leave comment on PR with a link to deploy request
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { repo: { owner, repo }, payload } = context;
+            const { pull_request } = payload;
+
+            const commentBody = `\
+            PlanetScale deploy request created for this DB branch! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests. 
+
+            **The deploy request must be MANUALLY DEPLOYED before merging this PR.**
+
+            Try the preview app at https://trad-archive-git-${{ github.head_ref }}-dangurney.vercel.app
+            `;
+
+            await github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number: pull_request.number,
+              body: commentBody
+            });

@@ -1,0 +1,51 @@
+name: PR - Updated
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  add-remove-label-if-db-schema-updated:
+    name: Add/remove label if DB schema has been updated
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - name: Check out this branch's code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch master branch so we can diff against it
+        run: git fetch origin master
+
+      - name: Check if models directory has changed relative to master branch
+        id: diff-models
+        run: |
+          echo "::set-output name=diff::$(git diff origin/master src/models)"
+
+      - name: Add "db schema" label if so; remove if not
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const { repo: { owner, repo }, payload } = context;
+            const { pull_request } = payload;
+
+            const diff = "${{ steps.diff-models.outputs.diff }}"
+
+            if (diff) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: pull_request.number,
+                labels: ['db schema']
+              })
+            } else {
+              await github.rest.issues.removeLabel({
+                owner,
+                repo,
+                issue_number: pull_request.number,
+                name: 'db schema'
+              })
+            }

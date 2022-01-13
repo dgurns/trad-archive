@@ -5,16 +5,15 @@ import {
 	Column,
 	CreateDateColumn,
 	UpdateDateColumn,
-	Index,
 } from "typeorm";
 import { ObjectType, Authorized, Field, registerEnumType } from "type-graphql";
 
-export enum UserPermission {
-	User = "USER",
-	Admin = "ADMIN",
+export enum UserRole {
+	User = "User",
+	Admin = "Admin",
 }
-registerEnumType(UserPermission, {
-	name: "UserPermission",
+registerEnumType(UserRole, {
+	name: "UserRole",
 });
 
 export enum CopyrightPermissionStatus {
@@ -32,14 +31,13 @@ export class User extends TypeOrmBaseEntity {
 	readonly id!: string;
 
 	@Authorized()
-	@Field(() => [UserPermission], { nullable: true })
+	@Field(() => UserRole, { nullable: true })
 	@Column({
 		type: "enum",
-		enum: UserPermission,
-		array: true,
-		default: [UserPermission.User],
+		enum: UserRole,
+		default: UserRole.User,
 	})
-	permissions!: UserPermission[];
+	role!: UserRole;
 
 	@Authorized()
 	@Field(() => String, { nullable: true })
@@ -48,24 +46,28 @@ export class User extends TypeOrmBaseEntity {
 
 	@Field(() => String)
 	@Column({ unique: true })
-	@Index()
 	username!: string;
 
 	@Column({ nullable: true, default: null })
 	autoLoginTokenHashed!: string;
 
-	@Column({ type: "timestamptz", nullable: true, default: null })
+	@Column({ type: "timestamp", nullable: true, default: null })
 	autoLoginTokenExpiry!: Date;
 
 	@Field(() => CopyrightPermissionStatus, { nullable: true })
-	@Column({ nullable: true, default: null })
+	@Column({
+		type: "enum",
+		enum: CopyrightPermissionStatus,
+		nullable: true,
+		default: null,
+	})
 	copyrightPermissionStatus!: CopyrightPermissionStatus;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn()
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn()
 	updatedAt!: Date;
 }

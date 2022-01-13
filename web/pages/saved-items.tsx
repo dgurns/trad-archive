@@ -23,7 +23,9 @@ const SavedItems = () => {
 				<div className="flex flex-col">
 					<h1 className="mb-6">Saved Items</h1>
 
-					{savedItems?.length && <Filters {...filtersProps} className="mb-6" />}
+					{savedItems?.length > 0 && (
+						<Filters {...filtersProps} className="mb-6" />
+					)}
 
 					{error && (
 						<div className="text-red-600 mb-4">Could not fetch saved items</div>

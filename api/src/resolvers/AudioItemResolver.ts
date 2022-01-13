@@ -15,7 +15,7 @@ import { CustomContext } from "../middleware/context";
 import { AudioItem } from "../models/entities/AudioItem";
 import { Comment } from "../models/Comment";
 import { SavedItem } from "../models/SavedItem";
-import { User, UserPermission } from "../models/User";
+import { User, UserRole } from "../models/User";
 import { Tag } from "../models/Tag";
 import {
 	AudioItemsInput,
@@ -51,7 +51,7 @@ export class AudioItemResolver {
 			.createQueryBuilder(AudioItem, "a")
 			.leftJoinAndSelect("a.createdByUser", "createdByUser")
 			.leftJoinAndSelect("a.updatedByUser", "updatedByUser")
-			.orderBy("RANDOM()")
+			.orderBy("RAND()")
 			.getOne();
 	}
 
@@ -156,7 +156,7 @@ export class AudioItemResolver {
 	}
 
 	@Mutation(() => AudioItem)
-	@Authorized(UserPermission.Admin)
+	@Authorized(UserRole.Admin)
 	async createAudioItem(
 		@Arg("input") input: CreateAudioItemInput,
 		@Ctx() ctx: CustomContext
@@ -243,12 +243,12 @@ export class AudioItemResolver {
 
 	@FieldResolver(() => Int)
 	async commentsCount(@Root() audioItem: AudioItem) {
-		const { count } = await getRepository(Comment)
+		const result = await getRepository(Comment)
 			.createQueryBuilder("comment")
 			.select("COUNT(id)")
 			.where("comment.parentAudioItemId = :id", { id: audioItem.id })
 			.getRawOne();
-		return parseInt(count);
+		return parseInt(result["COUNT(id)"], 10);
 	}
 
 	@FieldResolver(() => Boolean)

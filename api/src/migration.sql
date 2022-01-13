@@ -1,0 +1,2 @@
+-- Run this against your local DB and PlanetScale DB branch via `make migrate`.
+-- Clear the contents of this file when you're done applying the migration.

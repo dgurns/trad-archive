@@ -233,9 +233,11 @@ const addCollectionDigitalAudioObjectsToDbIfNotPresent = async (
 						await tag1.save();
 						await tag2.save();
 					}
-				} catch {
+				} catch (error) {
 					// If anything failed in the fetch + save process, continue on to the
 					// next item.
+					console.log("Error fetching and saving digital object:", error);
+					console.log("Moving on to the next digital object...");
 					continue;
 				}
 			}

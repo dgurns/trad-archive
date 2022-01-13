@@ -42,21 +42,21 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field(() => String)
 	@Column()
-	@Index()
+	@Index(["idx_base_entity_name"], { fulltext: true, parser: "ngram" })
 	name!: string;
 
 	@Field(() => String)
 	@Column({ unique: true })
-	@Index()
 	slug!: string;
 
 	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
-	@Index()
+	@Column({ type: "text", nullable: true, default: null })
+	@Index(["idx_base_entity_aliases"], { fulltext: true, parser: "ngram" })
 	aliases!: string;
 
 	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
+	@Column({ type: "text", nullable: true, default: null })
+	@Index(["idx_base_entity_description"], { fulltext: true, parser: "ngram" })
 	description!: string;
 
 	@Field(() => EntityStatus)
@@ -76,10 +76,12 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 	updatedByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
+	@Index()
 	createdAt!: Date;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn({ type: "timestamp" })
+	@Index()
 	updatedAt!: Date;
 }

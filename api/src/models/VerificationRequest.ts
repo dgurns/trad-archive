@@ -63,7 +63,7 @@ export class VerificationRequest extends TypeOrmBaseEntity {
 	createdByUserId!: string;
 
 	@Field()
-	@CreateDateColumn({ type: "timestamptz" })
+	@CreateDateColumn({ type: "timestamp" })
 	createdAt!: Date;
 
 	@Field(() => User, { nullable: true })
@@ -73,6 +73,6 @@ export class VerificationRequest extends TypeOrmBaseEntity {
 	updatedByUserId!: string;
 
 	@Field()
-	@UpdateDateColumn({ type: "timestamptz" })
+	@UpdateDateColumn({ type: "timestamp" })
 	updatedAt!: Date;
 }

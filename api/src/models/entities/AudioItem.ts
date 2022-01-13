@@ -11,7 +11,7 @@ import { Comment } from "../Comment";
 export class AudioItem extends EntityBaseFields {
 	@Field(() => String)
 	@Column({
-		type: "simple-enum",
+		type: "enum",
 		enum: EntityType,
 		nullable: true,
 		default: EntityType.AudioItem,

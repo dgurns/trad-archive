@@ -1,5 +1,5 @@
 import { AuthChecker } from "type-graphql";
-import { User, UserPermission } from "../models/User";
+import { User, UserRole } from "../models/User";
 import { CustomContext } from "../middleware/context";
 
 // authChecker is run whenever a resolver is protected by the `@Authorized`
@@ -16,12 +16,12 @@ export const authChecker: AuthChecker<CustomContext> = async (
 		return false;
 	}
 	// If user is an Admin, give access to everything
-	if (user.permissions.includes(UserPermission.Admin)) {
+	if (user.role === UserRole.Admin) {
 		return true;
 	}
 	// If the auth requires Admin, return user's admin status
-	if (requiredRoles.includes(UserPermission.Admin)) {
-		return user.permissions.includes(UserPermission.Admin);
+	if (requiredRoles.includes(UserRole.Admin)) {
+		return (user as User).role === UserRole.Admin;
 	}
 	// Otherwise, only return entities associated with current user
 	// For now, we're only checking User entities

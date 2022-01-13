@@ -21,7 +21,7 @@ import { Tag } from "../Tag";
 export class Tune extends EntityBaseFields {
 	@Field(() => String)
 	@Column({
-		type: "simple-enum",
+		type: "enum",
 		enum: EntityType,
 		nullable: true,
 		default: EntityType.Tune,
@@ -52,6 +52,6 @@ export class Tune extends EntityBaseFields {
 	mode!: string;
 
 	@Field(() => String, { nullable: true })
-	@Column({ nullable: true, default: null })
+	@Column({ type: "text", nullable: true, default: null })
 	abc!: string;
 }

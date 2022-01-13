@@ -5,6 +5,7 @@ on: delete
 jobs:
   clean-up-planetscale-branch-and-ssm-envs:
     name: Delete PlanetScale DB branch and connection variables in AWS SSM
+    if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     env:
       PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
@@ -18,7 +19,7 @@ jobs:
 
       - name: Set BRANCH_NAME as env variable
         run: |
-          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
+          echo "BRANCH_NAME=$(echo ${{ github.event.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
 
       - name: Authenticate with AWS
         uses: aws-actions/configure-aws-credentials@v1

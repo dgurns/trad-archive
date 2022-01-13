@@ -29,9 +29,4 @@ jobs:
 
             const diff = "${{ steps.diff-models.outputs.diff }}"
 
-            await github.rest.issues.addLabels({
-              owner,
-              repo,
-              issue_number: pull_request.number,
-              labels: ['db schema']
-            })
+            console.log(diff);

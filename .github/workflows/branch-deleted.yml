@@ -16,8 +16,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Set branch name as env variable
-        uses: nelonoel/branch-name@v1.0.1
+      - name: Set BRANCH_NAME as env variable
+        run: |
+          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")"
+          echo "BRANCH_NAME is $BRANCH_NAME"
 
       - name: Authenticate with AWS
         uses: aws-actions/configure-aws-credentials@v1

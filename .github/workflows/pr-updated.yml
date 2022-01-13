@@ -18,7 +18,7 @@ jobs:
       - name: Check if models directory has changed relative to master branch
         id: diff-models
         run: |
-          echo "::set-output name=diff::$(git diff master src/models)"
+          echo "::set-output name=diff::$(git diff origin/master src/models)"
 
       - name: Add "db schema" label if so; remove if not
         uses: actions/github-script@v5
@@ -39,10 +39,10 @@ jobs:
                 labels: ['db schema']
               })
             } else {
-              await github.rest.issues.removeLabels({
+              await github.rest.issues.removeLabel({
                 owner,
                 repo,
                 issue_number: pull_request.number,
-                labels: ['db schema']
+                name: 'db schema'
               })
             }

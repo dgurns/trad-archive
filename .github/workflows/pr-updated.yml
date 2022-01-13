@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Fetch master branch so we can diff against it
+        run: git fetch origin master
 
       - name: Check if models directory has changed relative to master branch
         id: diff-models

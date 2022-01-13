@@ -55,11 +55,3 @@ jobs:
                 //
               }
             }
-
-      - name: TEST - Set BRANCH_NAME as env variable
-        run: |
-          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
-          echo "BRANCH_NAME is ${{ env.BRANCH_NAME }}"
-
-      - name: TEST - reference env
-        run: echo ${{ env.BRANCH_NAME }}

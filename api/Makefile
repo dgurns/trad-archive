@@ -55,3 +55,19 @@ express-run:
 express-prod:
 	make express-build
 	make express-run NODE_ENV=production
+
+# Seed local MYSQL DB with the current schema for the app. Note that this will
+# erase any trad_archive data you have locally!
+init-local-db-schema:
+	mysql -h 127.0.0.1 -u admin -p < api/src/seed/init-db-schema.sql
+
+# Export current schema of local trad_archive MYSQL DB to the init-db-schema 
+# seed file
+dump-local-db-schema:
+	mysqldump \
+		-h 127.0.0.1 \
+		-u admin \
+		-p \
+		--no-data \
+		--databases \
+		trad_archive > api/src/seed/init-db-schema.sql

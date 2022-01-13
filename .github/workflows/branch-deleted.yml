@@ -19,7 +19,6 @@ jobs:
       - name: Set BRANCH_NAME as env variable
         run: |
           echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
-          echo "BRANCH_NAME is ${{ env.BRANCH_NAME }}"
 
       - name: Authenticate with AWS
         uses: aws-actions/configure-aws-credentials@v1
@@ -35,6 +34,7 @@ jobs:
 
       - name: Delete pscale DB branch
         run: |
+          echo "Deleting pscale DB branch ${{ env.BRANCH_NAME }}..."
           pscale branch delete trad_archive ${{ env.BRANCH_NAME }} --org tradarchive --force
 
       - name: Delete AWS SSM params for this branch

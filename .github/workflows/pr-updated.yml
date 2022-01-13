@@ -12,7 +12,7 @@ jobs:
       run:
         working-directory: api
     steps:
-      - name: Check out code
+      - name: Check out this branch's code
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
@@ -23,7 +23,7 @@ jobs:
       - name: Check if models directory has changed relative to master branch
         id: diff-models
         run: |
-          echo "::set-output name=diff::$(git diff origin/master src/seed)"
+          echo "::set-output name=diff::$(git diff origin/master src/models)"
 
       - name: Add "db schema" label if so; remove if not
         uses: actions/github-script@v5
@@ -33,8 +33,6 @@ jobs:
             const { pull_request } = payload;
 
             const diff = "${{ steps.diff-models.outputs.diff }}"
-
-            console.log("DIFF", diff);
 
             if (diff) {
               await github.rest.issues.addLabels({

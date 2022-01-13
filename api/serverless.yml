@@ -72,20 +72,17 @@ custom:
     prod: https://www.tradarchive.com
   shouldRunImportItmaAtomCollections:
     dev: false
-    # TODO: Re-enable before merging this PR
-    preview: false
+    preview: true
     # TODO: Run on prod when environment is deployed
     prod: false
   shouldRunImportTunes:
     dev: false
-    # TODO: Re-enable before merging this PR
-    preview: false
+    preview: true
     # TODO: Run on prod when environment is deployed
     prod: false
   shouldRunKeepWarm:
     dev: false
-    # TODO: Re-enable before merging this PR
-    preview: false
+    preview: true
     # TODO: Run on prod when environment is deployed
     prod: false
   webpack:

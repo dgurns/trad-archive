@@ -8,25 +8,33 @@ endif
 
 GIT_BRANCH := $(shell git branch --show-current)
 
-default: dev
+default: api
 
-# Recommended dev setup: Expose PlanetScale DB branch locally and run API via
-# Express
-dev:
-	make -j db express-dev-with-delay
-
+# Run the API as a Serverless app
 api:
 	NODE_ENV=development sls offline start -s dev
 
-# Make the PlanetScale DB for this branch accessible on localhost
-db:
-	pscale connect trad_archive ${GIT_BRANCH}
+# Run the API as an Express server - faster locally than Serverless
+api-express:
+	nodemon -e ts --exec "make express-build && make express-run NODE_ENV=development"
 
 # Run the migration currently defined in `migration-scratchpad.sql` against the
-# local MYSQL DB, if running, and this branch's pscale DB
+# local MYSQL DB and this branch's pscale DB
 migrate:
 	-mysql --protocol=tcp trad_archive < src/migration-scratchpad.sql
 	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
+
+# Make the PlanetScale DB for this branch accessible on localhost
+pscale-db:
+	pscale connect trad_archive ${GIT_BRANCH}
+
+api-express-with-delay:
+	sleep 1
+	make api-express
+
+# Run the PlanetScale DB branch and Express app simultaneously
+pscale-db-and-express:
+	make -j pscale-db api-express-with-delay
 
 import-itma-atom-collections:
 	sls invoke local -f importItmaAtomCollections -s dev
@@ -42,14 +50,6 @@ express-build:
 
 express-run:
 	NODE_ENV=${NODE_ENV} node .express-server-dist/express-server/index.js
-
-# Run the API as an Express server locally
-express-dev:
-	nodemon -e ts --exec "make express-build && make express-run NODE_ENV=development"
-
-express-dev-with-delay:
-	sleep 1
-	make express-dev
 
 # Build and run the API as an Express server for production
 express-prod:

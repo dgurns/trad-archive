@@ -1,1 +1,1 @@
--- Run this migration against your PlanetScale branch via `make run-migration`
+-- Run this against your local DB and PlanetScale DB branch via `make migrate`

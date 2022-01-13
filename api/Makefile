@@ -22,7 +22,7 @@ api-express:
 # local MYSQL DB and this branch's pscale DB
 migrate:
 	-mysql --protocol=tcp trad_archive < src/migration-scratchpad.sql
-	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
+	-pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
 
 # Make the PlanetScale DB for this branch accessible on localhost
 pscale-db:

@@ -23,6 +23,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Set branch name as env variable
+        uses: nelonoel/branch-name@v1.0.1
+
       - name: Set up pscale CLI
         run: |
           wget https://github.com/planetscale/cli/releases/download/v0.88.0/pscale_0.88.0_linux_amd64.deb
@@ -30,20 +33,20 @@ jobs:
 
       - name: Create pscale DB branch
         run: |
-          pscale branch create trad_archive ${{ github.head_ref }} --org tradarchive --region us-east-1
+          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east-1
 
       - name: Create connection info for this DB branch
         id: create-password
         run: |
-          JSON=$(pscale password create trad_archive ${{ github.head_ref }} ${{ github.sha }} --org tradarchive -f json)
+          JSON=$(pscale password create trad_archive ${BRANCH_NAME} ${{ github.sha }} --org tradarchive -f json)
           echo "::set-output name=dbHost::$(echo "${JSON}" | jq '.database_branch.access_host_url')"
           echo "::set-output name=dbUsername::$(echo "${JSON}" | jq '.id')"
           echo "::set-output name=dbPassword::$(echo "${JSON}" | jq '.plain_text')"
 
       - name: Save DB connection info as AWS SSM params
         run: |
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_HOST --value "${{ steps.create-password.outputs.dbHost }}" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_USERNAME --value "${{ steps.create-password.outputs.dbUsername }}" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_PASSWORD --value "${{ steps.create-password.outputs.dbPassword }}" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_PORT --value "3306" --type SecureString
-          aws ssm put-parameter --name /${{ github.head_ref }}/DATABASE_NAME --value "trad_archive" --type SecureString
+          aws ssm put-parameter --name /${BRANCH_NAME}/DATABASE_HOST --value "${{ steps.create-password.outputs.dbHost }}" --type SecureString
+          aws ssm put-parameter --name /${BRANCH_NAME}/DATABASE_USERNAME --value "${{ steps.create-password.outputs.dbUsername }}" --type SecureString
+          aws ssm put-parameter --name /${BRANCH_NAME}/DATABASE_PASSWORD --value "${{ steps.create-password.outputs.dbPassword }}" --type SecureString
+          aws ssm put-parameter --name /${BRANCH_NAME}/DATABASE_PORT --value "3306" --type SecureString
+          aws ssm put-parameter --name /${BRANCH_NAME}/DATABASE_NAME --value "trad_archive" --type SecureString

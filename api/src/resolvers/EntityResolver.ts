@@ -151,12 +151,6 @@ export class EntityResolver {
 			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
 				term: cleanedSearchTerm,
 			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager

@@ -33,7 +33,7 @@ jobs:
 
       - name: Create pscale DB branch
         run: |
-          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east-1
+          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east
 
       - name: Create connection info for this DB branch
         id: create-password

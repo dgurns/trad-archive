@@ -42,10 +42,24 @@ jobs:
                 labels: ['db schema']
               })
             } else {
-              await github.rest.issues.removeLabel({
-                owner,
-                repo,
-                issue_number: pull_request.number,
-                name: 'db schema'
-              })
+              // If the label hasn't already been applied, this will fail.
+              // That's fine so we'll just let it fail silently.
+              try {
+                await github.rest.issues.removeLabel({
+                  owner,
+                  repo,
+                  issue_number: pull_request.number,
+                  name: 'db schema'
+                });
+              } catch {
+                //
+              }
             }
+
+      - name: TEST - Set BRANCH_NAME as env variable
+        run: |
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
+          echo "BRANCH_NAME is ${{ env.BRANCH_NAME }}"
+
+      - name: TEST - reference env
+        run: echo ${{ env.BRANCH_NAME }}

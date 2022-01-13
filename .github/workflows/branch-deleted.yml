@@ -18,8 +18,8 @@ jobs:
 
       - name: Set BRANCH_NAME as env variable
         run: |
-          echo "::set-env name=BRANCH_NAME::$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")"
-          echo "BRANCH_NAME is $BRANCH_NAME"
+          echo "BRANCH_NAME=$(echo ${{ github.ref }} | sed -e "s#refs/heads/##g")" >> $GITHUB_ENV
+          echo "BRANCH_NAME is ${{ env.BRANCH_NAME }}"
 
       - name: Authenticate with AWS
         uses: aws-actions/configure-aws-credentials@v1
@@ -35,12 +35,12 @@ jobs:
 
       - name: Delete pscale DB branch
         run: |
-          pscale branch delete trad_archive ${BRANCH_NAME} --org tradarchive --force
+          pscale branch delete trad_archive ${{ env.BRANCH_NAME }} --org tradarchive --force
 
       - name: Delete AWS SSM params for this branch
         run: |
-          aws ssm delete-parameter --name /${BRANCH_NAME}/DATABASE_HOST
-          aws ssm delete-parameter --name /${BRANCH_NAME}/DATABASE_USERNAME
-          aws ssm delete-parameter --name /${BRANCH_NAME}/DATABASE_PASSWORD
-          aws ssm delete-parameter --name /${BRANCH_NAME}/DATABASE_PORT
-          aws ssm delete-parameter --name /${BRANCH_NAME}/DATABASE_NAME
+          aws ssm delete-parameter --name /${{ env.BRANCH_NAME }}/DATABASE_HOST
+          aws ssm delete-parameter --name /${{ env.BRANCH_NAME }}/DATABASE_USERNAME
+          aws ssm delete-parameter --name /${{ env.BRANCH_NAME }}/DATABASE_PASSWORD
+          aws ssm delete-parameter --name /${{ env.BRANCH_NAME }}/DATABASE_PORT
+          aws ssm delete-parameter --name /${{ env.BRANCH_NAME }}/DATABASE_NAME

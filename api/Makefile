@@ -23,8 +23,9 @@ db:
 	pscale connect trad_archive ${GIT_BRANCH}
 
 # Run the migration currently defined in `migration-scratchpad.sql` against the
-# branch's pscale DB
+# local MYSQL DB, if running, and this branch's pscale DB
 migrate:
+	-mysql --protocol=tcp trad_archive < src/migration-scratchpad.sql
 	pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
 
 import-itma-atom-collections:

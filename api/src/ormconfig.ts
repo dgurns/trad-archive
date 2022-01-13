@@ -28,7 +28,7 @@ export const DB_CONNECTION_NAME = "default";
 
 const isDevelopment = SERVERLESS_STAGE === "dev" || NODE_ENV === "development";
 
-const staticOrmConfig: ConnectionOptions = {
+const sharedOrmConfig: ConnectionOptions = {
 	name: DB_CONNECTION_NAME,
 	type: "mysql",
 	ssl: isDevelopment ? undefined : {},
@@ -53,7 +53,7 @@ const staticOrmConfig: ConnectionOptions = {
 };
 
 const ormConfig: ConnectionOptions = {
-	...staticOrmConfig,
+	...sharedOrmConfig,
 	host: DATABASE_HOST ?? "localhost",
 	port: parseInt(DATABASE_PORT ?? "3306"),
 	username: DATABASE_USERNAME ?? "admin",
@@ -90,7 +90,7 @@ export const makeOrmConfigWithSSMEnvs =
 			({ Name }) => Name === `/${SERVERLESS_STAGE}/DATABASE_USERNAME`
 		);
 		return {
-			...staticOrmConfig,
+			...sharedOrmConfig,
 			host: dbHost?.Value,
 			port: parseInt(dbPort?.Value ?? ""),
 			username: dbUsername?.Value,

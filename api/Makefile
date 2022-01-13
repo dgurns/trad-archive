@@ -18,11 +18,13 @@ api:
 api-express:
 	nodemon -e ts --exec "make express-build && make express-run NODE_ENV=development"
 
-# Run the migration currently defined in `migration-scratchpad.sql` against the
-# local MYSQL DB and this branch's pscale DB
+# Run the migration currently defined in `migration.sql` against the local MYSQL
+# DB and this branch's pscale DB. Afterwards, update the DB schema dump to
+# reflect the state of the database after the migration.
 migrate:
-	-mysql --protocol=tcp trad_archive < src/migration-scratchpad.sql
-	-pscale shell trad_archive ${GIT_BRANCH} < src/migration-scratchpad.sql
+	-mysql --protocol=tcp trad_archive < src/migration.sql
+	pscale shell trad_archive ${GIT_BRANCH} < src/migration.sql
+	make dump-local-db-schema
 
 # Make the PlanetScale DB for this branch accessible on localhost
 pscale-db:
@@ -59,7 +61,7 @@ express-prod:
 # Seed local MYSQL DB with the current schema for the app. Note that this will
 # erase any trad_archive data you have locally!
 init-local-db-schema:
-	mysql -h 127.0.0.1 -u admin -p < api/src/seed/init-db-schema.sql
+	mysql -h 127.0.0.1 -u admin -p < src/seed/init-db-schema.sql
 
 # Export current schema of local trad_archive MYSQL DB to the init-db-schema 
 # seed file
@@ -68,6 +70,7 @@ dump-local-db-schema:
 		-h 127.0.0.1 \
 		-u admin \
 		-p \
+		--password=password \
 		--no-data \
 		--databases \
-		trad_archive > api/src/seed/init-db-schema.sql
+		trad_archive > src/seed/init-db-schema.sql

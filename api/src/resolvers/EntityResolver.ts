@@ -148,9 +148,10 @@ export class EntityResolver {
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
+			.where("name LIKE :term", {
+				term: `%${cleanedSearchTerm}%`,
 			})
+			.orWhere("aliases LIKE :term", { term: `%${cleanedSearchTerm}%` })
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager

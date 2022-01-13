@@ -77,9 +77,11 @@ export class EntityBaseFields extends TypeOrmBaseEntity {
 
 	@Field()
 	@CreateDateColumn({ type: "timestamp" })
+	@Index()
 	createdAt!: Date;
 
 	@Field()
 	@UpdateDateColumn({ type: "timestamp" })
+	@Index()
 	updatedAt!: Date;
 }

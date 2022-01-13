@@ -1,1 +1,0 @@
--- Run this against your local DB and PlanetScale DB branch via `make migrate`

@@ -52,21 +52,6 @@ With this project, community members can...
     - When you create a new Git branch and push it up to GitHub, CI/CD will automatically create a matching PlanetScale branch of the same name.
     - You can then expose that branch locally by running `cd api && make pscale-db`, and connect to it as if it were a local MYSQL DB.
 
-### Migrations
-
-```sh
-# Switch to api directory
-cd api
-
-# Add the migration you'd like to run in `src/migration.sql`
-...
-ALTER TABLE user ADD COLUMN test varchar(255);
-...
-
-# Apply the migration simultaneously to your local MYSQL DB and the PlanetScale DB branch. If the migration succeeds, update `src/seed/init-db-schema.sql` with the new schema.
-> make migrate
-```
-
 ### API
 
 ```sh
@@ -94,4 +79,19 @@ ALTER TABLE user ADD COLUMN test varchar(255);
 
 # Serve the website at http://localhost:3000
 > yarn dev
+```
+
+### Migrations
+
+```sh
+# Switch to api directory
+cd api
+
+# Add the migration you'd like to run in `src/migration.sql`
+...
+ALTER TABLE user ADD COLUMN test varchar(255);
+...
+
+# Apply the migration simultaneously to your local MYSQL DB and the PlanetScale DB branch. If the migration succeeds, update `src/seed/init-db-schema.sql` with the new schema.
+> make migrate
 ```

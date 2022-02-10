@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import useSavedItemsForUser from "hooks/useSavedItemsForUser";
 import useFilters from "hooks/useFilters";
-import { FilterType, ViewAs } from "types";
+import { ViewAs } from "types";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
@@ -13,7 +13,6 @@ const SavedItems = () => {
 	const [savedItems, { loading, error }] = useSavedItemsForUser();
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		types: [FilterType.ViewAs],
 		defaultViewAs: ViewAs.List,
 	});
 

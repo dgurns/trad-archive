@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Tune, FilterType, ViewAs } from "types";
+import { Tune, ViewAs } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
@@ -49,7 +49,7 @@ const ViewTuneBySlug = () => {
 	] = useAudioItemsTaggedWithEntity({ entity: tuneData?.tune });
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		types: [FilterType.ViewAs],
+		defaultViewAs: ViewAs.Card,
 	});
 
 	const aboutMarkup = useMemo(

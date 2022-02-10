@@ -1,10 +1,9 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { FilterType, SortBy, ViewAs } from "types";
+import { SortBy, ViewAs } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
-	types?: Array<FilterType>;
 	defaultSortBy?: SortBy;
 	defaultViewAs?: ViewAs;
 }
@@ -16,12 +15,11 @@ interface ReturnValue {
 }
 
 // useFilters takes default values for sortBy and viewAs and returns the Filters
-// component along with props to pass to it, plus the output sortBy and
-// viewAs.
+// component along with props to pass to it, plus the current sortBy and
+// viewAs values.
 const useFilters = ({
-	types = [],
-	defaultSortBy = SortBy.RecentlyTagged,
-	defaultViewAs = ViewAs.Card,
+	defaultSortBy,
+	defaultViewAs,
 }: Args = {}): ReturnValue => {
 	const [sortBy, setSortBy] = useState(defaultSortBy);
 	const [viewAs, setViewAs] = useState(defaultViewAs);
@@ -39,13 +37,12 @@ const useFilters = ({
 
 	const filtersProps = useMemo(
 		() => ({
-			types,
 			sortBy,
 			onChangeSortBy,
 			viewAs,
 			onChangeViewAs,
 		}),
-		[types, sortBy, onChangeSortBy, viewAs, onChangeViewAs]
+		[sortBy, onChangeSortBy, viewAs, onChangeViewAs]
 	);
 
 	return { Filters, filtersProps, sortBy, viewAs };

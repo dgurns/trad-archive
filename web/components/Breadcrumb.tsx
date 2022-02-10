@@ -27,7 +27,7 @@ const Breadcrumb = ({ items = [], className }: Props) => {
 						{href ? (
 							<Link href={href}>{label}</Link>
 						) : (
-							<span className="text-gray">{label}</span>
+							<span className="text-gray-500">{label}</span>
 						)}
 						<i className="material-icons text-gray-500 text-base ml-1">
 							keyboard_arrow_right

@@ -1,8 +1,3 @@
-export enum FilterType {
-	SortBy = "SortBy",
-	ViewAs = "ViewAs",
-}
-
 export enum SortBy {
 	RecentlyTagged = "RecentlyTagged",
 	RecentlyAdded = "RecentlyAdded",

@@ -57,18 +57,18 @@ const Filters = ({
 	}, [totalPages]);
 
 	const perPageOptions = useMemo(() => {
-		const ouptut: React.ReactNode[] = [];
+		const output: React.ReactNode[] = [];
 		for (const value in PerPage) {
 			if (isNaN(Number(value))) {
 				continue;
 			}
-			ouptut.push(
+			output.push(
 				<option value={value} key={value}>
 					{value}
 				</option>
 			);
 		}
-		return ouptut;
+		return output;
 	}, []);
 
 	return (

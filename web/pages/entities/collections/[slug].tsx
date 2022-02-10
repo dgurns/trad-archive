@@ -10,6 +10,7 @@ import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
 
 import Layout from "components/Layout";
+import Breadcrumb from "components/Breadcrumb";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItem from "components/AudioItem";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
@@ -125,15 +126,13 @@ const ViewCollectionBySlug = () => {
 		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col mb-8">
-					<div className="flex flex-row items-center mb-1">
-						<Link href="/entities/collections">
-							<a className="mr-1">Collections</a>
-						</Link>
-						<i className="material-icons text-gray-500 text-base">
-							keyboard_arrow_right
-						</i>
-					</div>
-					<h1 className="mb-6">{name}</h1>
+					<Breadcrumb
+						items={[
+							{ label: "Collections", href: "/entities/collections" },
+							{ label: name },
+						]}
+						className="mb-6"
+					/>
 
 					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
 

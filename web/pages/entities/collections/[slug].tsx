@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { EntityFragments } from "fragments";
-import { Collection, ViewAs } from "types";
+import { Collection, PerPage, ViewAs } from "types";
 import useAudioItemsTaggedWithEntity from "hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "hooks/useFilters";
 import TagService from "services/Tag";
@@ -48,6 +48,9 @@ const ViewCollectionBySlug = () => {
 	] = useAudioItemsTaggedWithEntity({ entity: collection });
 
 	const { Filters, filtersProps, viewAs } = useFilters({
+		defaultPage: 0,
+		totalItems: 112,
+		defaultPerPage: PerPage.Ten,
 		defaultViewAs: ViewAs.Card,
 	});
 

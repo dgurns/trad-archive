@@ -1,3 +1,10 @@
+export enum PerPage {
+	Ten = 10,
+	Twenty = 20,
+	Fifty = 50,
+	Hundred = 100,
+}
+
 export enum SortBy {
 	RecentlyTagged = "RecentlyTagged",
 	RecentlyAdded = "RecentlyAdded",

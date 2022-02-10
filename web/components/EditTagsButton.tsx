@@ -40,8 +40,9 @@ interface Props {
 	entity: Entity;
 	className?: string;
 	children?: React.ReactChild | React.ReactChild[];
+	onSuccess?: () => void;
 }
-const EditTagsButton = ({ entity, className, children }: Props) => {
+const EditTagsButton = ({ entity, className, children, onSuccess }: Props) => {
 	const { currentUser, requireLogin } = useRequireLogin();
 
 	const [editTagsModalIsVisible, setEditTagsModalIsVisible] = useState(false);
@@ -79,12 +80,16 @@ const EditTagsButton = ({ entity, className, children }: Props) => {
 		};
 		if (deleteTagData?.deleteTag) {
 			onDeleteSuccess();
+			if (onSuccess) {
+				onSuccess();
+			}
 		}
 	}, [
 		deleteTagData,
 		getParentEntity,
 		setEditTagsModalIsVisible,
 		refetchTopLevelTags,
+		onSuccess,
 	]);
 
 	const { tags } = entity;

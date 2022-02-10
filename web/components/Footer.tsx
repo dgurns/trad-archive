@@ -19,8 +19,12 @@ const Footer = () => (
 			. We welcome community contributors.
 		</div>
 		<div>
-			<a href="https://forms.gle/7AU4e5JAd9XpRvBh8" target="_blank">
-				Share your feedback <i className="material-icons text-sm">launch</i>
+			<a
+				href="https://github.com/dgurns/trad-archive/discussions"
+				target="_blank"
+			>
+				Share feedback or report a bug{" "}
+				<i className="material-icons text-sm">launch</i>
 			</a>
 		</div>
 	</div>

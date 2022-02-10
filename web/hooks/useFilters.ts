@@ -1,31 +1,54 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { FilterType, SortBy, ViewAs } from "types";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
+import { PerPage, SortBy, ViewAs } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
-	types?: Array<FilterType>;
+	totalItems?: number;
+	defaultPage?: number; // Starts at 1
+	defaultPerPage?: PerPage;
 	defaultSortBy?: SortBy;
 	defaultViewAs?: ViewAs;
 }
 interface ReturnValue {
 	Filters: (props: FiltersProps) => React.ReactElement;
 	filtersProps: FiltersProps;
+	page?: number;
+	perPage?: PerPage;
 	sortBy?: SortBy;
 	viewAs?: ViewAs;
 }
 
 // useFilters takes default values for sortBy and viewAs and returns the Filters
-// component along with props to pass to it, plus the output sortBy and
-// viewAs.
+// component along with props to pass to it, plus the current sortBy and
+// viewAs values.
 const useFilters = ({
-	types = [],
-	defaultSortBy = SortBy.RecentlyTagged,
-	defaultViewAs = ViewAs.Card,
+	totalItems,
+	defaultPage,
+	defaultPerPage,
+	defaultSortBy,
+	defaultViewAs,
 }: Args = {}): ReturnValue => {
+	const [page, setPage] = useState(defaultPage);
+	const [perPage, setPerPage] = useState(defaultPerPage);
 	const [sortBy, setSortBy] = useState(defaultSortBy);
 	const [viewAs, setViewAs] = useState(defaultViewAs);
 
+	// Whenever perPage value changes, reset page to 1
+	useEffect(() => {
+		setPage(1);
+	}, [perPage]);
+
+	const onChangePage = useCallback(
+		(event: React.ChangeEvent<HTMLSelectElement>) =>
+			setPage(parseInt(event.target.value)),
+		[]
+	);
+	const onChangePerPage = useCallback(
+		(event: React.ChangeEvent<HTMLSelectElement>) =>
+			setPerPage(parseInt(event.target.value)),
+		[]
+	);
 	const onChangeSortBy = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>
 			setSortBy(event.target.value as SortBy),
@@ -39,16 +62,30 @@ const useFilters = ({
 
 	const filtersProps = useMemo(
 		() => ({
-			types,
+			totalItems,
+			page,
+			onChangePage,
+			perPage,
+			onChangePerPage,
 			sortBy,
 			onChangeSortBy,
 			viewAs,
 			onChangeViewAs,
 		}),
-		[types, sortBy, onChangeSortBy, viewAs, onChangeViewAs]
+		[
+			totalItems,
+			page,
+			onChangePage,
+			perPage,
+			onChangePerPage,
+			sortBy,
+			onChangeSortBy,
+			viewAs,
+			onChangeViewAs,
+		]
 	);
 
-	return { Filters, filtersProps, sortBy, viewAs };
+	return { Filters, filtersProps, page, perPage, sortBy, viewAs };
 };
 
 export default useFilters;

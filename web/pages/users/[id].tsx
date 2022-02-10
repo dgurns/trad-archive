@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
 
 import { UserFragments } from "fragments";
-import { User, FilterType } from "types";
+import { User, ViewAs } from "types";
 import DateTimeService from "services/DateTime";
 import EntityService from "services/Entity";
 import useAudioItemsCreatedByUser from "hooks/useAudioItemsCreatedByUser";
 import useFilters from "hooks/useFilters";
 
 import Layout from "components/Layout";
+import Breadcrumb from "components/Breadcrumb";
 import LoadingBlock from "components/LoadingBlock";
 import AudioItem from "components/AudioItem";
 
@@ -42,7 +43,7 @@ const ViewUserById = () => {
 	] = useAudioItemsCreatedByUser(userData?.user);
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		types: [FilterType.ViewAs],
+		defaultViewAs: ViewAs.Card,
 	});
 
 	const aboutMarkup = useMemo(
@@ -90,13 +91,10 @@ const ViewUserById = () => {
 		<Layout pageTitle={`Trad Archive - ${username}`}>
 			<div className="flex flex-col-reverse md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<div className="flex flex-row items-center">
-						Users{" "}
-						<i className="material-icons text-gray-500 text-base">
-							keyboard_arrow_right
-						</i>
-					</div>
-					<h1 className="mb-6">{username}</h1>
+					<Breadcrumb
+						className="mb-6"
+						items={[{ label: "Users" }, { label: username }]}
+					/>
 
 					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
 

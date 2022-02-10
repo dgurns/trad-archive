@@ -1,5 +1,6 @@
-import { InputType, Field, Int } from "type-graphql";
+import { InputType, Field, Int, ObjectType } from "type-graphql";
 import { EntityStatus, EntityType } from "../models/entities/base";
+import { AudioItem } from "../models/entities/AudioItem";
 import { SortBy } from "./commonTypes";
 
 @InputType()
@@ -39,6 +40,15 @@ export class AudioItemsTaggedWithEntityInput {
 		defaultValue: SortBy.RecentlyTagged,
 	})
 	sortBy?: SortBy;
+}
+
+@ObjectType()
+export class AudioItemsTaggedWithEntityResponse {
+	@Field(() => [AudioItem])
+	audioItems!: AudioItem[];
+
+	@Field(() => Int)
+	total!: number;
 }
 
 @InputType()

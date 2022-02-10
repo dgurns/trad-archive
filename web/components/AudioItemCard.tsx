@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import {
 	AudioItem,
@@ -28,7 +29,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	const { name, slug, description, tags, status, createdByUser, createdAt } =
 		audioItem;
 
-	const [_, { refetch }] = useAudioItem({ slug });
+	const router = useRouter();
 
 	const {
 		activeAudioItem,
@@ -68,10 +69,10 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	const onTakedownRequestCreated = useCallback(
 		(takedownRequest: TakedownRequest) => {
 			if (takedownRequest.status === TakedownRequestStatus.Approved) {
-				refetch();
+				router.push(`/entities/audio-items/${slug}`);
 			}
 		},
-		[refetch]
+		[router, slug]
 	);
 
 	const shouldShowPositionAndDuration =

@@ -81,17 +81,17 @@ With this project, community members can...
 > yarn dev
 ```
 
-### Migrations
+### Updating DB Schema
 
 ```sh
 # Switch to api directory
 cd api
 
-# Add the migration you'd like to run in `src/migration.sql`
+# Add the SQL commands you'd like to run in `src/migration.sql`
 ...
 ALTER TABLE user ADD COLUMN test varchar(255);
 ...
 
-# Apply the migration simultaneously to your local MYSQL DB and the PlanetScale DB branch. If the migration succeeds, update `src/seed/init-db-schema.sql` with the new schema.
+# Apply the migration simultaneously to your local MYSQL DB and the PlanetScale DB branch. If the migration succeeds, it will then update `src/seed/init-db-schema.sql` with the new schema.
 > make migrate
 ```

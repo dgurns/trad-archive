@@ -24,7 +24,8 @@ const useSavedItemsForUser = (): [
 	const [currentUser] = useCurrentUser();
 
 	const [makeQuery, query] = useLazyQuery<QueryData, {}>(
-		SAVED_ITEMS_FOR_USER_QUERY
+		SAVED_ITEMS_FOR_USER_QUERY,
+		{ fetchPolicy: "cache-first" }
 	);
 
 	useEffect(() => {

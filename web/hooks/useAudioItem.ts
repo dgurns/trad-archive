@@ -26,9 +26,14 @@ interface QueryVariables {
 interface HookArgs {
 	slug?: string;
 	queryOptions?: LazyQueryHookOptions<QueryData, QueryVariables>;
+	skip?: boolean;
 }
 
-const useAudioItem = ({ slug, queryOptions = {} }: HookArgs = {}): [
+const useAudioItem = ({
+	slug,
+	queryOptions = {},
+	skip = false,
+}: HookArgs = {}): [
 	AudioItem | undefined,
 	LazyQueryResult<QueryData, QueryVariables>
 ] => {
@@ -39,6 +44,9 @@ const useAudioItem = ({ slug, queryOptions = {} }: HookArgs = {}): [
 	const { data } = audioItemQuery;
 
 	useEffect(() => {
+		if (skip) {
+			return;
+		}
 		if (slug) {
 			getAudioItem({
 				variables: {
@@ -46,7 +54,7 @@ const useAudioItem = ({ slug, queryOptions = {} }: HookArgs = {}): [
 				},
 			});
 		}
-	}, [getAudioItem, slug]);
+	}, [getAudioItem, slug, skip]);
 
 	const audioItem = data?.audioItem;
 

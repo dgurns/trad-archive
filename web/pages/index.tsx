@@ -12,7 +12,6 @@ import {
 	Comment,
 	Collection,
 	EntityStatus,
-	FilterType,
 	SortBy,
 	ViewAs,
 } from "types";
@@ -32,7 +31,6 @@ import LoadingBlock from "components/LoadingBlock";
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 5;
 const NUM_COLLECTIONS_TO_FETCH = 5;
-const DEFAULT_SORT_BY = SortBy.RecentlyTagged;
 
 interface QueryVariables {
 	input: {
@@ -274,8 +272,8 @@ export default function Home({
 	]);
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
-		types: [FilterType.SortBy, FilterType.ViewAs],
-		defaultSortBy: DEFAULT_SORT_BY,
+		defaultSortBy: SortBy.RecentlyTagged,
+		defaultViewAs: ViewAs.Card,
 	});
 
 	// These queries skip the initial network request if the cache was

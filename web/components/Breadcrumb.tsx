@@ -7,11 +7,10 @@ interface BreadcrumbItem {
 
 interface Props {
 	items: BreadcrumbItem[];
-	uniformItems?: boolean;
 	className?: string;
 }
 
-const Breadcrumb = ({ items = [], uniformItems = false, className }: Props) => {
+const Breadcrumb = ({ items = [], className }: Props) => {
 	if (items.length === 0) {
 		return null;
 	}
@@ -37,12 +36,9 @@ const Breadcrumb = ({ items = [], uniformItems = false, className }: Props) => {
 						</i>
 					</div>
 				))}
-				{uniformItems && (
-					<span className="text-black font-bold">{finalItem.label}</span>
-				)}
 			</div>
 
-			{!uniformItems && <h1>{finalItem.label}</h1>}
+			<h1>{finalItem.label}</h1>
 		</div>
 	);
 };

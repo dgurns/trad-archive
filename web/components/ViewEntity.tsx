@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 
@@ -30,11 +30,17 @@ const ViewEntity = ({ entity, className }: Props) => {
 		defaultPerPage: PerPage.Twenty,
 		defaultViewAs: ViewAs.Card,
 	});
+	const filtersRef = useRef<HTMLDivElement>(null);
 
 	// Scroll to the top after choosing a different page of results
 	useEffect(() => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
-	}, [page]);
+		if (filtersRef.current) {
+			filtersRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "end",
+			});
+		}
+	}, [page, filtersRef]);
 
 	const {
 		audioItems = [],
@@ -79,7 +85,11 @@ const ViewEntity = ({ entity, className }: Props) => {
 						<a className="ml-4">Tags</a>
 					</Link>
 				</div>
-				{totalAudioItems > 0 && <Filters {...filtersProps} />}
+				{totalAudioItems > 0 && (
+					<div ref={filtersRef}>
+						<Filters {...filtersProps} />
+					</div>
+				)}
 			</div>
 
 			{audioItemsLoading && <LoadingBlock />}

@@ -18,7 +18,7 @@ const COLLECTION_QUERY = gql`
 	${EntityFragments.collection}
 `;
 
-const EditCollection = () => {
+const CollectionEdit = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
@@ -28,7 +28,7 @@ const EditCollection = () => {
 	});
 
 	const onEditSuccess = (collection: Collection) => {
-		router.push(`/entities/collections/${collection.slug}`);
+		router.push(`/entities/collections/${collection.slug}/about`);
 	};
 
 	let statusMessage;
@@ -59,4 +59,4 @@ const EditCollection = () => {
 	);
 };
 
-export default EditCollection;
+export default CollectionEdit;

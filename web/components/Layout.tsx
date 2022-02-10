@@ -42,7 +42,11 @@ const Layout = ({ children, pageTitle }: Props) => {
 			</div>
 
 			{/* Add header to the DOM after child content so its modals overlay */}
-			<div className="fixed top-0 right-0 left-0" ref={fixedHeaderRef}>
+			<div
+				className="fixed top-0 right-0 left-0"
+				ref={fixedHeaderRef}
+				id="header"
+			>
 				{shouldShowPreviewWarning && (
 					<div className="flex flex-row items-center justify-center py-1 px-4 bg-black text-white text-sm text-center">
 						This is a preview version of the site with fake data.

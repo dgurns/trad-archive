@@ -7,18 +7,21 @@ interface BreadcrumbItem {
 
 interface Props {
 	items: BreadcrumbItem[];
+	uniformItems?: boolean;
 	className?: string;
 }
 
-const Breadcrumb = ({ items = [], className }: Props) => {
+const Breadcrumb = ({ items = [], uniformItems = false, className }: Props) => {
 	if (items.length === 0) {
 		return null;
 	}
 	if (items.length === 1) {
 		return <h1 className={className ?? ""}>{items[0].label}</h1>;
 	}
+
 	const subItems = items.slice(0, items.length - 1);
 	const finalItem = items[items.length - 1];
+
 	return (
 		<div className={`flex flex-col ${className ?? ""}`}>
 			<div className="flex flex-row items-center mb-1">
@@ -34,8 +37,12 @@ const Breadcrumb = ({ items = [], className }: Props) => {
 						</i>
 					</div>
 				))}
+				{uniformItems && (
+					<span className="text-black font-bold">{finalItem.label}</span>
+				)}
 			</div>
-			<h1>{finalItem.label}</h1>
+
+			{!uniformItems && <h1>{finalItem.label}</h1>}
 		</div>
 	);
 };

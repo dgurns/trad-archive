@@ -26,7 +26,6 @@ const ViewCollectionBySlug = () => {
 	}>(COLLECTION_QUERY, {
 		variables: { slug },
 		skip: !slug,
-		fetchPolicy: "cache-and-network",
 	});
 	const { collection } = collectionData ?? {};
 

@@ -76,7 +76,7 @@ const ViewEntity = ({ entity, className }: Props) => {
 				/>
 				<div className="flex flex-row mb-6">
 					<span className="text-gray-500">
-						{totalAudioItems ?? ""} Audio Items
+						{totalAudioItems ?? ""} Audio Item{totalAudioItems === 1 ? "" : "s"}
 					</span>
 					<Link href={EntityService.makeHrefForAbout(entity)}>
 						<a className="ml-4">About</a>

@@ -59,7 +59,6 @@ const ViewEntity = ({ entity, className }: Props) => {
 
 	const headerOffset =
 		window.document.getElementById("header")?.offsetHeight ?? 0;
-	const metadataTopClass = `top-[${headerOffset}px]`;
 
 	return (
 		<div className={`flex flex-1 flex-col mb-8 ${className ?? ""}`}>
@@ -110,7 +109,8 @@ const ViewEntity = ({ entity, className }: Props) => {
 			<div
 				className={`${
 					metadataInView ? "hidden" : "visible"
-				} fixed left-0 right-0 p-4 ${metadataTopClass} bg-gray-100 shadow-lg`}
+				} fixed left-0 right-0 p-4 bg-gray-100 shadow-lg`}
+				style={{ top: `${headerOffset}px` }}
 			>
 				{totalAudioItems > 0 && <Filters {...filtersProps} />}
 			</div>

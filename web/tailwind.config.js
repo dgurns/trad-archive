@@ -1,9 +1,10 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-	mode: "jit",
-	purge: ["./components/**/*.{js,ts,jsx,tsx}", "./pages/**/*.{js,ts,jsx,tsx}"],
-	darkMode: "media",
+	content: [
+		"./components/**/*.{js,ts,jsx,tsx}",
+		"./pages/**/*.{js,ts,jsx,tsx}",
+	],
 	theme: {
 		colors: {
 			transparent: "transparent",
@@ -30,15 +31,6 @@ module.exports = {
 			lg: "1024px",
 			xl: "1280px",
 			"2xl": "1536px",
-		},
-	},
-	variants: {
-		extend: {
-			backgroundColor: ["disabled", "checked"],
-			borderColor: ["checked", "hover"],
-			borderRadius: ["hover"],
-			cursor: ["disabled"],
-			margin: ["last"],
 		},
 	},
 	plugins: [require("@tailwindcss/forms")],

@@ -58,7 +58,8 @@ const ViewEntity = ({ entity, className }: Props) => {
 	}, [total]);
 
 	const headerOffset =
-		window.document.getElementById("header")?.offsetHeight + 12 ?? 0;
+		window.document.getElementById("header")?.offsetHeight ?? 0;
+	const metadataTopClass = `top-[${headerOffset}px]`;
 
 	return (
 		<div className={`flex flex-1 flex-col mb-8 ${className ?? ""}`}>
@@ -91,9 +92,7 @@ const ViewEntity = ({ entity, className }: Props) => {
 					</div>
 				)}
 			</div>
-
 			{audioItemsLoading && <LoadingBlock />}
-
 			{totalAudioItems > 0 &&
 				audioItems.map((audioItem, index) => (
 					<AudioItem
@@ -103,7 +102,6 @@ const ViewEntity = ({ entity, className }: Props) => {
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 					/>
 				))}
-
 			{audioItemsError && (
 				<div className="text-red-600">Error fetching Audio Items</div>
 			)}
@@ -112,7 +110,7 @@ const ViewEntity = ({ entity, className }: Props) => {
 			<div
 				className={`${
 					metadataInView ? "hidden" : "visible"
-				} fixed top-0 left-0 right-0 p-4 pt-[${headerOffset}px] bg-gray-100 shadow-lg`}
+				} fixed left-0 right-0 p-4 ${metadataTopClass} bg-gray-100 shadow-lg`}
 			>
 				{totalAudioItems > 0 && <Filters {...filtersProps} />}
 			</div>

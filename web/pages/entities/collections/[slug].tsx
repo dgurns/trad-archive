@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useQuery, gql } from "@apollo/client";
@@ -41,18 +41,29 @@ const ViewCollectionBySlug = () => {
 	const { name, aliases, description, tags, itmaAtomSlug } = collection ?? {};
 	const sortedTags = TagService.sort(tags);
 
-	const [
-		audioItems = [],
-		{ loading: audioItemsLoading, error: audioItemsError },
-		fetchNextPageOfAudioItems,
-	] = useAudioItemsTaggedWithEntity({ entity: collection });
+	const [totalAudioItems, setTotalAudioItems] = useState<number>();
 
-	const { Filters, filtersProps, viewAs } = useFilters({
-		defaultPage: 0,
-		totalItems: 112,
-		defaultPerPage: PerPage.Ten,
+	const { Filters, filtersProps, page, perPage, viewAs } = useFilters({
+		defaultPage: 1,
+		totalItems: totalAudioItems,
+		defaultPerPage: PerPage.Twenty,
 		defaultViewAs: ViewAs.Card,
 	});
+
+	const {
+		audioItems = [],
+		total,
+		query: { loading: audioItemsLoading, error: audioItemsError },
+	} = useAudioItemsTaggedWithEntity({
+		entity: collection,
+		page,
+		perPage: perPage as number,
+	});
+	useEffect(() => {
+		if (typeof total === "number") {
+			setTotalAudioItems(total);
+		}
+	}, [total]);
 
 	const aboutMarkup = useMemo(
 		() => (
@@ -121,7 +132,6 @@ const ViewCollectionBySlug = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const shouldShowAudioItems = audioItems.length > 0;
 	const noAudioItemsFound =
 		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
 
@@ -139,29 +149,26 @@ const ViewCollectionBySlug = () => {
 
 					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
 
-					{shouldShowAudioItems && (
+					{!totalAudioItems && audioItemsLoading && <LoadingBlock />}
+
+					{totalAudioItems > 0 && (
 						<>
 							<Filters {...filtersProps} className="mb-6" />
-
-							{audioItems.map((audioItem, index) => (
-								<AudioItem
-									viewAs={viewAs}
-									audioItem={audioItem}
-									key={index}
-									className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
-								/>
-							))}
-							{!audioItemsLoading && (
-								<button
-									className="btn-text"
-									onClick={fetchNextPageOfAudioItems}
-								>
-									Load More
-								</button>
+							{audioItemsLoading ? (
+								<LoadingBlock />
+							) : (
+								audioItems.map((audioItem, index) => (
+									<AudioItem
+										viewAs={viewAs}
+										audioItem={audioItem}
+										key={index}
+										className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
+									/>
+								))
 							)}
 						</>
 					)}
-					{audioItemsLoading && <LoadingBlock />}
+
 					{noAudioItemsFound && (
 						<div className="text-gray-500">
 							No Audio Items tagged with this yet

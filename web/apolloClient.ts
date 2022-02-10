@@ -64,19 +64,6 @@ export const apolloClient = new ApolloClient({
 							return merged;
 						},
 					},
-					audioItemsTaggedWithEntity: {
-						// Namespace cached results for this query based on requested
-						// entity ID
-						keyArgs: (args) => args.input.entityId,
-						merge(existing = [], incoming, { args: { input } }) {
-							const { skip = 0 } = input;
-							const merged = existing ? existing.slice(0) : [];
-							for (let i = 0; i < incoming.length; ++i) {
-								merged[skip + i] = incoming[i];
-							}
-							return merged;
-						},
-					},
 					collections: {
 						// Cache separately based on the sortBy value
 						keyArgs: ["input", ["sortBy"]],

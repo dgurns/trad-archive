@@ -23,6 +23,7 @@ import {
 	AudioItemsCreatedByUserInput,
 	CreateAudioItemInput,
 	UpdateAudioItemInput,
+	AudioItemsTaggedWithEntityResponse,
 } from "./AudioItemResolverTypes";
 import EntityService from "../services/Entity";
 import { EntityStatus } from "../models/entities/base";
@@ -95,8 +96,8 @@ export class AudioItemResolver {
 		return audioItems;
 	}
 
-	@Query(() => [AudioItem])
-	audioItemsTaggedWithEntity(
+	@Query(() => AudioItemsTaggedWithEntityResponse)
+	async audioItemsTaggedWithEntity(
 		@Arg("input") input: AudioItemsTaggedWithEntityInput
 	) {
 		const { entityType, entityId, take, skip, sortBy } = input;
@@ -127,7 +128,11 @@ export class AudioItemResolver {
 			default:
 				break;
 		}
-		return query.getMany();
+		const results = await query.getManyAndCount();
+		return {
+			audioItems: results[0],
+			total: results[1],
+		};
 	}
 
 	@Query(() => [AudioItem])

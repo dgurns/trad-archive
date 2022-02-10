@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { PerPage, SortBy, ViewAs } from "types";
 
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
 	totalItems?: number;
-	defaultPage?: number;
+	defaultPage?: number; // Starts at 1
 	defaultPerPage?: PerPage;
 	defaultSortBy?: SortBy;
 	defaultViewAs?: ViewAs;
@@ -33,6 +33,11 @@ const useFilters = ({
 	const [perPage, setPerPage] = useState(defaultPerPage);
 	const [sortBy, setSortBy] = useState(defaultSortBy);
 	const [viewAs, setViewAs] = useState(defaultViewAs);
+
+	// Whenever perPage value changes, reset page to 1
+	useEffect(() => {
+		setPage(1);
+	}, [perPage]);
 
 	const onChangePage = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>

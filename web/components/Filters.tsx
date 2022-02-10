@@ -46,7 +46,11 @@ const Filters = ({
 		const output: React.ReactNode[] = [];
 		let i = 1;
 		while (i <= totalPages) {
-			output.push(<option value={i}>{i}</option>);
+			output.push(
+				<option value={i} key={i}>
+					{i}
+				</option>
+			);
 			i++;
 		}
 		return output;
@@ -58,7 +62,11 @@ const Filters = ({
 			if (isNaN(Number(value))) {
 				continue;
 			}
-			ouptut.push(<option value={value}>{value}</option>);
+			ouptut.push(
+				<option value={value} key={value}>
+					{value}
+				</option>
+			);
 		}
 		return ouptut;
 	}, []);

@@ -41,7 +41,7 @@ const ViewCollectionBySlug = () => {
 	const { name, aliases, description, tags, itmaAtomSlug } = collection ?? {};
 	const sortedTags = TagService.sort(tags);
 
-	const [totalAudioItems, setTotalAudioItems] = useState<number>();
+	const [totalAudioItems, setTotalAudioItems] = useState<number | undefined>();
 
 	const { Filters, filtersProps, page, perPage, viewAs } = useFilters({
 		defaultPage: 1,
@@ -132,9 +132,6 @@ const ViewCollectionBySlug = () => {
 		return <Layout>{statusMessage}</Layout>;
 	}
 
-	const noAudioItemsFound =
-		!audioItemsLoading && !audioItemsError && audioItems.length === 0;
-
 	return (
 		<Layout pageTitle={`Trad Archive - ${name}`}>
 			<div className="flex flex-col md:flex-row">
@@ -144,10 +141,19 @@ const ViewCollectionBySlug = () => {
 							{ label: "Collections", href: "/entities/collections" },
 							{ label: name },
 						]}
-						className="mb-6"
+						className="mb-2"
 					/>
-
-					<div className="flex-col mb-8 md:hidden">{aboutMarkup}</div>
+					<div className="flex flex-row mb-6">
+						<span className="text-gray-500">
+							{totalAudioItems ?? ""} Audio Items
+						</span>
+						<Link href={`/entities/collections/${slug}/about`}>
+							<a className="ml-4">About</a>
+						</Link>
+						<Link href={`/entities/collections/${slug}/tags`}>
+							<a className="ml-4">Tags</a>
+						</Link>
+					</div>
 
 					{!totalAudioItems && audioItemsLoading && <LoadingBlock />}
 
@@ -169,21 +175,9 @@ const ViewCollectionBySlug = () => {
 						</>
 					)}
 
-					{noAudioItemsFound && (
-						<div className="text-gray-500">
-							No Audio Items tagged with this yet
-						</div>
-					)}
 					{audioItemsError && (
 						<div className="text-red-600">Error fetching Audio Items</div>
 					)}
-				</div>
-
-				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
-					<h3 className="mb-4">About</h3>
-					{aboutMarkup}
-					<h3 className="mt-8 mb-4">Tags</h3>
-					{tagsMarkup}
 				</div>
 			</div>
 		</Layout>

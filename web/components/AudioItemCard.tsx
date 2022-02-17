@@ -47,24 +47,10 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			(tag) => typeof tag.subjectTimeMarkerSeconds === "number"
 		);
 	}, [tags]);
-	const shouldShowTimeMarkersIcon = tagsWithTimeMarkers.length > 0;
-
-	const [shouldShowTimeMarkers, setShouldShowTimeMarkers] = useState(false);
 
 	const onPlayPressed = useCallback(() => {
 		setActiveAudioItem(audioItem);
 	}, [audioItem]);
-
-	const onTimeMarkersIconClicked = useCallback(() => {
-		setShouldShowTimeMarkers(!shouldShowTimeMarkers);
-	}, [shouldShowTimeMarkers]);
-
-	// Show time markers if they exist and the AudioItem is in the player
-	useEffect(() => {
-		if (audioItemIsInPlayer && tagsWithTimeMarkers.length > 0) {
-			setShouldShowTimeMarkers(true);
-		}
-	}, [audioItemIsInPlayer, tagsWithTimeMarkers]);
 
 	const onTakedownRequestCreated = useCallback(
 		(takedownRequest: TakedownRequest) => {
@@ -136,20 +122,10 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 									{positionAndDuration}
 								</div>
 							</div>
-
-							{shouldShowTimeMarkersIcon && (
-								<button
-									className="btn-secondary flex flex-row items-center"
-									onClick={onTimeMarkersIconClicked}
-									aria-label="Show/Hide Timestamped Tags"
-								>
-									<i className="material-icons">format_list_bulleted</i>
-								</button>
-							)}
 						</div>
 					</>
 				)}
-				{shouldShowTimeMarkers && (
+				{tagsWithTimeMarkers.length > 0 && (
 					<div className="mx-4 mb-2 pt-3 border-t border-gray-200">
 						<TimeMarkers audioItem={audioItem} />
 					</div>

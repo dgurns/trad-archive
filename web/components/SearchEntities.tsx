@@ -128,7 +128,11 @@ const SearchEntities = ({
 								</button>
 
 								<Link href={EntityService.makeHrefForAbout(entity)}>
-									<a className="btn-icon w-auto px-2" target="_blank">
+									<a
+										className="btn-icon w-auto px-2"
+										target="_blank"
+										aria-label={`Open ${entity.name} in New Tab`}
+									>
 										<i className="material-icons text-base">launch</i>
 									</a>
 								</Link>

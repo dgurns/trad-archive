@@ -52,7 +52,11 @@ const ViewAudioItemBySlug = () => {
 					<div className="flex flex-row mb-6">
 						<Link href={EntityService.makeHrefForAbout(audioItem)}>About</Link>
 					</div>
-					<AudioItemComponent viewAs={ViewAs.Card} audioItem={audioItem} />
+					<AudioItemComponent
+						viewAs={ViewAs.Card}
+						audioItem={audioItem}
+						showTitle={false}
+					/>
 				</div>
 			)}
 		</Layout>

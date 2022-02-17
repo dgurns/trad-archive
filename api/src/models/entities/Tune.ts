@@ -36,6 +36,7 @@ export class Tune extends EntityBaseFields {
 	// theSessionTuneId is the Tune ID on TheSession.org
 	@Field(() => String)
 	@Column()
+	@Index()
 	theSessionTuneId!: string;
 
 	// type, meter, mode, and abc are populated with data from TheSession

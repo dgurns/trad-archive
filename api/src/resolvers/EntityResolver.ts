@@ -92,13 +92,7 @@ export class EntityResolver {
 		if (searchTerm.length < 3) {
 			throw new Error("Must include a search term of at least 3 letters");
 		}
-		// Remove accents and quotes from search term and convert to lower case
-		// https://stackoverflow.com/a/37511463/7426333
-		const cleanedSearchTerm = searchTerm
-			.normalize("NFD")
-			.replace(/[\u0300-\u036f]/g, "")
-			.replace(/["']/g, "")
-			.toLowerCase();
+		const cleanedSearchTerm = searchTerm.toLowerCase();
 		const takeFromEach = Math.round(take / (entityTypes?.length ?? 5));
 		const entityManager = getManager();
 
@@ -148,10 +142,9 @@ export class EntityResolver {
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-			.where("name LIKE :term", {
-				term: `%${cleanedSearchTerm}%`,
-			})
-			.orWhere("aliases LIKE :term", { term: `%${cleanedSearchTerm}%` })
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere("theSessionTuneId = :term", { term: cleanedSearchTerm })
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager

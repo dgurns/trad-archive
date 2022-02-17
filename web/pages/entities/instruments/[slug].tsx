@@ -6,7 +6,7 @@ import { Instrument } from "types";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import ViewEntity from "components/ViewEntity";
+import ViewEntityAndAudioItems from "components/ViewEntityAndAudioItems";
 
 export const INSTRUMENT_QUERY = gql`
 	query Instrument($slug: String!) {
@@ -42,7 +42,7 @@ const ViewInstrumentBySlug = () => {
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${instrument.name}`}>
-			<ViewEntity entity={instrument} />
+			<ViewEntityAndAudioItems entity={instrument} />
 		</Layout>
 	);
 };

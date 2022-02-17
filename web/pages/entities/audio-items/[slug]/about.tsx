@@ -2,25 +2,25 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import { Person } from "types";
+import { AudioItem } from "types";
 
 import Layout from "components/Layout";
-import { PERSON_QUERY } from "pages/entities/people/[slug]";
+import { AUDIO_ITEM_QUERY } from "pages/entities/audio-items/[slug]";
 import Breadcrumb from "components/Breadcrumb";
 import LoadingBlock from "components/LoadingBlock";
 
-const PersonAbout = () => {
+const AudioItemAbout = () => {
 	const router = useRouter();
 	const { slug } = router.query;
 
 	const { data, error } = useQuery<{
-		person: Person;
-	}>(PERSON_QUERY, {
+		audioItem: AudioItem;
+	}>(AUDIO_ITEM_QUERY, {
 		variables: { slug },
 		skip: !slug,
 	});
 	const isLoading = !data && !error;
-	const { name, description, aliases } = data?.person ?? {};
+	const { name, description, aliases, itmaAtomSlug } = data?.audioItem ?? {};
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - About`}>
@@ -30,12 +30,25 @@ const PersonAbout = () => {
 				<>
 					<Breadcrumb
 						items={[
-							{ label: "People", href: "/entities/people" },
-							{ label: name, href: `/entities/people/${slug}` },
+							{ label: "Audio Items", href: "/entities/audio-items" },
+							{ label: name, href: `/entities/audio-items/${slug}` },
 							{ label: "About" },
 						]}
 						className="mb-6"
 					/>
+					{itmaAtomSlug && (
+						<div className="mb-4">
+							<div className="italic text-gray-500">
+								This was sourced from ITMA's AtoM archive
+							</div>
+							<a
+								href={`https://itma-atom.arkivum.net/index.php/${itmaAtomSlug}`}
+								target="_blank"
+							>
+								View on AtoM <i className="material-icons text-sm">launch</i>
+							</a>
+						</div>
+					)}
 					{description && (
 						<div className="mb-4">
 							Description:
@@ -52,11 +65,11 @@ const PersonAbout = () => {
 							<span className="text-gray-500">{aliases}</span>
 						</div>
 					)}
-					<Link href={`/entities/people/${slug}/edit`}>Edit</Link>
+					<Link href={`/entities/audio-items/${slug}/edit`}>Edit</Link>
 				</>
 			)}
 		</Layout>
 	);
 };
 
-export default PersonAbout;
+export default AudioItemAbout;

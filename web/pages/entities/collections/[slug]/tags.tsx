@@ -1,100 +1,65 @@
-import {
-	ApolloClient,
-	InMemoryCache,
-	NormalizedCacheObject,
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
 import { Collection } from "types";
 import TagService from "services/Tag";
-import { API_URL } from "apolloClient";
 import { COLLECTION_QUERY } from "pages/entities/collections/[slug]";
 
 import Layout from "components/Layout";
 import Breadcrumb from "components/Breadcrumb";
+import LoadingBlock from "components/LoadingBlock";
 import TagWithRelationshipToObject from "components/TagWithRelationshipToObject";
 import AddTagButton from "components/AddTagButton";
 import EditTagsButton from "components/EditTagsButton";
 
-// Attempt to reuse instance of server side Apollo Client between runs of
-// getStaticProps, to avoid creating a new DB connection on every request
-let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
+const CollectionTags = () => {
+	const router = useRouter();
+	const { slug } = router.query;
 
-export async function getServerSideProps(context) {
-	let collection: Collection | undefined;
-
-	try {
-		if (!serverSideApolloClient) {
-			serverSideApolloClient = new ApolloClient({
-				uri: API_URL,
-				credentials: "include",
-				cache: new InMemoryCache(),
-				defaultOptions: {
-					query: {
-						// Force server-side queries to get the latest data each time
-						fetchPolicy: "no-cache",
-					},
-				},
-			});
-		}
-
-		const { data } = await serverSideApolloClient.query<{
-			collection: Collection;
-		}>({
-			query: COLLECTION_QUERY,
-			variables: { slug: context.params.slug },
-		});
-		collection = data.collection;
-	} catch {
-		//
-	}
-	return {
-		props: {
-			collection,
-		},
-	};
-}
-
-interface Props {
-	collection: Collection;
-}
-
-const CollectionTags = ({ collection }: Props) => {
-	if (!collection) {
-		return <Layout>Error fetching Collection</Layout>;
-	}
-
-	const { name, slug, tags } = collection;
+	const { data, error, refetch } = useQuery<{
+		collection: Collection;
+	}>(COLLECTION_QUERY, {
+		variables: { slug },
+		skip: !slug,
+	});
+	const isLoading = !data && !error;
+	const { collection } = data ?? {};
+	const { name, tags } = collection ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - Tags`}>
-			<Breadcrumb
-				items={[
-					{ label: "Collections", href: "/entities/collections" },
-					{ label: name, href: `/entities/collections/${slug}` },
-					{ label: "Tags" },
-				]}
-				className="mb-6"
-			/>
+			{isLoading && <LoadingBlock />}
+			{error && <div className="text-red-500">{error.message}</div>}
+			{data && (
+				<>
+					<Breadcrumb
+						items={[
+							{ label: "Collections", href: "/entities/collections" },
+							{ label: name, href: `/entities/collections/${slug}` },
+							{ label: "Tags" },
+						]}
+						className="mb-6"
+					/>
 
-			{sortedTags.map((tag, index) => (
-				<TagWithRelationshipToObject tag={tag} key={index} className="mb-4" />
-			))}
-			<div>
-				<AddTagButton
-					entity={collection}
-					onSuccess={() => window.location.reload()}
-				/>
-				{sortedTags.length > 0 && (
-					<>
-						<span className="text-gray-500 px-2">/</span>
-						<EditTagsButton
-							entity={collection}
-							onSuccess={() => window.location.reload()}
+					{sortedTags.map((tag, index) => (
+						<TagWithRelationshipToObject
+							tag={tag}
+							key={index}
+							className="mb-4"
 						/>
-					</>
-				)}
-			</div>
+					))}
+					<div>
+						<AddTagButton entity={collection} onSuccess={refetch} />
+						{sortedTags.length > 0 && (
+							<>
+								<span className="text-gray-500 px-2">/</span>
+								<EditTagsButton entity={collection} onSuccess={refetch} />
+							</>
+						)}
+					</div>
+				</>
+			)}
 		</Layout>
 	);
 };

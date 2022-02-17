@@ -120,6 +120,7 @@ const SaveItemButton = ({ audioItem }: Props) => {
 			} pl-0.5`}
 			onClick={onButtonClicked}
 			disabled={createLoading || deleteLoading}
+			aria-label={isSavedByUser ? "Unsave" : "Save"}
 		>
 			{isSavedByUser ? (
 				<>

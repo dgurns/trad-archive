@@ -46,7 +46,11 @@ const Menu = ({ children }: Props) => {
 
 	return (
 		<div className="relative" ref={containerRef}>
-			<button className="btn-secondary" onClick={onIconClicked}>
+			<button
+				className="btn-secondary"
+				onClick={onIconClicked}
+				aria-label={isOpen ? "Close Menu" : "Show Menu"}
+			>
 				<i className="material-icons">expand_more</i>
 			</button>
 

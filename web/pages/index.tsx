@@ -29,7 +29,7 @@ import AudioItemComponent from "components/AudioItem";
 import LoadingBlock from "components/LoadingBlock";
 
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
-const NUM_COMMENTS_TO_FETCH = 5;
+const NUM_COMMENTS_TO_FETCH = 6;
 const NUM_COLLECTIONS_TO_FETCH = 5;
 
 interface QueryVariables {
@@ -375,7 +375,7 @@ export default function Home({
 					)}
 				</div>
 
-				<div className="hidden md:flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
+				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Browse</h3>
 					<Link href="/entities/people">
 						<a className="mb-2">People</a>

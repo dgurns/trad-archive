@@ -392,10 +392,10 @@ CREATE TABLE `tune` (
   UNIQUE KEY `IDX_0c40b0dbe742aa63a6bb2b5231` (`slug`),
   KEY `FK_622835af391f05750fe194eb15b` (`createdByUserId`),
   KEY `FK_e29a2fc6cb1af1779a7ba55a417` (`updatedByUserId`),
-  KEY `name` (`name`),
   KEY `idx_name` (`name`),
   KEY `idx_createdAt` (`createdAt`),
   KEY `idx_updatedAt` (`updatedAt`),
+  KEY `idx_theSessionTuneId` (`theSessionTuneId`),
   FULLTEXT KEY `IDX_03ee6f8829912ff0af96eb1de9` (`name`) /*!50100 WITH PARSER `ngram` */ ,
   FULLTEXT KEY `IDX_a0031b16785b3b7dfed915e249` (`aliases`) /*!50100 WITH PARSER `ngram` */ ,
   FULLTEXT KEY `IDX_6d97fb12657d78f5e69c7eeefb` (`description`) /*!50100 WITH PARSER `ngram` */ ,
@@ -463,4 +463,4 @@ CREATE TABLE `verification_request` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-13 15:13:24
+-- Dump completed on 2022-02-17 14:37:08

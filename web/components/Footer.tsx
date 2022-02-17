@@ -11,6 +11,15 @@ const Footer = () => (
 				Dan Gurney <i className="material-icons text-sm">launch</i>
 			</a>
 		</div>
+
+		<div className="mb-4">
+			Special thanks to{" "}
+			<a href="https://thesession.org/" target="_blank">
+				The Session <i className="material-icons text-sm">launch</i>
+			</a>{" "}
+			for providing tune data.
+		</div>
+
 		<div className="mb-4">
 			All of the code is open source on{" "}
 			<a href="https://github.com/dgurns/trad-archive" target="_blank">
@@ -18,6 +27,7 @@ const Footer = () => (
 			</a>
 			. We welcome community contributors.
 		</div>
+
 		<div>
 			<a
 				href="https://github.com/dgurns/trad-archive/discussions"

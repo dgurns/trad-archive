@@ -148,10 +148,13 @@ export class EntityResolver {
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
-			.where("name LIKE :term", {
+			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
 				term: `%${cleanedSearchTerm}%`,
 			})
-			.orWhere("aliases LIKE :term", { term: `%${cleanedSearchTerm}%` })
+			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
+				term: `%${cleanedSearchTerm}%`,
+			})
+			.orWhere("theSessionTuneId = :term", { term: cleanedSearchTerm })
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager

@@ -115,7 +115,11 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 								{audioItemIsInPlayer ? (
 									<div className="pl-4 text-gray-500">Playing</div>
 								) : (
-									<button style={{ lineHeight: 0 }} onClick={onPlayPressed}>
+									<button
+										style={{ lineHeight: 0 }}
+										onClick={onPlayPressed}
+										aria-label="Play"
+									>
 										<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
 											play_arrow
 										</i>
@@ -137,6 +141,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 								<button
 									className="btn-secondary flex flex-row items-center"
 									onClick={onTimeMarkersIconClicked}
+									aria-label="Show/Hide Timestamped Tags"
 								>
 									<i className="material-icons">format_list_bulleted</i>
 								</button>

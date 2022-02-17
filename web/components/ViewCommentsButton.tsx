@@ -97,7 +97,11 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 
 	return (
 		<>
-			<button className="btn-secondary" onClick={onViewCommentsButtonClicked}>
+			<button
+				className="btn-secondary"
+				onClick={onViewCommentsButtonClicked}
+				aria-label="View Comments"
+			>
 				<i className="material-icons mr-0.5">chat_bubble_outline</i>
 				{commentsCount > 0 ? (
 					<>

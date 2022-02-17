@@ -6,7 +6,7 @@ import { Collection } from "types";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import ViewEntity from "components/ViewEntity";
+import ViewEntityAndAudioItems from "components/ViewEntityAndAudioItems";
 
 export const COLLECTION_QUERY = gql`
 	query Collection($slug: String!) {
@@ -42,7 +42,7 @@ const ViewCollectionBySlug = () => {
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${collection.name}`}>
-			<ViewEntity entity={collection} />
+			<ViewEntityAndAudioItems entity={collection} />
 		</Layout>
 	);
 };

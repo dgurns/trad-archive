@@ -6,7 +6,7 @@ import { Place } from "types";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import ViewEntity from "components/ViewEntity";
+import ViewEntityAndAudioItems from "components/ViewEntityAndAudioItems";
 
 export const PLACE_QUERY = gql`
 	query Place($slug: String!) {
@@ -42,7 +42,7 @@ const ViewPlaceBySlug = () => {
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${place.name}`}>
-			<ViewEntity entity={place} />
+			<ViewEntityAndAudioItems entity={place} />
 		</Layout>
 	);
 };

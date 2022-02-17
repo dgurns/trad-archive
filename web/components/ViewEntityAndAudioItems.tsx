@@ -15,7 +15,7 @@ interface Props {
 	entity: Entity;
 	className?: string;
 }
-const ViewEntity = ({ entity, className }: Props) => {
+const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 	const { name } = entity ?? {};
 
 	const { ref: metadataRef, inView: metadataInView } = useInView({
@@ -118,4 +118,4 @@ const ViewEntity = ({ entity, className }: Props) => {
 	);
 };
 
-export default ViewEntity;
+export default ViewEntityAndAudioItems;

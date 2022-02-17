@@ -127,7 +127,7 @@ const SearchEntities = ({
 									</span>
 								</button>
 
-								<Link href={EntityService.makeHrefForView(entity)}>
+								<Link href={EntityService.makeHrefForAbout(entity)}>
 									<a className="btn-icon w-auto px-2" target="_blank">
 										<i className="material-icons text-base">launch</i>
 									</a>

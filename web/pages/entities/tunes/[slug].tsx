@@ -6,7 +6,7 @@ import { Tune } from "types";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import ViewEntity from "components/ViewEntity";
+import ViewEntityAndAudioItems from "components/ViewEntityAndAudioItems";
 
 export const TUNE_QUERY = gql`
 	query Tune($slug: String!) {
@@ -42,7 +42,7 @@ const ViewTuneBySlug = () => {
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${tune.name}`}>
-			<ViewEntity entity={tune} />
+			<ViewEntityAndAudioItems entity={tune} />
 		</Layout>
 	);
 };

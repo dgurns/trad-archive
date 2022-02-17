@@ -6,7 +6,7 @@ import { Person } from "types";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
-import ViewEntity from "components/ViewEntity";
+import ViewEntityAndAudioItems from "components/ViewEntityAndAudioItems";
 
 export const PERSON_QUERY = gql`
 	query Person($slug: String!) {
@@ -42,7 +42,7 @@ const ViewPersonBySlug = () => {
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${person.name}`}>
-			<ViewEntity entity={person} />
+			<ViewEntityAndAudioItems entity={person} />
 		</Layout>
 	);
 };

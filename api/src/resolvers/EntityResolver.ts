@@ -100,79 +100,49 @@ export class EntityResolver {
 		const personQuery = entityManager
 			.createQueryBuilder(Person, "person")
 			.leftJoinAndSelect("person.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(description) LIKE "%${cleanedSearchTerm}%"`)
 			.take(takeFromEach)
 			.getMany();
 		const instrumentQuery = entityManager
 			.createQueryBuilder(Instrument, "instrument")
 			.leftJoinAndSelect("instrument.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(description) LIKE "%${cleanedSearchTerm}%"`)
 			.take(takeFromEach)
 			.getMany();
 		const placeQuery = entityManager
 			.createQueryBuilder(Place, "place")
 			.leftJoinAndSelect("place.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(description) LIKE "%${cleanedSearchTerm}%"`)
 			.take(takeFromEach)
 			.getMany();
 		const tuneQuery = entityManager
 			.createQueryBuilder(Tune, "tune")
 			.leftJoinAndSelect("tune.createdByUser", "createdByUser")
 			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
-			.orWhere(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
 			.orWhere("theSessionTuneId = :term", { term: cleanedSearchTerm })
 			.take(takeFromEach)
 			.getMany();
 		const collectionQuery = entityManager
 			.createQueryBuilder(Collection, "collection")
 			.leftJoinAndSelect("collection.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(description) LIKE "%${cleanedSearchTerm}%"`)
 			.take(takeFromEach)
 			.getMany();
 		const audioItemQuery = entityManager
 			.createQueryBuilder(AudioItem, "audioItem")
 			.leftJoinAndSelect("audioItem.createdByUser", "createdByUser")
-			.where("MATCH(name) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(aliases) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
-			.orWhere("MATCH(description) AGAINST (:term IN NATURAL LANGUAGE MODE)", {
-				term: cleanedSearchTerm,
-			})
+			.where(`LOWER(name) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(aliases) LIKE "%${cleanedSearchTerm}%"`)
+			.orWhere(`LOWER(description) LIKE "%${cleanedSearchTerm}%"`)
 			.take(takeFromEach)
 			.getMany();
 

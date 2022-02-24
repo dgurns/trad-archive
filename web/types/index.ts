@@ -230,3 +230,9 @@ export const isApprovedVerificationRequest = (
 export const isDeniedVerificationRequest = (
 	verificationRequest: VerificationRequest
 ) => verificationRequest.status.valueOf() === "Denied";
+
+export interface Stats {
+	numAudioItemsAllTime: number;
+	numTagsAllTime: number;
+	numCommentsAllTime: number;
+}

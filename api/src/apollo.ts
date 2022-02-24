@@ -17,6 +17,7 @@ import { InstrumentResolver } from "./resolvers/InstrumentResolver";
 import { PlaceResolver } from "./resolvers/PlaceResolver";
 import { TuneResolver } from "./resolvers/TuneResolver";
 import { CollectionResolver } from "./resolvers/CollectionResolver";
+import { StatsResolver } from "./resolvers/StatsResolver";
 
 export const makeSchema = () => {
 	return buildSchema({
@@ -36,6 +37,7 @@ export const makeSchema = () => {
 			PlaceResolver,
 			TuneResolver,
 			CollectionResolver,
+			StatsResolver,
 		],
 		dateScalarMode: "isoDate",
 		authChecker,

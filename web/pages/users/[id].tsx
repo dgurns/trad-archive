@@ -43,7 +43,7 @@ const ViewUserById = () => {
 	] = useAudioItemsCreatedByUser(userData?.user);
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		defaultViewAs: ViewAs.Card,
+		defaultViewAs: ViewAs.Cards,
 	});
 
 	const aboutMarkup = useMemo(

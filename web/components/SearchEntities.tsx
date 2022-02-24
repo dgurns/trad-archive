@@ -121,7 +121,12 @@ const SearchEntities = ({
 									className="flex flex-1 justify-between items-center text-left p-2 rounded cursor-pointer hover:bg-gray-200"
 									onClick={() => onSelect(entity)}
 								>
-									<span>{entity.name}</span>
+									<span>
+										{entity.name}
+										{entity.entityType === EntityType.Tune
+											? ` (${entity.type})`
+											: ""}
+									</span>
 									<span className="uppercase text-gray-500 text-sm">
 										{entity.entityType}
 									</span>

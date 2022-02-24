@@ -3,6 +3,7 @@ import {
 	ApolloClient,
 	InMemoryCache,
 	NormalizedCacheObject,
+	gql,
 } from "@apollo/client";
 import Link from "next/link";
 
@@ -14,6 +15,7 @@ import {
 	EntityStatus,
 	SortBy,
 	ViewAs,
+	Stats,
 } from "types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "hooks/useComments";
@@ -31,6 +33,16 @@ import LoadingBlock from "components/LoadingBlock";
 const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 6;
 const NUM_COLLECTIONS_TO_FETCH = 5;
+
+const STATS_QUERY = gql`
+	query Stats {
+		stats {
+			numAudioItemsAllTime
+			numTagsAllTime
+			numCommentsAllTime
+		}
+	}
+`;
 
 interface QueryVariables {
 	input: {
@@ -50,6 +62,7 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 export async function getStaticProps() {
 	let recentlyTaggedAudioItems: AudioItem[] | undefined;
 	let recentlyAddedAudioItems: AudioItem[] | undefined;
+	let stats: Stats | undefined;
 	let comments: Comment[] | undefined;
 	let collections: Collection[] | undefined;
 
@@ -100,7 +113,10 @@ export async function getStaticProps() {
 				}),
 			]);
 
-		const [commentsQuery, collectionsQuery] = await Promise.all([
+		const [statsQuery, commentsQuery, collectionsQuery] = await Promise.all([
+			serverSideApolloClient.query<{ stats: Stats }>({
+				query: STATS_QUERY,
+			}),
 			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
 				query: COMMENTS_QUERY,
 				variables: {
@@ -125,6 +141,7 @@ export async function getStaticProps() {
 
 		recentlyTaggedAudioItems = recentlyTaggedAudioItemsQuery?.data?.audioItems;
 		recentlyAddedAudioItems = recentlyAddedAudioItemsQuery?.data?.audioItems;
+		stats = statsQuery?.data?.stats;
 		comments = commentsQuery?.data?.comments;
 		collections = collectionsQuery?.data?.collections;
 	} catch {
@@ -135,6 +152,7 @@ export async function getStaticProps() {
 		props: {
 			prefetchedRecentlyTaggedAudioItems: recentlyTaggedAudioItems ?? null,
 			prefetchedRecentlyAddedAudioItems: recentlyAddedAudioItems ?? null,
+			prefetchedStats: stats ?? null,
 			prefetchedComments: comments ?? null,
 			prefetchedCollections: collections ?? null,
 		},
@@ -145,6 +163,7 @@ export async function getStaticProps() {
 interface Props {
 	prefetchedRecentlyTaggedAudioItems?: AudioItem[];
 	prefetchedRecentlyAddedAudioItems?: AudioItem[];
+	prefetchedStats?: Stats;
 	prefetchedComments?: Comment[];
 	prefetchedCollections?: Collection[];
 }
@@ -152,6 +171,7 @@ interface Props {
 export default function Home({
 	prefetchedRecentlyTaggedAudioItems,
 	prefetchedRecentlyAddedAudioItems,
+	prefetchedStats,
 	prefetchedComments,
 	prefetchedCollections,
 }: Props) {
@@ -215,6 +235,19 @@ export default function Home({
 				});
 			}
 		}
+		if (prefetchedStats) {
+			// Check if there are already Stats in the cache
+			const cachedStats = apolloClient.readQuery({
+				query: STATS_QUERY,
+			});
+			// If not, add the prefetched Stats to the cache
+			if (!cachedStats) {
+				apolloClient.writeQuery({
+					query: STATS_QUERY,
+					data: { stats: prefetchedStats },
+				});
+			}
+		}
 		if (prefetchedComments) {
 			// Check if there are already Comments in the cache
 			const cachedComments = apolloClient.readQuery({
@@ -267,13 +300,15 @@ export default function Home({
 		apolloClient,
 		prefetchedRecentlyTaggedAudioItems,
 		prefetchedRecentlyAddedAudioItems,
+		prefetchedStats,
 		prefetchedComments,
 		prefetchedCollections,
 	]);
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,
-		defaultViewAs: ViewAs.Card,
+		defaultViewAs: ViewAs.Cards,
+		enableQueryParams: false,
 	});
 
 	// These queries skip the initial network request if the cache was
@@ -393,6 +428,21 @@ export default function Home({
 						<a className="mb-2">Collections</a>
 					</Link>
 
+					{prefetchedStats && (
+						<>
+							<h3 className="mt-6 mb-4">Stats</h3>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numAudioItemsAllTime} Audio Items
+							</span>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numTagsAllTime} Tags
+							</span>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numCommentsAllTime} Comments
+							</span>
+						</>
+					)}
+
 					<h3 className="mt-6 mb-4">Latest Collections</h3>
 					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
 					{!collectionsLoading && collections?.length === 0 && (
@@ -411,6 +461,15 @@ export default function Home({
 							</div>
 						);
 					})}
+
+					<h3 className="mt-6 mb-4">Latest Features + Fixes</h3>
+					<a
+						className="mb-2"
+						href="https://github.com/dgurns/trad-archive/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc"
+						target="_blank"
+					>
+						View on GitHub <i className="material-icons text-sm">launch</i>
+					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>
 					{commentsLoading && comments?.length === 0 && <LoadingBlock />}

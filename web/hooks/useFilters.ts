@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { PerPage, SortBy, ViewAs } from "types";
 
+import useQueryParams from "hooks/useQueryParams";
 import Filters, { Props as FiltersProps } from "components/Filters";
 
 interface Args {
@@ -9,6 +10,7 @@ interface Args {
 	defaultPerPage?: PerPage;
 	defaultSortBy?: SortBy;
 	defaultViewAs?: ViewAs;
+	enableQueryParams?: boolean;
 }
 interface ReturnValue {
 	Filters: (props: FiltersProps) => React.ReactElement;
@@ -28,16 +30,51 @@ const useFilters = ({
 	defaultPerPage,
 	defaultSortBy,
 	defaultViewAs,
+	enableQueryParams = true,
 }: Args = {}): ReturnValue => {
-	const [page, setPage] = useState(defaultPage);
-	const [perPage, setPerPage] = useState(defaultPerPage);
-	const [sortBy, setSortBy] = useState(defaultSortBy);
-	const [viewAs, setViewAs] = useState(defaultViewAs);
+	const { getQueryParams, updateQueryParams, clearQueryParams } =
+		useQueryParams();
+	const queryParams = getQueryParams();
 
-	// Whenever perPage value changes, reset page to 1
+	// If query params are enabled and set in the URL, use them as default values
+	const initialPage = enableQueryParams
+		? parseInt(queryParams.page, 10) || defaultPage
+		: defaultPage;
+	const initialPerPage = enableQueryParams
+		? parseInt(queryParams.perPage, 10) || defaultPerPage
+		: defaultPerPage;
+	const initialSortBy = enableQueryParams
+		? (queryParams.sortBy as SortBy) ?? defaultSortBy
+		: defaultSortBy;
+	const initialViewAs = enableQueryParams
+		? (queryParams.viewAs as ViewAs) ?? defaultViewAs
+		: defaultViewAs;
+
+	const [page, setPage] = useState<number>(initialPage);
+	const [perPage, setPerPage] = useState<number>(initialPerPage);
+	const [sortBy, setSortBy] = useState<SortBy>(initialSortBy);
+	const [viewAs, setViewAs] = useState<ViewAs>(initialViewAs);
+
+	// Update query params when state changes
 	useEffect(() => {
-		setPage(1);
-	}, [perPage]);
+		if (!enableQueryParams) {
+			return;
+		}
+		updateQueryParams({
+			page: page ? `${page}` : null,
+			perPage: perPage ? `${perPage}` : null,
+			sortBy,
+			viewAs,
+		});
+	}, [enableQueryParams, page, perPage, sortBy, viewAs]);
+
+	// Clear query params on unmount
+	useEffect(() => {
+		if (!enableQueryParams) {
+			return;
+		}
+		return () => clearQueryParams();
+	}, [enableQueryParams]);
 
 	const onChangePage = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -45,8 +82,10 @@ const useFilters = ({
 		[]
 	);
 	const onChangePerPage = useCallback(
-		(event: React.ChangeEvent<HTMLSelectElement>) =>
-			setPerPage(parseInt(event.target.value)),
+		(event: React.ChangeEvent<HTMLSelectElement>) => {
+			setPerPage(parseInt(event.target.value));
+			setPage(1);
+		},
 		[]
 	);
 	const onChangeSortBy = useCallback(
@@ -60,19 +99,27 @@ const useFilters = ({
 		[]
 	);
 
-	const filtersProps = useMemo(
+	const returnValue = useMemo(
 		() => ({
-			totalItems,
+			Filters,
+			filtersProps: {
+				totalItems,
+				page,
+				onChangePage,
+				perPage,
+				onChangePerPage,
+				sortBy,
+				onChangeSortBy,
+				viewAs,
+				onChangeViewAs,
+			},
 			page,
-			onChangePage,
 			perPage,
-			onChangePerPage,
 			sortBy,
-			onChangeSortBy,
 			viewAs,
-			onChangeViewAs,
 		}),
 		[
+			Filters,
 			totalItems,
 			page,
 			onChangePage,
@@ -85,7 +132,7 @@ const useFilters = ({
 		]
 	);
 
-	return { Filters, filtersProps, page, perPage, sortBy, viewAs };
+	return returnValue;
 };
 
 export default useFilters;

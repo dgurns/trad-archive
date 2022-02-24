@@ -54,7 +54,9 @@ const CollectionAbout = () => {
 						<div className="mb-4">
 							Description:
 							<br />
-							<span className="text-gray-500">{description}</span>
+							<span className="text-gray-500 whitespace-pre-wrap">
+								{description}
+							</span>
 						</div>
 					)}
 					{aliases && (

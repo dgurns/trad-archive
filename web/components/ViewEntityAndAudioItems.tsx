@@ -28,7 +28,7 @@ const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 		defaultPage: 1,
 		totalItems: totalAudioItems,
 		defaultPerPage: PerPage.Twenty,
-		defaultViewAs: ViewAs.Card,
+		defaultViewAs: ViewAs.Cards,
 	});
 	const filtersRef = useRef<HTMLDivElement>(null);
 

@@ -273,7 +273,7 @@ export default function Home({
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,
-		defaultViewAs: ViewAs.Card,
+		defaultViewAs: ViewAs.Cards,
 		enableQueryParams: false,
 	});
 

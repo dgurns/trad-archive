@@ -117,7 +117,7 @@ const Filters = ({
 				<div className="flex flex-row items-center mr-0 md:mb-0">
 					View as
 					<select className="ml-1" value={viewAs} onChange={onChangeViewAs}>
-						<option value={ViewAs.Card}>Cards</option>
+						<option value={ViewAs.Cards}>Cards</option>
 						<option value={ViewAs.Compact}>Compact</option>
 						<option value={ViewAs.List}>List</option>
 					</select>

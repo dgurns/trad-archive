@@ -14,12 +14,12 @@ interface Props {
 // AudioItem handles wrapping the different variants of AudioItem components. It
 // returns the variant requested in the `viewAs` prop. Default is Card.
 const AudioItemComponent = ({
-	viewAs = ViewAs.Card,
+	viewAs = ViewAs.Cards,
 	audioItem,
 	showTitle,
 	className,
 }: Props) => {
-	if (viewAs === ViewAs.Card) {
+	if (viewAs === ViewAs.Cards) {
 		return (
 			<AudioItemCard
 				audioItem={audioItem}

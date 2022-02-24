@@ -12,7 +12,7 @@ export enum SortBy {
 }
 
 export enum ViewAs {
-	Card = "Card",
+	Cards = "Cards",
 	Compact = "Compact",
 	List = "List",
 }

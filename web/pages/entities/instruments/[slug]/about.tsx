@@ -40,7 +40,7 @@ const InstrumentAbout = () => {
 						<div className="mb-4">
 							Description:
 							<br />
-							<span className="text-gray-500 whitespace-pre">
+							<span className="text-gray-500 whitespace-pre-wrap">
 								{description}
 							</span>
 						</div>

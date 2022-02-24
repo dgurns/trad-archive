@@ -274,6 +274,7 @@ export default function Home({
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,
 		defaultViewAs: ViewAs.Card,
+		enableQueryParams: false,
 	});
 
 	// These queries skip the initial network request if the cache was

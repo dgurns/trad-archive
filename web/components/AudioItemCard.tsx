@@ -153,7 +153,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 					)}{" "}
 					{DateTime.formatDateYearTime(createdAt)}
 				</div>
-				<div className="text-sm mt-1 text-gray-900 whitespace-pre-line">
+				<div className="text-sm mt-1 text-gray-900 whitespace-pre-wrap">
 					{description || "No description"}
 				</div>
 			</div>

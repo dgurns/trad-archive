@@ -428,16 +428,20 @@ export default function Home({
 						<a className="mb-2">Collections</a>
 					</Link>
 
-					<h3 className="mt-6 mb-4">Stats</h3>
-					<span className="mb-2 text-gray-500">
-						{prefetchedStats.numAudioItemsAllTime} Audio Items
-					</span>
-					<span className="mb-2 text-gray-500">
-						{prefetchedStats.numTagsAllTime} Tags
-					</span>
-					<span className="mb-2 text-gray-500">
-						{prefetchedStats.numCommentsAllTime} Comments
-					</span>
+					{prefetchedStats && (
+						<>
+							<h3 className="mt-6 mb-4">Stats</h3>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numAudioItemsAllTime} Audio Items
+							</span>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numTagsAllTime} Tags
+							</span>
+							<span className="mb-2 text-gray-500">
+								{prefetchedStats.numCommentsAllTime} Comments
+							</span>
+						</>
+					)}
 
 					<h3 className="mt-6 mb-4">Latest Collections</h3>
 					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
@@ -457,6 +461,15 @@ export default function Home({
 							</div>
 						);
 					})}
+
+					<h3 className="mt-6 mb-4">Latest Features + Fixes</h3>
+					<a
+						className="mb-2"
+						href="https://github.com/dgurns/trad-archive/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc"
+						target="_blank"
+					>
+						View on GitHub <i className="material-icons text-sm">launch</i>
+					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>
 					{commentsLoading && comments?.length === 0 && <LoadingBlock />}

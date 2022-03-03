@@ -102,13 +102,13 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	const onTimeMarkerValueChanged = useCallback(
 		(newTimeMarkerValueSeconds: number) => {
-			if (newTimeMarkerValueSeconds > activeItemDurationSeconds) {
+			setShouldAddTimeMarker(true);
+			if (newTimeMarkerValueSeconds >= activeItemDurationSeconds) {
 				setTimeMarkerValue(activeItemDurationSeconds);
-				return;
+			} else if (newTimeMarkerValueSeconds <= 0) {
+				setTimeMarkerValue(0);
 			} else {
-				setShouldAddTimeMarker(true);
 				setTimeMarkerValue(newTimeMarkerValueSeconds);
-				return;
 			}
 		},
 		[activeItemDurationSeconds]

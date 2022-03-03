@@ -7,6 +7,7 @@ import useTags from "hooks/useTags";
 
 import SearchEntities from "components/SearchEntities";
 import SelectRelationship from "components/SelectRelationship";
+import TimestampInput from "components/TimestampInput";
 
 const CREATE_TAG_MUTATION = gql`
 	mutation CreateTag($input: CreateTagInput!) {
@@ -100,22 +101,17 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	}, []);
 
 	const onTimeMarkerValueChanged = useCallback(
-		(event) => {
-			const newTimeMarkerValue = parseInt(event.target.value);
-			if (isNaN(newTimeMarkerValue)) {
-				setShouldAddTimeMarker(false);
-				setTimeMarkerValue(NaN);
-				return;
-			} else if (newTimeMarkerValue > activeItemDurationSeconds) {
+		(newTimeMarkerValueSeconds: number) => {
+			setShouldAddTimeMarker(true);
+			if (newTimeMarkerValueSeconds >= activeItemDurationSeconds) {
 				setTimeMarkerValue(activeItemDurationSeconds);
-				return;
+			} else if (newTimeMarkerValueSeconds <= 0) {
+				setTimeMarkerValue(0);
 			} else {
-				setShouldAddTimeMarker(true);
-				setTimeMarkerValue(newTimeMarkerValue);
-				return;
+				setTimeMarkerValue(newTimeMarkerValueSeconds);
 			}
 		},
-		[playbackPositionSeconds, activeItemDurationSeconds]
+		[activeItemDurationSeconds]
 	);
 
 	const onSelectRelationship = useCallback(
@@ -192,7 +188,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		<>
 			<div>What is the relationship between these two entities?</div>
 
-			<div className="mt-3">
+			<div className="mt-2">
 				<SelectRelationship
 					subjectEntity={entity}
 					objectEntity={selectedEntity}
@@ -215,7 +211,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			</div>
 
 			{shouldCreateInverseRelationship && (
-				<div className="mt-3">
+				<div className="mt-2">
 					<SelectRelationship
 						subjectEntity={selectedEntity}
 						objectEntity={entity}
@@ -225,24 +221,21 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			)}
 
 			{shouldShowTimeMarkerCheckbox && (
-				<div className="mt-4 flex flex-row items-center justify-start">
+				<div className="mt-6 flex flex-row items-start justify-start">
 					<input
 						type="checkbox"
 						id="time-marker"
+						className="mt-1"
 						checked={shouldAddTimeMarker}
 						onChange={(event) => setShouldAddTimeMarker(event.target.checked)}
 					/>
 					<label htmlFor="time-marker" className="ml-2">
-						<div className="flex flex-row items-center">
-							Mark this tag at time{" "}
-							<div className="w-16 mx-2">
-								<input
-									type="number"
-									value={timeMarkerValue}
-									onChange={onTimeMarkerValueChanged}
-								/>{" "}
-							</div>
-							second{timeMarkerValue === 1 ? "" : "s"}
+						<div className="flex flex-col items-start">
+							<div className="mb-2">Mark this Tag at time:</div>
+							<TimestampInput
+								valueInSeconds={timeMarkerValue}
+								onChange={onTimeMarkerValueChanged}
+							/>
 						</div>
 					</label>
 				</div>

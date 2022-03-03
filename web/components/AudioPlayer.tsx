@@ -53,6 +53,7 @@ const AudioPlayer = ({ item }: AudioPlayerProps) => {
 		<audio
 			ref={audioPlayerRef}
 			id="audio"
+			preload="metadata"
 			autoPlay
 			controls
 			controlsList="nodownload"

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import Link from "next/link";
 
-import { AudioItem, Tag } from "types";
+import { AudioItem, EntityType, Tag } from "types";
 import DateTime from "services/DateTime";
 import Entity from "services/Entity";
 import usePlayerContext from "hooks/usePlayerContext";
@@ -95,7 +95,12 @@ const TimeMarkers = ({ audioItem }: Props) => {
 								{tagsAtTimeMarker.map((tag, index) => (
 									<span className="flex flex-row items-center" key={index}>
 										<Link href={Entity.makeHrefForView(tag.objectEntity)}>
-											<a id="time-marker-tag-link">{tag.objectEntity.name}</a>
+											<a id="time-marker-tag-link">
+												{tag.objectEntity.name}
+												{tag.objectEntity.entityType === EntityType.Tune
+													? ` (${tag.objectEntity.type})`
+													: ""}
+											</a>
 										</Link>
 										{index !== tagsAtTimeMarker.length - 1 && (
 											<span className="hidden md:block mr-1">,</span>

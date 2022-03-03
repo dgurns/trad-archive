@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -11,7 +11,6 @@ import {
 } from "types";
 import DateTime from "services/DateTime";
 import usePlayerContext from "hooks/usePlayerContext";
-import useAudioItem from "hooks/useAudioItem";
 
 import Tags from "components/Tags";
 import Menu from "components/Menu";

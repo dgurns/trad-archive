@@ -76,6 +76,7 @@ export const TagEntityFragments = {
 			entityType
 			name
 			slug
+			type
 		}
 	`,
 	tagCollection: gql`

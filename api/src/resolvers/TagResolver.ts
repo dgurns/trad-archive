@@ -77,6 +77,9 @@ export class TagResolver {
 				objectEntityId,
 			})
 			.andWhere("tag.relationshipId = :relationshipId", { relationshipId })
+			.andWhere("tag.subjectTimeMarkerSeconds = :subjectTimeMarkerSeconds", {
+				subjectTimeMarkerSeconds,
+			})
 			.getOne();
 		if (existingTag) {
 			throw new Error("This Tag has already been added");

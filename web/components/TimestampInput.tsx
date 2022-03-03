@@ -27,17 +27,14 @@ const TimestampInput = ({ valueInSeconds, onChange, className }: Props) => {
 		onChange(newValueInSeconds);
 	};
 
-	const hrsValue = valueInSeconds === 0 ? 0 : hrs || "";
-	const minsValue = valueInSeconds === 0 ? 0 : mins || "";
-	const secsValue = valueInSeconds === 0 ? 0 : secs || "";
-
 	return (
 		<div className={`flex flex-row items-center ${className ?? ""}`}>
 			<input
 				type="number"
 				id="hrs"
 				className="flex max-w-[50px]"
-				value={hrsValue}
+				value={hrs || ""}
+				placeholder="0"
 				onChange={onChangeHrs}
 			/>
 			<label htmlFor="hours" className="px-2">
@@ -47,7 +44,8 @@ const TimestampInput = ({ valueInSeconds, onChange, className }: Props) => {
 				type="number"
 				id="mins"
 				className="flex max-w-[55px]"
-				value={minsValue}
+				value={mins || ""}
+				placeholder="0"
 				onChange={onChangeMins}
 			/>
 			<label htmlFor="mins" className="px-2">
@@ -57,7 +55,8 @@ const TimestampInput = ({ valueInSeconds, onChange, className }: Props) => {
 				type="number"
 				id="secs"
 				className="flex max-w-[55px]"
-				value={secsValue}
+				value={secs || ""}
+				placeholder="0"
 				onChange={onChangeSecs}
 			/>
 			<label htmlFor="secs" className="px-2">

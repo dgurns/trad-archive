@@ -231,7 +231,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 					/>
 					<label htmlFor="time-marker" className="ml-2">
 						<div className="flex flex-col items-start">
-							<div className="mb-2">Mark this tag at time:</div>
+							<div className="mb-2">Mark this Tag at time:</div>
 							<TimestampInput
 								valueInSeconds={timeMarkerValue}
 								onChange={onTimeMarkerValueChanged}

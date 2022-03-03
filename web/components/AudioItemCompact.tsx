@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import Link from "next/link";
 
-import { AudioItem, EntityStatus } from "types";
+import { AudioItem, EntityStatus, EntityType } from "types";
 import EntityService from "services/Entity";
 import TagService from "services/Tag";
 import usePlayerContext from "hooks/usePlayerContext";
@@ -67,7 +67,12 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 					{sortedTags.map((tag, index) => (
 						<div key={index} className="ml-1 whitespace-pre">
 							<Link href={EntityService.makeHrefForView(tag.objectEntity)}>
-								{tag.objectEntity.name}
+								<a>
+									{tag.objectEntity.name}
+									{tag.objectEntity.entityType === EntityType.Tune
+										? ` (${tag.objectEntity.type})`
+										: ""}
+								</a>
 							</Link>
 							{index !== sortedTags.length - 1 && ", "}
 						</div>

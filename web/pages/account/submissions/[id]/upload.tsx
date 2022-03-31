@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
 
 import { Submission } from "types";
 import { SubmissionFragments } from "fragments";
@@ -20,6 +20,17 @@ const SUBMISSION = gql`
 	${SubmissionFragments.submission}
 `;
 
+const CREATE_PRESIGNED_FILE_UPLOAD_URLS = gql`
+	mutation CreatePresignedFileUploadUrls(
+		$input: CreatePresignedFileUploadUrlsInput!
+	) {
+		createPresignedFileUploadUrls(input: $input) {
+			filename
+			presignedUploadUrl
+		}
+	}
+`;
+
 interface QueryData {
 	submission: Submission;
 }
@@ -28,16 +39,45 @@ interface QueryVars {
 		id: string;
 	};
 }
+interface MutationData {
+	createPresignedFileUploadUrls: Array<{
+		filename: string;
+		presignedUploadUrl: string;
+	}>;
+}
+interface MutationVars {
+	input: {
+		submissionId: string;
+		filenames: string[];
+	};
+}
 
 const SubmissionsViewByIdUpload = () => {
 	const router = useRouter();
 	const { id } = router.query;
+	const submissionId = typeof id === "string" ? id : id[0];
 
 	const { data, error } = useQuery<QueryData, QueryVars>(SUBMISSION, {
 		variables: { input: { id: typeof id === "string" ? id : undefined } },
 	});
 
 	const [files, setFiles] = useState<File[]>([]);
+
+	const [getPresignedUrls, mutation] = useMutation<MutationData, MutationVars>(
+		CREATE_PRESIGNED_FILE_UPLOAD_URLS
+	);
+
+	const onUploadClicked = async () => {
+		try {
+			const filenames = files.map((f) => f.name);
+			const presignedUrls = await getPresignedUrls({
+				variables: { input: { submissionId, filenames } },
+			});
+			console.log(presignedUrls);
+		} catch {
+			alert("Error uploading files. Please try again.");
+		}
+	};
 
 	if (!data) {
 		return (
@@ -105,7 +145,7 @@ const SubmissionsViewByIdUpload = () => {
 								true
 							),
 						},
-						{ label: "Upload" },
+						{ label: "Upload Files" },
 					]}
 					className="mb-6"
 				/>
@@ -137,7 +177,7 @@ const SubmissionsViewByIdUpload = () => {
 									</li>
 								))}
 							</ul>
-							<button className="btn block">
+							<button className="btn block" onClick={onUploadClicked}>
 								Upload {files.length} File{files.length === 1 ? "" : "s"}
 							</button>
 						</>

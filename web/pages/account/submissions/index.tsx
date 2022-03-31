@@ -43,10 +43,10 @@ const Submissions = () => {
 				/>
 				<Link href="/account/submissions/new">Create New</Link>
 
-				{loading && <LoadingBlock className="mt-8" />}
+				{loading && <LoadingBlock className="mt-6" />}
 
 				{data && (
-					<ul className="mt-8">
+					<ul className="mt-6">
 						{data.submissionsForCurrentUser.map((s, index) => (
 							<li className="mb-4" key={index}>
 								{DateTimeService.formatDateYearTime(s.createdAt, true)} (

@@ -1,4 +1,4 @@
-import { InputType, Field, Int } from "type-graphql";
+import { InputType, ObjectType, Field, Int } from "type-graphql";
 
 import { SubmissionStatus, SubmissionMaterialType } from "../models/Submission";
 
@@ -42,4 +42,22 @@ export class UpdateSubmissionStatusInput {
 
 	@Field(() => SubmissionStatus)
 	status!: SubmissionStatus;
+}
+
+@InputType()
+export class CreatePresignedFileUploadUrlsInput {
+	@Field(() => String)
+	submissionId!: string;
+
+	@Field(() => [String])
+	filenames!: string[];
+}
+
+@ObjectType()
+export class PresignedFileUploadUrl {
+	@Field(() => String)
+	filename!: string;
+
+	@Field(() => String)
+	presignedUploadUrl!: string;
 }

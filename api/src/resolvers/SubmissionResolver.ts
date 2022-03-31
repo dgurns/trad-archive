@@ -7,9 +7,12 @@ import {
 	SubmissionsInput,
 	CreateSubmissionInput,
 	UpdateSubmissionStatusInput,
+	CreatePresignedFileUploadUrlsInput,
+	PresignedFileUploadUrl,
 } from "./SubmissionResolverTypes";
 import { Submission, SubmissionStatus } from "../models/Submission";
 import { User, UserRole, CopyrightPermissionStatus } from "../models/User";
+import S3Service from "../services/S3";
 
 @Resolver(() => Submission)
 export class SubmissionResolver {
@@ -143,5 +146,45 @@ export class SubmissionResolver {
 
 		await submission.save();
 		return submission;
+	}
+
+	// Any logged-in user can upload files to their own Submissions
+	@Mutation(() => [PresignedFileUploadUrl])
+	async createPresignedFileUploadUrls(
+		@Arg("input") input: CreatePresignedFileUploadUrlsInput,
+		@Ctx() ctx: CustomContext
+	) {
+		if (!ctx.userId) {
+			throw new Error(
+				"You must be logged in to create presigned URLs for file uploads"
+			);
+		}
+		const { submissionId, filenames } = input;
+		if (filenames.length === 0) {
+			throw new Error("You must provide filenames to upload");
+		}
+
+		const submission = await Submission.findOne({
+			where: { id: submissionId },
+		});
+		if (!submission) {
+			throw new Error("Could not find a Submission with that ID");
+		} else if (submission?.createdByUser.id !== ctx.userId) {
+			throw new Error(
+				"Only the User who created the Submission can upload files to it"
+			);
+		}
+
+		const urls: Array<{ filename: string; presignedUploadUrl: string }> = [];
+		for (const filename of filenames) {
+			const cleanedFilename = filename
+				.replace(" ", "_")
+				.replace(/[^a-zA-Z0-9-_.]/g, "");
+			const presignedUploadUrl = await S3Service.makePresignedPutUrl(
+				`${submission.s3DirectoryKey}/${cleanedFilename}`
+			);
+			urls.push({ filename, presignedUploadUrl });
+		}
+		return urls;
 	}
 }

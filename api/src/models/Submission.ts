@@ -17,13 +17,13 @@ export enum SubmissionStatus {
 }
 registerEnumType(SubmissionStatus, { name: "SubmissionStatus" });
 
-export enum MaterialType {
+export enum SubmissionMaterialType {
 	Audio = "Audio",
 	Video = "Video",
 	Image = "Image",
 	Document = "Document",
 }
-registerEnumType(MaterialType, { name: "MaterialType" });
+registerEnumType(SubmissionMaterialType, { name: "SubmissionMaterialType" });
 
 @ObjectType()
 @TypeOrmEntity()
@@ -41,9 +41,9 @@ export class Submission extends TypeOrmBaseEntity {
 	})
 	status!: SubmissionStatus;
 
-	@Field(() => [MaterialType])
+	@Field(() => [SubmissionMaterialType])
 	@Column({ type: "simple-array" })
-	materialTypes!: MaterialType[];
+	materialTypes!: SubmissionMaterialType[];
 
 	@Field(() => Boolean)
 	@Column({ type: "bool" })

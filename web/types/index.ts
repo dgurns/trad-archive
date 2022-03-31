@@ -231,6 +231,31 @@ export const isDeniedVerificationRequest = (
 	verificationRequest: VerificationRequest
 ) => verificationRequest.status.valueOf() === "Denied";
 
+export enum SubmissionStatus {
+	Pending = "Pending",
+	Approved = "Approved",
+	Denied = "Denied",
+}
+export enum SubmissionMaterialType {
+	Audio = "Audio",
+	Video = "Video",
+	Image = "Image",
+	Document = "Document",
+}
+export interface Submission {
+	id: string;
+	status: SubmissionStatus;
+	materialTypes: SubmissionMaterialType[];
+	userControlsCopyright: boolean;
+	copyrightDetails: string | null;
+	description: string | null;
+	s3DirectoryKey: string | null;
+	createdByUser: User;
+	createdAt: string;
+	updatedByUser: User;
+	updatedAt: string;
+}
+
 export interface Stats {
 	numAudioItemsAllTime: number;
 	numTagsAllTime: number;

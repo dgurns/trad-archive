@@ -1,6 +1,6 @@
 import { InputType, Field, Int } from "type-graphql";
 
-import { SubmissionStatus, MaterialType } from "../models/Submission";
+import { SubmissionStatus, SubmissionMaterialType } from "../models/Submission";
 
 @InputType()
 export class SubmissionsInput {
@@ -16,8 +16,8 @@ export class SubmissionsInput {
 
 @InputType()
 export class CreateSubmissionInput {
-	@Field(() => [MaterialType])
-	materialTypes!: MaterialType[];
+	@Field(() => [SubmissionMaterialType])
+	materialTypes!: SubmissionMaterialType[];
 
 	@Field(() => Boolean)
 	userControlsCopyright!: boolean;

@@ -62,24 +62,35 @@ const CreateSubmissionForm = ({ onSuccess }: Props) => {
 		return materialTypes.includes(materialType);
 	};
 
-	const onSubmitForm = useCallback(
-		(event) => {
-			event.preventDefault();
-			setValidationError("");
-			// TODO: VALIDATE
-			const input = {};
-			try {
-				// createSubmission({
-				// 	variables: {
-				// 		input,
-				// 	},
-				// });
-			} catch {
-				//
-			}
-		},
-		[createSubmission]
-	);
+	const onSubmitForm = (event) => {
+		event.preventDefault();
+		setValidationError("");
+		if (!userControlsCopyright && !copyrightDetails) {
+			setValidationError(
+				"Please provide details on who controls the copyright for these items"
+			);
+			return;
+		}
+		if (!description) {
+			setValidationError("Please describe the items you are submitting");
+			return;
+		}
+		const input = {
+			materialTypes,
+			userControlsCopyright,
+			copyrightDetails,
+			description,
+		};
+		try {
+			createSubmission({
+				variables: {
+					input,
+				},
+			});
+		} catch {
+			//
+		}
+	};
 
 	useEffect(() => {
 		if (data?.createSubmission?.id && onSuccess) {

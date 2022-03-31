@@ -12,13 +12,13 @@ const Checkbox = ({ checked, label, id, onChange, className }: Props) => {
 	const inputId = id ?? `input_${Math.round(Math.random() * 100000)}`;
 
 	return (
-		<div className={`flex-row items-center justify-start ${className ?? ""}`}>
+		<div className={`flex flex-row items-top justify-start ${className ?? ""}`}>
 			<input
 				type="checkbox"
 				checked={checked}
 				onChange={onChange}
 				id={inputId}
-				className="mr-2"
+				className="mt-1 mr-2"
 			/>
 			<label htmlFor={inputId}>{label}</label>
 		</div>

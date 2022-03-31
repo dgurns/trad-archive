@@ -1,11 +1,10 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import Breadcrumb from "components/Breadcrumb";
 
-const SubmissionsViewById = () => {
+const SubmissionsViewByIdUpload = () => {
 	const router = useRouter();
 	const { id } = router.query;
 
@@ -20,13 +19,14 @@ const SubmissionsViewById = () => {
 						},
 						{ label: "Submissions", href: "/account/submissions" },
 						{ label: `${id}` },
+						{ label: "Upload" },
 					]}
 					className="mb-4"
 				/>
-				View Submission by ID
+				Upload files here
 			</RequireUser>
 		</Layout>
 	);
 };
 
-export default SubmissionsViewById;
+export default SubmissionsViewByIdUpload;

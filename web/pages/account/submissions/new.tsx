@@ -1,11 +1,18 @@
-import Link from "next/link";
+import { useRouter } from "next/router";
 
+import { Submission } from "types";
 import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import Breadcrumb from "components/Breadcrumb";
 import CreateSubmissionForm from "components/CreateSubmissionForm";
 
 const SubmissionsNew = () => {
+	const router = useRouter();
+
+	const onCreateSuccess = (submission: Submission) => {
+		router.push(`/account/submissions/${submission.id}/upload`);
+	};
+
 	return (
 		<Layout>
 			<RequireUser>
@@ -32,7 +39,7 @@ const SubmissionsNew = () => {
 						documents you are sharing, then upload your files. Thank you for
 						your contribution.
 					</div>
-					<CreateSubmissionForm />
+					<CreateSubmissionForm onSuccess={onCreateSuccess} />
 				</div>
 			</RequireUser>
 		</Layout>

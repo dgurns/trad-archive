@@ -63,7 +63,7 @@ const SubmissionsViewByIdUpload = () => {
 
 	const [files, setFiles] = useState<File[]>([]);
 
-	const [getPresignedUrls, mutation] = useMutation<MutationData, MutationVars>(
+	const [getPresignedUrls] = useMutation<MutationData, MutationVars>(
 		CREATE_PRESIGNED_FILE_UPLOAD_URLS
 	);
 

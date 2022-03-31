@@ -416,3 +416,29 @@ export const VerificationRequestFragments = {
 		}
 	`,
 };
+
+export const SubmissionFragments = {
+	submission: gql`
+		fragment Submission on Submission {
+			id
+			status
+			materialTypes
+			userControlsCopyright
+			copyrightDetails
+			description
+			s3DirectoryKey
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`,
+};

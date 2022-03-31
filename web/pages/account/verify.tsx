@@ -17,6 +17,7 @@ import Layout from "components/Layout";
 import RequireUser from "components/RequireUser";
 import SearchEntities from "components/SearchEntities";
 import LoadingCircle from "components/LoadingCircle";
+import Breadcrumb from "components/Breadcrumb";
 
 const CREATE_PRESIGNED_UPLOAD_URL_MUTATION = gql`
 	mutation CreatePresignedUploadUrl($filename: String!) {
@@ -158,7 +159,16 @@ const AccountVerify = () => {
 	return (
 		<Layout>
 			<RequireUser>
-				<h1 className="mb-4">Verify Yourself and Link Person Tag</h1>
+				<Breadcrumb
+					items={[
+						{
+							label: "Account",
+							href: "/account",
+						},
+						{ label: "Verify Yourself and Link Person Tag" },
+					]}
+					className="mb-4"
+				/>
 				<div className="mb-8 text-gray-500">
 					By verifying yourself, you can link your account to a Person tag. For
 					example, if you are Michael Coleman (bear with us) you can link

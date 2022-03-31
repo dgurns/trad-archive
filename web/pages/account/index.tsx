@@ -61,6 +61,11 @@ const AccountHome = () => {
 			<RequireUser>
 				<h1 className="mb-4">Account</h1>
 				{verifyYourselfMarkup}
+				<Link href="/account/submissions">
+					<a className="block mt-2">
+						Submit Audio, Video, Images, or Documents to ITMA
+					</a>
+				</Link>
 				<Link href="/logout">
 					<a className="block mt-2">Log Out</a>
 				</Link>

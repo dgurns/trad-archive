@@ -12,6 +12,7 @@ import { Tune } from "./models/entities/Tune";
 import { Collection } from "./models/entities/Collection";
 import { TakedownRequest } from "./models/TakedownRequest";
 import { VerificationRequest } from "./models/VerificationRequest";
+import { Submission } from "./models/Submission";
 import SSMService from "./services/SSM";
 
 const {
@@ -41,6 +42,7 @@ const sharedOrmConfig: ConnectionOptions = {
 		SavedItem,
 		TakedownRequest,
 		VerificationRequest,
+		Submission,
 		AudioItem,
 		Person,
 		Instrument,

@@ -20,10 +20,11 @@ With this project, community members can...
 
 ### Dependencies
 
-- [Node 12.x](https://nodejs.org/en/)
+- [Node 14.x](https://nodejs.org/en/)
   - Recommended to install and manage via [nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 - [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 - [PlanetScale CLI](https://github.com/planetscale/cli#installation)
+  - Version 0.91 or above
 - [mysql CLI](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
   - Instructions for Mac users [here](https://stackoverflow.com/a/55692783/7426333)
 

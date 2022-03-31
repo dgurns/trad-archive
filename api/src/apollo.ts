@@ -10,6 +10,7 @@ import { CommentResolver } from "./resolvers/CommentResolver";
 import { SavedItemResolver } from "./resolvers/SavedItemResolver";
 import { TakedownRequestResolver } from "./resolvers/TakedownRequestResolver";
 import { VerificationRequestResolver } from "./resolvers/VerificationRequestResolver";
+import { SubmissionResolver } from "./resolvers/SubmissionResolver";
 import { EntityResolver } from "./resolvers/EntityResolver";
 import { AudioItemResolver } from "./resolvers/AudioItemResolver";
 import { PersonResolver } from "./resolvers/PersonResolver";
@@ -30,6 +31,7 @@ export const makeSchema = () => {
 			SavedItemResolver,
 			TakedownRequestResolver,
 			VerificationRequestResolver,
+			SubmissionResolver,
 			EntityResolver,
 			AudioItemResolver,
 			PersonResolver,

@@ -1,7 +1,6 @@
 import { Resolver, Mutation, Ctx, Arg, Query, Authorized } from "type-graphql";
 import { FindManyOptions } from "typeorm";
 
-import SubmissionService from "../services/Submission";
 import { CustomContext } from "../middleware/context";
 import {
 	SubmissionsInput,
@@ -15,7 +14,7 @@ import { User, UserRole, CopyrightPermissionStatus } from "../models/User";
 export class SubmissionResolver {
 	@Query(() => [Submission])
 	@Authorized(UserRole.Admin)
-	submissions(@Arg("input") input: SubmissionsInput) {
+	async submissions(@Arg("input") input: SubmissionsInput) {
 		const { take, skip, status } = input;
 		const findOptions: FindManyOptions<Submission> = {
 			take,
@@ -69,10 +68,7 @@ export class SubmissionResolver {
 		await submission.save();
 
 		// Set the s3DirectoryKey based on the Submission's ID
-		submission.s3DirectoryKey = SubmissionService.makeS3DirectoryKey(
-			user.id,
-			submission.id
-		);
+		submission.s3DirectoryKey = `submissions/${submission.id}`;
 		await submission.save();
 
 		// Since the User can only create a Submission after granting full

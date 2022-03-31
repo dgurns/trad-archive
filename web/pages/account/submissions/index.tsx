@@ -53,8 +53,8 @@ const Submissions = () => {
 								{s.materialTypes.join(", ")}) - Status: {s.status}
 								<br />
 								<span className="text-gray-500">
-									{`${s.description.substring(0, 50)}${
-										s.description.length > 50 ? "..." : ""
+									{`${s.description.substring(0, 200)}${
+										s.description.length > 200 ? "..." : ""
 									}`}
 								</span>
 								<br />

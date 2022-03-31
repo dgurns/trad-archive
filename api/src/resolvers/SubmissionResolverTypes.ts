@@ -3,6 +3,12 @@ import { InputType, Field, Int } from "type-graphql";
 import { SubmissionStatus, SubmissionMaterialType } from "../models/Submission";
 
 @InputType()
+export class SubmissionInput {
+	@Field(() => String)
+	id!: string;
+}
+
+@InputType()
 export class SubmissionsInput {
 	@Field(() => Int, { nullable: true, defaultValue: 40 })
 	take?: number;

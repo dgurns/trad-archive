@@ -3,6 +3,7 @@ import { FindManyOptions } from "typeorm";
 
 import { CustomContext } from "../middleware/context";
 import {
+	SubmissionInput,
 	SubmissionsInput,
 	CreateSubmissionInput,
 	UpdateSubmissionStatusInput,
@@ -12,9 +13,38 @@ import { User, UserRole, CopyrightPermissionStatus } from "../models/User";
 
 @Resolver(() => Submission)
 export class SubmissionResolver {
+	@Query(() => Submission)
+	async submission(
+		@Arg("input") input: SubmissionInput,
+		@Ctx() ctx: CustomContext
+	) {
+		if (!ctx.userId) {
+			throw new Error("Must be logged in to fetch a Submission");
+		}
+		const user = await User.findOne({ where: { id: ctx.userId } });
+
+		const { id } = input;
+		if (!id) {
+			throw new Error("Must provide an ID");
+		}
+		const result = await Submission.findOne({ where: { id } });
+		if (!result) {
+			throw new Error("Could not find a Submission with that ID");
+		}
+
+		const isAdmin = user?.role === UserRole.Admin;
+		const isAssociatedUser = result.createdByUser.id === user?.id;
+		if (!isAdmin && !isAssociatedUser) {
+			throw new Error(
+				"To fetch a Submission you must be the associated User or an admin"
+			);
+		}
+		return result;
+	}
+
 	@Query(() => [Submission])
 	@Authorized(UserRole.Admin)
-	async submissions(@Arg("input") input: SubmissionsInput) {
+	submissions(@Arg("input") input: SubmissionsInput) {
 		const { take, skip, status } = input;
 		const findOptions: FindManyOptions<Submission> = {
 			take,

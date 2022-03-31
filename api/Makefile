@@ -16,7 +16,7 @@ api:
 
 # Run the API as an Express server - faster locally than Serverless
 api-express:
-	nodemon -e ts --exec "make express-build && make express-run NODE_ENV=development"
+	node_modules/nodemon/bin/nodemon.js -e ts --exec "make express-build && make express-run NODE_ENV=development"
 
 # Run the migration currently defined in `migration.sql` against the local MYSQL
 # DB and this branch's pscale DB. Afterwards, update the DB schema dump to

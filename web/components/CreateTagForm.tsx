@@ -182,7 +182,8 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	// Only show the time marker option if the subject entity is an AudioItem
 	const shouldShowTimeMarkerCheckbox =
-		entity.entityType === EntityType.AudioItem;
+		entity.entityType === EntityType.AudioItem &&
+		typeof defaultTimeMarkerValue !== "undefined";
 
 	return (
 		<>

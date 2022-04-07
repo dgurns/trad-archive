@@ -33,7 +33,7 @@
 	/* Primary buttons (for example the "Save" button on a form) */
 	.btn,
 	input[type="submit"] {
-		@apply w-auto bg-teal-600 text-white rounded p-2 px-3 border-none cursor-pointer hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
+		@apply w-auto bg-teal-600 text-white rounded p-2 px-3 border-none no-underline cursor-pointer hover:text-white hover:bg-teal-800 disabled:bg-gray-300 hover:no-underline;
 	}
 
 	input[type="file"] {

@@ -2,6 +2,7 @@ import {
 	S3Client,
 	PutObjectCommand,
 	GetObjectCommand,
+	ListObjectsCommand,
 	DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -22,12 +23,20 @@ const s3Client = new S3Client({
 	},
 });
 
+const listObjects = (prefix: string) => {
+	const command = new ListObjectsCommand({
+		Bucket: API_AWS_S3_BUCKET,
+		Prefix: prefix,
+	});
+	return s3Client.send(command);
+};
+
 const makePresignedPutUrl = (s3Key: string) => {
 	const command = new PutObjectCommand({
 		Bucket: API_AWS_S3_BUCKET,
 		Key: s3Key,
 	});
-	return getSignedUrl(s3Client, command, { expiresIn: 360 });
+	return getSignedUrl(s3Client, command, { expiresIn: 3600 });
 };
 
 const makePresignedGetUrl = (s3Key: string) => {
@@ -35,7 +44,7 @@ const makePresignedGetUrl = (s3Key: string) => {
 		Bucket: API_AWS_S3_BUCKET,
 		Key: s3Key,
 	});
-	return getSignedUrl(s3Client, command, { expiresIn: 360 });
+	return getSignedUrl(s3Client, command, { expiresIn: 3600 });
 };
 
 const deleteObject = (s3Key: string) => {
@@ -47,6 +56,7 @@ const deleteObject = (s3Key: string) => {
 };
 
 const S3Service = {
+	listObjects,
 	makePresignedPutUrl,
 	makePresignedGetUrl,
 	deleteObject,

@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.27, for macos11.6 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.28, for macos12.0 (x86_64)
 --
 -- Host: 127.0.0.1    Database: trad_archive
 -- ------------------------------------------------------
@@ -280,6 +280,29 @@ CREATE TABLE `saved_item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `submission`
+--
+
+DROP TABLE IF EXISTS `submission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `submission` (
+  `id` char(36) NOT NULL,
+  `status` enum('Pending','Approved','Denied') DEFAULT 'Pending',
+  `materialTypes` text NOT NULL,
+  `userControlsCopyright` tinyint(1) NOT NULL,
+  `copyrightDetails` text,
+  `description` text,
+  `s3DirectoryKey` varchar(255) DEFAULT NULL,
+  `createdByUserId` char(36) DEFAULT NULL,
+  `createdAt` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedByUserId` char(36) DEFAULT NULL,
+  `updatedAt` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tag`
 --
 
@@ -463,4 +486,4 @@ CREATE TABLE `verification_request` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-17 14:37:08
+-- Dump completed on 2022-04-07 15:27:06

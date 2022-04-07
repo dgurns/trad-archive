@@ -34,7 +34,7 @@ const AdminSubmissions = () => {
 		SUBMISSIONS,
 		{
 			variables: { input: { take: 100, skip: 0 } },
-			fetchPolicy: "network-only",
+			fetchPolicy: "cache-and-network",
 		}
 	);
 
@@ -52,7 +52,7 @@ const AdminSubmissions = () => {
 					className="mb-6"
 				/>
 
-				{loading && <LoadingBlock />}
+				{!data && loading && <LoadingBlock />}
 
 				{data && (
 					<ul>

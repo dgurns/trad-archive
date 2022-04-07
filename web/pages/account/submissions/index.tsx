@@ -26,7 +26,7 @@ interface SubmissionsData {
 const Submissions = () => {
 	const { data, loading } = useQuery<SubmissionsData>(
 		SUBMISSIONS_FOR_CURRENT_USER,
-		{ fetchPolicy: "network-only" }
+		{ fetchPolicy: "cache-and-network" }
 	);
 
 	return (
@@ -46,7 +46,7 @@ const Submissions = () => {
 					<a className="btn">Create New</a>
 				</Link>
 
-				{loading && <LoadingBlock className="mt-12" />}
+				{!data && loading && <LoadingBlock className="mt-12" />}
 
 				{data && (
 					<ul className="mt-12">

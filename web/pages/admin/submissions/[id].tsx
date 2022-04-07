@@ -76,8 +76,6 @@ const AdminViewSubmissionById = () => {
 					className="mb-6"
 				/>
 
-				{loading && <LoadingBlock />}
-
 				{files && (
 					<ul>
 						{files.map((f, index) => (
@@ -92,6 +90,8 @@ const AdminViewSubmissionById = () => {
 						))}
 					</ul>
 				)}
+
+				{!files && loading && <LoadingBlock className="mt-8" />}
 			</RequireAdmin>
 		</Layout>
 	);

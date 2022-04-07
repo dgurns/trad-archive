@@ -27,7 +27,7 @@ const makePresignedPutUrl = (s3Key: string) => {
 		Bucket: API_AWS_S3_BUCKET,
 		Key: s3Key,
 	});
-	return getSignedUrl(s3Client, command, { expiresIn: 360 });
+	return getSignedUrl(s3Client, command, { expiresIn: 3600 });
 };
 
 const makePresignedGetUrl = (s3Key: string) => {
@@ -35,7 +35,7 @@ const makePresignedGetUrl = (s3Key: string) => {
 		Bucket: API_AWS_S3_BUCKET,
 		Key: s3Key,
 	});
-	return getSignedUrl(s3Client, command, { expiresIn: 360 });
+	return getSignedUrl(s3Client, command, { expiresIn: 3600 });
 };
 
 const deleteObject = (s3Key: string) => {

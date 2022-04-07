@@ -72,7 +72,7 @@ export class SubmissionResolver {
 		return Submission.find({
 			where: { createdByUserId: ctx.userId },
 			order: {
-				createdAt: "ASC",
+				createdAt: "DESC",
 			},
 		});
 	}

@@ -50,6 +50,7 @@ const AdminViewSubmissionById = () => {
 	>(SUBMISSION_WITH_FILES, {
 		variables: { id: submissionId },
 		skip: !submissionId,
+		fetchPolicy: "cache-and-network",
 	});
 	const { submission, files } = data?.submissionWithFiles ?? {};
 
@@ -66,7 +67,8 @@ const AdminViewSubmissionById = () => {
 						{
 							label: submission
 								? `${DateTimeService.formatDateYearTime(
-										submission.createdAt
+										submission.createdAt,
+										true
 								  )} from ${submission.createdByUser.username}`
 								: "View Submission",
 						},

@@ -34,6 +34,7 @@ const AdminSubmissions = () => {
 		SUBMISSIONS,
 		{
 			variables: { input: { take: 100, skip: 0 } },
+			fetchPolicy: "network-only",
 		}
 	);
 
@@ -61,6 +62,9 @@ const AdminSubmissions = () => {
 								{s.materialTypes.join(", ")}) - Status: {s.status}
 								<br />
 								From {s.createdByUser.username} / {s.createdByUser.email}
+								<br />
+								Owns copyright? {s.userControlsCopyright ? "Yes" : "No"}
+								{s.copyrightDetails ? ` - ${s.copyrightDetails}` : ""}
 								<br />
 								<span className="text-gray-500">{s.description}</span>
 								<br />

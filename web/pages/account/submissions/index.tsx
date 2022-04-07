@@ -24,8 +24,9 @@ interface SubmissionsData {
 }
 
 const Submissions = () => {
-	const { data, loading, error } = useQuery<SubmissionsData>(
-		SUBMISSIONS_FOR_CURRENT_USER
+	const { data, loading } = useQuery<SubmissionsData>(
+		SUBMISSIONS_FOR_CURRENT_USER,
+		{ fetchPolicy: "network-only" }
 	);
 
 	return (

@@ -76,11 +76,9 @@ const SubmissionsViewByIdUpload = () => {
 			return;
 		}
 		try {
-			// Prepend filenames with a random number to avoid collisions, for example
+			// Prepend filenames with their size to avoid collisions, for example
 			// multiple "Track1.mp3"
-			const filenamesForUrls = files.map(
-				(f) => `${Math.round(Math.random() * 1000000)}_${f.name}`
-			);
+			const filenamesForUrls = files.map((f) => `${f.size}_${f.name}`);
 			const response = await getPresignedUrls({
 				variables: { input: { submissionId, filenames: filenamesForUrls } },
 			});

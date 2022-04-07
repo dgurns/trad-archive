@@ -60,14 +60,11 @@ const AdminSubmissions = () => {
 								{DateTimeService.formatDateYearTime(s.createdAt, true)} (
 								{s.materialTypes.join(", ")}) - Status: {s.status}
 								<br />
+								From {s.createdByUser.username} / {s.createdByUser.email}
+								<br />
 								<span className="text-gray-500">{s.description}</span>
 								<br />
-								<Link href="https://console.aws.amazon.com/s3">
-									<a target="_blank">
-										View Files <i className="material-icons text-sm">launch</i>
-									</a>
-								</Link>{" "}
-								- {s.s3DirectoryKey}
+								<Link href={`/admin/submissions/${s.id}`}>View Files</Link>
 							</li>
 						))}
 					</ul>

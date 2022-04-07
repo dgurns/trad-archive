@@ -9,6 +9,8 @@ import {
 	UpdateSubmissionStatusInput,
 	CreatePresignedFileUploadUrlsInput,
 	PresignedFileUploadUrl,
+	SubmissionWithFiles,
+	FileWithPresignedDownloadUrl,
 } from "./SubmissionResolverTypes";
 import { Submission, SubmissionStatus } from "../models/Submission";
 import { User, UserRole, CopyrightPermissionStatus } from "../models/User";
@@ -73,6 +75,38 @@ export class SubmissionResolver {
 				createdAt: "ASC",
 			},
 		});
+	}
+
+	@Query(() => SubmissionWithFiles)
+	@Authorized(UserRole.Admin)
+	async submissionWithFiles(
+		@Arg("id") id: String,
+		@Ctx() ctx: CustomContext
+	): Promise<SubmissionWithFiles> {
+		const submission = await Submission.findOne({
+			where: { id },
+		});
+		if (!submission || !submission.s3DirectoryKey) {
+			throw new Error("Could not find a valid Submission with that ID");
+		}
+		// Get all objects for this Submission and make a presigned download URL for
+		// each
+		const s3Objects = await S3Service.listObjects(submission.s3DirectoryKey);
+		const filesWithPresignedUrls: FileWithPresignedDownloadUrl[] = [];
+		for (const o of s3Objects.Contents ?? []) {
+			if (!o.Key) {
+				continue;
+			}
+			const url = await S3Service.makePresignedGetUrl(o.Key);
+			filesWithPresignedUrls.push({
+				filename: o.Key.split(submission.s3DirectoryKey + "/")[1],
+				presignedDownloadUrl: url,
+			});
+		}
+		return {
+			submission,
+			files: filesWithPresignedUrls,
+		};
 	}
 
 	@Mutation(() => Submission)

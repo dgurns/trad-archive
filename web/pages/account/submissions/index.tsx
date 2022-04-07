@@ -43,10 +43,10 @@ const Submissions = () => {
 				/>
 				<Link href="/account/submissions/new">Create New</Link>
 
-				{loading && <LoadingBlock className="mt-6" />}
+				{loading && <LoadingBlock className="mt-8" />}
 
 				{data && (
-					<ul className="mt-6">
+					<ul className="mt-8">
 						{data.submissionsForCurrentUser.map((s, index) => (
 							<li className="mb-4" key={index}>
 								{DateTimeService.formatDateYearTime(s.createdAt, true)} (
@@ -59,7 +59,7 @@ const Submissions = () => {
 								</span>
 								<br />
 								<Link href={`/account/submissions/${s.id}/upload`}>
-									Upload More Files
+									Upload More Files to This Submission
 								</Link>
 							</li>
 						))}

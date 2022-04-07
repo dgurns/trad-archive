@@ -142,7 +142,8 @@ export class SubmissionResolver {
 		await submission.save();
 
 		// Since the User can only create a Submission after granting full
-		// non-commercial copyright to ITMA, confirm that the User field is updated
+		// non-commercial copyright to ITMA, confirm that the copyright permissions
+		// field is updated for the User.
 		if (
 			user.copyrightPermissionStatus !==
 			CopyrightPermissionStatus.FullNonCommercialGranted

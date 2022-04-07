@@ -165,24 +165,24 @@ const AccountVerify = () => {
 							label: "Account",
 							href: "/account",
 						},
-						{ label: "Verify Yourself and Link Person Tag" },
+						{ label: "Verify Your Account" },
 					]}
 					className="mb-4"
 				/>
 				<div className="mb-8 text-gray-500">
-					By verifying yourself, you can link your account to a Person tag. For
-					example, if you are Michael Coleman (bear with us) you can link
-					yourself to the "Michael Coleman" tag on the site. You'll get a
+					This enables you to link your user account with a Person tag. For
+					example, let's say you are Michael Coleman; you can link your user
+					account to the "Michael Coleman" tag on the site. You'll get a
 					verified badge next to your username, and you'll be able to
-					immediately take down any content that you're tagged in, if you so
-					choose. Verification is free and will be done by ITMA staff.
+					immediately take down any content that you're tagged in, if you want
+					to. Verification is free and will be done by ITMA staff.
 				</div>
 
 				{!personEntity ? (
 					<>
 						<div className="mb-2">
-							Search for your name and select the Person if found. If it doesn't
-							exist yet, go ahead and create a new one.
+							Search for your name and click on the Person if found. If it
+							doesn't exist yet, go ahead and create a new one.
 						</div>
 						<div className="flex flex-col max-w-xs">
 							<SearchEntities
@@ -225,8 +225,8 @@ const AccountVerify = () => {
 
 				<div className="mb-2">
 					Do you give the Irish Traditional Music Archive (ITMA) permission to
-					make recordings of you publicly available for non-commercial use, as
-					long as you can take them down at any time?
+					make recordings of you publicly available for non-commercial use,
+					given that you can take them down at any time?
 				</div>
 				<div className="mb-8 flex flex-row items-center justify-start">
 					<input

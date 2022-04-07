@@ -51,9 +51,7 @@ const AccountHome = () => {
 				</span>
 			);
 		}
-		return (
-			<Link href="/account/verify">Verify Yourself and Link Person Tag</Link>
-		);
+		return <Link href="/account/verify">Verify Your Account</Link>;
 	}, [data, loading, error, verificationRequests]);
 
 	return (

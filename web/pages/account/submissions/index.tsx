@@ -39,14 +39,16 @@ const Submissions = () => {
 						},
 						{ label: "Submissions" },
 					]}
-					className="mb-4"
+					className="mb-6"
 				/>
-				<Link href="/account/submissions/new">Create New</Link>
+				<Link href="/account/submissions/new">
+					<a className="btn">Create New</a>
+				</Link>
 
-				{loading && <LoadingBlock className="mt-8" />}
+				{loading && <LoadingBlock className="mt-12" />}
 
 				{data && (
-					<ul className="mt-8">
+					<ul className="mt-12">
 						{data.submissionsForCurrentUser.map((s, index) => (
 							<li className="mb-4" key={index}>
 								{DateTimeService.formatDateYearTime(s.createdAt, true)} (

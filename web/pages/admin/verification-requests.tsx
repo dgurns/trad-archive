@@ -17,6 +17,7 @@ import DateTimeService from "services/DateTime";
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
 import RequireAdmin from "components/RequireAdmin";
+import Breadcrumb from "components/Breadcrumb";
 
 const VERIFICATION_REQUESTS = gql`
 	query VerificationRequests($input: VerificationRequestsInput!) {
@@ -130,7 +131,16 @@ const VerificationRequests = () => {
 		<Layout>
 			<RequireAdmin>
 				<>
-					<h1 className="mb-4">Verification Requests</h1>
+					<Breadcrumb
+						items={[
+							{
+								label: "Admin",
+								href: "/admin",
+							},
+							{ label: "Verification Requests" },
+						]}
+						className="mb-6"
+					/>
 
 					<select
 						className="mb-6 flex max-w-xs"

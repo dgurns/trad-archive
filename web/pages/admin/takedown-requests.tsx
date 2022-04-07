@@ -15,6 +15,7 @@ import DateTimeService from "services/DateTime";
 
 import Layout from "components/Layout";
 import LoadingBlock from "components/LoadingBlock";
+import Breadcrumb from "components/Breadcrumb";
 import RequireAdmin from "components/RequireAdmin";
 
 const TAKEDOWN_REQUESTS = gql`
@@ -113,7 +114,16 @@ const TakedownRequests = () => {
 		<Layout>
 			<RequireAdmin>
 				<>
-					<h1 className="mb-4">Takedown Requests</h1>
+					<Breadcrumb
+						items={[
+							{
+								label: "Admin",
+								href: "/admin",
+							},
+							{ label: "Takedown Requests" },
+						]}
+						className="mb-6"
+					/>
 
 					{takedownRequestsLoading && <LoadingBlock />}
 					{takedownRequestsError && (

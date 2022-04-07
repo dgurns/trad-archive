@@ -47,7 +47,7 @@ export class SubmissionResolver {
 
 	@Query(() => [Submission])
 	@Authorized(UserRole.Admin)
-	submissions(@Arg("input") input: SubmissionsInput) {
+	submissions(@Arg("input") input: SubmissionsInput): Promise<Submission[]> {
 		const { take, skip, status } = input;
 		const findOptions: FindManyOptions<Submission> = {
 			take,

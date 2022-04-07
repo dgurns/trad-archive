@@ -47,36 +47,6 @@ export class SubmissionResolver {
 		return result;
 	}
 
-	@Query(() => [Submission])
-	@Authorized(UserRole.Admin)
-	submissions(@Arg("input") input: SubmissionsInput): Promise<Submission[]> {
-		const { take, skip, status } = input;
-		const findOptions: FindManyOptions<Submission> = {
-			take,
-			skip,
-			order: { createdAt: "DESC" },
-		};
-		if (status) {
-			findOptions.where = { status };
-		}
-		return Submission.find(findOptions);
-	}
-
-	@Query(() => [Submission])
-	submissionsForCurrentUser(@Ctx() ctx: CustomContext) {
-		if (!ctx.userId) {
-			throw new Error(
-				"Must be logged in to fetch Submissions for current user"
-			);
-		}
-		return Submission.find({
-			where: { createdByUserId: ctx.userId },
-			order: {
-				createdAt: "DESC",
-			},
-		});
-	}
-
 	@Query(() => SubmissionWithFiles)
 	@Authorized(UserRole.Admin)
 	async submissionWithFiles(
@@ -107,6 +77,36 @@ export class SubmissionResolver {
 			submission,
 			files: filesWithPresignedUrls,
 		};
+	}
+
+	@Query(() => [Submission])
+	@Authorized(UserRole.Admin)
+	submissions(@Arg("input") input: SubmissionsInput): Promise<Submission[]> {
+		const { take, skip, status } = input;
+		const findOptions: FindManyOptions<Submission> = {
+			take,
+			skip,
+			order: { createdAt: "DESC" },
+		};
+		if (status) {
+			findOptions.where = { status };
+		}
+		return Submission.find(findOptions);
+	}
+
+	@Query(() => [Submission])
+	submissionsForCurrentUser(@Ctx() ctx: CustomContext) {
+		if (!ctx.userId) {
+			throw new Error(
+				"Must be logged in to fetch Submissions for current user"
+			);
+		}
+		return Submission.find({
+			where: { createdByUserId: ctx.userId },
+			order: {
+				createdAt: "DESC",
+			},
+		});
 	}
 
 	@Mutation(() => Submission)

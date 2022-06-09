@@ -66,7 +66,7 @@ __export(root_exports, {
 var import_react3 = require("@remix-run/react");
 
 // app/styles/globals-generated-do-not-edit.css
-var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-RBOYQLC7.css";
+var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-LQ3Y3A32.css";
 
 // app/components/Header.tsx
 var import_react2 = require("@remix-run/react");
@@ -297,12 +297,14 @@ function AudioItemComponent({
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/index.tsx
 async function loader() {
+  const start = Date.now();
   const audioItems = await db.audioItem.findMany({
     include: {
       tagsAsSubject: true,
       createdByUser: true
     }
   });
+  console.log(Date.now() - start);
   return { audioItems };
 }
 function Index() {
@@ -351,7 +353,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "f5ee352c", "entry": { "module": "/build/entry.client-FHHRAIVL.js", "imports": ["/build/_shared/chunk-RSYHIWCN.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-U77PYONA.js", "imports": ["/build/_shared/chunk-Q4BHSRMT.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-L5CR3CM3.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-F5EE352C.js" };
+var assets_manifest_default = { "version": "573e5ec1", "entry": { "module": "/build/entry.client-XFAQ3DFY.js", "imports": ["/build/_shared/chunk-JFS2FXVD.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-HOGINFI2.js", "imports": ["/build/_shared/chunk-YJ5V2O2W.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-I5KKIDCP.js", "imports": void 0, "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-573E5EC1.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

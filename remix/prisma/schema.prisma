@@ -10,7 +10,7 @@ generator client {
 }
 
 model AudioItem {
-  id               String            @id @db.Char(36)
+  id               String            @id @db.Char(36) @default(uuid())
   name             String            @db.VarChar(255)
   slug             String            @unique(map: "IDX_d5eca2db8a788b6481cf843c31") @db.VarChar(255)
   aliases          String?           @db.Text
@@ -40,7 +40,7 @@ model AudioItem {
 }
 
 model Collection {
-  id              String       @id @db.Char(36)
+  id              String       @id @db.Char(36) @default(uuid())
   name            String       @db.VarChar(255)
   slug            String       @unique(map: "IDX_75a6fd6eedd7fa7378de400b0a") @db.VarChar(255)
   aliases         String?      @db.Text
@@ -66,7 +66,7 @@ model Collection {
 }
 
 model Comment {
-  id                String    @id @db.Char(36)
+  id                String    @id @db.Char(36) @default(uuid())
   parentAudioItemId String    @db.Char(36)
   text              String    @db.Text
   createdByUserId   String?   @db.Char(36)
@@ -79,7 +79,7 @@ model Comment {
 }
 
 model Instrument {
-  id              String       @id @db.Char(36)
+  id              String       @id @db.Char(36) @default(uuid())
   name            String       @db.VarChar(255)
   slug            String       @unique(map: "IDX_9281cb956dba2fe2b2006f1cbf") @db.VarChar(255)
   aliases         String?      @db.Text
@@ -103,7 +103,7 @@ model Instrument {
 }
 
 model Person {
-  id                   String                @id @db.Char(36)
+  id                   String                @id @db.Char(36) @default(uuid())
   name                 String                @db.VarChar(255)
   slug                 String                @unique(map: "IDX_48e444390904f250a3b20e4d57") @db.VarChar(255)
   aliases              String?               @db.Text
@@ -131,7 +131,7 @@ model Person {
 }
 
 model Place {
-  id              String       @id @db.Char(36)
+  id              String       @id @db.Char(36) @default(uuid())
   name            String       @db.VarChar(255)
   slug            String       @unique(map: "IDX_1443badb6c7af8994264958b4d") @db.VarChar(255)
   aliases         String?      @db.Text
@@ -157,7 +157,7 @@ model Place {
 }
 
 model Relationship {
-  id                String     @id @db.Char(36)
+  id                String     @id @db.Char(36) @default(uuid())
   name              String     @db.VarChar(255)
   subjectEntityType EntityType
   objectEntityType  EntityType
@@ -171,7 +171,7 @@ model Relationship {
 }
 
 model SavedItem {
-  id          String    @id @db.Char(36)
+  id          String    @id @db.Char(36) @default(uuid())
   audioItemId String    @db.Char(36)
   userId      String    @db.Char(36)
   createdAt   DateTime  @default(now()) @db.Timestamp(6)
@@ -182,7 +182,7 @@ model SavedItem {
 }
 
 model Submission {
-  id                    String            @id @db.Char(36)
+  id                    String            @id @db.Char(36) @default(uuid())
   status                SubmissionStatus? @default(Pending)
   materialTypes         String            @db.Text
   userControlsCopyright Boolean
@@ -199,7 +199,7 @@ model Submission {
 }
 
 model Tag {
-  id                       String       @id @db.Char(36)
+  id                       String       @id @db.Char(36) @default(uuid())
   relationshipId           String       @db.Char(36)
   subjectAudioItemId       String?      @db.Char(36)
   subjectPersonId          String?      @db.Char(36)
@@ -236,7 +236,7 @@ model Tag {
 }
 
 model TakedownRequest {
-  id              String                 @id @db.Char(36)
+  id              String                 @id @db.Char(36) @default(uuid())
   type            TakedownRequestType
   message         String                 @db.Text
   status          TakedownRequestStatus? @default(PENDING)
@@ -254,7 +254,7 @@ model TakedownRequest {
 }
 
 model Tune {
-  id               String       @id @db.Char(36)
+  id               String       @id @db.Char(36) @default(uuid())
   name             String       @db.VarChar(255)
   slug             String       @unique(map: "IDX_0c40b0dbe742aa63a6bb2b5231") @db.VarChar(255)
   aliases          String?      @db.Text
@@ -284,7 +284,7 @@ model Tune {
 }
 
 model User {
-  id                          String                     @id @db.Char(36)
+  id                          String                     @id @db.Char(36) @default(uuid())
   role                        UserRole                   @default(User)
   email                       String                     @unique(map: "IDX_e12875dfb3b1d92d7d7c5377e2") @db.VarChar(255)
   username                    String                     @unique(map: "IDX_78a916df40e02a9deb1c4b75ed") @db.VarChar(255)
@@ -314,12 +314,12 @@ model User {
   verificationRequestsCreated VerificationRequest[]      @relation("UserToverification_request_createdByUserId")
   verificationRequestsUpdated VerificationRequest[]      @relation("UserToverification_request_updatedByUserId")
 
-  @@map("user")
   Submission Submission[]
+  @@map("user")
 }
 
 model VerificationRequest {
-  id                        String                     @id @db.Char(36)
+  id                        String                     @id @db.Char(36) @default(uuid())
   personId                  String                     @db.Char(36)
   status                    VerificationRequestStatus? @default(Pending)
   copyrightPermissionStatus CopyrightPermissionStatus?

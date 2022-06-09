@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
+import type { MetaFunction } from "@remix-run/node";
 import {
 	Links,
 	LiveReload,
@@ -59,9 +59,9 @@ export default function App() {
 				<Links />
 			</head>
 			<body className="bg-gray-100">
-				<div className="flex flex-col w-full relative">
+				<div className="flex flex-col w-full relative pt-12">
 					<div className="flex flex-col justify-start items-center">
-						<div className="w-full min-h-screen lg:max-w-5xl py-6 px-4 pb-44 pt-12">
+						<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44">
 							<Outlet />
 						</div>
 						<Footer />

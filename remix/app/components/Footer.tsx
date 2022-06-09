@@ -4,19 +4,18 @@ export default function Footer() {
 			<div className="mb-4">
 				This project is a collaboration between the{" "}
 				<a href="https://www.itma.ie/" target="_blank" rel="noreferrer">
-					Irish Traditional Music Archive{" "}
-					<i className="material-icons text-sm">launch</i>
+					Irish Traditional Music Archive ↗
 				</a>{" "}
 				and{" "}
 				<a href="https://dangurney.net" target="_blank" rel="noreferrer">
-					Dan Gurney <i className="material-icons text-sm">launch</i>
+					Dan Gurney ↗
 				</a>
 			</div>
 
 			<div className="mb-4">
 				Special thanks to{" "}
 				<a href="https://thesession.org/" target="_blank" rel="noreferrer">
-					The Session <i className="material-icons text-sm">launch</i>
+					The Session ↗
 				</a>{" "}
 				for providing tune data.
 			</div>
@@ -28,7 +27,7 @@ export default function Footer() {
 					target="_blank"
 					rel="noreferrer"
 				>
-					GitHub <i className="material-icons text-sm">launch</i>
+					GitHub ↗
 				</a>
 				. We welcome community contributors.
 			</div>
@@ -39,8 +38,7 @@ export default function Footer() {
 					target="_blank"
 					rel="noreferrer"
 				>
-					Share feedback or report a bug{" "}
-					<i className="material-icons text-sm">launch</i>
+					Share feedback or report a bug ↗
 				</a>
 			</div>
 		</div>

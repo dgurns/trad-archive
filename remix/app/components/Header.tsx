@@ -15,7 +15,7 @@ export default function Header() {
 					<button className="text-white flex flex-row items-center whitespace-nowrap hover:text-gray-400 group ml-4">
 						<SearchIcon className="h-5 block" />
 						<span className="hidden md:block md:pl-1">Search</span>
-						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
+						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2">{`/`}</span>
 					</button>
 					<Link
 						to="/entities/audio-items/random"

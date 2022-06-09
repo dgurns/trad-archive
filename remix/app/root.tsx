@@ -22,8 +22,31 @@ export function links() {
 	return [
 		{ rel: "stylesheet", href: styles },
 		{
+			rel: "apple-touch-icon",
+			sizes: "180x180",
+			href: "/favicons/apple-touch-icon.png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "192x192",
+			href: "/favicons/android-chrome-192x192.png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "32x32",
+			href: "/favicons/favicon-32x32.png",
+		},
+		{
+			rel: "icon",
+			type: "image/png",
+			sizes: "16x16",
+			href: "/favicons/favicon-16x16.png",
+		},
+		{
 			rel: "shortcut icon",
-			href: "/favicon.ico",
+			href: "/favicons/favicon.ico",
 		},
 	];
 }

@@ -1,0 +1,383 @@
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+model AudioItem {
+  id               String            @id @db.Char(36)
+  name             String            @db.VarChar(255)
+  slug             String            @unique(map: "IDX_d5eca2db8a788b6481cf843c31") @db.VarChar(255)
+  aliases          String?           @db.Text
+  description      String?           @db.Text
+  status           EntityStatus      @default(PUBLISHED)
+  createdByUserId  String?           @db.Char(36)
+  updatedByUserId  String?           @db.Char(36)
+  createdAt        DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime          @updatedAt
+  entityType       EntityType?       @default(AudioItem)
+  itmaAtomSlug     String?           @db.VarChar(255)
+  urlSource        String?           @db.VarChar(255)
+  createdByUser    User?             @relation("audioItemCreatedByUser", fields: [createdByUserId], references: [id])
+  updatedByUser    User?             @relation("audioItemUpdatedByUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject     Tag[]             @relation("tagObjectAudioItem")
+  tagsAsSubject    Tag[]             @relation("tagSubjectAudioItem")
+  comment          Comment[]
+  savedItems       SavedItem[]
+  takedownRequests TakedownRequest[]
+
+
+  @@index([name], map: "IDX_17c0f6ea1cd539cbd513a02926")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("audio_item")
+}
+
+model Collection {
+  id              String       @id @db.Char(36)
+  name            String       @db.VarChar(255)
+  slug            String       @unique(map: "IDX_75a6fd6eedd7fa7378de400b0a") @db.VarChar(255)
+  aliases         String?      @db.Text
+  description     String?      @db.Text
+  status          EntityStatus @default(PUBLISHED)
+  createdByUserId String?      @db.Char(36)
+  updatedByUserId String?      @db.Char(36)
+  createdAt       DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime     @updatedAt
+  entityType      EntityType?  @default(Collection)
+  itmaAtomSlug    String?      @db.VarChar(255)
+  createdByUser   User?        @relation("collection_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?        @relation("collection_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject    Tag[]        @relation("collectionTotag_objectCollectionId")
+  tagsAsSubject   Tag[]        @relation("collectionTotag_subjectCollectionId")
+
+
+  @@index([name], map: "IDX_926e7bdc3f52cd582078a379f1")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("collection")
+}
+
+model Comment {
+  id                String    @id @db.Char(36)
+  parentAudioItemId String    @db.Char(36)
+  text              String    @db.Text
+  createdByUserId   String?   @db.Char(36)
+  createdAt         DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime  @updatedAt
+  createdByUser     User?     @relation(fields: [createdByUserId], references: [id])
+  parentAudioItem   AudioItem @relation(fields: [parentAudioItemId], references: [id])
+
+  @@map("comment")
+}
+
+model Instrument {
+  id              String       @id @db.Char(36)
+  name            String       @db.VarChar(255)
+  slug            String       @unique(map: "IDX_9281cb956dba2fe2b2006f1cbf") @db.VarChar(255)
+  aliases         String?      @db.Text
+  description     String?      @db.Text
+  status          EntityStatus @default(PUBLISHED)
+  createdByUserId String?      @db.Char(36)
+  updatedByUserId String?      @db.Char(36)
+  createdAt       DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime     @updatedAt
+  entityType      EntityType?  @default(Instrument)
+  createdByUser   User?        @relation("instrument_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?        @relation("instrument_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject    Tag[]        @relation("instrumentTotag_objectInstrumentId")
+  tagsAsSubject   Tag[]        @relation("instrumentTotag_subjectInstrumentId")
+
+  @@index([name], map: "IDX_efda620b8e7e274a712072e2af")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("instrument")
+}
+
+model Person {
+  id                   String                @id @db.Char(36)
+  name                 String                @db.VarChar(255)
+  slug                 String                @unique(map: "IDX_48e444390904f250a3b20e4d57") @db.VarChar(255)
+  aliases              String?               @db.Text
+  description          String?               @db.Text
+  status               EntityStatus          @default(PUBLISHED)
+  createdByUserId      String?               @db.Char(36)
+  updatedByUserId      String?               @db.Char(36)
+  createdAt            DateTime              @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime              @updatedAt
+  entityType           EntityType?           @default(Person)
+  firstName            String                @db.VarChar(255)
+  middleName           String?               @db.VarChar(255)
+  lastName             String                @db.VarChar(255)
+  createdByUser        User?                 @relation("person_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser        User?                 @relation("person_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject         Tag[]                 @relation("personTotag_objectPersonId")
+  tagsAsSubject        Tag[]                 @relation("personTotag_subjectPersonId")
+  verificationRequests VerificationRequest[]
+
+  @@index([name], map: "IDX_27c811883af9f3fefe79892f02")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("person")
+}
+
+model Place {
+  id              String       @id @db.Char(36)
+  name            String       @db.VarChar(255)
+  slug            String       @unique(map: "IDX_1443badb6c7af8994264958b4d") @db.VarChar(255)
+  aliases         String?      @db.Text
+  description     String?      @db.Text
+  status          EntityStatus @default(PUBLISHED)
+  createdByUserId String?      @db.Char(36)
+  updatedByUserId String?      @db.Char(36)
+  createdAt       DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime     @updatedAt
+  entityType      EntityType?  @default(Place)
+  latitude        Float        @db.Float
+  longitude       Float        @db.Float
+  createdByUser   User?        @relation("place_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?        @relation("place_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject    Tag[]        @relation("placeTotag_objectPlaceId")
+  tagsAsSubject   Tag[]        @relation("placeTotag_subjectPlaceId")
+
+  @@index([name], map: "IDX_493d5e591af774a1587d363fb8")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("place")
+}
+
+model Relationship {
+  id                String     @id @db.Char(36)
+  name              String     @db.VarChar(255)
+  subjectEntityType EntityType
+  objectEntityType  EntityType
+  createdByUserId   String?    @db.Char(36)
+  createdAt         DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt         DateTime   @updatedAt
+  createdByUser     User?      @relation(fields: [createdByUserId], references: [id])
+  tags              Tag[]
+
+  @@map("relationship")
+}
+
+model SavedItem {
+  id          String    @id @db.Char(36)
+  audioItemId String    @db.Char(36)
+  userId      String    @db.Char(36)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  audioItem   AudioItem @relation(fields: [audioItemId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@map("saved_item")
+}
+
+model Submission {
+  id                    String            @id @db.Char(36)
+  status                SubmissionStatus? @default(Pending)
+  materialTypes         String            @db.Text
+  userControlsCopyright Boolean
+  copyrightDetails      String?           @db.Text
+  description           String?           @db.Text
+  s3DirectoryKey        String?           @db.VarChar(255)
+  createdByUserId       String?           @db.Char(36)
+  createdByUser         User?             @relation(fields: [createdByUserId], references: [id])
+  createdAt             DateTime          @default(now()) @db.Timestamp(6)
+  updatedByUserId       String?           @db.Char(36)
+  updatedAt             DateTime          @updatedAt
+
+  @@map("submission")
+}
+
+model Tag {
+  id                       String       @id @db.Char(36)
+  relationshipId           String       @db.Char(36)
+  subjectAudioItemId       String?      @db.Char(36)
+  subjectPersonId          String?      @db.Char(36)
+  subjectInstrumentId      String?      @db.Char(36)
+  subjectPlaceId           String?      @db.Char(36)
+  subjectTuneId            String?      @db.Char(36)
+  subjectCollectionId      String?      @db.Char(36)
+  objectAudioItemId        String?      @db.Char(36)
+  objectPersonId           String?      @db.Char(36)
+  objectInstrumentId       String?      @db.Char(36)
+  objectPlaceId            String?      @db.Char(36)
+  objectTuneId             String?      @db.Char(36)
+  objectCollectionId       String?      @db.Char(36)
+  subjectTimeMarkerSeconds Int?
+  createdByUserId          String?      @db.Char(36)
+  createdAt                DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt                DateTime     @updatedAt
+  createdByUser            User?        @relation(fields: [createdByUserId], references: [id])
+  objectAudioItem          AudioItem?   @relation("tagObjectAudioItem", fields: [objectAudioItemId], references: [id])
+  objectCollection         Collection?  @relation("collectionTotag_objectCollectionId", fields: [objectCollectionId], references: [id])
+  objectInstrument         Instrument?  @relation("instrumentTotag_objectInstrumentId", fields: [objectInstrumentId], references: [id])
+  objectPerson             Person?      @relation("personTotag_objectPersonId", fields: [objectPersonId], references: [id])
+  objectPlace              Place?       @relation("placeTotag_objectPlaceId", fields: [objectPlaceId], references: [id])
+  objectTune               Tune?        @relation("tag_objectTuneIdTotune", fields: [objectTuneId], references: [id])
+  relationship             Relationship @relation(fields: [relationshipId], references: [id])
+  subjectAudioItem         AudioItem?   @relation("tagSubjectAudioItem", fields: [subjectAudioItemId], references: [id])
+  subjectCollection        Collection?  @relation("collectionTotag_subjectCollectionId", fields: [subjectCollectionId], references: [id])
+  subjectInstrument        Instrument?  @relation("instrumentTotag_subjectInstrumentId", fields: [subjectInstrumentId], references: [id])
+  subjectPerson            Person?      @relation("personTotag_subjectPersonId", fields: [subjectPersonId], references: [id])
+  subjectPlace             Place?       @relation("placeTotag_subjectPlaceId", fields: [subjectPlaceId], references: [id])
+  subjectTune              Tune?        @relation("tag_subjectTuneIdTotune", fields: [subjectTuneId], references: [id])
+
+  @@map("tag")
+}
+
+model TakedownRequest {
+  id              String                 @id @db.Char(36)
+  type            TakedownRequestType
+  message         String                 @db.Text
+  status          TakedownRequestStatus? @default(PENDING)
+  createdByUserId String?                @db.Char(36)
+  createdAt       DateTime               @default(now()) @db.Timestamp(6)
+  updatedByUserId String?                @db.Char(36)
+  updatedAt       DateTime               @updatedAt
+  audioItemId     String?                @db.Char(36)
+  audioItem       AudioItem?             @relation(fields: [audioItemId], references: [id])
+  createdByUser   User?                  @relation("takedown_request_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?                  @relation("takedown_request_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+
+  @@index([audioItemId], map: "IDX_4b57e3d008abb21714be3c7b22")
+  @@map("takedown_request")
+}
+
+model Tune {
+  id               String       @id @db.Char(36)
+  name             String       @db.VarChar(255)
+  slug             String       @unique(map: "IDX_0c40b0dbe742aa63a6bb2b5231") @db.VarChar(255)
+  aliases          String?      @db.Text
+  description      String?      @db.Text
+  status           EntityStatus @default(PUBLISHED)
+  createdByUserId  String?      @db.Char(36)
+  updatedByUserId  String?      @db.Char(36)
+  createdAt        DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime     @updatedAt
+  entityType       EntityType?  @default(Tune)
+  theSessionTuneId String       @db.VarChar(255)
+  type             String?      @db.VarChar(255)
+  meter            String?      @db.VarChar(255)
+  mode             String?      @db.VarChar(255)
+  abc              String?      @db.Text
+  createdByUser    User?        @relation("tune_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser    User?        @relation("tune_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject     Tag[]        @relation("tag_objectTuneIdTotune")
+  tagsAsSubject    Tag[]        @relation("tag_subjectTuneIdTotune")
+
+  @@index([name], map: "IDX_03ee6f8829912ff0af96eb1de9")
+  @@index([createdAt], map: "idx_createdAt")
+  @@index([name], map: "idx_name")
+  @@index([theSessionTuneId], map: "idx_theSessionTuneId")
+  @@index([updatedAt], map: "idx_updatedAt")
+  @@map("tune")
+}
+
+model User {
+  id                          String                     @id @db.Char(36)
+  role                        UserRole                   @default(User)
+  email                       String                     @unique(map: "IDX_e12875dfb3b1d92d7d7c5377e2") @db.VarChar(255)
+  username                    String                     @unique(map: "IDX_78a916df40e02a9deb1c4b75ed") @db.VarChar(255)
+  autoLoginTokenHashed        String?                    @db.VarChar(255)
+  autoLoginTokenExpiry        DateTime?                  @db.Timestamp(0)
+  copyrightPermissionStatus   CopyrightPermissionStatus?
+  createdAt                   DateTime                   @default(now()) @db.DateTime(6)
+  updatedAt                   DateTime                   @updatedAt
+  audioItemsCreated           AudioItem[]                @relation("audioItemCreatedByUser")
+  audioItemsUpdated           AudioItem[]                @relation("audioItemUpdatedByUser")
+  collectionsCreated          Collection[]               @relation("collection_createdByUserIdToUser")
+  collectionsUpdated          Collection[]               @relation("collection_updatedByUserIdToUser")
+  comment                     Comment[]
+  instrumentsCreated          Instrument[]               @relation("instrument_createdByUserIdToUser")
+  instrumentsUpdated          Instrument[]               @relation("instrument_updatedByUserIdToUser")
+  peopleCreated               Person[]                   @relation("person_createdByUserIdToUser")
+  peopleUpdated               Person[]                   @relation("person_updatedByUserIdToUser")
+  placesCreated               Place[]                    @relation("place_createdByUserIdToUser")
+  placesUpdated               Place[]                    @relation("place_updatedByUserIdToUser")
+  relationships               Relationship[]
+  savedItems                  SavedItem[]
+  tagsCreated                 Tag[]
+  takedownRequestsCreated     TakedownRequest[]          @relation("takedown_request_createdByUserIdToUser")
+  takedownRequestsUpdated     TakedownRequest[]          @relation("takedown_request_updatedByUserIdToUser")
+  tunesCreated                Tune[]                     @relation("tune_createdByUserIdToUser")
+  tunesUpdated                Tune[]                     @relation("tune_updatedByUserIdToUser")
+  verificationRequestsCreated VerificationRequest[]      @relation("UserToverification_request_createdByUserId")
+  verificationRequestsUpdated VerificationRequest[]      @relation("UserToverification_request_updatedByUserId")
+
+  @@map("user")
+  Submission Submission[]
+}
+
+model VerificationRequest {
+  id                        String                     @id @db.Char(36)
+  personId                  String                     @db.Char(36)
+  status                    VerificationRequestStatus? @default(Pending)
+  copyrightPermissionStatus CopyrightPermissionStatus?
+  imageS3Key                String?                    @db.VarChar(255)
+  createdByUserId           String                     @db.Char(36)
+  createdAt                 DateTime                   @default(now()) @db.Timestamp(6)
+  updatedByUserId           String?                    @db.Char(36)
+  updatedAt                 DateTime                   @updatedAt
+  createdByUser             User                       @relation("UserToverification_request_createdByUserId", fields: [createdByUserId], references: [id])
+  person                    Person                     @relation(fields: [personId], references: [id])
+  updatedByUser             User?                      @relation("UserToverification_request_updatedByUserId", fields: [updatedByUserId], references: [id])
+
+  @@index([personId], map: "IDX_763df5ddfc5de533461d83add6")
+  @@map("verification_request")
+}
+
+enum EntityStatus {
+  PUBLISHED
+  TAKEN_DOWN
+}
+
+enum EntityType {
+  AudioItem
+  Person
+  Instrument
+  Place
+  Tune
+  Collection
+}
+
+enum SubmissionStatus {
+  Pending
+  Approved
+  Denied
+}
+
+enum TakedownRequestType {
+  COPYRIGHT
+  PERFORMER
+}
+
+enum TakedownRequestStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum UserRole {
+  User
+  Admin
+}
+
+enum CopyrightPermissionStatus {
+  FullNonCommercialGranted
+}
+
+enum VerificationRequestStatus {
+  Pending
+  Approved
+  Denied
+}

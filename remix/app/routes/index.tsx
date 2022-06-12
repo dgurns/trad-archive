@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useCallback, useState } from "react";
-import type { NormalizedCacheObject } from "@apollo/client";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { Link, useLoaderData } from "@remix-run/react";
+import { gql } from "@apollo/client";
+import { Link } from "@remix-run/react";
 
-import { API_URL, apolloClient } from "~/apolloClient";
-import type { AudioItem, Comment, Collection, Stats } from "~/types";
 import { EntityStatus, SortBy, ViewAs } from "~/types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "~/hooks/useAudioItems";
 import useComments, { COMMENTS_QUERY } from "~/hooks/useComments";
@@ -23,279 +20,7 @@ const NUM_AUDIO_ITEMS_TO_FETCH = 10;
 const NUM_COMMENTS_TO_FETCH = 6;
 const NUM_COLLECTIONS_TO_FETCH = 5;
 
-const STATS_QUERY = gql`
-	query Stats {
-		stats {
-			numAudioItemsAllTime
-			numTagsAllTime
-			numCommentsAllTime
-		}
-	}
-`;
-
-interface QueryVariables {
-	input: {
-		sortBy?: SortBy;
-		take?: number;
-		skip?: number;
-		status?: EntityStatus;
-	};
-}
-
-// Attempt to reuse instance of server side Apollo Client between runs of
-// getStaticProps, to avoid creating a new DB connection on every request
-let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
-
-// getStaticProps fetches data server-side and pre-renders a static HTML page.
-// It will regenerate the static HTML at most once per second.
-export async function loader() {
-	let recentlyTaggedAudioItems: AudioItem[] | undefined;
-	let recentlyAddedAudioItems: AudioItem[] | undefined;
-	let stats: Stats | undefined;
-	let comments: Comment[] | undefined;
-	let collections: Collection[] | undefined;
-
-	try {
-		if (!serverSideApolloClient) {
-			serverSideApolloClient = new ApolloClient({
-				uri: API_URL,
-				credentials: "include",
-				cache: new InMemoryCache(),
-				defaultOptions: {
-					query: {
-						// Force server-side queries to get the latest data each time
-						fetchPolicy: "no-cache",
-					},
-				},
-			});
-		}
-
-		const [recentlyTaggedAudioItemsQuery, recentlyAddedAudioItemsQuery] =
-			await Promise.all([
-				serverSideApolloClient.query<
-					{ audioItems: AudioItem[] },
-					QueryVariables
-				>({
-					query: AUDIO_ITEMS_QUERY,
-					variables: {
-						input: {
-							sortBy: SortBy.RecentlyTagged,
-							take: NUM_AUDIO_ITEMS_TO_FETCH,
-							skip: 0,
-							status: EntityStatus.Published,
-						},
-					},
-				}),
-				serverSideApolloClient.query<
-					{ audioItems: AudioItem[] },
-					QueryVariables
-				>({
-					query: AUDIO_ITEMS_QUERY,
-					variables: {
-						input: {
-							sortBy: SortBy.RecentlyAdded,
-							take: NUM_AUDIO_ITEMS_TO_FETCH,
-							skip: 0,
-							status: EntityStatus.Published,
-						},
-					},
-				}),
-			]);
-
-		const [statsQuery, commentsQuery, collectionsQuery] = await Promise.all([
-			serverSideApolloClient.query<{ stats: Stats }>({
-				query: STATS_QUERY,
-			}),
-			serverSideApolloClient.query<{ comments: Comment[] }, QueryVariables>({
-				query: COMMENTS_QUERY,
-				variables: {
-					input: {
-						take: NUM_COMMENTS_TO_FETCH,
-					},
-				},
-			}),
-			serverSideApolloClient.query<
-				{ collections: Collection[] },
-				QueryVariables
-			>({
-				query: COLLECTIONS_QUERY,
-				variables: {
-					input: {
-						take: NUM_COLLECTIONS_TO_FETCH,
-						sortBy: SortBy.RecentlyAdded,
-					},
-				},
-			}),
-		]);
-
-		recentlyTaggedAudioItems = recentlyTaggedAudioItemsQuery?.data?.audioItems;
-		recentlyAddedAudioItems = recentlyAddedAudioItemsQuery?.data?.audioItems;
-		stats = statsQuery?.data?.stats;
-		comments = commentsQuery?.data?.comments;
-		collections = collectionsQuery?.data?.collections;
-	} catch {
-		//
-	}
-
-	return {
-		props: {
-			prefetchedRecentlyTaggedAudioItems: recentlyTaggedAudioItems ?? null,
-			prefetchedRecentlyAddedAudioItems: recentlyAddedAudioItems ?? null,
-			prefetchedStats: stats ?? null,
-			prefetchedComments: comments ?? null,
-			prefetchedCollections: collections ?? null,
-		},
-		revalidate: 1,
-	};
-}
-
-interface Props {
-	prefetchedRecentlyTaggedAudioItems?: AudioItem[];
-	prefetchedRecentlyAddedAudioItems?: AudioItem[];
-	prefetchedStats?: Stats;
-	prefetchedComments?: Comment[];
-	prefetchedCollections?: Collection[];
-}
-
 export default function Home() {
-	const {
-		prefetchedRecentlyTaggedAudioItems,
-		prefetchedRecentlyAddedAudioItems,
-		prefetchedStats,
-		prefetchedComments,
-		prefetchedCollections,
-	} = useLoaderData<Props>();
-
-	// If there is prefetched data and the cache is not yet populated, populate it
-	useEffect(() => {
-		if (prefetchedRecentlyTaggedAudioItems) {
-			// Check if there are already "Recently Tagged" AudioItems in the cache
-			const cachedRecentlyTaggedAudioItems = apolloClient.readQuery({
-				query: AUDIO_ITEMS_QUERY,
-				variables: {
-					input: {
-						sortBy: SortBy.RecentlyTagged,
-						take: NUM_AUDIO_ITEMS_TO_FETCH,
-						skip: 0,
-						status: EntityStatus.Published,
-					},
-				},
-			});
-			// If not, add the prefetched AudioItems to the cache
-			if (!cachedRecentlyTaggedAudioItems) {
-				apolloClient.writeQuery({
-					query: AUDIO_ITEMS_QUERY,
-					data: { audioItems: prefetchedRecentlyTaggedAudioItems },
-					variables: {
-						input: {
-							sortBy: SortBy.RecentlyTagged,
-							take: NUM_AUDIO_ITEMS_TO_FETCH,
-							skip: 0,
-							status: EntityStatus.Published,
-						},
-					},
-				});
-			}
-		}
-		if (prefetchedRecentlyAddedAudioItems) {
-			// Check if there are already "Recently Added" AudioItems in the cache
-			const cachedRecentlyAddedAudioItems = apolloClient.readQuery({
-				query: AUDIO_ITEMS_QUERY,
-				variables: {
-					input: {
-						sortBy: SortBy.RecentlyAdded,
-						take: NUM_AUDIO_ITEMS_TO_FETCH,
-						skip: 0,
-						status: EntityStatus.Published,
-					},
-				},
-			});
-			// If not, add the prefetched AudioItems to the cache
-			if (!cachedRecentlyAddedAudioItems) {
-				apolloClient.writeQuery({
-					query: AUDIO_ITEMS_QUERY,
-					data: { audioItems: prefetchedRecentlyAddedAudioItems },
-					variables: {
-						input: {
-							sortBy: SortBy.RecentlyAdded,
-							take: NUM_AUDIO_ITEMS_TO_FETCH,
-							skip: 0,
-							status: EntityStatus.Published,
-						},
-					},
-				});
-			}
-		}
-		if (prefetchedStats) {
-			// Check if there are already Stats in the cache
-			const cachedStats = apolloClient.readQuery({
-				query: STATS_QUERY,
-			});
-			// If not, add the prefetched Stats to the cache
-			if (!cachedStats) {
-				apolloClient.writeQuery({
-					query: STATS_QUERY,
-					data: { stats: prefetchedStats },
-				});
-			}
-		}
-		if (prefetchedComments) {
-			// Check if there are already Comments in the cache
-			const cachedComments = apolloClient.readQuery({
-				query: COMMENTS_QUERY,
-				variables: {
-					input: {
-						take: NUM_COMMENTS_TO_FETCH,
-					},
-				},
-			});
-			// If not, add the prefetched Comments to the cache
-			if (!cachedComments) {
-				apolloClient.writeQuery({
-					query: COMMENTS_QUERY,
-					data: { comments: prefetchedComments },
-					variables: {
-						input: {
-							take: NUM_COMMENTS_TO_FETCH,
-						},
-					},
-				});
-			}
-		}
-		if (prefetchedCollections) {
-			// Check if there are already Tags in the cache
-			const cachedCollections = apolloClient.readQuery({
-				query: COLLECTIONS_QUERY,
-				variables: {
-					input: {
-						take: NUM_COLLECTIONS_TO_FETCH,
-						sortBy: SortBy.RecentlyAdded,
-					},
-				},
-			});
-			// If not, add the prefetched Tags to the cache
-			if (!cachedCollections) {
-				apolloClient.writeQuery({
-					query: COLLECTIONS_QUERY,
-					data: { collections: prefetchedCollections },
-					variables: {
-						input: {
-							take: NUM_COLLECTIONS_TO_FETCH,
-							sortBy: SortBy.RecentlyAdded,
-						},
-					},
-				});
-			}
-		}
-	}, [
-		apolloClient,
-		prefetchedRecentlyTaggedAudioItems,
-		prefetchedRecentlyAddedAudioItems,
-		prefetchedStats,
-		prefetchedComments,
-		prefetchedCollections,
-	]);
-
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,
 		defaultViewAs: ViewAs.Cards,
@@ -332,22 +57,18 @@ export default function Home() {
 		},
 	});
 
-	const defaultAudioItems =
-		sortBy === SortBy.RecentlyTagged
-			? prefetchedRecentlyTaggedAudioItems
-			: prefetchedRecentlyAddedAudioItems;
-	const audioItems = fetchedAudioItems ?? defaultAudioItems;
+	const audioItems = fetchedAudioItems;
 
 	const comments = useMemo(() => {
-		const data = fetchedComments ?? prefetchedComments ?? [];
+		const data = fetchedComments ?? [];
 		const sorted = CommentService.sortByCreatedAtDesc(data);
 		return sorted.slice(0, NUM_COMMENTS_TO_FETCH);
-	}, [fetchedComments, prefetchedComments]);
+	}, [fetchedComments]);
 
 	const collections = useMemo(() => {
-		const data = fetchedCollections ?? prefetchedCollections ?? [];
+		const data = fetchedCollections ?? [];
 		return data.slice(0, NUM_COLLECTIONS_TO_FETCH);
-	}, [fetchedCollections, prefetchedCollections]);
+	}, [fetchedCollections]);
 
 	// Due to static rendering, we need to check localStorage for intro status
 	// after client-side hydration.
@@ -419,7 +140,7 @@ export default function Home() {
 						<a className="mb-2">Collections</a>
 					</Link>
 
-					{prefetchedStats && (
+					{/* {prefetchedStats && (
 						<>
 							<h3 className="mt-6 mb-4">Stats</h3>
 							<span className="mb-2 text-gray-500">
@@ -432,7 +153,7 @@ export default function Home() {
 								{prefetchedStats.numCommentsAllTime} Comments
 							</span>
 						</>
-					)}
+					)} */}
 
 					<h3 className="mt-6 mb-4">Latest Collections</h3>
 					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}

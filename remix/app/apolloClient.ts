@@ -1,14 +1,14 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
+// const { NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF } = process.env;
 
 let graphqlPath = "/graphql";
 let apiUrl = `http://localhost:4000${graphqlPath}`;
-if (NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "master") {
-	apiUrl = `https://api-prod.tradarchive.com${graphqlPath}`;
-} else if (typeof NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "string") {
-	apiUrl = `https://api-${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}.tradarchive.com${graphqlPath}`;
-}
+// if (NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "master") {
+// 	apiUrl = `https://api-prod.tradarchive.com${graphqlPath}`;
+// } else if (typeof NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF === "string") {
+// 	apiUrl = `https://api-${NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}.tradarchive.com${graphqlPath}`;
+// }
 export const API_URL = apiUrl;
 
 // mergeArrayById holds logic for merging incoming arrays to the cache. If an

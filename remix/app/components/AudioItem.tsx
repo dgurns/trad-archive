@@ -1,21 +1,25 @@
-import { ViewAs, type AudioItemWithTags } from "~/types";
+import type { AudioItem } from "~/types";
+import { ViewAs } from "~/types";
+
 import AudioItemCard from "~/components/AudioItemCard";
+import AudioItemCompact from "~/components/AudioItemCompact";
+import AudioItemTextOnly from "~/components/AudioItemTextOnly";
 
 interface Props {
 	viewAs?: ViewAs;
-	audioItem: AudioItemWithTags;
+	audioItem: AudioItem;
 	showTitle?: boolean;
 	className?: string;
 }
 
 // AudioItem handles wrapping the different variants of AudioItem components. It
 // returns the variant requested in the `viewAs` prop. Default is Card.
-export default function AudioItemComponent({
+const AudioItemComponent = ({
 	viewAs = ViewAs.Cards,
 	audioItem,
 	showTitle,
 	className,
-}: Props) {
+}: Props) => {
 	if (viewAs === ViewAs.Cards) {
 		return (
 			<AudioItemCard
@@ -24,7 +28,13 @@ export default function AudioItemComponent({
 				className={className}
 			/>
 		);
+	} else if (viewAs === ViewAs.Compact) {
+		return <AudioItemCompact audioItem={audioItem} className={className} />;
+	} else if (viewAs === ViewAs.List) {
+		return <AudioItemTextOnly audioItem={audioItem} className={className} />;
 	} else {
 		return null;
 	}
-}
+};
+
+export default AudioItemComponent;

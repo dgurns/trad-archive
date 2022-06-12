@@ -1,77 +1,69 @@
-import { useMemo } from "react";
-import { useNavigate, Link } from "@remix-run/react";
-import { EntityStatus, type Tag } from "@prisma/client";
-import { type AudioItemWithTags } from "~/types";
-import { PlayIcon } from "@heroicons/react/outline";
+import { useCallback, useMemo } from "react";
+import { Link } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 
-// import DateTime from "services/DateTime";
-// import usePlayerContext from "hooks/usePlayerContext";
+import type { AudioItem, Tag, TakedownRequest } from "~/types";
+import { EntityStatus, TakedownRequestStatus } from "~/types";
+import DateTime from "~/services/DateTime";
+import usePlayerContext from "~/hooks/usePlayerContext";
 
-// import Tags from "components/Tags";
-// import Menu from "components/Menu";
-// import SaveItemButton from "components/SaveItemButton";
-// import ViewCommentsButton from "components/ViewCommentsButton";
-// import TimeMarkers from "components/TimeMarkers";
-// import RequestTakedownButton from "components/RequestTakedownButton";
+import Tags from "~/components/Tags";
+import Menu from "~/components/Menu";
+import SaveItemButton from "~/components/SaveItemButton";
+import ViewCommentsButton from "~/components/ViewCommentsButton";
+import TimeMarkers from "~/components/TimeMarkers";
+import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
-	audioItem: AudioItemWithTags;
+	audioItem: AudioItem;
 	showTitle?: boolean;
 	className?: string;
 }
 const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
-	const {
-		name,
-		slug,
-		description,
-		status,
-		tagsAsSubject,
-		createdByUser,
-		createdAt,
-	} = audioItem;
+	const { name, slug, description, tags, status, createdByUser, createdAt } =
+		audioItem;
 
 	const navigate = useNavigate();
 
-	// const {
-	// 	activeAudioItem,
-	// 	setActiveAudioItem,
-	// 	activeItemDurationSeconds,
-	// 	playbackPositionSeconds,
-	// } = usePlayerContext();
+	const {
+		activeAudioItem,
+		setActiveAudioItem,
+		activeItemDurationSeconds,
+		playbackPositionSeconds,
+	} = usePlayerContext();
 
-	const audioItemIsInPlayer = false; // activeAudioItem?.id === audioItem.id;
+	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
 	const tagsWithTimeMarkers: Tag[] = useMemo(() => {
-		if (!Array.isArray(tagsAsSubject)) {
+		if (!Array.isArray(tags)) {
 			return [];
 		}
-		return tagsAsSubject.filter(
+		return tags.filter(
 			(tag) => typeof tag.subjectTimeMarkerSeconds === "number"
 		);
-	}, [tagsAsSubject]);
+	}, [tags]);
 
-	// const onPlayPressed = useCallback(() => {
-	// 	setActiveAudioItem(audioItem);
-	// }, [audioItem]);
+	const onPlayPressed = useCallback(() => {
+		setActiveAudioItem(audioItem);
+	}, [audioItem]);
 
-	// const onTakedownRequestCreated = useCallback(
-	// 	(takedownRequest: TakedownRequest) => {
-	// 		if (takedownRequest.status === TakedownRequestStatus.APPROVED) {
-	// 			navigate(`/entities/audio-items/${slug}`);
-	// 		}
-	// 	},
-	// 	[navigate, slug]
-	// );
+	const onTakedownRequestCreated = useCallback(
+		(takedownRequest: TakedownRequest) => {
+			if (takedownRequest.status === TakedownRequestStatus.Approved) {
+				navigate(`/entities/audio-items/${slug}`);
+			}
+		},
+		[navigate, slug]
+	);
 
-	const shouldShowPositionAndDuration = false;
-	// audioItemIsInPlayer &&
-	// typeof playbackPositionSeconds === "number" &&
-	// typeof activeItemDurationSeconds === "number";
+	const shouldShowPositionAndDuration =
+		audioItemIsInPlayer &&
+		typeof playbackPositionSeconds === "number" &&
+		typeof activeItemDurationSeconds === "number";
+	const positionAndDuration = `${DateTime.formatSecondsAsDuration(
+		playbackPositionSeconds
+	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds)}`;
 
-	// const positionAndDuration = `${DateTime.formatSecondsAsDuration(
-	// 	playbackPositionSeconds
-	// )} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds)}`;
-
-	const isTakenDown = status === EntityStatus.TAKEN_DOWN;
+	const isTakenDown = status === EntityStatus.TakenDown;
 
 	return (
 		<div
@@ -81,13 +73,15 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		>
 			{showTitle && (
 				<h2 className="mb-2">
-					<Link to={`/entities/audio-items/${slug}`} className="link-bare">
-						{name}
+					<Link to={`/entities/audio-items/${slug}`}>
+						<a className="link-bare">{name}</a>
 					</Link>
 				</h2>
 			)}
 
-			<div className="mb-4">{/* <Tags entity={audioItem} /> */}</div>
+			<div className="mb-4">
+				<Tags entity={audioItem} />
+			</div>
 
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">
 				{isTakenDown ? (
@@ -103,10 +97,12 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 								) : (
 									<button
 										style={{ lineHeight: 0 }}
-										// onClick={onPlayPressed}
+										onClick={onPlayPressed}
 										aria-label="Play"
 									>
-										<PlayIcon className="material-icons h-8 text-teal-600 hover:text-teal-800" />
+										<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
+											play_arrow
+										</i>
 									</button>
 								)}
 
@@ -117,7 +113,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 											: ""
 									}`}
 								>
-									{/* {positionAndDuration} */}
+									{positionAndDuration}
 								</div>
 							</div>
 						</div>
@@ -125,7 +121,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 				)}
 				{tagsWithTimeMarkers.length > 0 && (
 					<div className="mx-4 mb-2 pt-3 border-t border-gray-200">
-						{/* <TimeMarkers audioItem={audioItem} /> */}
+						<TimeMarkers audioItem={audioItem} />
 					</div>
 				)}
 			</div>
@@ -137,20 +133,19 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 						<>
 							{" "}
 							by{" "}
-							<Link
-								to={`/users/${createdByUser.id}`}
-								className="flex flex-row px-0 sm:px-1"
-							>
-								{/* {createdByUser.verifiedPerson && (
+							<Link to={`/users/${createdByUser.id}`}>
+								<a className="flex flex-row px-0 sm:px-1">
+									{createdByUser.verifiedPerson && (
 										<div className="inline">
 											<i className="material-icons text-sm mr-1">verified</i>
 										</div>
-									)} */}
-								{createdByUser.username}
+									)}
+									{createdByUser.username}
+								</a>
 							</Link>
 						</>
 					)}{" "}
-					{/* {DateTime.formatDateYearTime(createdAt)} */}
+					{DateTime.formatDateYearTime(createdAt)}
 				</div>
 				<div className="text-sm mt-1 text-gray-900 whitespace-pre-wrap">
 					{description || "No description"}
@@ -159,21 +154,21 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 
 			<div className="border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center">
 				<div className="flex flex-row items-center">
-					{/* <ViewCommentsButton audioItem={audioItem} /> */}
+					<ViewCommentsButton audioItem={audioItem} />
 
 					<div className="ml-2">
-						{/* <SaveItemButton audioItem={audioItem} /> */}
+						<SaveItemButton audioItem={audioItem} />
 					</div>
 				</div>
 
-				{/* <Menu>
+				<Menu>
 					{!isTakenDown && (
 						<RequestTakedownButton
 							entity={audioItem}
 							onTakedownRequestCreated={onTakedownRequestCreated}
 						/>
 					)}
-				</Menu> */}
+				</Menu>
 			</div>
 		</div>
 	);

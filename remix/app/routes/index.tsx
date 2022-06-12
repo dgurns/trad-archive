@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useCallback, useState } from "react";
 import type { NormalizedCacheObject } from "@apollo/client";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 
-import { API_URL, apolloClient } from "apolloClient";
+import { API_URL, apolloClient } from "~/apolloClient";
 import type { AudioItem, Comment, Collection, Stats } from "~/types";
 import { EntityStatus, SortBy, ViewAs } from "~/types";
 import useAudioItems, { AUDIO_ITEMS_QUERY } from "~/hooks/useAudioItems";
@@ -48,7 +48,7 @@ let serverSideApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 
 // getStaticProps fetches data server-side and pre-renders a static HTML page.
 // It will regenerate the static HTML at most once per second.
-export async function getStaticProps() {
+export async function loader() {
 	let recentlyTaggedAudioItems: AudioItem[] | undefined;
 	let recentlyAddedAudioItems: AudioItem[] | undefined;
 	let stats: Stats | undefined;
@@ -157,13 +157,15 @@ interface Props {
 	prefetchedCollections?: Collection[];
 }
 
-export default function Home({
-	prefetchedRecentlyTaggedAudioItems,
-	prefetchedRecentlyAddedAudioItems,
-	prefetchedStats,
-	prefetchedComments,
-	prefetchedCollections,
-}: Props) {
+export default function Home() {
+	const {
+		prefetchedRecentlyTaggedAudioItems,
+		prefetchedRecentlyAddedAudioItems,
+		prefetchedStats,
+		prefetchedComments,
+		prefetchedCollections,
+	} = useLoaderData<Props>();
+
 	// If there is prefetched data and the cache is not yet populated, populate it
 	useEffect(() => {
 		if (prefetchedRecentlyTaggedAudioItems) {

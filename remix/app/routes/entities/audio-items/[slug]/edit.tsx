@@ -2,7 +2,7 @@ import { useNavigate } from "@remix-run/react";
 import { useQuery, gql } from "@apollo/client";
 
 import type { AudioItem } from "types";
-import { EntityFragments } from "fragments";
+import { EntityFragments } from "~/fragments";
 
 import Layout from "~/components/Layout";
 import LoadingBlock from "~/components/LoadingBlock";

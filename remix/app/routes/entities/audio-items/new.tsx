@@ -1,7 +1,7 @@
 import { useNavigate } from "@remix-run/react";
 import type { AudioItem } from "types";
 
-import useAudioItems from "hooks/useAudioItems";
+import useAudioItems from "~/hooks/useAudioItems";
 
 import Layout from "~/components/Layout";
 import RequireAdmin from "~/components/RequireAdmin";

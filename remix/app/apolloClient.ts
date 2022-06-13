@@ -46,6 +46,7 @@ const mergeArrayById = (
 export const apolloClient = new ApolloClient({
 	uri: API_URL,
 	credentials: "include",
+	ssrMode: true,
 	cache: new InMemoryCache({
 		typePolicies: {
 			Query: {

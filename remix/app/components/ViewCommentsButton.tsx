@@ -1,78 +1,24 @@
-import { useCallback, useState, useEffect, useRef } from "react";
+import { useCallback, useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "@remix-run/react";
-import { useLazyQuery, gql } from "@apollo/client";
 
-import type { AudioItem, Comment, EntityType } from "~/types";
-import { CommentFragments } from "~/fragments";
+import type { AudioItemWithRelations, CommentWithRelations } from "~/types";
 import DateTimeService from "~/services/DateTime";
-import useAudioItem from "~/hooks/useAudioItem";
 
 import Modal from "~/components/Modal";
 import CreateCommentForm from "~/components/CreateCommentForm";
-import LoadingCircle from "~/components/LoadingCircle";
-
-const COMMENTS_FOR_PARENT_ENTITY_QUERY = gql`
-	query CommentsForParentEntity($input: CommentsForParentEntityInput!) {
-		commentsForParentEntity(input: $input) {
-			...CommentWithoutParentEntity
-		}
-	}
-	${CommentFragments.commentWithoutParentEntity}
-`;
-
-interface QueryData {
-	commentsForParentEntity: Comment[];
-}
-interface QueryVariables {
-	input: {
-		parentEntityType: EntityType;
-		parentEntityId: string;
-	};
-}
 interface Props {
-	audioItem: AudioItem;
+	audioItem: AudioItemWithRelations;
 }
 const ViewCommentsButton = ({ audioItem }: Props) => {
-	const { id, slug, entityType, commentsCount } = audioItem;
+	const { comments } = audioItem;
+	const commentsCount = comments.length;
 
 	const commentsRef = useRef<HTMLDivElement>();
-
 	const [modalIsVisible, setModalIsVisible] = useState(false);
-
-	// The parent AudioItem has already been fetched, so only use the cache for
-	// this query
-	const [, { refetch: refetchParentAudioItem }] = useAudioItem({
-		slug,
-		queryOptions: { fetchPolicy: "cache-only" },
-	});
-
-	const [getCommentsForParentEntity, { loading, data, error }] = useLazyQuery<
-		QueryData,
-		QueryVariables
-	>(COMMENTS_FOR_PARENT_ENTITY_QUERY, {
-		fetchPolicy: "cache-and-network",
-	});
-	const comments = data?.commentsForParentEntity ?? [];
-
-	const fetchCommentsForParent = useCallback(async () => {
-		await getCommentsForParentEntity({
-			variables: {
-				input: { parentEntityType: entityType, parentEntityId: id },
-			},
-		});
-	}, [getCommentsForParentEntity, entityType, id]);
 
 	const onViewCommentsButtonClicked = useCallback(async () => {
 		setModalIsVisible(true);
-		await fetchCommentsForParent();
-	}, [fetchCommentsForParent, commentsCount, comments]);
-
-	const onCreateCommentSuccess = useCallback(async () => {
-		await Promise.allSettled([
-			fetchCommentsForParent(),
-			refetchParentAudioItem({ slug }),
-		]);
-	}, [fetchCommentsForParent, refetchParentAudioItem]);
+	}, []);
 
 	const onCloseModal = useCallback(() => setModalIsVisible(false), []);
 
@@ -123,24 +69,16 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 				isVisible={modalIsVisible}
 				onClose={onCloseModal}
 			>
-				{error && <div className="text-red-600 mb-2">{error.message}</div>}
-
 				{comments.length > 0 && (
-					<div className="max-h-1/2 overflow-auto" ref={commentsRef}>
+					<div className="max-h-1/2 overflow-auto">
 						{comments.map(({ createdByUser, createdAt, text }, index) => (
 							<div className="mb-2" key={index}>
 								<div className="text-gray-500 text-sm mb-1 flex flex-row items-center">
-									<Link to={`/users/${createdByUser.id}`}>
-										<a className="mr-1 flex flex-row items-center">
-											{createdByUser.verifiedPerson && (
-												<div className="inline">
-													<i className="material-icons text-sm mr-1">
-														verified
-													</i>
-												</div>
-											)}
-											<span>{createdByUser.username}</span>
-										</a>
+									<Link
+										to={`/users/${createdByUser?.id}`}
+										className="mr-1 flex flex-row items-center"
+									>
+										<span>{createdByUser?.username}</span>
 									</Link>{" "}
 									{DateTimeService.formatDateYearTime(createdAt)}
 								</div>
@@ -152,13 +90,8 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 					</div>
 				)}
 
-				{loading && <LoadingCircle />}
-
 				<div className="mt-4">
-					<CreateCommentForm
-						parentEntity={audioItem}
-						onSuccess={onCreateCommentSuccess}
-					/>
+					<CreateCommentForm parentEntity={audioItem} onSuccess={() => {}} />
 				</div>
 			</Modal>
 		</>

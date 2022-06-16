@@ -30,6 +30,11 @@ export async function loader(): Promise<LoaderData> {
 				tagsAsSubject: true,
 				createdByUser: true,
 				updatedByUser: true,
+				comments: {
+					include: {
+						createdByUser: true,
+					},
+				},
 			},
 			orderBy: {
 				updatedAt: "desc",
@@ -57,7 +62,6 @@ export async function loader(): Promise<LoaderData> {
 			},
 		}),
 	]);
-	console.log(audioItems, collections, comments);
 	return {
 		audioItems,
 		collections,
@@ -67,8 +71,6 @@ export async function loader(): Promise<LoaderData> {
 
 export default function Home() {
 	const { audioItems, collections, comments } = useLoaderData<LoaderData>();
-
-	console.log(audioItems);
 
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,

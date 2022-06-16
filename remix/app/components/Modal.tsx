@@ -1,7 +1,8 @@
+import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 interface Props {
-	children: React.ReactChild | React.ReactChild[];
+	children: React.ReactNode;
 	isVisible: boolean;
 	onClose: () => void;
 	title?: string;

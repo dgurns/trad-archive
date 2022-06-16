@@ -2,7 +2,16 @@ import type { Tag, User, AudioItem, Collection } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
 const audioItemWithRelations = Prisma.validator<Prisma.AudioItemArgs>()({
-	include: { tagsAsSubject: true, createdByUser: true, updatedByUser: true },
+	include: {
+		tagsAsSubject: true,
+		createdByUser: true,
+		updatedByUser: true,
+		comments: {
+			include: {
+				createdByUser: true,
+			},
+		},
+	},
 });
 export type AudioItemWithRelations = Prisma.AudioItemGetPayload<
 	typeof audioItemWithRelations

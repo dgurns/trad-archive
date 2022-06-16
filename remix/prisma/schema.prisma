@@ -27,7 +27,7 @@ model AudioItem {
   updatedByUser    User?             @relation("audioItemUpdatedByUser", fields: [updatedByUserId], references: [id])
   tagsAsObject     Tag[]             @relation("tagObjectAudioItem")
   tagsAsSubject    Tag[]             @relation("tagSubjectAudioItem")
-  comment          Comment[]
+  comments          Comment[] @relation("audioItemComments")
   savedItems       SavedItem[]
   takedownRequests TakedownRequest[]
 
@@ -67,13 +67,13 @@ model Collection {
 
 model Comment {
   id                String    @id @db.Char(36) @default(uuid())
+  parentAudioItem   AudioItem @relation("audioItemComments", fields: [parentAudioItemId], references: [id])
   parentAudioItemId String    @db.Char(36)
   text              String    @db.Text
   createdByUserId   String?   @db.Char(36)
   createdAt         DateTime  @default(now()) @db.Timestamp(6)
   updatedAt         DateTime  @updatedAt
-  createdByUser     User?     @relation(fields: [createdByUserId], references: [id])
-  parentAudioItem   AudioItem @relation(fields: [parentAudioItemId], references: [id])
+  createdByUser     User?     @relation("userComments", fields: [createdByUserId], references: [id])
 
   @@map("comment")
 }
@@ -297,7 +297,7 @@ model User {
   audioItemsUpdated           AudioItem[]                @relation("audioItemUpdatedByUser")
   collectionsCreated          Collection[]               @relation("collection_createdByUserIdToUser")
   collectionsUpdated          Collection[]               @relation("collection_updatedByUserIdToUser")
-  comment                     Comment[]
+  comments                     Comment[] @relation("userComments")
   instrumentsCreated          Instrument[]               @relation("instrument_createdByUserIdToUser")
   instrumentsUpdated          Instrument[]               @relation("instrument_updatedByUserIdToUser")
   peopleCreated               Person[]                   @relation("person_createdByUserIdToUser")

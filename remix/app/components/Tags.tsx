@@ -1,7 +1,8 @@
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { Link } from "@remix-run/react";
+import type { Tag } from "@prisma/client";
 
-import type { Tag, Entity } from "~/types";
+import type { Entity } from "~/types";
 import EntityService from "~/services/Entity";
 import TagService from "~/services/Tag";
 

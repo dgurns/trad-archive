@@ -1,65 +1,80 @@
-import { useEffect, useMemo, useCallback, useState } from "react";
-import { gql } from "@apollo/client";
-import { Link } from "@remix-run/react";
+import { useEffect, useCallback, useState } from "react";
+import { Link, useLoaderData } from "@remix-run/react";
 
-import { EntityStatus, SortBy, ViewAs } from "~/types";
-import useAudioItems, { AUDIO_ITEMS_QUERY } from "~/hooks/useAudioItems";
-import useComments, { COMMENTS_QUERY } from "~/hooks/useComments";
-import useCollections, { COLLECTIONS_QUERY } from "~/hooks/useCollections";
+import type {
+	CollectionWithRelations,
+	CommentWithRelations,
+	AudioItemWithRelations,
+} from "~/types";
+import { SortBy, ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
-import CommentService from "~/services/Comment";
 import LocalStorageService from "~/services/LocalStorage";
+import { db } from "~/utils/db.server";
 
 import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
-import LoadingBlock from "~/components/LoadingBlock";
 
-const NUM_AUDIO_ITEMS_TO_FETCH = 10;
-const NUM_COMMENTS_TO_FETCH = 6;
-const NUM_COLLECTIONS_TO_FETCH = 5;
+interface LoaderData {
+	audioItems: AudioItemWithRelations[];
+	collections: CollectionWithRelations[];
+	comments: CommentWithRelations[];
+}
+
+export async function loader(): Promise<LoaderData> {
+	const [audioItems, collections, comments] = await Promise.all([
+		db.audioItem.findMany({
+			take: 10,
+			include: {
+				tagsAsSubject: true,
+				createdByUser: true,
+				updatedByUser: true,
+			},
+			orderBy: {
+				updatedAt: "desc",
+			},
+		}),
+		db.collection.findMany({
+			take: 5,
+			include: {
+				tagsAsSubject: true,
+				createdByUser: true,
+				updatedByUser: true,
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+		}),
+		db.comment.findMany({
+			take: 6,
+			include: {
+				createdByUser: true,
+				parentAudioItem: true,
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+		}),
+	]);
+	console.log(audioItems, collections, comments);
+	return {
+		audioItems,
+		collections,
+		comments,
+	};
+}
 
 export default function Home() {
+	const { audioItems, collections, comments } = useLoaderData<LoaderData>();
+
+	console.log(audioItems);
+
 	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
 		defaultSortBy: SortBy.RecentlyTagged,
 		defaultViewAs: ViewAs.Cards,
 		enableQueryParams: false,
 	});
-
-	// These queries skip the initial network request if the cache was
-	// pre-populated via static props
-	const [
-		fetchedAudioItems,
-		{ loading: audioItemsLoading, error: audioItemsError },
-		fetchNextPage,
-	] = useAudioItems({
-		sortBy,
-		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
-	});
-	const {
-		comments: fetchedComments,
-		commentsQuery: { loading: commentsLoading },
-	} = useComments({
-		resultsPerPage: NUM_COMMENTS_TO_FETCH,
-	});
-	const [fetchedCollections, { loading: collectionsLoading }] = useCollections({
-		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
-		sortBy: SortBy.RecentlyAdded,
-	});
-
-	const audioItems = fetchedAudioItems;
-
-	const comments = useMemo(() => {
-		const data = fetchedComments ?? [];
-		const sorted = CommentService.sortByCreatedAtDesc(data);
-		return sorted.slice(0, NUM_COMMENTS_TO_FETCH);
-	}, [fetchedComments]);
-
-	const collections = useMemo(() => {
-		const data = fetchedCollections ?? [];
-		return data.slice(0, NUM_COLLECTIONS_TO_FETCH);
-	}, [fetchedCollections]);
 
 	// Due to static rendering, we need to check localStorage for intro status
 	// after client-side hydration.
@@ -89,13 +104,7 @@ export default function Home() {
 
 					<Filters {...filtersProps} className="mb-6" />
 
-					{!audioItems && audioItemsError && (
-						<div className="text-red-600">{audioItemsError.message}</div>
-					)}
-					{!audioItemsLoading && audioItems?.length === 0 && (
-						<div className="text-gray-500">No Audio Items found</div>
-					)}
-					{audioItems?.map((audioItem, index) => (
+					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent
 							viewAs={viewAs}
 							audioItem={audioItem}
@@ -103,14 +112,6 @@ export default function Home() {
 							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 						/>
 					))}
-					{audioItemsLoading && <LoadingBlock />}
-					{!audioItemsLoading && audioItems && audioItems?.length > 0 && (
-						<div className="flex flex-row justify-center">
-							<button className="btn-text" onClick={fetchNextPage}>
-								Load More
-							</button>
-						</div>
-					)}
 				</div>
 
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
@@ -147,11 +148,7 @@ export default function Home() {
 					)} */}
 
 					<h3 className="mt-6 mb-4">Latest Collections</h3>
-					{collectionsLoading && collections?.length === 0 && <LoadingBlock />}
-					{!collectionsLoading && collections?.length === 0 && (
-						<div className="text-gray-500">None</div>
-					)}
-					{collections?.map((collection, index) => {
+					{collections.map((collection, index) => {
 						const { name } = collection;
 						if (!name) {
 							return null;
@@ -179,11 +176,7 @@ export default function Home() {
 					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>
-					{commentsLoading && comments?.length === 0 && <LoadingBlock />}
-					{!commentsLoading && comments?.length === 0 && (
-						<div className="text-gray-500">None</div>
-					)}
-					{comments?.map((comment, index) => {
+					{comments.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
 						if (!createdByUser || !parentAudioItem) {
 							return null;

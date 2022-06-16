@@ -1,7 +1,8 @@
 import { useCallback, useState, useMemo } from "react";
 import { useQuery, gql } from "@apollo/client";
+import type { TakedownRequest } from "@prisma/client";
 
-import type { Entity, EntityType, TakedownRequest } from "~/types";
+import type { Entity, EntityType } from "~/types";
 import { isPendingTakedownRequest, isApprovedTakedownRequest } from "~/types";
 import useRequireLogin from "~/hooks/useRequireLogin";
 import EntityService from "~/services/Entity";

@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
 import { Link } from "@remix-run/react";
 import { useNavigate } from "@remix-run/react";
+import type { TakedownRequest, Tag } from "@prisma/client";
 
-import type { AudioItem, Tag, TakedownRequest } from "~/types";
-import { EntityStatus, TakedownRequestStatus } from "~/types";
+import type { AudioItemWithRelations } from "~/types";
 import DateTime from "~/services/DateTime";
 import usePlayerContext from "~/hooks/usePlayerContext";
 
@@ -15,13 +15,20 @@ import TimeMarkers from "~/components/TimeMarkers";
 import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
-	audioItem: AudioItem;
+	audioItem: AudioItemWithRelations;
 	showTitle?: boolean;
 	className?: string;
 }
 const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
-	const { name, slug, description, tags, status, createdByUser, createdAt } =
-		audioItem;
+	const {
+		name,
+		slug,
+		description,
+		tagsAsSubject: tags,
+		status,
+		createdByUser,
+		createdAt,
+	} = audioItem;
 
 	const navigate = useNavigate();
 
@@ -48,7 +55,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 
 	const onTakedownRequestCreated = useCallback(
 		(takedownRequest: TakedownRequest) => {
-			if (takedownRequest.status === TakedownRequestStatus.Approved) {
+			if (takedownRequest.status === "APPROVED") {
 				navigate(`/entities/audio-items/${slug}`);
 			}
 		},
@@ -63,7 +70,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		playbackPositionSeconds ?? 0
 	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds ?? 0)}`;
 
-	const isTakenDown = status === EntityStatus.TakenDown;
+	const isTakenDown = status === "TAKEN_DOWN";
 
 	return (
 		<div
@@ -140,11 +147,6 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 								to={`/users/${createdByUser.id}`}
 								className="flex flex-row px-0 sm:px-1"
 							>
-								{createdByUser.verifiedPerson && (
-									<div className="inline">
-										<i className="material-icons text-sm mr-1">verified</i>
-									</div>
-								)}
 								{createdByUser.username}
 							</Link>
 						</>

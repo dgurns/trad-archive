@@ -1,3 +1,38 @@
+import type { Tag, User, AudioItem, Collection } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+
+const audioItemWithRelations = Prisma.validator<Prisma.AudioItemArgs>()({
+	include: { tagsAsSubject: true, createdByUser: true, updatedByUser: true },
+});
+export type AudioItemWithRelations = Prisma.AudioItemGetPayload<
+	typeof audioItemWithRelations
+>;
+
+const collectionWithRelations = Prisma.validator<Prisma.CollectionArgs>()({
+	include: { tagsAsSubject: true, createdByUser: true, updatedByUser: true },
+});
+export type CollectionWithRelations = Prisma.CollectionGetPayload<
+	typeof collectionWithRelations
+>;
+
+const commentWithRelations = Prisma.validator<Prisma.CommentArgs>()({
+	include: { parentAudioItem: true, createdByUser: true },
+});
+export type CommentWithRelations = Prisma.CommentGetPayload<
+	typeof commentWithRelations
+>;
+
+// EVERYTHING BELOW THIS LINE SHOULD BE GRADUALLY DEPRECATED
+
+export enum EntityType {
+	AudioItem = "AudioItem",
+	Person = "Person",
+	Instrument = "Instrument",
+	Place = "Place",
+	Tune = "Tune",
+	Collection = "Collection",
+}
+
 export enum PerPage {
 	Ten = 10,
 	Twenty = 20,
@@ -25,16 +60,6 @@ export enum UserRole {
 export enum CopyrightPermissionStatus {
 	FullNonCommercialGranted = "FullNonCommercialGranted",
 }
-export interface User {
-	id: string;
-	role?: UserRole;
-	email?: string;
-	username: string;
-	copyrightPermissionStatus?: CopyrightPermissionStatus | null;
-	verifiedPerson?: Person | null;
-	createdAt: string;
-	updatedAt: string;
-}
 
 // Entity defines a union of all the different Entity types
 export type Entity =
@@ -44,15 +69,6 @@ export type Entity =
 	| Place
 	| Tune
 	| Collection;
-
-export enum EntityType {
-	AudioItem = "AudioItem",
-	Person = "Person",
-	Instrument = "Instrument",
-	Place = "Place",
-	Tune = "Tune",
-	Collection = "Collection",
-}
 
 export enum EntityStatus {
 	Published = "Published",
@@ -84,21 +100,14 @@ interface BaseEntity {
 	slug: string;
 	aliases: string | null;
 	description: string | null;
-	tags: Tag[] | null;
+	tagsAsSubject?: Tag[] | null;
+	tagsAsObject?: Tag[] | null;
 	createdByUser: User | null;
-	lastUpdatedByUser: User | null;
+	lastUpdatedByUser?: User | null;
+	updatedByUser?: User | null;
 	status?: EntityStatus;
 	createdAt: string;
 	updatedAt: string;
-}
-
-export interface AudioItem extends BaseEntity {
-	entityType: EntityType.AudioItem;
-	comments?: Comment[] | null;
-	commentsCount?: number;
-	itmaAtomSlug: string | null;
-	urlSource: string | null;
-	isSavedByUser?: boolean;
 }
 
 export interface Person extends BaseEntity {
@@ -128,28 +137,12 @@ export interface Tune extends BaseEntity {
 	abc: string | null;
 }
 
-export interface Collection extends BaseEntity {
-	entityType: EntityType.Collection;
-	itmaAtomSlug: string | null;
-}
-
 export interface Relationship {
 	id: string;
 	name: string;
 	subjectEntityType: EntityType;
 	objectEntityType: EntityType;
 	createdByUser: User;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface Tag {
-	id: string;
-	relationship: Relationship;
-	subjectEntity?: Entity;
-	objectEntity: Entity;
-	subjectTimeMarkerSeconds?: number | null;
-	createdByUser?: User | null;
 	createdAt: string;
 	updatedAt: string;
 }

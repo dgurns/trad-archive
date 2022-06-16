@@ -20,7 +20,7 @@ model AudioItem {
   updatedByUserId  String?           @db.Char(36)
   createdAt        DateTime          @default(now()) @db.Timestamp(6)
   updatedAt        DateTime          @updatedAt
-  entityType       EntityType?       @default(AudioItem)
+  entityType       EntityType       @default(AudioItem)
   itmaAtomSlug     String?           @db.VarChar(255)
   urlSource        String?           @db.VarChar(255)
   createdByUser    User?             @relation("audioItemCreatedByUser", fields: [createdByUserId], references: [id])
@@ -50,7 +50,7 @@ model Collection {
   updatedByUserId String?      @db.Char(36)
   createdAt       DateTime     @default(now()) @db.Timestamp(6)
   updatedAt       DateTime     @updatedAt
-  entityType      EntityType?  @default(Collection)
+  entityType      EntityType  @default(Collection)
   itmaAtomSlug    String?      @db.VarChar(255)
   createdByUser   User?        @relation("collection_createdByUserIdToUser", fields: [createdByUserId], references: [id])
   updatedByUser   User?        @relation("collection_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
@@ -89,7 +89,7 @@ model Instrument {
   updatedByUserId String?      @db.Char(36)
   createdAt       DateTime     @default(now()) @db.Timestamp(6)
   updatedAt       DateTime     @updatedAt
-  entityType      EntityType?  @default(Instrument)
+  entityType      EntityType  @default(Instrument)
   createdByUser   User?        @relation("instrument_createdByUserIdToUser", fields: [createdByUserId], references: [id])
   updatedByUser   User?        @relation("instrument_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
   tagsAsObject    Tag[]        @relation("instrumentTotag_objectInstrumentId")
@@ -113,7 +113,7 @@ model Person {
   updatedByUserId      String?               @db.Char(36)
   createdAt            DateTime              @default(now()) @db.Timestamp(6)
   updatedAt            DateTime              @updatedAt
-  entityType           EntityType?           @default(Person)
+  entityType           EntityType          @default(Person)
   firstName            String                @db.VarChar(255)
   middleName           String?               @db.VarChar(255)
   lastName             String                @db.VarChar(255)
@@ -141,7 +141,7 @@ model Place {
   updatedByUserId String?      @db.Char(36)
   createdAt       DateTime     @default(now()) @db.Timestamp(6)
   updatedAt       DateTime     @updatedAt
-  entityType      EntityType?  @default(Place)
+  entityType      EntityType  @default(Place)
   latitude        Float        @db.Float
   longitude       Float        @db.Float
   createdByUser   User?        @relation("place_createdByUserIdToUser", fields: [createdByUserId], references: [id])

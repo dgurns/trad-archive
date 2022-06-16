@@ -22,13 +22,13 @@ const formatSecondsAsDuration = (inputSeconds: number) => {
 };
 
 const formatDateYear = (
-	date?: number | string,
+	date?: Date | number | string,
 	shouldCapitalize: boolean | undefined = false
 ) => {
 	if (!date) {
 		return "";
 	}
-	const dateObject = new Date(date);
+	const dateObject = date instanceof Date ? date : new Date(date);
 	if (isToday(dateObject)) {
 		return format(dateObject, `'${shouldCapitalize ? "T" : "t"}oday`);
 	} else if (isYesterday(dateObject)) {
@@ -39,13 +39,13 @@ const formatDateYear = (
 };
 
 const formatDateYearTime = (
-	date?: number | string,
+	date?: Date | number | string,
 	shouldCapitalize: boolean | undefined = false
 ) => {
 	if (!date) {
 		return "";
 	}
-	const dateObject = new Date(date);
+	const dateObject = date instanceof Date ? date : new Date(date);
 	if (isToday(dateObject)) {
 		return format(
 			dateObject,

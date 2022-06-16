@@ -36,25 +36,16 @@ export default function Home() {
 	] = useAudioItems({
 		sortBy,
 		resultsPerPage: NUM_AUDIO_ITEMS_TO_FETCH,
-		queryOptions: {
-			fetchPolicy: "cache-only",
-		},
 	});
 	const {
 		comments: fetchedComments,
 		commentsQuery: { loading: commentsLoading },
 	} = useComments({
 		resultsPerPage: NUM_COMMENTS_TO_FETCH,
-		queryOptions: {
-			fetchPolicy: "cache-only",
-		},
 	});
 	const [fetchedCollections, { loading: collectionsLoading }] = useCollections({
 		resultsPerPage: NUM_COLLECTIONS_TO_FETCH,
 		sortBy: SortBy.RecentlyAdded,
-		queryOptions: {
-			fetchPolicy: "cache-only",
-		},
 	});
 
 	const audioItems = fetchedAudioItems;
@@ -84,7 +75,7 @@ export default function Home() {
 	}, []);
 
 	return (
-		<Layout pageTitle="Trad Archive - Home">
+		<Layout>
 			{shouldShowIntro && (
 				<ProjectIntro
 					className="mb-8 md:mt-4 md:mb-12"
@@ -113,7 +104,7 @@ export default function Home() {
 						/>
 					))}
 					{audioItemsLoading && <LoadingBlock />}
-					{!audioItemsLoading && audioItems?.length > 0 && (
+					{!audioItemsLoading && audioItems && audioItems?.length > 0 && (
 						<div className="flex flex-row justify-center">
 							<button className="btn-text" onClick={fetchNextPage}>
 								Load More
@@ -124,20 +115,20 @@ export default function Home() {
 
 				<div className="flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300">
 					<h3 className="mb-4">Browse</h3>
-					<Link to="/entities/people">
-						<a className="mb-2">People</a>
+					<Link to="/entities/people" className="mb-2">
+						People
 					</Link>
-					<Link to="/entities/instruments">
-						<a className="mb-2">Instruments</a>
+					<Link to="/entities/instruments" className="mb-2">
+						Instruments
 					</Link>
-					<Link to="/entities/places">
-						<a className="mb-2">Places</a>
+					<Link to="/entities/places" className="mb-2">
+						Places
 					</Link>
-					<Link to="/entities/tunes">
-						<a className="mb-2">Tunes</a>
+					<Link to="/entities/tunes" className="mb-2">
+						Tunes
 					</Link>
-					<Link to="/entities/collections">
-						<a className="mb-2">Collections</a>
+					<Link to="/entities/collections" className="mb-2">
+						Collections
 					</Link>
 
 					{/* {prefetchedStats && (
@@ -181,7 +172,10 @@ export default function Home() {
 						target="_blank"
 						rel="noreferrer"
 					>
-						View on GitHub <i className="material-icons text-sm">launch</i>
+						View on GitHub{" "}
+						<i className="material-icons">
+							<span className="text-sm">launch</span>
+						</i>
 					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>
@@ -191,7 +185,7 @@ export default function Home() {
 					)}
 					{comments?.map((comment, index) => {
 						const { createdByUser, parentAudioItem, text } = comment;
-						if (!createdByUser) {
+						if (!createdByUser || !parentAudioItem) {
 							return null;
 						}
 						return (

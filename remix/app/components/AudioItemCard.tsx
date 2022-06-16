@@ -44,7 +44,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 
 	const onPlayPressed = useCallback(() => {
 		setActiveAudioItem(audioItem);
-	}, [audioItem]);
+	}, [audioItem, setActiveAudioItem]);
 
 	const onTakedownRequestCreated = useCallback(
 		(takedownRequest: TakedownRequest) => {
@@ -60,8 +60,8 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		typeof playbackPositionSeconds === "number" &&
 		typeof activeItemDurationSeconds === "number";
 	const positionAndDuration = `${DateTime.formatSecondsAsDuration(
-		playbackPositionSeconds
-	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds)}`;
+		playbackPositionSeconds ?? 0
+	)} / ${DateTime.formatSecondsAsDuration(activeItemDurationSeconds ?? 0)}`;
 
 	const isTakenDown = status === EntityStatus.TakenDown;
 
@@ -73,8 +73,11 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		>
 			{showTitle && (
 				<h2 className="mb-2">
-					<Link to={`/entities/audio-items/${slug}`}>
-						<a className="link-bare">{name}</a>
+					<Link
+						to={`/entities/audio-items/${slug}`}
+						className="no-underline text-gray-700"
+					>
+						{name}
 					</Link>
 				</h2>
 			)}
@@ -100,8 +103,8 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 										onClick={onPlayPressed}
 										aria-label="Play"
 									>
-										<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
-											play_arrow
+										<i className="material-icons text-teal-600 hover:text-teal-800">
+											<span className="text-6xl">play_arrow</span>
 										</i>
 									</button>
 								)}
@@ -133,15 +136,16 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 						<>
 							{" "}
 							by{" "}
-							<Link to={`/users/${createdByUser.id}`}>
-								<a className="flex flex-row px-0 sm:px-1">
-									{createdByUser.verifiedPerson && (
-										<div className="inline">
-											<i className="material-icons text-sm mr-1">verified</i>
-										</div>
-									)}
-									{createdByUser.username}
-								</a>
+							<Link
+								to={`/users/${createdByUser.id}`}
+								className="flex flex-row px-0 sm:px-1"
+							>
+								{createdByUser.verifiedPerson && (
+									<div className="inline">
+										<i className="material-icons text-sm mr-1">verified</i>
+									</div>
+								)}
+								{createdByUser.username}
 							</Link>
 						</>
 					)}{" "}

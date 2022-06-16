@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { Link } from "@remix-run/react";
 
-import { AudioItem, EntityType, Tag } from "~/types";
+import type { AudioItem, Tag } from "~/types";
+import { EntityType } from "~/types";
 import DateTime from "~/services/DateTime";
 import Entity from "~/services/Entity";
 import usePlayerContext from "~/hooks/usePlayerContext";
@@ -23,7 +24,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 		[timeMarker: string]: Tag[];
 	};
 	const timeMarkersWithTags: TimeMarkersWithTags = useMemo(() => {
-		const output = {};
+		const output: Record<number, Tag[]> = {};
 		if (!tags) {
 			return output;
 		}
@@ -34,9 +35,13 @@ const TimeMarkers = ({ audioItem }: Props) => {
 		// Sort array so that time markers are ascending, and thus object keys will
 		// be created in ascending order
 		filteredTags.sort(
-			(a, b) => a.subjectTimeMarkerSeconds - b.subjectTimeMarkerSeconds
+			(a, b) =>
+				a.subjectTimeMarkerSeconds ?? 0 - (b.subjectTimeMarkerSeconds ?? 0)
 		);
 		filteredTags.forEach((tag) => {
+			if (typeof tag.subjectTimeMarkerSeconds !== "number") {
+				return;
+			}
 			const existingTagsAtTimeMarker: Tag[] | undefined =
 				output[tag.subjectTimeMarkerSeconds] ?? [];
 			output[tag.subjectTimeMarkerSeconds] = [...existingTagsAtTimeMarker, tag];
@@ -55,7 +60,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 			}
 			setSeekPositionSeconds(parseInt(timeMarker));
 		},
-		[audioItem, activeAudioItem]
+		[audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]
 	);
 
 	const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
@@ -65,7 +70,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 		}
 		let result: string | undefined;
 		Object.keys(timeMarkersWithTags).forEach((timeMarker) => {
-			if (parseInt(timeMarker) <= playbackPositionSeconds) {
+			if (parseInt(timeMarker) <= (playbackPositionSeconds ?? 0)) {
 				result = timeMarker;
 			}
 		});
@@ -85,7 +90,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 							<div className="flex flex-row w-16 flex-shrink-0">
 								<div className="w-3 text-left">{isActive && ">"}</div>
 								<button
-									className="btn-text underline hover:underline"
+									className="link"
 									onClick={(event) => onTimeMarkerClicked(event, timeMarker)}
 								>
 									{DateTime.formatSecondsAsDuration(parseInt(timeMarker))}
@@ -94,13 +99,14 @@ const TimeMarkers = ({ audioItem }: Props) => {
 							<div className="flex flex-col md:flex-row">
 								{tagsAtTimeMarker.map((tag, index) => (
 									<span className="flex flex-row items-center" key={index}>
-										<Link to={Entity.makeHrefForView(tag.objectEntity)}>
-											<a id="time-marker-tag-link">
-												{tag.objectEntity.name}
-												{tag.objectEntity.entityType === EntityType.Tune
-													? ` (${tag.objectEntity.type})`
-													: ""}
-											</a>
+										<Link
+											to={Entity.makeHrefForView(tag.objectEntity)}
+											id="time-marker-tag-link"
+										>
+											{tag.objectEntity.name}
+											{tag.objectEntity.entityType === EntityType.Tune
+												? ` (${tag.objectEntity.type})`
+												: ""}
 										</Link>
 										{index !== tagsAtTimeMarker.length - 1 && (
 											<span className="hidden md:block mr-1">,</span>

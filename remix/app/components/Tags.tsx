@@ -40,21 +40,20 @@ const TagLink = ({ tag }: TagProps) => {
 	const { objectEntity, relationship } = tag;
 	const href = EntityService.makeHrefForView(objectEntity);
 	return (
-		<Link to={href}>
-			<a
-				className="relative block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800"
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
+		<Link
+			to={href}
+			className="relative block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800"
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+		>
+			{objectEntity.name}
+			<div
+				className={`${
+					tooltipIsVisible ? "flex" : "hidden"
+				} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`}
 			>
-				{objectEntity.name}
-				<div
-					className={`${
-						tooltipIsVisible ? "flex" : "hidden"
-					} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`}
-				>
-					{relationship.name} {objectEntity.entityType.toUpperCase()}
-				</div>
-			</a>
+				{relationship.name} {objectEntity.entityType.toUpperCase()}
+			</div>
 		</Link>
 	);
 };
@@ -83,11 +82,11 @@ const Tags = ({ entity }: TagsProps) => {
 				</div>
 			))}
 
-			<div className={tags?.length > 0 ? "mb-2 ml-1" : undefined}>
+			<div className={tags && tags.length > 0 ? "mb-2 ml-1" : undefined}>
 				<AddTagButton entity={entity} />
 			</div>
 
-			{tags?.length > 0 && (
+			{tags && tags.length > 0 && (
 				<div className="flex ml-1 mb-2">
 					<span className="text-gray-500 mr-1">/</span>
 					<EditTagsButton entity={entity} />

@@ -24,6 +24,12 @@ export const meta: MetaFunction = () => ({
 export function links() {
 	return [
 		{ rel: "stylesheet", href: styles },
+		{ rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
+		{ rel: "preconnect", href: "https://fonts.gstatic.com/" },
+		{
+			rel: "stylesheet",
+			href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+		},
 		{
 			rel: "apple-touch-icon",
 			sizes: "180x180",

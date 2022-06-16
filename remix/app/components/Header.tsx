@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import { Link } from "@remix-run/react";
 import { useNavigate } from "@remix-run/react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -18,7 +18,9 @@ const Header = () => {
 
 	const [searchModalIsVisible, setSearchModalIsVisible] = useState(false);
 
-	const openSearchModal = (event) => {
+	const openSearchModal = (
+		event: KeyboardEvent | React.SyntheticEvent<HTMLButtonElement>
+	) => {
 		event.preventDefault();
 		setSearchModalIsVisible(true);
 	};
@@ -49,40 +51,45 @@ const Header = () => {
 		} else if (currentUser) {
 			return (
 				<div className="flex flex-row items-center">
-					<Link to="/saved-items">
-						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
-							<i className="material-icons">bookmark</i>
-							<span className="hidden md:block md:pl-1">Saved</span>
-						</a>
+					<Link
+						to="/saved-items"
+						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
+					>
+						<i className="material-icons">bookmark</i>
+						<span className="hidden md:block md:pl-1">Saved</span>
 					</Link>
 					{UserService.isAdmin(currentUser) && (
-						<Link to="/admin">
-							<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
-								<i className="material-icons">manage_accounts</i>
-								<span className="hidden md:block md:pl-1">Admin</span>
-							</a>
+						<Link
+							to="/admin"
+							className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
+						>
+							<i className="material-icons">manage_accounts</i>
+							<span className="hidden md:block md:pl-1">Admin</span>
 						</Link>
 					)}
-					<Link to="/account">
-						<a className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4">
-							<i className="material-icons">account_circle</i>
-							<span className="hidden md:block md:pl-1">Account</span>
-						</a>
+					<Link
+						to="/account"
+						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
+					>
+						<i className="material-icons">account_circle</i>
+						<span className="hidden md:block md:pl-1">Account</span>
 					</Link>
 				</div>
 			);
 		} else {
 			return (
 				<div>
-					<Link to="/login">
-						<a className="btn-text text-current whitespace-nowrap hover:text-gray-400 ml-4">
-							Log In
-						</a>
+					<Link
+						to="/login"
+						className="whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
+					>
+						Log In
 					</Link>
-					<Link to="/signup">
-						<a className="btn text-current no-underline whitespace-nowrap hover:text-current ml-4">
-							Sign Up
-						</a>
+					<Link
+						to="/signup"
+						className="btn text-current no-underline whitespace-nowrap hover:text-current ml-4"
+					>
+						Sign Up
 					</Link>
 				</div>
 			);
@@ -96,26 +103,28 @@ const Header = () => {
 				suppressHydrationWarning
 			>
 				<div className="flex flex-row">
-					<Link to="/">
-						<a className="btn-text text-current whitespace-nowrap text-yellow-200 hover:text-gray-400">
-							Trad Archive
-						</a>
+					<Link
+						to="/"
+						className="whitespace-nowrap no-underline text-yellow-200 hover:text-gray-400"
+					>
+						Trad Archive
 					</Link>
 					<button
-						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 group ml-4"
+						className="flex flex-row items-center whitespace-nowrap text-white hover:text-gray-400 group ml-4"
 						onClick={openSearchModal}
 					>
 						<i className="material-icons">search</i>
 						<span className="hidden md:block md:pl-1">Search</span>
 						<span className="hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5">{`/`}</span>
 					</button>
-					<Link to="/entities/audio-items/random">
-						<a className="flex flex-row items-center link-bare text-current text-white hover:text-gray-400 ml-4">
-							<div className="block h-6">
-								<i className="material-icons">shuffle</i>
-							</div>
-							<div className="md:pl-2 hidden md:block">Random</div>
-						</a>
+					<Link
+						to="/entities/audio-items/random"
+						className="flex flex-row items-center no-underline text-white hover:text-gray-400 ml-4"
+					>
+						<div className="block h-6">
+							<i className="material-icons">shuffle</i>
+						</div>
+						<div className="md:pl-2 hidden md:block">Random</div>
 					</Link>
 				</div>
 

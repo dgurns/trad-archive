@@ -3,7 +3,6 @@ import { useNavigate } from "@remix-run/react";
 
 import type { Person } from "~/types";
 import TagService from "~/services/Tag";
-import { PERSON_QUERY } from "~/routes/entities/people/[slug]";
 
 import Layout from "~/components/Layout";
 import Breadcrumb from "~/components/Breadcrumb";
@@ -16,14 +15,6 @@ const PersonTags = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error, refetch } = useQuery<{
-		person: Person;
-	}>(PERSON_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
-	const { person } = data ?? {};
 	const { name, tags } = person ?? {};
 	const sortedTags = TagService.sort(tags);
 

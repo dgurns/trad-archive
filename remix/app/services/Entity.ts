@@ -1,11 +1,12 @@
-import { Entity, EntityType } from "~/types";
+import type { Entity } from "~/types";
+import { EntityType } from "~/types";
 
 const cleanSlug = (rawSlug: string) => {
 	const slugWithHyphens = rawSlug.replace(/[\s]/g, "-");
 	return slugWithHyphens.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
 };
 
-const makeHrefForTopLevel = (entity: Entity) => {
+const makeHrefForTopLevel = (entity?: Entity | null) => {
 	switch (entity?.entityType) {
 		case EntityType.AudioItem:
 			return "/entities/audio-items";
@@ -24,23 +25,35 @@ const makeHrefForTopLevel = (entity: Entity) => {
 	}
 };
 
-const makeHrefForView = (entity: Entity) => {
+const makeHrefForView = (entity?: Entity | null) => {
+	if (!entity) {
+		return "";
+	}
 	return `${makeHrefForTopLevel(entity)}/${entity.slug}`;
 };
 
-const makeHrefForEdit = (entity: Entity) => {
+const makeHrefForEdit = (entity?: Entity | null) => {
+	if (!entity) {
+		return "";
+	}
 	return `${makeHrefForView(entity)}/edit`;
 };
 
-const makeHrefForAbout = (entity: Entity) => {
+const makeHrefForAbout = (entity?: Entity | null) => {
+	if (!entity) {
+		return "";
+	}
 	return `${makeHrefForView(entity)}/about`;
 };
 
-const makeHrefForTags = (entity: Entity) => {
+const makeHrefForTags = (entity?: Entity | null) => {
+	if (!entity) {
+		return "";
+	}
 	return `${makeHrefForView(entity)}/tags`;
 };
 
-const makeReadableNamePlural = (entity: Entity) => {
+const makeReadableNamePlural = (entity?: Entity | null) => {
 	switch (entity?.entityType) {
 		case EntityType.AudioItem:
 			return "Audio Items";

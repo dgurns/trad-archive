@@ -90,7 +90,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			)}
 
 			<div className="mb-4">
-				<Tags entity={audioItem} />
+				<Tags audioItem={audioItem} />
 			</div>
 
 			<div className="flex flex-col w-full border border-gray-200 rounded mb-2">

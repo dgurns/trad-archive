@@ -1,9 +1,37 @@
-import type { Tag, User, AudioItem, Collection } from "@prisma/client";
+import type {
+	User,
+	AudioItem,
+	Collection,
+	Instrument,
+	Person,
+	Place,
+	Tune,
+} from "@prisma/client";
 import { Prisma } from "@prisma/client";
+
+export type Entity =
+	| AudioItem
+	| AudioItemWithRelations
+	| Collection
+	| CollectionWithRelations
+	| Instrument
+	| Person
+	| Place
+	| Tune;
 
 const audioItemWithRelations = Prisma.validator<Prisma.AudioItemArgs>()({
 	include: {
-		tagsAsSubject: true,
+		tagsAsSubject: {
+			include: {
+				objectAudioItem: true,
+				objectCollection: true,
+				objectInstrument: true,
+				objectPerson: true,
+				objectPlace: true,
+				objectTune: true,
+				relationship: true,
+			},
+		},
 		createdByUser: true,
 		updatedByUser: true,
 		comments: {
@@ -30,6 +58,19 @@ const commentWithRelations = Prisma.validator<Prisma.CommentArgs>()({
 export type CommentWithRelations = Prisma.CommentGetPayload<
 	typeof commentWithRelations
 >;
+
+const tagWithRelations = Prisma.validator<Prisma.TagArgs>()({
+	include: {
+		objectAudioItem: true,
+		objectCollection: true,
+		objectInstrument: true,
+		objectPerson: true,
+		objectPlace: true,
+		objectTune: true,
+		relationship: true,
+	},
+});
+export type TagWithRelations = Prisma.TagGetPayload<typeof tagWithRelations>;
 
 // EVERYTHING BELOW THIS LINE SHOULD BE GRADUALLY DEPRECATED
 
@@ -70,15 +111,6 @@ export enum CopyrightPermissionStatus {
 	FullNonCommercialGranted = "FullNonCommercialGranted",
 }
 
-// Entity defines a union of all the different Entity types
-export type Entity =
-	| AudioItem
-	| Person
-	| Instrument
-	| Place
-	| Tune
-	| Collection;
-
 export enum EntityStatus {
 	Published = "Published",
 	TakenDown = "TakenDown",
@@ -102,50 +134,6 @@ export function isTune(entity: Entity): entity is Tune {
 export function isCollection(entity: Entity): entity is Collection {
 	return (entity as Collection).entityType === EntityType.Collection;
 }
-
-interface BaseEntity {
-	id: string;
-	name: string;
-	slug: string;
-	aliases: string | null;
-	description: string | null;
-	tagsAsSubject?: Tag[] | null;
-	tagsAsObject?: Tag[] | null;
-	createdByUser: User | null;
-	lastUpdatedByUser?: User | null;
-	updatedByUser?: User | null;
-	status?: EntityStatus;
-	createdAt: string;
-	updatedAt: string;
-}
-
-export interface Person extends BaseEntity {
-	entityType: EntityType.Person;
-	firstName: string;
-	middleName: string | null;
-	lastName: string;
-	verifiedUser?: User | null;
-}
-
-export interface Instrument extends BaseEntity {
-	entityType: EntityType.Instrument;
-}
-
-export interface Place extends BaseEntity {
-	entityType: EntityType.Place;
-	latitude: number;
-	longitude: number;
-}
-
-export interface Tune extends BaseEntity {
-	entityType: EntityType.Tune;
-	theSessionTuneId: string;
-	type: string | null;
-	meter: string | null;
-	mode: string | null;
-	abc: string | null;
-}
-
 export interface Relationship {
 	id: string;
 	name: string;

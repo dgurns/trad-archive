@@ -1,8 +1,7 @@
 import { useMemo, useState, useCallback, useEffect } from "react";
 import { Link } from "@remix-run/react";
-import type { Tag } from "@prisma/client";
 
-import type { Entity } from "~/types";
+import type { TagWithRelations, AudioItemWithRelations } from "~/types";
 import EntityService from "~/services/Entity";
 import TagService from "~/services/Tag";
 
@@ -10,7 +9,7 @@ import AddTagButton from "~/components/AddTagButton";
 import EditTagsButton from "~/components/EditTagsButton";
 
 interface TagProps {
-	tag: Tag;
+	tag: TagWithRelations;
 }
 const TagLink = ({ tag }: TagProps) => {
 	const [tooltipIsVisible, setTooltipIsVisible] = useState(false);
@@ -38,8 +37,12 @@ const TagLink = ({ tag }: TagProps) => {
 		};
 	}, [timeoutFunc]);
 
-	const { objectEntity, relationship } = tag;
+	const { relationship } = tag;
+	const objectEntity = TagService.getObjectEntity(tag);
 	const href = EntityService.makeHrefForView(objectEntity);
+	if (!objectEntity || !href) {
+		return null;
+	}
 	return (
 		<Link
 			to={href}
@@ -53,27 +56,27 @@ const TagLink = ({ tag }: TagProps) => {
 					tooltipIsVisible ? "flex" : "hidden"
 				} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`}
 			>
-				{relationship.name} {objectEntity.entityType.toUpperCase()}
+				{relationship.name} {objectEntity.entityType?.toUpperCase()}
 			</div>
 		</Link>
 	);
 };
 
 interface TagsProps {
-	entity: Entity;
+	audioItem: AudioItemWithRelations;
 }
-const Tags = ({ entity }: TagsProps) => {
-	const { tags } = entity;
+const Tags = ({ audioItem }: TagsProps) => {
+	const { tagsAsSubject } = audioItem;
 
 	const sortedTags = useMemo(() => {
-		if (!Array.isArray(tags)) {
+		if (!Array.isArray(tagsAsSubject)) {
 			return [];
 		}
-		const tagsWithoutTimeMarkers = tags.filter(
+		const tagsWithoutTimeMarkers = tagsAsSubject.filter(
 			(tag) => typeof tag.subjectTimeMarkerSeconds !== "number"
 		);
 		return TagService.sort(tagsWithoutTimeMarkers);
-	}, [tags]);
+	}, [tagsAsSubject]);
 
 	return (
 		<div className="flex flex-row items-center flex-wrap">
@@ -83,14 +86,18 @@ const Tags = ({ entity }: TagsProps) => {
 				</div>
 			))}
 
-			<div className={tags && tags.length > 0 ? "mb-2 ml-1" : undefined}>
-				<AddTagButton entity={entity} />
+			<div
+				className={
+					tagsAsSubject && tagsAsSubject.length > 0 ? "mb-2 ml-1" : undefined
+				}
+			>
+				<AddTagButton entity={audioItem} />
 			</div>
 
-			{tags && tags.length > 0 && (
+			{tagsAsSubject && tagsAsSubject.length > 0 && (
 				<div className="flex ml-1 mb-2">
 					<span className="text-gray-500 mr-1">/</span>
-					<EditTagsButton entity={entity} />
+					<EditTagsButton entity={audioItem} />
 				</div>
 			)}
 		</div>

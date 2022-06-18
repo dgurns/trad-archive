@@ -5,7 +5,6 @@ import { useNavigate } from "@remix-run/react";
 import type { Person } from "~/types";
 
 import Layout from "~/components/Layout";
-import { PERSON_QUERY } from "~/routes/entities/people/[slug]";
 import Breadcrumb from "~/components/Breadcrumb";
 import LoadingBlock from "~/components/LoadingBlock";
 
@@ -13,13 +12,6 @@ const PersonAbout = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error } = useQuery<{
-		person: Person;
-	}>(PERSON_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { name, description, aliases } = data?.person ?? {};
 
 	return (

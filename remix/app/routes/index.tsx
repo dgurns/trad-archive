@@ -27,7 +27,17 @@ export async function loader(): Promise<LoaderData> {
 		db.audioItem.findMany({
 			take: 10,
 			include: {
-				tagsAsSubject: true,
+				tagsAsSubject: {
+					include: {
+						objectAudioItem: true,
+						objectCollection: true,
+						objectInstrument: true,
+						objectPerson: true,
+						objectPlace: true,
+						objectTune: true,
+						relationship: true,
+					},
+				},
 				createdByUser: true,
 				updatedByUser: true,
 				comments: {

@@ -8,13 +8,15 @@ import {
 	ScrollRestoration,
 	useCatch,
 } from "@remix-run/react";
-import { ApolloProvider } from "@apollo/client";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import styles from "~/styles/globals-generated-do-not-edit.css";
 
-import { apolloClient } from "~/apolloClient";
 import PlayerContextProvider from "~/components/PlayerContextProvider";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+
+// TODO: Remove this
+const apolloClient = new ApolloClient({ cache: new InMemoryCache() });
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",

@@ -83,250 +83,10 @@ __export(root_exports, {
   meta: () => meta
 });
 var import_react21 = require("@remix-run/react");
-var import_client11 = require("@apollo/client");
+var import_client10 = require("@apollo/client");
 
 // app/styles/globals-generated-do-not-edit.css
 var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-SEJGMZM7.css";
-
-// app/apolloClient.ts
-var import_client = require("@apollo/client");
-var graphqlPath = "/graphql";
-var apiUrl = `http://localhost:4000${graphqlPath}`;
-var API_URL = apiUrl;
-var mergeArrayById = (existing, incoming, { readField, mergeObjects }) => {
-  const merged = existing ? existing.slice(0) : [];
-  const idToIndex = /* @__PURE__ */ Object.create(null);
-  if (existing) {
-    existing.forEach((item, index) => {
-      idToIndex[readField("id", item)] = index;
-    });
-  }
-  if (incoming) {
-    incoming.forEach((item) => {
-      const id = readField("id", item);
-      const index = idToIndex[id];
-      if (typeof index === "number") {
-        merged[index] = mergeObjects(merged[index], item);
-      } else {
-        idToIndex[id] = merged.length;
-        merged.push(item);
-      }
-    });
-  }
-  return merged;
-};
-var apolloClient = new import_client.ApolloClient({
-  uri: API_URL,
-  credentials: "include",
-  ssrMode: typeof document === "undefined",
-  cache: new import_client.InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          audioItems: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          },
-          collections: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          },
-          comments: {
-            keyArgs: false,
-            merge: mergeArrayById
-          },
-          entity: {
-            keyArgs: false,
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          },
-          instruments: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          },
-          people: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          },
-          places: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          },
-          savedItemsForUser: {
-            keyArgs: false,
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          },
-          tags: {
-            keyArgs: false,
-            merge(_, incoming) {
-              return incoming;
-            }
-          },
-          tunes: {
-            keyArgs: ["input", ["sortBy"]],
-            merge(existing = [], incoming, { args: { input } }) {
-              const { skip = 0 } = input;
-              const merged = existing ? existing.slice(0) : [];
-              for (let i = 0; i < incoming.length; ++i) {
-                merged[skip + i] = incoming[i];
-              }
-              return merged;
-            }
-          }
-        }
-      },
-      AudioItem: {
-        fields: {
-          comments: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          },
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          },
-          isSavedByUser: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          },
-          createdByUser: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      Collection: {
-        fields: {
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      Comment: {
-        fields: {
-          parentAudioItem: {
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          },
-          createdByUser: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      Instrument: {
-        fields: {
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      Person: {
-        fields: {
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      Place: {
-        fields: {
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      },
-      SavedItem: {
-        fields: {
-          audioItem: {
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          }
-        }
-      },
-      Tag: {
-        fields: {
-          subjectEntity: {
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          },
-          objectEntity: {
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          },
-          createdByUser: {
-            merge(existing, incoming, { mergeObjects }) {
-              return mergeObjects(existing, incoming);
-            }
-          }
-        }
-      },
-      Tune: {
-        fields: {
-          tags: {
-            merge(existing, incoming) {
-              return incoming ?? existing;
-            }
-          }
-        }
-      }
-    }
-  })
-});
 
 // app/components/PlayerContextProvider.tsx
 var import_react6 = __toESM(require("react"));
@@ -344,8 +104,8 @@ var usePlayerContext = () => {
 var usePlayerContext_default = usePlayerContext;
 
 // app/types/index.ts
-var import_client2 = require("@prisma/client");
-var audioItemWithRelations = import_client2.Prisma.validator()({
+var import_client = require("@prisma/client");
+var audioItemWithRelations = import_client.Prisma.validator()({
   include: {
     tagsAsSubject: {
       include: {
@@ -367,13 +127,13 @@ var audioItemWithRelations = import_client2.Prisma.validator()({
     }
   }
 });
-var collectionWithRelations = import_client2.Prisma.validator()({
+var collectionWithRelations = import_client.Prisma.validator()({
   include: { tagsAsSubject: true, createdByUser: true, updatedByUser: true }
 });
-var commentWithRelations = import_client2.Prisma.validator()({
+var commentWithRelations = import_client.Prisma.validator()({
   include: { parentAudioItem: true, createdByUser: true }
 });
-var tagWithRelations = import_client2.Prisma.validator()({
+var tagWithRelations = import_client.Prisma.validator()({
   include: {
     objectAudioItem: true,
     objectCollection: true,
@@ -540,12 +300,12 @@ var import_react_hotkeys_hook2 = require("react-hotkeys-hook");
 
 // app/hooks/useCurrentUser.ts
 var import_react7 = require("react");
-var import_client4 = require("@apollo/client");
+var import_client3 = require("@apollo/client");
 
 // app/fragments/index.ts
-var import_client3 = require("@apollo/client");
+var import_client2 = require("@apollo/client");
 var UserFragments = {
-  user: import_client3.gql`
+  user: import_client2.gql`
 		fragment User on User {
 			id
 			username
@@ -559,7 +319,7 @@ var UserFragments = {
 			createdAt
 		}
 	`,
-  currentUser: import_client3.gql`
+  currentUser: import_client2.gql`
 		fragment CurrentUser on User {
 			id
 			role
@@ -570,7 +330,7 @@ var UserFragments = {
 	`
 };
 var RelationshipFragments = {
-  relationship: import_client3.gql`
+  relationship: import_client2.gql`
 		fragment Relationship on Relationship {
 			id
 			name
@@ -580,7 +340,7 @@ var RelationshipFragments = {
 	`
 };
 var TagEntityFragments = {
-  tagAudioItem: import_client3.gql`
+  tagAudioItem: import_client2.gql`
 		fragment TagAudioItem on AudioItem {
 			id
 			entityType
@@ -588,7 +348,7 @@ var TagEntityFragments = {
 			slug
 		}
 	`,
-  tagInstrument: import_client3.gql`
+  tagInstrument: import_client2.gql`
 		fragment TagInstrument on Instrument {
 			id
 			entityType
@@ -596,7 +356,7 @@ var TagEntityFragments = {
 			slug
 		}
 	`,
-  tagPerson: import_client3.gql`
+  tagPerson: import_client2.gql`
 		fragment TagPerson on Person {
 			id
 			entityType
@@ -604,7 +364,7 @@ var TagEntityFragments = {
 			slug
 		}
 	`,
-  tagPlace: import_client3.gql`
+  tagPlace: import_client2.gql`
 		fragment TagPlace on Place {
 			id
 			entityType
@@ -612,7 +372,7 @@ var TagEntityFragments = {
 			slug
 		}
 	`,
-  tagTune: import_client3.gql`
+  tagTune: import_client2.gql`
 		fragment TagTune on Tune {
 			id
 			entityType
@@ -621,7 +381,7 @@ var TagEntityFragments = {
 			type
 		}
 	`,
-  tagCollection: import_client3.gql`
+  tagCollection: import_client2.gql`
 		fragment TagCollection on Collection {
 			id
 			entityType
@@ -631,7 +391,7 @@ var TagEntityFragments = {
 	`
 };
 var TagFragments = {
-  tag: import_client3.gql`
+  tag: import_client2.gql`
 		fragment Tag on Tag {
 			id
 			relationship {
@@ -668,7 +428,7 @@ var TagFragments = {
 		${TagEntityFragments.tagCollection}
 		${UserFragments.user}
 	`,
-  tagForEntity: import_client3.gql`
+  tagForEntity: import_client2.gql`
 		fragment TagForEntity on Tag {
 			id
 			relationship {
@@ -699,7 +459,7 @@ var TagFragments = {
 	`
 };
 var EntityFragments = {
-  audioItem: import_client3.gql`
+  audioItem: import_client2.gql`
 		fragment AudioItem on AudioItem {
 			id
 			entityType
@@ -729,7 +489,7 @@ var EntityFragments = {
 		}
 		${TagFragments.tagForEntity}
 	`,
-  person: import_client3.gql`
+  person: import_client2.gql`
 		fragment Person on Person {
 			id
 			entityType
@@ -756,7 +516,7 @@ var EntityFragments = {
 		${TagFragments.tag}
 		${UserFragments.user}
 	`,
-  instrument: import_client3.gql`
+  instrument: import_client2.gql`
 		fragment Instrument on Instrument {
 			id
 			entityType
@@ -774,7 +534,7 @@ var EntityFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  place: import_client3.gql`
+  place: import_client2.gql`
 		fragment Place on Place {
 			id
 			entityType
@@ -794,7 +554,7 @@ var EntityFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  tune: import_client3.gql`
+  tune: import_client2.gql`
 		fragment Tune on Tune {
 			id
 			entityType
@@ -813,7 +573,7 @@ var EntityFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  collection: import_client3.gql`
+  collection: import_client2.gql`
 		fragment Collection on Collection {
 			id
 			entityType
@@ -837,7 +597,7 @@ var EntityFragments = {
 	`
 };
 var CommentFragments = {
-  comment: import_client3.gql`
+  comment: import_client2.gql`
 		fragment Comment on Comment {
 			id
 			text
@@ -853,7 +613,7 @@ var CommentFragments = {
 		${EntityFragments.audioItem}
 		${UserFragments.user}
 	`,
-  commentWithoutParentEntity: import_client3.gql`
+  commentWithoutParentEntity: import_client2.gql`
 		fragment CommentWithoutParentEntity on Comment {
 			id
 			text
@@ -867,7 +627,7 @@ var CommentFragments = {
 	`
 };
 var SavedItemFragments = {
-  savedItem: import_client3.gql`
+  savedItem: import_client2.gql`
 		fragment SavedItem on SavedItem {
 			id
 			audioItem {
@@ -879,7 +639,7 @@ var SavedItemFragments = {
 	`
 };
 var TakedownRequestFragments = {
-  takedownRequest: import_client3.gql`
+  takedownRequest: import_client2.gql`
 		fragment TakedownRequest on TakedownRequest {
 			id
 			entity {
@@ -903,7 +663,7 @@ var TakedownRequestFragments = {
 		}
 		${EntityFragments.audioItem}
 	`,
-  takedownRequestWithoutEntity: import_client3.gql`
+  takedownRequestWithoutEntity: import_client2.gql`
 		fragment TakedownRequestWithoutEntity on TakedownRequest {
 			id
 			type
@@ -925,7 +685,7 @@ var TakedownRequestFragments = {
 	`
 };
 var VerificationRequestFragments = {
-  verificationRequest: import_client3.gql`
+  verificationRequest: import_client2.gql`
 		fragment VerificationRequest on VerificationRequest {
 			id
 			person {
@@ -953,7 +713,7 @@ var VerificationRequestFragments = {
 	`
 };
 var SubmissionFragments = {
-  submission: import_client3.gql`
+  submission: import_client2.gql`
 		fragment Submission on Submission {
 			id
 			status
@@ -979,7 +739,7 @@ var SubmissionFragments = {
 };
 
 // app/hooks/useCurrentUser.ts
-var CURRENT_USER_QUERY = import_client4.gql`
+var CURRENT_USER_QUERY = import_client3.gql`
 	query CurrentUser {
 		currentUser {
 			...CurrentUser
@@ -989,7 +749,7 @@ var CURRENT_USER_QUERY = import_client4.gql`
 `;
 var useCurrentUser = () => {
   var _a;
-  const [getCurrentUser, currentUserQuery] = (0, import_client4.useLazyQuery)(CURRENT_USER_QUERY);
+  const [getCurrentUser, currentUserQuery] = (0, import_client3.useLazyQuery)(CURRENT_USER_QUERY);
   (0, import_react7.useEffect)(() => {
     getCurrentUser();
   }, [getCurrentUser]);
@@ -1011,24 +771,24 @@ var UserService = {
 var User_default = UserService;
 
 // app/services/Entity.ts
-var import_client5 = require("@prisma/client");
+var import_client4 = require("@prisma/client");
 var cleanSlug = (rawSlug) => {
   const slugWithHyphens = rawSlug.replace(/[\s]/g, "-");
   return slugWithHyphens.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
 };
 var makeHrefForTopLevel = (entity) => {
   switch (entity == null ? void 0 : entity.entityType) {
-    case import_client5.EntityType.AudioItem:
+    case import_client4.EntityType.AudioItem:
       return "/entities/audio-items";
-    case import_client5.EntityType.Person:
+    case import_client4.EntityType.Person:
       return "/entities/people";
-    case import_client5.EntityType.Instrument:
+    case import_client4.EntityType.Instrument:
       return "/entities/instruments";
-    case import_client5.EntityType.Place:
+    case import_client4.EntityType.Place:
       return "/entities/places";
-    case import_client5.EntityType.Tune:
+    case import_client4.EntityType.Tune:
       return "/entities/tunes";
-    case import_client5.EntityType.Collection:
+    case import_client4.EntityType.Collection:
       return "/entities/collections";
     default:
       return "";
@@ -1060,17 +820,17 @@ var makeHrefForTags = (entity) => {
 };
 var makeReadableNamePlural = (entity) => {
   switch (entity == null ? void 0 : entity.entityType) {
-    case import_client5.EntityType.AudioItem:
+    case import_client4.EntityType.AudioItem:
       return "Audio Items";
-    case import_client5.EntityType.Person:
+    case import_client4.EntityType.Person:
       return "People";
-    case import_client5.EntityType.Instrument:
+    case import_client4.EntityType.Instrument:
       return "Instruments";
-    case import_client5.EntityType.Place:
+    case import_client4.EntityType.Place:
       return "Places";
-    case import_client5.EntityType.Tune:
+    case import_client4.EntityType.Tune:
       return "Tunes";
-    case import_client5.EntityType.Collection:
+    case import_client4.EntityType.Collection:
       return "Collections";
     default:
       return "";
@@ -1129,7 +889,7 @@ var Modal_default = Modal;
 // app/components/SearchEntities.tsx
 var import_react16 = require("@remix-run/react");
 var import_react17 = require("react");
-var import_client10 = require("@apollo/client");
+var import_client9 = require("@apollo/client");
 var import_debounce = __toESM(require("lodash/debounce"));
 
 // app/components/LoadingCircle.tsx
@@ -1161,8 +921,8 @@ var useRequireLogin_default = useRequireLogin;
 
 // app/components/CreatePersonForm.tsx
 var import_react11 = require("react");
-var import_client6 = require("@apollo/client");
-var CREATE_PERSON_MUTATION = import_client6.gql`
+var import_client5 = require("@apollo/client");
+var CREATE_PERSON_MUTATION = import_client5.gql`
 	mutation CreatePerson($input: CreatePersonInput!) {
 		createPerson(input: $input) {
 			...Person
@@ -1171,7 +931,7 @@ var CREATE_PERSON_MUTATION = import_client6.gql`
 	${EntityFragments.person}
 `;
 var CreatePersonForm = ({ onSuccess }) => {
-  const [createPerson, { loading, error: error2, data: data2 }] = (0, import_client6.useMutation)(CREATE_PERSON_MUTATION, {
+  const [createPerson, { loading, error: error2, data: data2 }] = (0, import_client5.useMutation)(CREATE_PERSON_MUTATION, {
     errorPolicy: "all"
   });
   const [firstName, setFirstName] = (0, import_react11.useState)("");
@@ -1272,8 +1032,8 @@ var CreatePersonForm_default = CreatePersonForm;
 
 // app/components/CreateInstrumentForm.tsx
 var import_react12 = require("react");
-var import_client7 = require("@apollo/client");
-var CREATE_INSTRUMENT_MUTATION = import_client7.gql`
+var import_client6 = require("@apollo/client");
+var CREATE_INSTRUMENT_MUTATION = import_client6.gql`
 	mutation CreateInstrument($input: CreateInstrumentInput!) {
 		createInstrument(input: $input) {
 			...Instrument
@@ -1282,7 +1042,7 @@ var CREATE_INSTRUMENT_MUTATION = import_client7.gql`
 	${EntityFragments.instrument}
 `;
 var CreateInstrumentForm = ({ onSuccess }) => {
-  const [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client7.useMutation)(CREATE_INSTRUMENT_MUTATION, {
+  const [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client6.useMutation)(CREATE_INSTRUMENT_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react12.useState)("");
@@ -1358,8 +1118,8 @@ var CreateInstrumentForm_default = CreateInstrumentForm;
 
 // app/components/CreatePlaceForm.tsx
 var import_react13 = require("react");
-var import_client8 = require("@apollo/client");
-var CREATE_PLACE_MUTATION = import_client8.gql`
+var import_client7 = require("@apollo/client");
+var CREATE_PLACE_MUTATION = import_client7.gql`
 	mutation CreatePlace($input: CreatePlaceInput!) {
 		createPlace(input: $input) {
 			...Place
@@ -1368,7 +1128,7 @@ var CREATE_PLACE_MUTATION = import_client8.gql`
 	${EntityFragments.place}
 `;
 var CreatePlaceForm = ({ onSuccess }) => {
-  const [createPlace, { loading, error: error2, data: data2 }] = (0, import_client8.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" });
+  const [createPlace, { loading, error: error2, data: data2 }] = (0, import_client7.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" });
   const [name, setName] = (0, import_react13.useState)("");
   const [slug, setSlug] = (0, import_react13.useState)("");
   const [aliases, setAliases] = (0, import_react13.useState)("");
@@ -1467,8 +1227,8 @@ var CreatePlaceForm_default = CreatePlaceForm;
 
 // app/components/CreateCollectionForm.tsx
 var import_react14 = require("react");
-var import_client9 = require("@apollo/client");
-var CREATE_COLLECTION_MUTATION = import_client9.gql`
+var import_client8 = require("@apollo/client");
+var CREATE_COLLECTION_MUTATION = import_client8.gql`
 	mutation CreateCollection($input: CreateCollectionInput!) {
 		createCollection(input: $input) {
 			...Collection
@@ -1477,7 +1237,7 @@ var CREATE_COLLECTION_MUTATION = import_client9.gql`
 	${EntityFragments.collection}
 `;
 var CreateCollectionForm = ({ onSuccess }) => {
-  const [createCollection, { loading, error: error2, data: data2 }] = (0, import_client9.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" });
+  const [createCollection, { loading, error: error2, data: data2 }] = (0, import_client8.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" });
   const [name, setName] = (0, import_react14.useState)("");
   const [slug, setSlug] = (0, import_react14.useState)("");
   const [aliases, setAliases] = (0, import_react14.useState)("");
@@ -1651,7 +1411,7 @@ var CreateNewEntities = ({ entityTypes, onNewEntityCreated }) => {
 var CreateNewEntities_default = CreateNewEntities;
 
 // app/components/SearchEntities.tsx
-var SEARCH_ENTITIES_QUERY = import_client10.gql`
+var SEARCH_ENTITIES_QUERY = import_client9.gql`
 	query SearchEntities($input: SearchEntitiesInput!) {
 		searchEntities(input: $input) {
 			...AudioItem
@@ -1681,7 +1441,7 @@ var SearchEntities = ({
   const onChangeSearchTerm = (event) => {
     setSearchTerm(event.target.value);
   };
-  const [searchEntities, { loading, data: data2, error: error2 }] = (0, import_client10.useLazyQuery)(SEARCH_ENTITIES_QUERY, {
+  const [searchEntities, { loading, data: data2, error: error2 }] = (0, import_client9.useLazyQuery)(SEARCH_ENTITIES_QUERY, {
     fetchPolicy: "no-cache"
   });
   const debouncedSearchEntities = (0, import_react17.useCallback)((0, import_debounce.default)(searchEntities, 300, { trailing: true }), [searchEntities]);
@@ -1882,6 +1642,7 @@ function Footer() {
 }
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/root.tsx
+var apolloClient = new import_client10.ApolloClient({ cache: new import_client10.InMemoryCache() });
 var meta = () => ({
   charset: "utf-8",
   title: "Trad Archive",
@@ -1928,7 +1689,7 @@ function links() {
 function App() {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client10.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1946,7 +1707,7 @@ function App() {
 function ErrorBoundary({ error: error2 }) {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client10.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1967,7 +1728,7 @@ function CatchBoundary() {
   const caught = (0, import_react21.useCatch)();
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client10.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1992,7 +1753,7 @@ __export(upload_exports, {
 });
 var import_react25 = require("react");
 var import_react26 = require("@remix-run/react");
-var import_client12 = require("@apollo/client");
+var import_client11 = require("@apollo/client");
 
 // app/components/Layout.tsx
 var Layout = ({ children }) => {
@@ -2212,7 +1973,7 @@ var DateTimeService = {
 var DateTime_default = DateTimeService;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/[id]/upload.tsx
-var SUBMISSION = import_client12.gql`
+var SUBMISSION = import_client11.gql`
 	query Submission($input: SubmissionInput!) {
 		submission(input: $input) {
 			...Submission
@@ -2220,7 +1981,7 @@ var SUBMISSION = import_client12.gql`
 	}
 	${SubmissionFragments.submission}
 `;
-var CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client12.gql`
+var CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client11.gql`
 	mutation CreatePresignedFileUploadUrls(
 		$input: CreatePresignedFileUploadUrlsInput!
 	) {
@@ -2234,13 +1995,13 @@ var SubmissionsViewByIdUpload = () => {
   const navigate = (0, import_react26.useNavigate)();
   const { id } = navigate.query;
   const submissionId = typeof id === "string" ? id : void 0;
-  const { data: data2, error: error2 } = (0, import_client12.useQuery)(SUBMISSION, {
+  const { data: data2, error: error2 } = (0, import_client11.useQuery)(SUBMISSION, {
     variables: { input: { id: submissionId } },
     skip: !submissionId
   });
   const [files, setFiles] = (0, import_react25.useState)([]);
   const [uploadQueue, setUploadQueue] = (0, import_react25.useState)();
-  const [getPresignedUrls] = (0, import_client12.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS);
+  const [getPresignedUrls] = (0, import_client11.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS);
   const onUploadClicked = async () => {
     if (!submissionId) {
       return;
@@ -2338,7 +2099,7 @@ __export(verification_requests_exports, {
 });
 var import_react28 = require("react");
 var import_react29 = require("@remix-run/react");
-var import_client13 = require("@apollo/client");
+var import_client12 = require("@apollo/client");
 var import_compareDesc = __toESM(require("date-fns/compareDesc"));
 
 // app/components/RequireAdmin.tsx
@@ -2362,7 +2123,7 @@ var RequireAdmin = ({ children }) => {
 var RequireAdmin_default = RequireAdmin;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/admin/verification-requests.tsx
-var VERIFICATION_REQUESTS = import_client13.gql`
+var VERIFICATION_REQUESTS = import_client12.gql`
 	query VerificationRequests($input: VerificationRequestsInput!) {
 		verificationRequests(input: $input) {
 			...VerificationRequest
@@ -2370,7 +2131,7 @@ var VERIFICATION_REQUESTS = import_client13.gql`
 	}
 	${VerificationRequestFragments.verificationRequest}
 `;
-var UPDATE_VERIFICATION_REQUEST_STATUS = import_client13.gql`
+var UPDATE_VERIFICATION_REQUEST_STATUS = import_client12.gql`
 	mutation UpdateVerificationRequestStatus(
 		$input: UpdateVerificationRequestStatusInput!
 	) {
@@ -2394,7 +2155,7 @@ var VerificationRequests = () => {
     loading: verificationRequestsLoading,
     data: verificationRequestsData,
     error: verificationRequestsError
-  } = (0, import_client13.useQuery)(VERIFICATION_REQUESTS, {
+  } = (0, import_client12.useQuery)(VERIFICATION_REQUESTS, {
     variables: { input: { take: 200, skip: 0, status: statusToFetch } },
     fetchPolicy: "network-only"
   });
@@ -2414,7 +2175,7 @@ var VerificationRequests = () => {
       loading: updateVerificationRequestStatusLoading,
       error: updateVerificationRequestStatusError
     }
-  ] = (0, import_client13.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" });
+  ] = (0, import_client12.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" });
   const onApproveClicked = (id) => {
     updateVerificationRequestStatus({
       variables: { input: { id, status: "Approved" /* Approved */ } }
@@ -2505,7 +2266,7 @@ __export(slug_exports, {
 });
 var import_react57 = require("@remix-run/react");
 var import_react58 = require("@remix-run/react");
-var import_client26 = require("@apollo/client");
+var import_client25 = require("@apollo/client");
 
 // app/components/AudioItemCard.tsx
 var import_react50 = require("react");
@@ -2565,16 +2326,16 @@ var Tag_default = {
 
 // app/components/AddTagButton.tsx
 var import_react33 = require("react");
-var import_client17 = require("@apollo/client");
+var import_client16 = require("@apollo/client");
 
 // app/components/CreateTagForm.tsx
 var import_react32 = require("react");
-var import_client16 = require("@apollo/client");
+var import_client15 = require("@apollo/client");
 
 // app/hooks/useTags.ts
 var import_react30 = require("react");
-var import_client14 = require("@apollo/client");
-var TAGS_QUERY = import_client14.gql`
+var import_client13 = require("@apollo/client");
+var TAGS_QUERY = import_client13.gql`
 	query Tags($input: TagsInput!) {
 		tags(input: $input) {
 			...Tag
@@ -2587,7 +2348,7 @@ var useTags = ({
   queryOptions = {}
 } = {}) => {
   var _a;
-  const [getTags, tagsQuery] = (0, import_client14.useLazyQuery)(TAGS_QUERY, __spreadValues({
+  const [getTags, tagsQuery] = (0, import_client13.useLazyQuery)(TAGS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = tagsQuery;
@@ -2622,8 +2383,8 @@ var useTags_default = useTags;
 
 // app/components/SelectRelationship.tsx
 var import_react31 = require("react");
-var import_client15 = require("@apollo/client");
-var SEARCH_RELATIONSHIPS_QUERY = import_client15.gql`
+var import_client14 = require("@apollo/client");
+var SEARCH_RELATIONSHIPS_QUERY = import_client14.gql`
 	query SearchRelationships(
 		$subjectEntityType: String!
 		$objectEntityType: String!
@@ -2643,7 +2404,7 @@ var SelectRelationship = ({
   onSelect
 }) => {
   const [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react31.useState)("");
-  const { loading, data: data2, error: error2 } = (0, import_client15.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
+  const { loading, data: data2, error: error2 } = (0, import_client14.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
     variables: {
       subjectEntityType: subjectEntity.entityType,
       objectEntityType: objectEntity.entityType
@@ -2738,7 +2499,7 @@ var TimestampInput = ({ valueInSeconds, onChange, className }) => {
 var TimestampInput_default = TimestampInput;
 
 // app/components/CreateTagForm.tsx
-var CREATE_TAG_MUTATION = import_client16.gql`
+var CREATE_TAG_MUTATION = import_client15.gql`
 	mutation CreateTag($input: CreateTagInput!) {
 		createTag(input: $input) {
 			id
@@ -2759,7 +2520,7 @@ var CreateTagForm = ({ entity, onSuccess }) => {
   const [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react32.useState)("");
   const [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] = (0, import_react32.useState)(true);
   const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react32.useState)("");
-  const [createTag, { data: data2, error: error2 }] = (0, import_client16.useMutation)(CREATE_TAG_MUTATION, {
+  const [createTag, { data: data2, error: error2 }] = (0, import_client15.useMutation)(CREATE_TAG_MUTATION, {
     errorPolicy: "all"
   });
   const [tagsAreCreating, setTagsAreCreating] = (0, import_react32.useState)(false);
@@ -2907,7 +2668,7 @@ var CreateTagForm = ({ entity, onSuccess }) => {
 var CreateTagForm_default = CreateTagForm;
 
 // app/components/AddTagButton.tsx
-var PARENT_ENTITY_QUERY = import_client17.gql`
+var PARENT_ENTITY_QUERY = import_client16.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2928,7 +2689,7 @@ var PARENT_ENTITY_QUERY = import_client17.gql`
 var AddTagButton = ({ entity, onSuccess, className, children }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [addTagModalIsVisible, setAddTagModalIsVisible] = (0, import_react33.useState)(false);
-  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client17.useLazyQuery)(PARENT_ENTITY_QUERY, {
+  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client16.useLazyQuery)(PARENT_ENTITY_QUERY, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
   });
@@ -2962,8 +2723,8 @@ var AddTagButton_default = AddTagButton;
 
 // app/components/EditTagsButton.tsx
 var import_react34 = require("react");
-var import_client18 = require("@apollo/client");
-var PARENT_ENTITY_QUERY2 = import_client18.gql`
+var import_client17 = require("@apollo/client");
+var PARENT_ENTITY_QUERY2 = import_client17.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2981,7 +2742,7 @@ var PARENT_ENTITY_QUERY2 = import_client18.gql`
 	${EntityFragments.place}
 	${EntityFragments.tune}
 `;
-var DELETE_TAG_MUTATION = import_client18.gql`
+var DELETE_TAG_MUTATION = import_client17.gql`
 	mutation DeleteTag($id: String!) {
 		deleteTag(id: $id)
 	}
@@ -2989,11 +2750,11 @@ var DELETE_TAG_MUTATION = import_client18.gql`
 var EditTagsButton = ({ entity, className, children, onSuccess }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react34.useState)(false);
-  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client18.useLazyQuery)(PARENT_ENTITY_QUERY2, {
+  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client17.useLazyQuery)(PARENT_ENTITY_QUERY2, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
   });
-  const [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client18.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" });
+  const [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client17.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" });
   const {
     tagsQuery: { refetch: refetchTopLevelTags }
   } = useTags_default();
@@ -3181,12 +2942,12 @@ var Menu_default = Menu;
 // app/components/SaveItemButton.tsx
 var import_react40 = require("react");
 var import_react41 = require("@remix-run/react");
-var import_client21 = require("@apollo/client");
+var import_client20 = require("@apollo/client");
 
 // app/hooks/useAudioItem.ts
 var import_react38 = require("react");
-var import_client19 = require("@apollo/client");
-var AUDIO_ITEM_QUERY = import_client19.gql`
+var import_client18 = require("@apollo/client");
+var AUDIO_ITEM_QUERY = import_client18.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -3197,8 +2958,8 @@ var AUDIO_ITEM_QUERY = import_client19.gql`
 
 // app/hooks/useSavedItemsForUser.ts
 var import_react39 = require("react");
-var import_client20 = require("@apollo/client");
-var SAVED_ITEMS_FOR_USER_QUERY = import_client20.gql`
+var import_client19 = require("@apollo/client");
+var SAVED_ITEMS_FOR_USER_QUERY = import_client19.gql`
 	query SavedItemsForUser {
 		savedItemsForUser {
 			...SavedItem
@@ -3209,7 +2970,7 @@ var SAVED_ITEMS_FOR_USER_QUERY = import_client20.gql`
 var useSavedItemsForUser = () => {
   var _a;
   const [currentUser] = useCurrentUser_default();
-  const [makeQuery, query] = (0, import_client20.useLazyQuery)(SAVED_ITEMS_FOR_USER_QUERY, { fetchPolicy: "cache-first" });
+  const [makeQuery, query] = (0, import_client19.useLazyQuery)(SAVED_ITEMS_FOR_USER_QUERY, { fetchPolicy: "cache-first" });
   (0, import_react39.useEffect)(() => {
     if (currentUser) {
       makeQuery();
@@ -3221,14 +2982,14 @@ var useSavedItemsForUser = () => {
 var useSavedItemsForUser_default = useSavedItemsForUser;
 
 // app/components/SaveItemButton.tsx
-var CREATE_SAVED_ITEM_MUTATION = import_client21.gql`
+var CREATE_SAVED_ITEM_MUTATION = import_client20.gql`
 	mutation CreateSavedItem($input: CreateSavedItemInput!) {
 		createSavedItem(input: $input) {
 			id
 		}
 	}
 `;
-var DELETE_SAVED_ITEM_MUTATION = import_client21.gql`
+var DELETE_SAVED_ITEM_MUTATION = import_client20.gql`
 	mutation DeleteSavedItem($input: DeleteSavedItemInput!) {
 		deleteSavedItem(input: $input)
 	}
@@ -3237,18 +2998,18 @@ var SaveItemButton = ({ audioItem }) => {
   const { id, slug, isSavedByUser } = audioItem;
   const navigate = (0, import_react41.useNavigate)();
   const { currentUser, requireLogin } = useRequireLogin_default();
-  const [refetchAudioItem] = (0, import_client21.useLazyQuery)(AUDIO_ITEM_QUERY, {
+  const [refetchAudioItem] = (0, import_client20.useLazyQuery)(AUDIO_ITEM_QUERY, {
     fetchPolicy: "network-only"
   });
   const [, { refetch: refetchSavedItemsForUser }] = useSavedItemsForUser_default();
   const [
     createSavedItem,
     { loading: createLoading, data: createData, error: createError }
-  ] = (0, import_client21.useMutation)(CREATE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
+  ] = (0, import_client20.useMutation)(CREATE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
   const [
     deleteSavedItem,
     { loading: deleteLoading, data: deleteData, error: deleteError }
-  ] = (0, import_client21.useMutation)(DELETE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
+  ] = (0, import_client20.useMutation)(DELETE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
   const onButtonClicked = (0, import_react40.useCallback)(async () => {
     if (!currentUser) {
       const redirectTo = Entity_default.makeHrefForView(audioItem);
@@ -3314,12 +3075,12 @@ var import_react45 = require("@remix-run/react");
 
 // app/components/CreateCommentForm.tsx
 var import_react43 = require("react");
-var import_client23 = require("@apollo/client");
+var import_client22 = require("@apollo/client");
 
 // app/hooks/useComments.ts
 var import_react42 = require("react");
-var import_client22 = require("@apollo/client");
-var COMMENTS_QUERY = import_client22.gql`
+var import_client21 = require("@apollo/client");
+var COMMENTS_QUERY = import_client21.gql`
 	query Comments($input: CommentsInput!) {
 		comments(input: $input) {
 			...Comment
@@ -3332,7 +3093,7 @@ var useComments = ({
   queryOptions = {}
 } = {}) => {
   var _a;
-  const [getComments, commentsQuery] = (0, import_client22.useLazyQuery)(COMMENTS_QUERY, __spreadValues({
+  const [getComments, commentsQuery] = (0, import_client21.useLazyQuery)(COMMENTS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = commentsQuery;
@@ -3366,7 +3127,7 @@ var useComments = ({
 var useComments_default = useComments;
 
 // app/components/CreateCommentForm.tsx
-var CREATE_COMMENT_MUTATION = import_client23.gql`
+var CREATE_COMMENT_MUTATION = import_client22.gql`
 	mutation CreateComment($input: CreateCommentInput!) {
 		createComment(input: $input) {
 			...CommentWithoutParentEntity
@@ -3377,7 +3138,7 @@ var CREATE_COMMENT_MUTATION = import_client23.gql`
 var CreateCommentForm = ({ parentEntity, onSuccess }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [text, setText] = (0, import_react43.useState)("");
-  const [createComment, { loading, data: data2, error: error2 }] = (0, import_client23.useMutation)(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
+  const [createComment, { loading, data: data2, error: error2 }] = (0, import_client22.useMutation)(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
   const {
     commentsQuery: { refetch: refetchTopLevelComments }
   } = useComments_default();
@@ -3566,12 +3327,12 @@ var TimeMarkers_default = TimeMarkers;
 
 // app/components/RequestTakedownButton.tsx
 var import_react49 = require("react");
-var import_client25 = require("@apollo/client");
+var import_client24 = require("@apollo/client");
 
 // app/components/CreateTakedownRequestForm.tsx
 var import_react48 = require("react");
-var import_client24 = require("@apollo/client");
-var CREATE_TAKEDOWN_REQUEST = import_client24.gql`
+var import_client23 = require("@apollo/client");
+var CREATE_TAKEDOWN_REQUEST = import_client23.gql`
 	mutation CreateTakedownRequest($input: CreateTakedownRequestInput!) {
 		createTakedownRequest(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -3584,7 +3345,7 @@ var CreateTakedownRequestForm = ({ entity, onSuccess }) => {
   const [type, setType] = (0, import_react48.useState)(defaultType);
   const [message, setMessage] = (0, import_react48.useState)("");
   const [validationError, setValidationError] = (0, import_react48.useState)("");
-  const [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client24.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" });
+  const [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client23.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" });
   const getLabelForType = (type2) => {
     switch (TakedownRequestType[type2]) {
       case "Performer" /* Performer */:
@@ -3655,7 +3416,7 @@ var CreateTakedownRequestForm = ({ entity, onSuccess }) => {
 var CreateTakedownRequestForm_default = CreateTakedownRequestForm;
 
 // app/components/RequestTakedownButton.tsx
-var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client25.gql`
+var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client24.gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
 		takedownRequestsForEntity(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -3667,7 +3428,7 @@ var RequestTakedownButton = ({ entity, onTakedownRequestCreated }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [modalIsVisible, setModalIsVisible] = (0, import_react49.useState)(false);
   const closeModal = (0, import_react49.useCallback)(() => setModalIsVisible(false), []);
-  const { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client25.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
+  const { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client24.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
     variables: {
       input: {
         entityType: entity.entityType,
@@ -3984,7 +3745,7 @@ var AudioItemComponent = ({
 var AudioItem_default = AudioItemComponent;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/[slug].tsx
-var AUDIO_ITEM_QUERY2 = import_client26.gql`
+var AUDIO_ITEM_QUERY2 = import_client25.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -3995,7 +3756,7 @@ var AUDIO_ITEM_QUERY2 = import_client26.gql`
 var ViewAudioItemBySlug = () => {
   const navigate = (0, import_react57.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client26.useQuery)(AUDIO_ITEM_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client25.useQuery)(AUDIO_ITEM_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -4033,15 +3794,15 @@ var about_exports = {};
 __export(about_exports, {
   default: () => about_default
 });
-var import_client28 = require("@apollo/client");
+var import_client27 = require("@apollo/client");
 var import_react61 = require("@remix-run/react");
 var import_react62 = require("@remix-run/react");
 
 // app/routes/entities/audio-items/[slug].tsx
 var import_react59 = require("@remix-run/react");
 var import_react60 = require("@remix-run/react");
-var import_client27 = require("@apollo/client");
-var AUDIO_ITEM_QUERY3 = import_client27.gql`
+var import_client26 = require("@apollo/client");
+var AUDIO_ITEM_QUERY3 = import_client26.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -4054,7 +3815,7 @@ var AUDIO_ITEM_QUERY3 = import_client27.gql`
 var AudioItemAbout = () => {
   const navigate = (0, import_react62.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client28.useQuery)(AUDIO_ITEM_QUERY3, {
+  const { data: data2, error: error2 } = (0, import_client27.useQuery)(AUDIO_ITEM_QUERY3, {
     variables: { slug },
     skip: !slug
   });
@@ -4101,13 +3862,13 @@ __export(edit_exports, {
   default: () => edit_default
 });
 var import_react65 = require("@remix-run/react");
-var import_client30 = require("@apollo/client");
+var import_client29 = require("@apollo/client");
 
 // app/components/EditAudioItemForm.tsx
 var import_react63 = require("react");
-var import_client29 = require("@apollo/client");
+var import_client28 = require("@apollo/client");
 var import_react64 = require("@remix-run/react");
-var UPDATE_AUDIO_ITEM_MUTATION = import_client29.gql`
+var UPDATE_AUDIO_ITEM_MUTATION = import_client28.gql`
 	mutation UpdateAudioItem($slug: String!, $input: UpdateAudioItemInput!) {
 		updateAudioItem(slug: $slug, input: $input) {
 			...AudioItem
@@ -4117,7 +3878,7 @@ var UPDATE_AUDIO_ITEM_MUTATION = import_client29.gql`
 `;
 var EditAudioItemForm = ({ audioItem, onSuccess }) => {
   const navigate = (0, import_react64.useNavigate)();
-  const [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client29.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
+  const [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client28.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react63.useState)(audioItem.name);
@@ -4175,7 +3936,7 @@ var EditAudioItemForm = ({ audioItem, onSuccess }) => {
 var EditAudioItemForm_default = EditAudioItemForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/[slug]/edit.tsx
-var AUDIO_ITEM_QUERY4 = import_client30.gql`
+var AUDIO_ITEM_QUERY4 = import_client29.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -4186,7 +3947,7 @@ var AUDIO_ITEM_QUERY4 = import_client30.gql`
 var EditAudioItem = () => {
   const navigate = (0, import_react65.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client30.useQuery)(AUDIO_ITEM_QUERY4, {
+  const { data: data2, error: error2 } = (0, import_client29.useQuery)(AUDIO_ITEM_QUERY4, {
     variables: { slug },
     skip: !slug
   });
@@ -4242,8 +4003,8 @@ var import_react68 = require("react");
 var import_react69 = require("@remix-run/react");
 
 // app/hooks/useAudioItemRandom.ts
-var import_client31 = require("@apollo/client");
-var AUDIO_ITEM_RANDOM_QUERY = import_client31.gql`
+var import_client30 = require("@apollo/client");
+var AUDIO_ITEM_RANDOM_QUERY = import_client30.gql`
 	query AudioItemRandom {
 		audioItemRandom {
 			...AudioItem
@@ -4252,7 +4013,7 @@ var AUDIO_ITEM_RANDOM_QUERY = import_client31.gql`
 	${EntityFragments.audioItem}
 `;
 var useAudioItemRandom = ({ queryOptions = {} } = {}) => {
-  const audioItemRandomQuery = (0, import_client31.useQuery)(AUDIO_ITEM_RANDOM_QUERY, __spreadValues({
+  const audioItemRandomQuery = (0, import_client30.useQuery)(AUDIO_ITEM_RANDOM_QUERY, __spreadValues({
     fetchPolicy: "network-only"
   }, queryOptions));
   const { data: data2 } = audioItemRandomQuery;
@@ -4283,7 +4044,7 @@ __export(slug_exports2, {
   default: () => slug_default2
 });
 var import_react76 = require("@remix-run/react");
-var import_client32 = require("@apollo/client");
+var import_client31 = require("@apollo/client");
 
 // app/components/ViewEntityAndAudioItems.tsx
 var import_react74 = require("react");
@@ -4565,7 +4326,7 @@ var ViewEntityAndAudioItems = ({ entity, audioItems, className }) => {
 var ViewEntityAndAudioItems_default = ViewEntityAndAudioItems;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/[slug].tsx
-var COLLECTION_QUERY = import_client32.gql`
+var COLLECTION_QUERY = import_client31.gql`
 	query Collection($slug: String!) {
 		collection(slug: $slug) {
 			...Collection
@@ -4576,7 +4337,7 @@ var COLLECTION_QUERY = import_client32.gql`
 var ViewCollectionBySlug = () => {
   const navigate = (0, import_react76.useNavigate)();
   const { slug } = navigate.query;
-  const { data: collectionData, error: collectionError } = (0, import_client32.useQuery)(COLLECTION_QUERY, {
+  const { data: collectionData, error: collectionError } = (0, import_client31.useQuery)(COLLECTION_QUERY, {
     variables: { slug },
     skip: !slug
   });
@@ -4603,14 +4364,14 @@ var about_exports2 = {};
 __export(about_exports2, {
   default: () => about_default2
 });
-var import_client34 = require("@apollo/client");
+var import_client33 = require("@apollo/client");
 var import_react78 = require("@remix-run/react");
 var import_react79 = require("@remix-run/react");
 
 // app/routes/entities/collections/[slug].tsx
 var import_react77 = require("@remix-run/react");
-var import_client33 = require("@apollo/client");
-var COLLECTION_QUERY2 = import_client33.gql`
+var import_client32 = require("@apollo/client");
+var COLLECTION_QUERY2 = import_client32.gql`
 	query Collection($slug: String!) {
 		collection(slug: $slug) {
 			...Collection
@@ -4623,7 +4384,7 @@ var COLLECTION_QUERY2 = import_client33.gql`
 var CollectionAbout = () => {
   const navigate = (0, import_react79.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client34.useQuery)(COLLECTION_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client33.useQuery)(COLLECTION_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -4670,13 +4431,13 @@ __export(edit_exports2, {
   default: () => edit_default2
 });
 var import_react82 = require("@remix-run/react");
-var import_client36 = require("@apollo/client");
+var import_client35 = require("@apollo/client");
 
 // app/components/EditCollectionForm.tsx
 var import_react80 = require("react");
-var import_client35 = require("@apollo/client");
+var import_client34 = require("@apollo/client");
 var import_react81 = require("@remix-run/react");
-var UPDATE_COLLECTION_MUTATION = import_client35.gql`
+var UPDATE_COLLECTION_MUTATION = import_client34.gql`
 	mutation UpdateCollection($slug: String!, $input: UpdateCollectionInput!) {
 		updateCollection(slug: $slug, input: $input) {
 			...Collection
@@ -4686,7 +4447,7 @@ var UPDATE_COLLECTION_MUTATION = import_client35.gql`
 `;
 var EditCollectionForm = ({ collection, onSuccess }) => {
   const navigate = (0, import_react81.useNavigate)();
-  const [updateCollection, { loading, error: error2, data: data2 }] = (0, import_client35.useMutation)(UPDATE_COLLECTION_MUTATION, {
+  const [updateCollection, { loading, error: error2, data: data2 }] = (0, import_client34.useMutation)(UPDATE_COLLECTION_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react80.useState)(collection.name);
@@ -4743,7 +4504,7 @@ var EditCollectionForm = ({ collection, onSuccess }) => {
 var EditCollectionForm_default = EditCollectionForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/[slug]/edit.tsx
-var COLLECTION_QUERY3 = import_client36.gql`
+var COLLECTION_QUERY3 = import_client35.gql`
 	query Collection($slug: String!) {
 		collection(slug: $slug) {
 			...Collection
@@ -4754,7 +4515,7 @@ var COLLECTION_QUERY3 = import_client36.gql`
 var CollectionEdit = () => {
   const navigate = (0, import_react82.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client36.useQuery)(COLLECTION_QUERY3, {
+  const { data: data2, error: error2 } = (0, import_client35.useQuery)(COLLECTION_QUERY3, {
     variables: { slug },
     skip: !slug
   });
@@ -4787,7 +4548,7 @@ var tags_exports2 = {};
 __export(tags_exports2, {
   default: () => tags_default2
 });
-var import_client37 = require("@apollo/client");
+var import_client36 = require("@apollo/client");
 var import_react84 = require("@remix-run/react");
 
 // app/components/TagWithRelationshipToObject.tsx
@@ -4812,7 +4573,7 @@ var TagWithRelationshipToObject_default = TagWithRelationshipToObject;
 var CollectionTags = () => {
   const navigate = (0, import_react84.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client37.useQuery)(COLLECTION_QUERY2, {
+  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client36.useQuery)(COLLECTION_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -4854,8 +4615,8 @@ __export(slug_exports3, {
   default: () => slug_default3
 });
 var import_react85 = require("@remix-run/react");
-var import_client38 = require("@apollo/client");
-var INSTRUMENT_QUERY = import_client38.gql`
+var import_client37 = require("@apollo/client");
+var INSTRUMENT_QUERY = import_client37.gql`
 	query Instrument($slug: String!) {
 		instrument(slug: $slug) {
 			...Instrument
@@ -4866,7 +4627,7 @@ var INSTRUMENT_QUERY = import_client38.gql`
 var ViewInstrumentBySlug = () => {
   const navigate = (0, import_react85.useNavigate)();
   const { slug } = navigate.query;
-  const { data: instrumentData, error: instrumentError } = (0, import_client38.useQuery)(INSTRUMENT_QUERY, {
+  const { data: instrumentData, error: instrumentError } = (0, import_client37.useQuery)(INSTRUMENT_QUERY, {
     variables: { slug },
     skip: !slug
   });
@@ -4893,14 +4654,14 @@ var about_exports3 = {};
 __export(about_exports3, {
   default: () => about_default3
 });
-var import_client40 = require("@apollo/client");
+var import_client39 = require("@apollo/client");
 var import_react87 = require("@remix-run/react");
 var import_react88 = require("@remix-run/react");
 
 // app/routes/entities/instruments/[slug].tsx
 var import_react86 = require("@remix-run/react");
-var import_client39 = require("@apollo/client");
-var INSTRUMENT_QUERY2 = import_client39.gql`
+var import_client38 = require("@apollo/client");
+var INSTRUMENT_QUERY2 = import_client38.gql`
 	query Instrument($slug: String!) {
 		instrument(slug: $slug) {
 			...Instrument
@@ -4913,7 +4674,7 @@ var INSTRUMENT_QUERY2 = import_client39.gql`
 var InstrumentAbout = () => {
   const navigate = (0, import_react88.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client40.useQuery)(INSTRUMENT_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client39.useQuery)(INSTRUMENT_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -4950,13 +4711,13 @@ __export(edit_exports3, {
   default: () => edit_default3
 });
 var import_react91 = require("@remix-run/react");
-var import_client42 = require("@apollo/client");
+var import_client41 = require("@apollo/client");
 
 // app/components/EditInstrumentForm.tsx
 var import_react89 = require("react");
-var import_client41 = require("@apollo/client");
+var import_client40 = require("@apollo/client");
 var import_react90 = require("@remix-run/react");
-var UPDATE_INSTRUMENT_MUTATION = import_client41.gql`
+var UPDATE_INSTRUMENT_MUTATION = import_client40.gql`
 	mutation UpdateInstrument($slug: String!, $input: UpdateInstrumentInput!) {
 		updateInstrument(slug: $slug, input: $input) {
 			...Instrument
@@ -4966,7 +4727,7 @@ var UPDATE_INSTRUMENT_MUTATION = import_client41.gql`
 `;
 var EditInstrumentForm = ({ instrument, onSuccess }) => {
   const navigate = (0, import_react90.useNavigate)();
-  const [updateInstrument, { loading, error: error2, data: data2 }] = (0, import_client41.useMutation)(UPDATE_INSTRUMENT_MUTATION, {
+  const [updateInstrument, { loading, error: error2, data: data2 }] = (0, import_client40.useMutation)(UPDATE_INSTRUMENT_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react89.useState)(instrument.name);
@@ -5024,7 +4785,7 @@ var EditInstrumentForm = ({ instrument, onSuccess }) => {
 var EditInstrumentForm_default = EditInstrumentForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/instruments/[slug]/edit.tsx
-var INSTRUMENT_QUERY3 = import_client42.gql`
+var INSTRUMENT_QUERY3 = import_client41.gql`
 	query Instrument($slug: String!) {
 		instrument(slug: $slug) {
 			...Instrument
@@ -5035,7 +4796,7 @@ var INSTRUMENT_QUERY3 = import_client42.gql`
 var EditInstrument = () => {
   const navigate = (0, import_react91.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client42.useQuery)(INSTRUMENT_QUERY3, {
+  const { data: data2, error: error2 } = (0, import_client41.useQuery)(INSTRUMENT_QUERY3, {
     variables: { slug },
     skip: !slug
   });
@@ -5068,12 +4829,12 @@ var tags_exports3 = {};
 __export(tags_exports3, {
   default: () => tags_default3
 });
-var import_client43 = require("@apollo/client");
+var import_client42 = require("@apollo/client");
 var import_react92 = require("@remix-run/react");
 var InstrumentTags = () => {
   const navigate = (0, import_react92.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client43.useQuery)(INSTRUMENT_QUERY2, {
+  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client42.useQuery)(INSTRUMENT_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -5133,8 +4894,8 @@ var import_react96 = require("@remix-run/react");
 
 // app/hooks/useCollections.ts
 var import_react95 = require("react");
-var import_client44 = require("@apollo/client");
-var COLLECTIONS_QUERY = import_client44.gql`
+var import_client43 = require("@apollo/client");
+var COLLECTIONS_QUERY = import_client43.gql`
 	query Collections($input: CollectionsInput!) {
 		collections(input: $input) {
 			...Collection
@@ -5149,7 +4910,7 @@ var useCollections = ({
 } = {}) => {
   const [skip, setSkip] = (0, import_react95.useState)(0);
   const [collections, setCollections] = (0, import_react95.useState)();
-  const [getCollections, collectionsQuery] = (0, import_client44.useLazyQuery)(COLLECTIONS_QUERY, __spreadValues({
+  const [getCollections, collectionsQuery] = (0, import_client43.useLazyQuery)(COLLECTIONS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = collectionsQuery;
@@ -5222,8 +4983,8 @@ var import_react98 = require("@remix-run/react");
 
 // app/hooks/useInstruments.ts
 var import_react97 = require("react");
-var import_client45 = require("@apollo/client");
-var INSTRUMENTS_QUERY = import_client45.gql`
+var import_client44 = require("@apollo/client");
+var INSTRUMENTS_QUERY = import_client44.gql`
 	query Instruments($input: InstrumentsInput!) {
 		instruments(input: $input) {
 			...Instrument
@@ -5242,7 +5003,7 @@ var useInstruments = ({
     setInstruments(void 0);
     setSkip(0);
   }, [sortBy]);
-  const [getInstruments, instrumentsQuery] = (0, import_client45.useLazyQuery)(INSTRUMENTS_QUERY, __spreadValues({
+  const [getInstruments, instrumentsQuery] = (0, import_client44.useLazyQuery)(INSTRUMENTS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = instrumentsQuery;
@@ -5312,8 +5073,8 @@ __export(submissions_exports, {
   default: () => submissions_default
 });
 var import_react99 = require("@remix-run/react");
-var import_client46 = require("@apollo/client");
-var SUBMISSIONS_FOR_CURRENT_USER = import_client46.gql`
+var import_client45 = require("@apollo/client");
+var SUBMISSIONS_FOR_CURRENT_USER = import_client45.gql`
 	query SubmissionsForCurrentUser {
 		submissionsForCurrentUser {
 			...Submission
@@ -5322,7 +5083,7 @@ var SUBMISSIONS_FOR_CURRENT_USER = import_client46.gql`
 	${SubmissionFragments.submission}
 `;
 var Submissions = () => {
-  const { data: data2, loading } = (0, import_client46.useQuery)(SUBMISSIONS_FOR_CURRENT_USER, { fetchPolicy: "cache-and-network" });
+  const { data: data2, loading } = (0, import_client45.useQuery)(SUBMISSIONS_FOR_CURRENT_USER, { fetchPolicy: "cache-and-network" });
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
     items: [
       {
@@ -5360,8 +5121,8 @@ var import_react102 = require("@remix-run/react");
 
 // app/hooks/useAudioItems.ts
 var import_react100 = require("react");
-var import_client47 = require("@apollo/client");
-var AUDIO_ITEMS_QUERY = import_client47.gql`
+var import_client46 = require("@apollo/client");
+var AUDIO_ITEMS_QUERY = import_client46.gql`
 	query AudioItems($input: AudioItemsInput!) {
 		audioItems(input: $input) {
 			...AudioItem
@@ -5380,7 +5141,7 @@ var useAudioItems = ({
     setAudioItems(void 0);
     setSkip(0);
   }, [sortBy]);
-  const [getAudioItems, audioItemsQuery] = (0, import_client47.useLazyQuery)(AUDIO_ITEMS_QUERY, __spreadValues({
+  const [getAudioItems, audioItemsQuery] = (0, import_client46.useLazyQuery)(AUDIO_ITEMS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = audioItemsQuery;
@@ -5421,8 +5182,8 @@ var useAudioItems_default = useAudioItems;
 
 // app/components/CreateAudioItemForm.tsx
 var import_react101 = require("react");
-var import_client48 = require("@apollo/client");
-var CREATE_AUDIO_ITEM_MUTATION = import_client48.gql`
+var import_client47 = require("@apollo/client");
+var CREATE_AUDIO_ITEM_MUTATION = import_client47.gql`
 	mutation CreateAudioItem($input: CreateAudioItemInput!) {
 		createAudioItem(input: $input) {
 			...AudioItem
@@ -5431,7 +5192,7 @@ var CREATE_AUDIO_ITEM_MUTATION = import_client48.gql`
 	${EntityFragments.audioItem}
 `;
 var CreateAudioItemForm = ({ onSuccess }) => {
-  const [createAudioItem, { loading, error: error2, data: data2 }] = (0, import_client48.useMutation)(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: "all" });
+  const [createAudioItem, { loading, error: error2, data: data2 }] = (0, import_client47.useMutation)(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: "all" });
   const [name, setName] = (0, import_react101.useState)("");
   const [urlSource, setUrlSource] = (0, import_react101.useState)("");
   const [slug, setSlug] = (0, import_react101.useState)("");
@@ -5575,7 +5336,7 @@ var import_react106 = require("@remix-run/react");
 
 // app/components/CreateSubmissionForm.tsx
 var import_react105 = require("react");
-var import_client49 = require("@apollo/client");
+var import_client48 = require("@apollo/client");
 
 // app/components/Checkbox.tsx
 var Checkbox = ({ checked, label, id, onChange, className }) => {
@@ -5595,7 +5356,7 @@ var Checkbox = ({ checked, label, id, onChange, className }) => {
 var Checkbox_default = Checkbox;
 
 // app/components/CreateSubmissionForm.tsx
-var CREATE_SUBMISSION = import_client49.gql`
+var CREATE_SUBMISSION = import_client48.gql`
 	mutation CreateSubmission($input: CreateSubmissionInput!) {
 		createSubmission(input: $input) {
 			...Submission
@@ -5611,7 +5372,7 @@ var CreateSubmissionForm = ({ onSuccess }) => {
   const [description, setDescription] = (0, import_react105.useState)("");
   const [userGrantsPermissionToITMA, setUserGrantsPermissionToITMA] = (0, import_react105.useState)(false);
   const [validationError, setValidationError] = (0, import_react105.useState)("");
-  const [createSubmission, { loading, data: data2, error: error2 }] = (0, import_client49.useMutation)(CREATE_SUBMISSION, { errorPolicy: "all" });
+  const [createSubmission, { loading, data: data2, error: error2 }] = (0, import_client48.useMutation)(CREATE_SUBMISSION, { errorPolicy: "all" });
   const onMaterialTypeChecked = (materialType, isChecked) => {
     if (isChecked) {
       setMaterialTypes(materialTypes.concat(materialType));
@@ -5764,8 +5525,8 @@ __export(submissions_exports2, {
   default: () => submissions_default2
 });
 var import_react107 = require("@remix-run/react");
-var import_client50 = require("@apollo/client");
-var SUBMISSIONS = import_client50.gql`
+var import_client49 = require("@apollo/client");
+var SUBMISSIONS = import_client49.gql`
 	query Submissions($input: SubmissionsInput!) {
 		submissions(input: $input) {
 			...Submission
@@ -5774,7 +5535,7 @@ var SUBMISSIONS = import_client50.gql`
 	${SubmissionFragments.submission}
 `;
 var AdminSubmissions = () => {
-  const { data: data2, loading } = (0, import_client50.useQuery)(SUBMISSIONS, {
+  const { data: data2, loading } = (0, import_client49.useQuery)(SUBMISSIONS, {
     variables: { input: { take: 100, skip: 0 } },
     fetchPolicy: "cache-and-network"
   });
@@ -5804,9 +5565,9 @@ __export(takedown_requests_exports, {
   default: () => takedown_requests_default
 });
 var import_react108 = require("react");
-var import_client51 = require("@apollo/client");
+var import_client50 = require("@apollo/client");
 var import_compareDesc3 = __toESM(require("date-fns/compareDesc"));
-var TAKEDOWN_REQUESTS = import_client51.gql`
+var TAKEDOWN_REQUESTS = import_client50.gql`
 	query TakedownRequests($input: TakedownRequestsInput!) {
 		takedownRequests(input: $input) {
 			...TakedownRequest
@@ -5814,7 +5575,7 @@ var TAKEDOWN_REQUESTS = import_client51.gql`
 	}
 	${TakedownRequestFragments.takedownRequest}
 `;
-var UPDATE_TAKEDOWN_REQUEST_STATUS = import_client51.gql`
+var UPDATE_TAKEDOWN_REQUEST_STATUS = import_client50.gql`
 	mutation UpdateTakedownRequestStatus(
 		$input: UpdateTakedownRequestStatusInput!
 	) {
@@ -5829,7 +5590,7 @@ var TakedownRequests = () => {
     loading: takedownRequestsLoading,
     data: takedownRequestsData,
     error: takedownRequestsError
-  } = (0, import_client51.useQuery)(TAKEDOWN_REQUESTS, {
+  } = (0, import_client50.useQuery)(TAKEDOWN_REQUESTS, {
     variables: { input: { take: 200, skip: 0 } },
     fetchPolicy: "network-only"
   });
@@ -5847,7 +5608,7 @@ var TakedownRequests = () => {
       loading: updateTakedownRequestStatusLoading,
       error: updateTakedownRequestStatusError
     }
-  ] = (0, import_client51.useMutation)(UPDATE_TAKEDOWN_REQUEST_STATUS, { errorPolicy: "all" });
+  ] = (0, import_client50.useMutation)(UPDATE_TAKEDOWN_REQUEST_STATUS, { errorPolicy: "all" });
   const onApproveClicked = (id) => {
     updateTakedownRequestStatus({
       variables: { input: { id, status: "Approved" /* Approved */ } }
@@ -5918,8 +5679,8 @@ __export(id_exports, {
 });
 var import_react109 = require("@remix-run/react");
 var import_react110 = require("@remix-run/react");
-var import_client52 = require("@apollo/client");
-var SUBMISSION_WITH_FILES = import_client52.gql`
+var import_client51 = require("@apollo/client");
+var SUBMISSION_WITH_FILES = import_client51.gql`
 	query SubmissionWithFiles($id: String!) {
 		submissionWithFiles(id: $id) {
 			submission {
@@ -5937,7 +5698,7 @@ var AdminViewSubmissionById = () => {
   const navigate = (0, import_react110.useNavigate)();
   const { id } = navigate.query;
   const submissionId = typeof id === "string" ? id : void 0;
-  const { data: data2, loading } = (0, import_client52.useQuery)(SUBMISSION_WITH_FILES, {
+  const { data: data2, loading } = (0, import_client51.useQuery)(SUBMISSION_WITH_FILES, {
     variables: { id: submissionId },
     skip: !submissionId,
     fetchPolicy: "cache-and-network"
@@ -5979,8 +5740,8 @@ __export(slug_exports4, {
   default: () => slug_default4
 });
 var import_react111 = require("@remix-run/react");
-var import_client53 = require("@apollo/client");
-var PLACE_QUERY = import_client53.gql`
+var import_client52 = require("@apollo/client");
+var PLACE_QUERY = import_client52.gql`
 	query Place($slug: String!) {
 		place(slug: $slug) {
 			...Place
@@ -5991,7 +5752,7 @@ var PLACE_QUERY = import_client53.gql`
 var ViewPlaceBySlug = () => {
   const navigate = (0, import_react111.useNavigate)();
   const { slug } = navigate.query;
-  const { data: placeData, error: placeError } = (0, import_client53.useQuery)(PLACE_QUERY, {
+  const { data: placeData, error: placeError } = (0, import_client52.useQuery)(PLACE_QUERY, {
     variables: { slug },
     skip: !slug
   });
@@ -6018,14 +5779,14 @@ var about_exports4 = {};
 __export(about_exports4, {
   default: () => about_default4
 });
-var import_client55 = require("@apollo/client");
+var import_client54 = require("@apollo/client");
 var import_react113 = require("@remix-run/react");
 var import_react114 = require("@remix-run/react");
 
 // app/routes/entities/places/[slug].tsx
 var import_react112 = require("@remix-run/react");
-var import_client54 = require("@apollo/client");
-var PLACE_QUERY2 = import_client54.gql`
+var import_client53 = require("@apollo/client");
+var PLACE_QUERY2 = import_client53.gql`
 	query Place($slug: String!) {
 		place(slug: $slug) {
 			...Place
@@ -6038,7 +5799,7 @@ var PLACE_QUERY2 = import_client54.gql`
 var PlaceAbout = () => {
   const navigate = (0, import_react114.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client55.useQuery)(PLACE_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client54.useQuery)(PLACE_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -6085,13 +5846,13 @@ __export(edit_exports4, {
   default: () => edit_default4
 });
 var import_react117 = require("@remix-run/react");
-var import_client57 = require("@apollo/client");
+var import_client56 = require("@apollo/client");
 
 // app/components/EditPlaceForm.tsx
 var import_react115 = require("react");
-var import_client56 = require("@apollo/client");
+var import_client55 = require("@apollo/client");
 var import_react116 = require("@remix-run/react");
-var UPDATE_PLACE_MUTATION = import_client56.gql`
+var UPDATE_PLACE_MUTATION = import_client55.gql`
 	mutation UpdatePlace($slug: String!, $input: UpdatePlaceInput!) {
 		updatePlace(slug: $slug, input: $input) {
 			...Place
@@ -6101,7 +5862,7 @@ var UPDATE_PLACE_MUTATION = import_client56.gql`
 `;
 var EditPlaceForm = ({ place, onSuccess }) => {
   const navigate = (0, import_react116.useNavigate)();
-  const [updatePlace, { loading, error: error2, data: data2 }] = (0, import_client56.useMutation)(UPDATE_PLACE_MUTATION, {
+  const [updatePlace, { loading, error: error2, data: data2 }] = (0, import_client55.useMutation)(UPDATE_PLACE_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react115.useState)(place.name);
@@ -6178,7 +5939,7 @@ var EditPlaceForm = ({ place, onSuccess }) => {
 var EditPlaceForm_default = EditPlaceForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/places/[slug]/edit.tsx
-var PLACE_QUERY3 = import_client57.gql`
+var PLACE_QUERY3 = import_client56.gql`
 	query Place($slug: String!) {
 		place(slug: $slug) {
 			...Place
@@ -6189,7 +5950,7 @@ var PLACE_QUERY3 = import_client57.gql`
 var EditPlace = () => {
   const navigate = (0, import_react117.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client57.useQuery)(PLACE_QUERY3, {
+  const { data: data2, error: error2 } = (0, import_client56.useQuery)(PLACE_QUERY3, {
     variables: { slug },
     skip: !slug
   });
@@ -6222,12 +5983,12 @@ var tags_exports4 = {};
 __export(tags_exports4, {
   default: () => tags_default4
 });
-var import_client58 = require("@apollo/client");
+var import_client57 = require("@apollo/client");
 var import_react118 = require("@remix-run/react");
 var PlaceTags = () => {
   const navigate = (0, import_react118.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client58.useQuery)(PLACE_QUERY2, {
+  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client57.useQuery)(PLACE_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -6271,13 +6032,13 @@ __export(slug_exports5, {
 var import_react119 = require("@remix-run/react");
 
 // app/utils/db.server.ts
-var import_client59 = require("@prisma/client");
+var import_client58 = require("@prisma/client");
 var db;
 if (false) {
-  db = new import_client59.PrismaClient();
+  db = new import_client58.PrismaClient();
 } else {
   if (!global.__db) {
-    global.__db = new import_client59.PrismaClient();
+    global.__db = new import_client58.PrismaClient();
   }
   db = global.__db;
 }
@@ -6395,13 +6156,13 @@ __export(edit_exports5, {
   default: () => edit_default5
 });
 var import_react124 = require("@remix-run/react");
-var import_client61 = require("@apollo/client");
+var import_client60 = require("@apollo/client");
 
 // app/components/EditPersonForm.tsx
 var import_react122 = require("react");
-var import_client60 = require("@apollo/client");
+var import_client59 = require("@apollo/client");
 var import_react123 = require("@remix-run/react");
-var UPDATE_PERSON_MUTATION = import_client60.gql`
+var UPDATE_PERSON_MUTATION = import_client59.gql`
 	mutation UpdatePerson($slug: String!, $input: UpdatePersonInput!) {
 		updatePerson(slug: $slug, input: $input) {
 			...Person
@@ -6411,7 +6172,7 @@ var UPDATE_PERSON_MUTATION = import_client60.gql`
 `;
 var EditPersonForm = ({ person: person2, onSuccess }) => {
   const navigate = (0, import_react123.useNavigate)();
-  const [updatePerson, { loading, error: error2, data: data2 }] = (0, import_client60.useMutation)(UPDATE_PERSON_MUTATION, {
+  const [updatePerson, { loading, error: error2, data: data2 }] = (0, import_client59.useMutation)(UPDATE_PERSON_MUTATION, {
     errorPolicy: "all"
   });
   const [firstName, setFirstName] = (0, import_react122.useState)(person2.firstName);
@@ -6483,7 +6244,7 @@ var EditPersonForm = ({ person: person2, onSuccess }) => {
 var EditPersonForm_default = EditPersonForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/people/$slug/edit.tsx
-var PERSON_QUERY = import_client61.gql`
+var PERSON_QUERY = import_client60.gql`
 	query Person($slug: String!) {
 		person(slug: $slug) {
 			...Person
@@ -6494,7 +6255,7 @@ var PERSON_QUERY = import_client61.gql`
 var EditPerson = () => {
   const navigate = (0, import_react124.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client61.useQuery)(PERSON_QUERY, {
+  const { data: data2, error: error2 } = (0, import_client60.useQuery)(PERSON_QUERY, {
     variables: { slug },
     skip: !slug
   });
@@ -6569,8 +6330,8 @@ var import_react127 = require("@remix-run/react");
 
 // app/hooks/usePeople.ts
 var import_react126 = require("react");
-var import_client62 = require("@apollo/client");
-var PEOPLE_QUERY = import_client62.gql`
+var import_client61 = require("@apollo/client");
+var PEOPLE_QUERY = import_client61.gql`
 	query People($input: PeopleInput!) {
 		people(input: $input) {
 			...Person
@@ -6589,7 +6350,7 @@ var usePeople = ({
     setPeople(void 0);
     setSkip(0);
   }, [sortBy]);
-  const [getPeople, peopleQuery] = (0, import_client62.useLazyQuery)(PEOPLE_QUERY, __spreadValues({
+  const [getPeople, peopleQuery] = (0, import_client61.useLazyQuery)(PEOPLE_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = peopleQuery;
@@ -6662,8 +6423,8 @@ var import_react129 = require("@remix-run/react");
 
 // app/hooks/usePlaces.ts
 var import_react128 = require("react");
-var import_client63 = require("@apollo/client");
-var PLACES_QUERY = import_client63.gql`
+var import_client62 = require("@apollo/client");
+var PLACES_QUERY = import_client62.gql`
 	query Places($input: PlacesInput!) {
 		places(input: $input) {
 			...Place
@@ -6682,7 +6443,7 @@ var usePlaces = ({
     setPlaces(void 0);
     setSkip(0);
   }, [sortBy]);
-  const [getPlaces, placesQuery] = (0, import_client63.useLazyQuery)(PLACES_QUERY, __spreadValues({
+  const [getPlaces, placesQuery] = (0, import_client62.useLazyQuery)(PLACES_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = placesQuery;
@@ -6753,8 +6514,8 @@ __export(slug_exports6, {
   default: () => slug_default6
 });
 var import_react130 = require("@remix-run/react");
-var import_client64 = require("@apollo/client");
-var TUNE_QUERY = import_client64.gql`
+var import_client63 = require("@apollo/client");
+var TUNE_QUERY = import_client63.gql`
 	query Tune($slug: String!) {
 		tune(slug: $slug) {
 			...Tune
@@ -6765,7 +6526,7 @@ var TUNE_QUERY = import_client64.gql`
 var ViewTuneBySlug = () => {
   const navigate = (0, import_react130.useNavigate)();
   const { slug } = navigate.query;
-  const { data: tuneData, error: tuneError } = (0, import_client64.useQuery)(TUNE_QUERY, {
+  const { data: tuneData, error: tuneError } = (0, import_client63.useQuery)(TUNE_QUERY, {
     variables: { slug },
     skip: !slug
   });
@@ -6792,14 +6553,14 @@ var about_exports6 = {};
 __export(about_exports6, {
   default: () => about_default6
 });
-var import_client66 = require("@apollo/client");
+var import_client65 = require("@apollo/client");
 var import_react132 = require("@remix-run/react");
 var import_react133 = require("@remix-run/react");
 
 // app/routes/entities/tunes/[slug].tsx
 var import_react131 = require("@remix-run/react");
-var import_client65 = require("@apollo/client");
-var TUNE_QUERY2 = import_client65.gql`
+var import_client64 = require("@apollo/client");
+var TUNE_QUERY2 = import_client64.gql`
 	query Tune($slug: String!) {
 		tune(slug: $slug) {
 			...Tune
@@ -6812,7 +6573,7 @@ var TUNE_QUERY2 = import_client65.gql`
 var TuneAbout = () => {
   const navigate = (0, import_react133.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client66.useQuery)(TUNE_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client65.useQuery)(TUNE_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -6870,12 +6631,12 @@ var tags_exports6 = {};
 __export(tags_exports6, {
   default: () => tags_default6
 });
-var import_client67 = require("@apollo/client");
+var import_client66 = require("@apollo/client");
 var import_react134 = require("@remix-run/react");
 var TuneTags = () => {
   const navigate = (0, import_react134.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client67.useQuery)(TUNE_QUERY2, {
+  const { data: data2, error: error2, refetch: refetch2 } = (0, import_client66.useQuery)(TUNE_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -6919,8 +6680,8 @@ var import_react136 = require("@remix-run/react");
 
 // app/hooks/useTunes.ts
 var import_react135 = require("react");
-var import_client68 = require("@apollo/client");
-var TUNES_QUERY = import_client68.gql`
+var import_client67 = require("@apollo/client");
+var TUNES_QUERY = import_client67.gql`
 	query Tunes($input: TunesInput!) {
 		tunes(input: $input) {
 			...Tune
@@ -6939,7 +6700,7 @@ var useTunes = ({
     setTunes(void 0);
     setSkip(0);
   }, [sortBy]);
-  const [getTunes, tunesQuery] = (0, import_client68.useLazyQuery)(TUNES_QUERY, __spreadValues({
+  const [getTunes, tunesQuery] = (0, import_client67.useLazyQuery)(TUNES_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = tunesQuery;
@@ -7051,13 +6812,13 @@ __export(verify_exports, {
   default: () => verify_default
 });
 var import_react140 = require("react");
-var import_client70 = require("@apollo/client");
+var import_client69 = require("@apollo/client");
 var import_react141 = require("@remix-run/react");
 
 // app/hooks/useVerificationRequestsForCurrentUser.ts
 var import_react139 = require("react");
-var import_client69 = require("@apollo/client");
-var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client69.gql`
+var import_client68 = require("@apollo/client");
+var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client68.gql`
 	query VerificationRequestsForCurrentUser {
 		verificationRequestsForCurrentUser {
 			...VerificationRequest
@@ -7067,7 +6828,7 @@ var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client69.gql`
 `;
 var useVerificationRequestsForCurrentUser = () => {
   var _a;
-  const [makeQuery, query] = (0, import_client69.useLazyQuery)(VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY);
+  const [makeQuery, query] = (0, import_client68.useLazyQuery)(VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY);
   (0, import_react139.useEffect)(() => {
     makeQuery();
   }, [makeQuery]);
@@ -7077,7 +6838,7 @@ var useVerificationRequestsForCurrentUser = () => {
 var useVerificationRequestsForCurrentUser_default = useVerificationRequestsForCurrentUser;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/verify.tsx
-var CREATE_PRESIGNED_UPLOAD_URL_MUTATION = import_client70.gql`
+var CREATE_PRESIGNED_UPLOAD_URL_MUTATION = import_client69.gql`
 	mutation CreatePresignedUploadUrl($filename: String!) {
 		createPresignedUploadUrlForVerificationImage(filename: $filename) {
 			imageS3Key
@@ -7085,7 +6846,7 @@ var CREATE_PRESIGNED_UPLOAD_URL_MUTATION = import_client70.gql`
 		}
 	}
 `;
-var CREATE_VERIFICATION_REQUEST_MUTATION = import_client70.gql`
+var CREATE_VERIFICATION_REQUEST_MUTATION = import_client69.gql`
 	mutation CreateVerificationRequest($input: CreateVerificationRequestInput!) {
 		createVerificationRequest(input: $input) {
 			...VerificationRequest
@@ -7107,8 +6868,8 @@ var AccountVerify = () => {
   const [imageFileObjectUrl, setImageFileObjectUrl] = (0, import_react140.useState)();
   const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] = (0, import_react140.useState)(false);
   const [formIsSubmitting, setFormIsSubmitting] = (0, import_react140.useState)(false);
-  const [createPresignedUploadUrl] = (0, import_client70.useMutation)(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" });
-  const [createVerificationRequest] = (0, import_client70.useMutation)(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
+  const [createPresignedUploadUrl] = (0, import_client69.useMutation)(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" });
+  const [createVerificationRequest] = (0, import_client69.useMutation)(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
   const onSelectEntity = (entity) => {
     if (isPerson(entity)) {
       setPersonEntity(entity);
@@ -7366,8 +7127,8 @@ __export(auto_login_exports, {
 var import_react146 = require("react");
 var import_react147 = require("@remix-run/react");
 var import_react148 = require("@remix-run/react");
-var import_client71 = require("@apollo/client");
-var AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = import_client71.gql`
+var import_client70 = require("@apollo/client");
+var AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = import_client70.gql`
 	mutation AuthenticateWithAutoLoginToken(
 		$input: AuthenticateWithAutoLoginTokenInput!
 	) {
@@ -7388,7 +7149,7 @@ var AutoLogin = () => {
   const [
     authenticateWithAutoLoginToken,
     { loading: authenticateLoading, data: data2, error: error2 }
-  ] = (0, import_client71.useMutation)(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
+  ] = (0, import_client70.useMutation)(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
   (0, import_react146.useEffect)(() => {
     if (typeof tokenUnhashed !== "string" || typeof userEmail !== "string") {
       return;
@@ -7466,12 +7227,12 @@ __export(id_exports2, {
 var import_react150 = require("react");
 var import_react151 = require("@remix-run/react");
 var import_react152 = require("@remix-run/react");
-var import_client73 = require("@apollo/client");
+var import_client72 = require("@apollo/client");
 
 // app/hooks/useAudioItemsCreatedByUser.tsx
 var import_react149 = require("react");
-var import_client72 = require("@apollo/client");
-var AUDIO_ITEMS_CREATED_BY_USER_QUERY = import_client72.gql`
+var import_client71 = require("@apollo/client");
+var AUDIO_ITEMS_CREATED_BY_USER_QUERY = import_client71.gql`
 	query AudioItemsCreatedByUser($input: AudioItemsCreatedByUserInput!) {
 		audioItemsCreatedByUser(input: $input) {
 			...AudioItem
@@ -7481,7 +7242,7 @@ var AUDIO_ITEMS_CREATED_BY_USER_QUERY = import_client72.gql`
 `;
 var useAudioItemsCreatedByUser = (user) => {
   var _a;
-  const [makeQuery, query] = (0, import_client72.useLazyQuery)(AUDIO_ITEMS_CREATED_BY_USER_QUERY, {
+  const [makeQuery, query] = (0, import_client71.useLazyQuery)(AUDIO_ITEMS_CREATED_BY_USER_QUERY, {
     variables: {
       input: {
         userId: user == null ? void 0 : user.id
@@ -7499,7 +7260,7 @@ var useAudioItemsCreatedByUser = (user) => {
 var useAudioItemsCreatedByUser_default = useAudioItemsCreatedByUser;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/users/[id].tsx
-var USER_QUERY = import_client73.gql`
+var USER_QUERY = import_client72.gql`
 	query User($id: String!) {
 		user(id: $id) {
 			...User
@@ -7510,7 +7271,7 @@ var USER_QUERY = import_client73.gql`
 var ViewUserById = () => {
   const navigate = (0, import_react151.useNavigate)();
   const { id } = navigate.query;
-  const { data: userData, error: userError } = (0, import_client73.useQuery)(USER_QUERY, {
+  const { data: userData, error: userError } = (0, import_client72.useQuery)(USER_QUERY, {
     variables: { id },
     skip: !id
   });
@@ -7582,15 +7343,15 @@ __export(logout_exports, {
 });
 var import_react153 = require("react");
 var import_react154 = require("@remix-run/react");
-var import_client74 = require("@apollo/client");
-var LOG_OUT_MUTATION = import_client74.gql`
+var import_client73 = require("@apollo/client");
+var LOG_OUT_MUTATION = import_client73.gql`
 	mutation LogOut {
 		logOut
 	}
 `;
 var LogOut = () => {
   const navigate = (0, import_react154.useNavigate)();
-  const [logOut, { data: logOutData }] = (0, import_client74.useMutation)(LOG_OUT_MUTATION, {
+  const [logOut, { data: logOutData }] = (0, import_client73.useMutation)(LOG_OUT_MUTATION, {
     errorPolicy: "all"
   });
   (0, import_react153.useEffect)(() => {
@@ -7615,8 +7376,8 @@ __export(signup_exports, {
 var import_react155 = require("react");
 var import_react156 = require("@remix-run/react");
 var import_react157 = require("@remix-run/react");
-var import_client75 = require("@apollo/client");
-var SIGN_UP_MUTATION = import_client75.gql`
+var import_client74 = require("@apollo/client");
+var SIGN_UP_MUTATION = import_client74.gql`
 	mutation SignUp($input: SignUpInput!) {
 		signUp(input: $input) {
 			...CurrentUser
@@ -7631,7 +7392,7 @@ var SignUp = () => {
   const [email, setEmail] = (0, import_react155.useState)("");
   const [username, setUsername] = (0, import_react155.useState)("");
   const [validationError, setValidationError] = (0, import_react155.useState)("");
-  const [signUp, { loading, data: data2, error: error2 }] = (0, import_client75.useMutation)(SIGN_UP_MUTATION, {
+  const [signUp, { loading, data: data2, error: error2 }] = (0, import_client74.useMutation)(SIGN_UP_MUTATION, {
     errorPolicy: "all"
   });
   const onSignUp = (event) => {
@@ -7894,8 +7655,8 @@ __export(login_exports, {
 var import_react160 = require("react");
 var import_react161 = require("@remix-run/react");
 var import_react162 = require("@remix-run/react");
-var import_client76 = require("@apollo/client");
-var LOG_IN_MUTATION = import_client76.gql`
+var import_client75 = require("@apollo/client");
+var LOG_IN_MUTATION = import_client75.gql`
 	mutation LogIn($input: LogInInput!) {
 		logIn(input: $input) {
 			...CurrentUser
@@ -7908,7 +7669,7 @@ var Login = () => {
   const { redirectTo } = navigate.query;
   const [currentUser] = useCurrentUser_default();
   const [email, setEmail] = (0, import_react160.useState)("");
-  const [logIn, { loading, data: data2, error: error2 }] = (0, import_client76.useMutation)(LOG_IN_MUTATION, {
+  const [logIn, { loading, data: data2, error: error2 }] = (0, import_client75.useMutation)(LOG_IN_MUTATION, {
     errorPolicy: "all"
   });
   const onLogIn = (event) => {
@@ -7953,7 +7714,7 @@ var Login = () => {
 var login_default = Login;
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "a6502eb6", "entry": { "module": "/build/entry.client-XZMPU6EP.js", "imports": ["/build/_shared/chunk-SIEGJXK6.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-BNJKRZVH.js", "imports": ["/build/_shared/chunk-5NZPHOME.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": true, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-LVM2HC7M.js", "imports": ["/build/_shared/chunk-B6LXBBUF.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-5YJUYJKL.js", "imports": ["/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-CURQ6XNE.js", "imports": ["/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-CCGUCNM6.js", "imports": ["/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-UATGOJXZ.js", "imports": ["/build/_shared/chunk-B6LXBBUF.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-3DLIXALA.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-XXO3S27P.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-QBGD22HY.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-TAVNNZNN.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-FNYRWEOM.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-LXEAHWGZ.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-T2DI4XE5.js", "imports": ["/build/_shared/chunk-J3DRKT76.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-JNA2YCXW.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-NY4ID3T4.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-AXSDXI2H.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-AH322W72.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-LYMRFJL5.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-JAT5DRKJ.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-KEJAQRP3.js", "imports": ["/build/_shared/chunk-HVW4YIXU.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-K5ETEWYG.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-3PF56SJT.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-MVMOZDWF.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-BCG2FIM5.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-X2NMERM3.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-TPCIVL76.js", "imports": ["/build/_shared/chunk-XIHXT5R4.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-XOCHVTFU.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-2FUYJEUF.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-URPJZ27F.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-NH226JIE.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-GJDRBOGR.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-XH4UYVKX.js", "imports": ["/build/_shared/chunk-EXRK4ZUP.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-7QHYLNRN.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-S52YMY53.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-A72LKY4V.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-YLKBNOXE.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-53D5PH7B.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-Y4XKTV2K.js", "imports": ["/build/_shared/chunk-FXGKUFG3.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-7OZNGZNX.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-QN2X6LN2.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-GMAQE7RU.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-OZ4B3YN2.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-6RKHALID.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-QMKWOHGU.js", "imports": ["/build/_shared/chunk-Z436PMIP.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-2ZM4EJEM.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-VGDQVE7H.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-INQTGBZ5.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-GLFO773N.js", "imports": ["/build/_shared/chunk-EXRK4ZUP.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-7XKAZFLF.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-IQE4A5KU.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-VMMRDVHP.js", "imports": ["/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-L2WPP7EV.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-RKQH724B.js", "imports": ["/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-A6502EB6.js" };
+var assets_manifest_default = { "version": "325aaabe", "entry": { "module": "/build/entry.client-J6ZSRDNF.js", "imports": ["/build/_shared/chunk-FQNH2CWN.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-OVQN7UHO.js", "imports": ["/build/_shared/chunk-S7PN3G6T.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": true, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-QUBBZ7CM.js", "imports": ["/build/_shared/chunk-62AN4TPO.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-HI6XUQHH.js", "imports": ["/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-7YDBN62N.js", "imports": ["/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-D3HA3NIX.js", "imports": ["/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-N42NAGY7.js", "imports": ["/build/_shared/chunk-62AN4TPO.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-R7TMBY2T.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-VXXUBJEE.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-ENFCATS7.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-NCRE6APH.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-IQN63IPG.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-33KOB7XZ.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-IZTOFYKE.js", "imports": ["/build/_shared/chunk-PZBYYJS2.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-VHC2ZAAB.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-7DYQ4DKS.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-KYR4GC7F.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-B4GRYLE2.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-QNFK6THC.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-TV3BYIPZ.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-EU35M3BQ.js", "imports": ["/build/_shared/chunk-OIF45POS.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-M765DECW.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-3BWTOX7N.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-L5DV7MJX.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-UHZHW24E.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-HCFWR4JB.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-HCHQV4VF.js", "imports": ["/build/_shared/chunk-ACA63UUA.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-XHJVU7TD.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-MK7YEX2L.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-R3HB2H2O.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-HK6P4I5X.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-YKBBPFT4.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-622MUYCI.js", "imports": ["/build/_shared/chunk-HNK6Q7JI.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-AQ36QIUN.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-BUXHYEPZ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-IUW7LBDR.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-YYC4F7AL.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-UUBNZVIJ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-AXVPCGJK.js", "imports": ["/build/_shared/chunk-3FWRNUQS.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-5GOSUSUC.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-ISMJRHEQ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-VUDC3VBH.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-7E73KRMS.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-GLFL47W5.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-ZN6FDLTO.js", "imports": ["/build/_shared/chunk-NNKVZEE5.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-Z3KCHFBO.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-VL6QMHQH.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-57UMYXAJ.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-LFUWZLUH.js", "imports": ["/build/_shared/chunk-HNK6Q7JI.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-VAQPOK4E.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X66U2SOU.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-3I6GMCGC.js", "imports": ["/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-IT42G6XD.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-S4I243MJ.js", "imports": ["/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-325AAABE.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

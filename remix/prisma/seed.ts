@@ -18,12 +18,14 @@ const user1: Pick<User, "id" | "email" | "username" | "role"> = {
 };
 const audioItem1: Pick<
 	AudioItem,
-	"id" | "slug" | "name" | "description" | "createdByUserId"
+	"id" | "slug" | "name" | "description" | "urlSource" | "createdByUserId"
 > = {
 	id: "audioItem_1",
 	slug: "rare-recording-of-michael-coleman",
 	name: "Rare recording of Michael Coleman",
 	description: "This was unearthed in an old audio tape in the attic.",
+	urlSource:
+		"https://itma-atom.arkivum.net/uploads/r/irish-traditional-music-archive/4/4/e/44e8926dd492158f62ddaa7883b34b7700bcad03626ac30bb4ee8181a8f10073/f8dcdb97-1f4c-4175-be91-66bf11421f81-ITMA0266025_141.mp3",
 	createdByUserId: user1.id,
 };
 const collection1: Pick<

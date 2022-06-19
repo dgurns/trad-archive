@@ -1,26 +1,35 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { type Instrument } from "@prisma/client";
 
-import useInstruments from "~/hooks/useInstruments";
 import EntityService from "~/services/Entity";
 
 import Layout from "~/components/Layout";
-import LoadingBlock from "~/components/LoadingBlock";
+import { db } from "~/utils/db.server";
+
+export function meta() {
+	return {
+		title: "Trad Archive - Instruments",
+	};
+}
+
+export function loader(): Promise<Instrument[]> {
+	return db.instrument.findMany({
+		orderBy: {
+			name: "asc",
+		},
+	});
+}
 
 const Instruments = () => {
-	const [instruments, { loading, error }, fetchNextPage] = useInstruments({
-		resultsPerPage: 50,
-	});
+	const instruments = useLoaderData<Instrument[]>();
 
 	return (
-		<Layout pageTitle={`Trad Archive - Instruments`}>
+		<Layout>
 			<h1 className="mb-6">Instruments</h1>
-			{!loading && error && (
-				<div className="text-red-600">Error fetching Instruments</div>
-			)}
-			{!loading && instruments?.length === 0 && (
+			{instruments.length === 0 && (
 				<div className="text-gray-500">No Instruments found</div>
 			)}
-			{instruments?.length > 0 && (
+			{instruments.length > 0 && (
 				<ul>
 					{instruments.map((instrument, index) => (
 						<li className="mb-2" key={index}>
@@ -31,14 +40,6 @@ const Instruments = () => {
 					))}
 				</ul>
 			)}
-			<div className="mt-6">
-				{loading && <LoadingBlock />}
-				{!loading && instruments?.length > 0 && (
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
-				)}
-			</div>
 		</Layout>
 	);
 };

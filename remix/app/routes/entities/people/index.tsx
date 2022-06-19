@@ -1,26 +1,35 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { type Person } from "@prisma/client";
 
-import usePeople from "~/hooks/usePeople";
 import EntityService from "~/services/Entity";
 
 import Layout from "~/components/Layout";
-import LoadingBlock from "~/components/LoadingBlock";
+import { db } from "~/utils/db.server";
+
+export function meta() {
+	return {
+		title: "Trad Archive - People",
+	};
+}
+
+export function loader(): Promise<Person[]> {
+	return db.person.findMany({
+		orderBy: {
+			name: "asc",
+		},
+	});
+}
 
 const People = () => {
-	const [people, { loading, error }, fetchNextPage] = usePeople({
-		resultsPerPage: 50,
-	});
+	const people = useLoaderData<Person[]>();
 
 	return (
-		<Layout pageTitle={`Trad Archive - People`}>
+		<Layout>
 			<h1 className="mb-6">People</h1>
-			{!loading && error && (
-				<div className="text-red-600">Error fetching People</div>
-			)}
-			{!loading && people?.length === 0 && (
+			{people.length === 0 && (
 				<div className="text-gray-500">No People found</div>
 			)}
-			{people?.length > 0 && (
+			{people.length > 0 && (
 				<ul>
 					{people.map((person, index) => (
 						<li className="mb-2" key={index}>
@@ -31,14 +40,6 @@ const People = () => {
 					))}
 				</ul>
 			)}
-			<div className="mt-6">
-				{loading && <LoadingBlock />}
-				{!loading && people?.length > 0 && (
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
-				)}
-			</div>
 		</Layout>
 	);
 };

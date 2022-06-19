@@ -697,6 +697,11 @@ select {
   position: relative;
 }
 
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -739,6 +744,10 @@ select {
 
 .top-\[48px\] {
   top: 48px;
+}
+
+.top-24 {
+  top: 6rem;
 }
 
 .z-40 {
@@ -1227,6 +1236,11 @@ select {
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .pt-12 {

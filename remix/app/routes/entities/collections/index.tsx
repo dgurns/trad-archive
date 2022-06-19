@@ -1,26 +1,35 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { type Collection } from "@prisma/client";
 
-import useCollections from "~/hooks/useCollections";
 import EntityService from "~/services/Entity";
 
 import Layout from "~/components/Layout";
-import LoadingBlock from "~/components/LoadingBlock";
+import { db } from "~/utils/db.server";
+
+export function meta() {
+	return {
+		title: "Trad Archive - Collections",
+	};
+}
+
+export function loader(): Promise<Collection[]> {
+	return db.collection.findMany({
+		orderBy: {
+			name: "asc",
+		},
+	});
+}
 
 const Collections = () => {
-	const [collections, { loading, error }, fetchNextPage] = useCollections({
-		resultsPerPage: 50,
-	});
+	const collections = useLoaderData<Collection[]>();
 
 	return (
-		<Layout pageTitle={`Trad Archive - Collections`}>
+		<Layout>
 			<h1 className="mb-6">Collections</h1>
-			{!loading && error && (
-				<div className="text-red-600">Error fetching Collections</div>
-			)}
-			{!loading && collections?.length === 0 && (
+			{collections.length === 0 && (
 				<div className="text-gray-500">No Collections found</div>
 			)}
-			{collections?.length > 0 && (
+			{collections.length > 0 && (
 				<ul>
 					{collections.map((collection, index) => (
 						<li className="mb-2" key={index}>
@@ -31,14 +40,6 @@ const Collections = () => {
 					))}
 				</ul>
 			)}
-			<div className="mt-6">
-				{loading && <LoadingBlock />}
-				{!loading && collections?.length > 0 && (
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
-				)}
-			</div>
 		</Layout>
 	);
 };

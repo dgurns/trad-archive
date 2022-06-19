@@ -1,26 +1,35 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { type Place } from "@prisma/client";
 
-import usePlaces from "~/hooks/usePlaces";
 import EntityService from "~/services/Entity";
 
 import Layout from "~/components/Layout";
-import LoadingBlock from "~/components/LoadingBlock";
+import { db } from "~/utils/db.server";
+
+export function meta() {
+	return {
+		title: "Trad Archive - Places",
+	};
+}
+
+export function loader(): Promise<Place[]> {
+	return db.place.findMany({
+		orderBy: {
+			name: "asc",
+		},
+	});
+}
 
 const Places = () => {
-	const [places, { loading, error }, fetchNextPage] = usePlaces({
-		resultsPerPage: 50,
-	});
+	const places = useLoaderData<Place[]>();
 
 	return (
-		<Layout pageTitle={`Trad Archive - Places`}>
+		<Layout>
 			<h1 className="mb-6">Places</h1>
-			{!loading && error && (
-				<div className="text-red-600">Error fetching Places</div>
-			)}
-			{!loading && places?.length === 0 && (
+			{places.length === 0 && (
 				<div className="text-gray-500">No Places found</div>
 			)}
-			{places?.length > 0 && (
+			{places.length > 0 && (
 				<ul>
 					{places.map((place, index) => (
 						<li className="mb-2" key={index}>
@@ -31,14 +40,6 @@ const Places = () => {
 					))}
 				</ul>
 			)}
-			<div className="mt-6">
-				{loading && <LoadingBlock />}
-				{!loading && places?.length > 0 && (
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
-				)}
-			</div>
 		</Layout>
 	);
 };

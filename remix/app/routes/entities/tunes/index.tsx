@@ -1,26 +1,73 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
+import { type DataFunctionArgs } from "@remix-run/node";
+import { type Tune } from "@prisma/client";
 
-import useTunes from "~/hooks/useTunes";
 import EntityService from "~/services/Entity";
+import useFilters from "~/hooks/useFilters";
 
 import Layout from "~/components/Layout";
-import LoadingBlock from "~/components/LoadingBlock";
+import { db } from "~/utils/db.server";
+
+export function meta() {
+	return {
+		title: "Trad Archive - Tunes",
+	};
+}
+
+const PER_PAGE = 100;
+
+interface LoaderData {
+	tunes: Tune[];
+	totalTunes: number;
+}
+
+export async function loader({
+	request,
+}: DataFunctionArgs): Promise<LoaderData> {
+	const url = new URL(request.url);
+	const params = new URLSearchParams(url.search);
+	const page = Number(params.get("page") ?? 1);
+	const perPage = Number(params.get("perPage") ?? PER_PAGE);
+
+	const [tunes, totalTunes] = await Promise.all([
+		db.tune.findMany({
+			take: perPage,
+			skip: perPage * (page - 1),
+			orderBy: {
+				name: "asc",
+			},
+		}),
+		db.tune.count(),
+	]);
+
+	return {
+		tunes,
+		totalTunes,
+	};
+}
 
 const Tunes = () => {
-	const [tunes, { loading, error }, fetchNextPage] = useTunes({
-		resultsPerPage: 50,
+	const { tunes, totalTunes } = useLoaderData<LoaderData>();
+
+	const { Filters, filtersProps } = useFilters({
+		totalItems: totalTunes,
+		defaultPerPage: PER_PAGE,
 	});
 
 	return (
-		<Layout pageTitle={`Trad Archive - Tunes`}>
-			<h1 className="mb-6">Tunes</h1>
-			{!loading && error && (
-				<div className="text-red-600">Error fetching Tunes</div>
-			)}
-			{!loading && tunes?.length === 0 && (
+		<Layout>
+			<h1>Tunes</h1>
+			<Filters
+				{...filtersProps}
+				sortBy={undefined}
+				viewAs={undefined}
+				className="sticky left-0 right-0 py-4 bg-gray-100 top-[48px] mb-6"
+			/>
+
+			{tunes.length === 0 && (
 				<div className="text-gray-500">No Tunes found</div>
 			)}
-			{tunes?.length > 0 && (
+			{tunes.length > 0 && (
 				<ul>
 					{tunes.map((tune, index) => (
 						<li className="mb-2" key={index}>
@@ -29,14 +76,6 @@ const Tunes = () => {
 					))}
 				</ul>
 			)}
-			<div className="mt-6">
-				{loading && <LoadingBlock />}
-				{!loading && tunes?.length > 0 && (
-					<button className="btn-text" onClick={fetchNextPage}>
-						Load More
-					</button>
-				)}
-			</div>
 		</Layout>
 	);
 };

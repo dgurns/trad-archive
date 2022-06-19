@@ -5,7 +5,6 @@ import { useNavigate } from "@remix-run/react";
 import type { Tune } from "~/types";
 
 import Layout from "~/components/Layout";
-import { TUNE_QUERY } from "~/routes/entities/tunes/[slug]";
 import Breadcrumb from "~/components/Breadcrumb";
 import LoadingBlock from "~/components/LoadingBlock";
 
@@ -13,20 +12,11 @@ const TuneAbout = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error } = useQuery<{
-		tune: Tune;
-	}>(TUNE_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { name, aliases, theSessionTuneId, type, meter, mode, abc } =
 		data?.tune ?? {};
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - About`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb

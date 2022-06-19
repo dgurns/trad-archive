@@ -2,36 +2,26 @@ import { useQuery } from "@apollo/client";
 import { Link } from "@remix-run/react";
 import { useNavigate } from "@remix-run/react";
 
-import type { Instrument } from "~/types";
+import type { Place } from "~/types";
 
 import Layout from "~/components/Layout";
-import { INSTRUMENT_QUERY } from "~/routes/entities/instruments/[slug]";
 import Breadcrumb from "~/components/Breadcrumb";
 import LoadingBlock from "~/components/LoadingBlock";
 
-const InstrumentAbout = () => {
+const PlaceAbout = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error } = useQuery<{
-		instrument: Instrument;
-	}>(INSTRUMENT_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
-	const { name, description, aliases } = data?.instrument ?? {};
+	const { name, description, aliases, latitude, longitude } = data?.place ?? {};
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - About`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb
 						items={[
-							{ label: "Instruments", href: "/entities/instruments" },
-							{ label: name, href: `/entities/instruments/${slug}` },
+							{ label: "Places", href: "/entities/places" },
+							{ label: name, href: `/entities/places/${slug}` },
 							{ label: "About" },
 						]}
 						className="mb-6"
@@ -52,11 +42,28 @@ const InstrumentAbout = () => {
 							<span className="text-gray-500">{aliases}</span>
 						</div>
 					)}
-					<Link to={`/entities/instruments/${slug}/edit`}>Edit</Link>
+					{latitude && longitude && (
+						<div className="mb-4">
+							Latitude and Longitude:
+							<br />
+							<span className="text-gray-500">
+								{latitude},{longitude}
+							</span>
+							<br />
+							<a
+								href={`https://www.google.com/maps/@?api=1&map_action=map&zoom=12&center=${latitude},${longitude}`}
+								target="_blank"
+								rel="noreferrer"
+							>
+								View on Map <i className="material-icons text-base">launch</i>
+							</a>
+						</div>
+					)}
+					<Link to={`/entities/places/${slug}/edit`}>Edit</Link>
 				</>
 			)}
 		</Layout>
 	);
 };
 
-export default InstrumentAbout;
+export default PlaceAbout;

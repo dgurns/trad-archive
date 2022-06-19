@@ -6,26 +6,16 @@ import type { Collection } from "~/types";
 
 import Layout from "~/components/Layout";
 import LoadingBlock from "~/components/LoadingBlock";
-import { COLLECTION_QUERY } from "~/routes/entities/collections/[slug]";
 import Breadcrumb from "~/components/Breadcrumb";
 
 const CollectionAbout = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error } = useQuery<{
-		collection: Collection;
-	}>(COLLECTION_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { name, description, aliases, itmaAtomSlug } = data?.collection ?? {};
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - About`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb

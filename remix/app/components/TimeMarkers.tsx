@@ -1,17 +1,19 @@
 import { useCallback, useMemo } from "react";
 import { Link } from "@remix-run/react";
 
-import type { AudioItem, Tag } from "~/types";
+import type { AudioItemWithRelations, TagWithRelations } from "~/types";
 import { EntityType } from "~/types";
 import DateTime from "~/services/DateTime";
 import Entity from "~/services/Entity";
+import TagService from "~/services/Tag";
 import usePlayerContext from "~/hooks/usePlayerContext";
+import type { Tune } from "@prisma/client";
 
 interface Props {
-	audioItem: AudioItem;
+	audioItem: AudioItemWithRelations;
 }
 const TimeMarkers = ({ audioItem }: Props) => {
-	const { tags } = audioItem;
+	const { tagsAsSubject } = audioItem;
 
 	const {
 		activeAudioItem,
@@ -21,15 +23,15 @@ const TimeMarkers = ({ audioItem }: Props) => {
 	} = usePlayerContext();
 
 	type TimeMarkersWithTags = {
-		[timeMarker: string]: Tag[];
+		[timeMarker: string]: TagWithRelations[];
 	};
 	const timeMarkersWithTags: TimeMarkersWithTags = useMemo(() => {
-		const output: Record<number, Tag[]> = {};
-		if (!tags) {
+		const output: Record<number, TagWithRelations[]> = {};
+		if (!tagsAsSubject) {
 			return output;
 		}
 		// Filter out tags without time markers
-		const filteredTags = tags.filter(
+		const filteredTags = tagsAsSubject.filter(
 			(tag) => typeof tag.subjectTimeMarkerSeconds === "number"
 		);
 		// Sort array so that time markers are ascending, and thus object keys will
@@ -42,12 +44,12 @@ const TimeMarkers = ({ audioItem }: Props) => {
 			if (typeof tag.subjectTimeMarkerSeconds !== "number") {
 				return;
 			}
-			const existingTagsAtTimeMarker: Tag[] | undefined =
+			const existingTagsAtTimeMarker: TagWithRelations[] | undefined =
 				output[tag.subjectTimeMarkerSeconds] ?? [];
 			output[tag.subjectTimeMarkerSeconds] = [...existingTagsAtTimeMarker, tag];
 		});
 		return output;
-	}, [tags]);
+	}, [tagsAsSubject]);
 
 	const onTimeMarkerClicked = useCallback(
 		(event, timeMarker) => {
@@ -80,7 +82,7 @@ const TimeMarkers = ({ audioItem }: Props) => {
 	return (
 		<div className="flex flex-col">
 			{Object.entries(timeMarkersWithTags).map(
-				([timeMarker, tagsAtTimeMarker], index) => {
+				([timeMarker, tagsAsSubjectAtTimeMarker], index) => {
 					const isActive = activeTimeMarker === timeMarker;
 					return (
 						<div
@@ -97,22 +99,28 @@ const TimeMarkers = ({ audioItem }: Props) => {
 								</button>
 							</div>
 							<div className="flex flex-col md:flex-row">
-								{tagsAtTimeMarker.map((tag, index) => (
-									<span className="flex flex-row items-center" key={index}>
-										<Link
-											to={Entity.makeHrefForView(tag.objectEntity)}
-											id="time-marker-tag-link"
-										>
-											{tag.objectEntity.name}
-											{tag.objectEntity.entityType === EntityType.Tune
-												? ` (${tag.objectEntity.type})`
-												: ""}
-										</Link>
-										{index !== tagsAtTimeMarker.length - 1 && (
-											<span className="hidden md:block mr-1">,</span>
-										)}
-									</span>
-								))}
+								{tagsAsSubjectAtTimeMarker.map((tag, index) => {
+									const objectEntity = TagService.getObjectEntity(tag);
+									if (!objectEntity) {
+										return null;
+									}
+									return (
+										<span className="flex flex-row items-center" key={index}>
+											<Link
+												to={Entity.makeHrefForView(objectEntity)}
+												id="time-marker-tag-link"
+											>
+												{objectEntity.name}
+												{objectEntity.entityType === EntityType.Tune
+													? ` (${(objectEntity as Tune).type})`
+													: ""}
+											</Link>
+											{index !== tagsAsSubjectAtTimeMarker.length - 1 && (
+												<span className="hidden md:block mr-1">,</span>
+											)}
+										</span>
+									);
+								})}
 							</div>
 						</div>
 					);

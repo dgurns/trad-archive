@@ -3,7 +3,6 @@ import { useNavigate } from "@remix-run/react";
 
 import type { Place } from "~/types";
 import TagService from "~/services/Tag";
-import { PLACE_QUERY } from "~/routes/entities/places/[slug]";
 
 import Layout from "~/components/Layout";
 import Breadcrumb from "~/components/Breadcrumb";
@@ -16,21 +15,12 @@ const PlaceTags = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error, refetch } = useQuery<{
-		place: Place;
-	}>(PLACE_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { place } = data ?? {};
 	const { name, tags } = place ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - Tags`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb

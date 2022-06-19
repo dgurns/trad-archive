@@ -1,6 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Person } from "@prisma/client";
+import type { Prisma, Collection } from "@prisma/client";
 
 import { type AudioItemWithRelations, SortBy } from "~/types";
 import { db } from "~/utils/db.server";
@@ -8,7 +8,7 @@ import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
 interface LoaderData {
-	person: Person;
+	collection: Collection;
 	audioItems: AudioItemWithRelations[];
 	totalAudioItems: number;
 }
@@ -18,15 +18,15 @@ export async function loader({
 	request,
 }: DataFunctionArgs): Promise<LoaderData> {
 	const { slug } = params;
-	const person = await db.person.findUnique({
+	const collection = await db.collection.findUnique({
 		where: {
 			slug,
 		},
 	});
-	if (!person) {
+	if (!collection) {
 		throw new Response("Not Found", {
 			status: 404,
-			statusText: "Could not find this Person",
+			statusText: "Could not find this Collection",
 		});
 	}
 	const { searchParams } = new URL(request.url);
@@ -65,7 +65,7 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectPersonId: person.id,
+						subjectCollectionId: collection.id,
 					},
 				},
 			},
@@ -75,26 +75,27 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectPersonId: person.id,
+						subjectCollectionId: collection.id,
 					},
 				},
 			},
 		}),
 	]);
 	return {
-		person,
+		collection,
 		audioItems,
 		totalAudioItems,
 	};
 }
 
-const ViewPersonBySlug = () => {
-	const { person, audioItems, totalAudioItems } = useLoaderData<LoaderData>();
+const ViewCollectionBySlug = () => {
+	const { collection, audioItems, totalAudioItems } =
+		useLoaderData<LoaderData>();
 
 	return (
 		<Layout>
 			<ViewEntityAndAudioItems
-				entity={person}
+				entity={collection}
 				audioItems={audioItems}
 				totalAudioItems={totalAudioItems}
 			/>
@@ -102,4 +103,4 @@ const ViewPersonBySlug = () => {
 	);
 };
 
-export default ViewPersonBySlug;
+export default ViewCollectionBySlug;

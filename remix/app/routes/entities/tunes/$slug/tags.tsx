@@ -3,7 +3,6 @@ import { useNavigate } from "@remix-run/react";
 
 import type { Tune } from "~/types";
 import TagService from "~/services/Tag";
-import { TUNE_QUERY } from "~/routes/entities/tunes/[slug]";
 
 import Layout from "~/components/Layout";
 import Breadcrumb from "~/components/Breadcrumb";
@@ -16,21 +15,12 @@ const TuneTags = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error, refetch } = useQuery<{
-		tune: Tune;
-	}>(TUNE_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { tune } = data ?? {};
 	const { name, tags } = tune ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - Tags`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb

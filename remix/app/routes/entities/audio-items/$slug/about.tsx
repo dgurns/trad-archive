@@ -5,7 +5,6 @@ import { useNavigate } from "@remix-run/react";
 import type { AudioItem } from "~/types";
 
 import Layout from "~/components/Layout";
-import { AUDIO_ITEM_QUERY } from "~/routes/entities/audio-items/[slug]";
 import Breadcrumb from "~/components/Breadcrumb";
 import LoadingBlock from "~/components/LoadingBlock";
 
@@ -13,19 +12,10 @@ const AudioItemAbout = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error } = useQuery<{
-		audioItem: AudioItem;
-	}>(AUDIO_ITEM_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
 	const { name, description, aliases, itmaAtomSlug } = data?.audioItem ?? {};
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - About`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb

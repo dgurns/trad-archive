@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { useInView } from "react-intersection-observer";
 
 import type { AudioItemWithRelations, Entity } from "~/types";
-import { PerPage, ViewAs } from "~/types";
+import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
 
@@ -30,28 +30,12 @@ const ViewEntityAndAudioItems = ({
 
 	const { search } = useLocation();
 	const queryParams = new URLSearchParams(search);
-	const page = queryParams.get("page");
 	const viewAs = queryParams.get("viewAs") as ViewAs;
 
 	const { Filters, filtersProps } = useFilters({
-		totalItems: audioItems.length,
+		totalItems: totalAudioItems,
 	});
 	const filtersRef = useRef<HTMLDivElement>(null);
-
-	// Scroll to the top after choosing a different page of results
-	useEffect(() => {
-		if (filtersRef.current) {
-			filtersRef.current.scrollIntoView({
-				behavior: "smooth",
-				block: "end",
-			});
-		}
-	}, [page, filtersRef]);
-
-	const headerOffset =
-		typeof document !== "undefined"
-			? document.getElementById("header")?.offsetHeight
-			: 0;
 
 	return (
 		<div className={`flex flex-1 flex-col mb-8 ${className ?? ""}`}>
@@ -98,8 +82,7 @@ const ViewEntityAndAudioItems = ({
 			<div
 				className={`${
 					metadataInView ? "hidden" : "visible"
-				} fixed left-0 right-0 p-4 bg-gray-100 shadow-lg`}
-				style={{ top: `${headerOffset}px` }}
+				} fixed left-0 right-0 p-4 bg-gray-100 shadow-lg top-[48px]`}
 			>
 				{totalAudioItems > 0 && <Filters {...filtersProps} />}
 			</div>

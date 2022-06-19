@@ -1,9 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { useNavigate } from "@remix-run/react";
+import type { Collection } from "@prisma/client";
 
-import type { Instrument } from "~/types";
 import TagService from "~/services/Tag";
-import { INSTRUMENT_QUERY } from "~/routes/entities/instruments/[slug]";
 
 import Layout from "~/components/Layout";
 import Breadcrumb from "~/components/Breadcrumb";
@@ -12,31 +11,22 @@ import TagWithRelationshipToObject from "~/components/TagWithRelationshipToObjec
 import AddTagButton from "~/components/AddTagButton";
 import EditTagsButton from "~/components/EditTagsButton";
 
-const InstrumentTags = () => {
+const CollectionTags = () => {
 	const navigate = useNavigate();
 	const { slug } = navigate.query;
 
-	const { data, error, refetch } = useQuery<{
-		instrument: Instrument;
-	}>(INSTRUMENT_QUERY, {
-		variables: { slug },
-		skip: !slug,
-	});
-	const isLoading = !data && !error;
-	const { instrument } = data ?? {};
-	const { name, tags } = instrument ?? {};
+	const { collection } = data ?? {};
+	const { name, tags } = collection ?? {};
 	const sortedTags = TagService.sort(tags);
 
 	return (
 		<Layout pageTitle={`Trad Archive - ${name} - Tags`}>
-			{isLoading && <LoadingBlock />}
-			{error && <div className="text-red-500">{error.message}</div>}
 			{data && (
 				<>
 					<Breadcrumb
 						items={[
-							{ label: "Instruments", href: "/entities/instruments" },
-							{ label: name, href: `/entities/instruments/${slug}` },
+							{ label: "Collections", href: "/entities/collections" },
+							{ label: name, href: `/entities/collections/${slug}` },
 							{ label: "Tags" },
 						]}
 						className="mb-6"
@@ -50,11 +40,11 @@ const InstrumentTags = () => {
 						/>
 					))}
 					<div>
-						<AddTagButton entity={instrument} onSuccess={refetch} />
+						<AddTagButton entity={collection} onSuccess={refetch} />
 						{sortedTags.length > 0 && (
 							<>
 								<span className="text-gray-500 px-2">/</span>
-								<EditTagsButton entity={instrument} onSuccess={refetch} />
+								<EditTagsButton entity={collection} onSuccess={refetch} />
 							</>
 						)}
 					</div>
@@ -64,4 +54,4 @@ const InstrumentTags = () => {
 	);
 };
 
-export default InstrumentTags;
+export default CollectionTags;

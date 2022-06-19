@@ -737,6 +737,10 @@ select {
   top: -2rem;
 }
 
+.top-\[48px\] {
+  top: 48px;
+}
+
 .z-40 {
   z-index: 40;
 }

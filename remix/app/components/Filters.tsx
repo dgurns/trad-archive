@@ -108,7 +108,7 @@ const Filters = ({
 					Sort by
 					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
 						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
-						<option value={SortBy.RecentlyAdded}>Recently added</option>
+						<option value={SortBy.RecentlyAdded}>Newest</option>
 					</select>
 				</div>
 			)}

@@ -1,14 +1,13 @@
 import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
-import { type Prisma } from "@prisma/client";
 
 import type {
 	CollectionWithRelations,
 	CommentWithRelations,
 	AudioItemWithRelations,
 } from "~/types";
-import { SortBy, ViewAs } from "~/types";
+import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
 import LocalStorageService from "~/services/LocalStorage";
@@ -31,11 +30,8 @@ export async function loader({
 	request,
 }: DataFunctionArgs): Promise<LoaderData> {
 	const { searchParams } = new URL(request.url);
-	const sortBy = searchParams.get("sortBy") ?? SortBy.RecentlyTagged;
-	const audioItemsOrderBy: Prisma.Enumerable<Prisma.AudioItemOrderByWithRelationInput> =
-		sortBy === SortBy.RecentlyTagged
-			? { updatedAt: "desc" }
-			: { createdAt: "desc" };
+	const page = Number(searchParams.get("page") ?? 1);
+	const perPage = Number(searchParams.get("perPage") ?? 20);
 
 	const [
 		audioItems,
@@ -46,7 +42,8 @@ export async function loader({
 		numCommentsAllTime,
 	] = await Promise.all([
 		db.audioItem.findMany({
-			take: 10,
+			skip: page,
+			take: perPage,
 			include: {
 				tagsAsSubject: {
 					include: {
@@ -67,7 +64,9 @@ export async function loader({
 					},
 				},
 			},
-			orderBy: audioItemsOrderBy,
+			orderBy: {
+				updatedAt: "desc",
+			},
 		}),
 		db.collection.findMany({
 			take: 5,
@@ -117,7 +116,9 @@ export default function Home() {
 	const viewAs =
 		(new URLSearchParams(search).get("viewAs") as ViewAs) ?? ViewAs.Cards;
 
-	const { Filters, filtersProps } = useFilters();
+	const { Filters, filtersProps } = useFilters({
+		totalItems: numAudioItemsAllTime,
+	});
 
 	// Due to static rendering, we need to check localStorage for intro status
 	// after client-side hydration.
@@ -143,9 +144,14 @@ export default function Home() {
 
 			<div className="flex flex-col md:flex-row">
 				<div className="flex flex-1 flex-col pb-8">
-					<h1 className="mb-6">Explore</h1>
+					<h1>Explore</h1>
 
-					<Filters {...filtersProps} className="mb-6" />
+					<Filters
+						{...filtersProps}
+						viewAs={undefined}
+						sortBy={undefined}
+						className="sticky left-0 right-0 py-4 px-4 -ml-4 -mr-4 bg-gray-100 top-[48px] mb-2 z-10"
+					/>
 
 					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent

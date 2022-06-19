@@ -746,12 +746,12 @@ select {
   top: 48px;
 }
 
-.top-24 {
-  top: 6rem;
-}
-
 .z-40 {
   z-index: 40;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .m-2 {
@@ -877,6 +877,22 @@ select {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.-ml-4 {
+  margin-left: -1rem;
+}
+
+.-mr-4 {
+  margin-right: -1rem;
+}
+
+.-ml-2 {
+  margin-left: -0.5rem;
+}
+
+.-mr-2 {
+  margin-right: -0.5rem;
 }
 
 .block {

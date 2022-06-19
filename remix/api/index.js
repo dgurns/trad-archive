@@ -3594,13 +3594,13 @@ var AudioItemCard_default = AudioItemCard;
 var import_react53 = require("react");
 var import_react54 = require("@remix-run/react");
 var AudioItemCompact = ({ audioItem, className }) => {
-  const { name, slug, description, tags, status } = audioItem;
-  const isTakenDown = status === "TakenDown" /* TakenDown */;
-  const sortedTags = (0, import_react53.useMemo)(() => Tag_default.sort(tags), [tags]);
+  const { name, slug, description, tagsAsSubject, status } = audioItem;
+  const isTakenDown = status === "TAKEN_DOWN" /* TakenDown */;
+  const sortedTags = (0, import_react53.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]);
   const { activeAudioItem, setActiveAudioItem } = usePlayerContext_default();
   const onPlayPressed = (0, import_react53.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem]);
+  }, [audioItem, setActiveAudioItem]);
   const playButtonMarkup = (0, import_react53.useMemo)(() => {
     const audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     if (isTakenDown) {
@@ -3631,15 +3631,21 @@ var AudioItemCompact = ({ audioItem, className }) => {
     to: `/entities/audio-items/${slug}`
   }, name), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
-  }, "Tags:", sortedTags.map((tag, index) => /* @__PURE__ */ React.createElement("div", {
-    key: index,
-    className: "ml-1 whitespace-pre"
-  }, /* @__PURE__ */ React.createElement(import_react54.Link, {
-    to: Entity_default.makeHrefForView(tag.objectEntity)
-  }, /* @__PURE__ */ React.createElement("a", null, tag.objectEntity.name, tag.objectEntity.entityType === "Tune" /* Tune */ ? ` (${tag.objectEntity.type})` : "")), index !== sortedTags.length - 1 && ", ")), /* @__PURE__ */ React.createElement(AddTagButton_default, {
+  }, "Tags:", sortedTags.map((tag, index) => {
+    const objectEntity = Tag_default.getObjectEntity(tag);
+    if (!objectEntity) {
+      return null;
+    }
+    return /* @__PURE__ */ React.createElement("div", {
+      key: index,
+      className: "ml-1 whitespace-pre"
+    }, /* @__PURE__ */ React.createElement(import_react54.Link, {
+      to: Entity_default.makeHrefForView(objectEntity)
+    }, objectEntity.name, objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""), index !== sortedTags.length - 1 && ", ");
+  }), /* @__PURE__ */ React.createElement(AddTagButton_default, {
     entity: audioItem,
     className: "ml-2"
-  }), (tags == null ? void 0 : tags.length) > 0 && /* @__PURE__ */ React.createElement("div", {
+  }), (tagsAsSubject == null ? void 0 : tagsAsSubject.length) > 0 && /* @__PURE__ */ React.createElement("div", {
     className: "flex ml-1"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500 mr-1"
@@ -3667,13 +3673,13 @@ var AudioItemCompact_default = AudioItemCompact;
 var import_react55 = require("react");
 var import_react56 = require("@remix-run/react");
 var AudioItemTextOnly = ({ audioItem, className }) => {
-  const { name, slug, tags, status } = audioItem;
-  const isTakenDown = status === "TakenDown" /* TakenDown */;
-  const sortedTags = (0, import_react55.useMemo)(() => Tag_default.sort(tags), [tags]);
+  const { name, slug, tagsAsSubject, status } = audioItem;
+  const isTakenDown = status === "TAKEN_DOWN" /* TakenDown */;
+  const sortedTags = (0, import_react55.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]);
   const { activeAudioItem, setActiveAudioItem } = usePlayerContext_default();
   const onPlayPressed = (0, import_react55.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem]);
+  }, [audioItem, setActiveAudioItem]);
   const playButtonMarkup = (0, import_react55.useMemo)(() => {
     const audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     if (isTakenDown) {
@@ -3706,18 +3712,21 @@ var AudioItemTextOnly = ({ audioItem, className }) => {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, "Tags:"), sortedTags.map((tag, index) => /* @__PURE__ */ React.createElement("div", {
-    key: index,
-    className: "ml-1 whitespace-pre"
-  }, /* @__PURE__ */ React.createElement(import_react56.Link, {
-    to: Entity_default.makeHrefForView(tag.objectEntity)
-  }, tag.objectEntity.name), index !== sortedTags.length - 1 && ", ")))));
+  }, "Tags:"), sortedTags.map((tag, index) => {
+    const objectEntity = Tag_default.getObjectEntity(tag);
+    return /* @__PURE__ */ React.createElement("div", {
+      key: index,
+      className: "ml-1 whitespace-pre"
+    }, /* @__PURE__ */ React.createElement(import_react56.Link, {
+      to: Entity_default.makeHrefForView(objectEntity)
+    }, objectEntity == null ? void 0 : objectEntity.name), index !== sortedTags.length - 1 && ", ");
+  }))));
 };
 var AudioItemTextOnly_default = AudioItemTextOnly;
 
 // app/components/AudioItem.tsx
 var AudioItemComponent = ({
-  viewAs = "Cards" /* Cards */,
+  viewAs,
   audioItem,
   showTitle,
   className
@@ -4043,66 +4052,20 @@ __export(slug_exports2, {
   COLLECTION_QUERY: () => COLLECTION_QUERY,
   default: () => slug_default2
 });
-var import_react76 = require("@remix-run/react");
+var import_react75 = require("@remix-run/react");
 var import_client31 = require("@apollo/client");
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_react74 = require("react");
-var import_react75 = require("@remix-run/react");
+var import_react73 = require("react");
+var import_react74 = require("@remix-run/react");
 var import_react_intersection_observer = require("react-intersection-observer");
 
 // app/hooks/useFilters.ts
-var import_react73 = require("react");
-
-// app/hooks/useQueryParams.ts
-var import_react70 = require("react");
-var import_react71 = require("@remix-run/react");
-var useQueryParams = () => {
-  const navigate = (0, import_react71.useNavigate)();
-  const getQueryParams = (0, import_react70.useCallback)(() => {
-    if (typeof window === "undefined") {
-      return {};
-    }
-    const queryParams = new URLSearchParams(window.location.search);
-    const outputObject = {};
-    for (const key of queryParams.keys()) {
-      outputObject[key] = queryParams.get(key);
-    }
-    return outputObject;
-  }, []);
-  const updateQueryParams = (0, import_react70.useCallback)((paramsToUpdate = {}) => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const queryParams = new URLSearchParams(window.location.search);
-    const paramNames = Object.keys(paramsToUpdate);
-    paramNames.forEach((paramName) => {
-      const value = paramsToUpdate[paramName];
-      if (value) {
-        queryParams.set(paramName, value);
-      } else {
-        queryParams.delete(paramName);
-      }
-    });
-    return navigate(`${window.location.pathname}?${queryParams.toString()}`);
-  }, [navigate]);
-  const clearQueryParams = (0, import_react70.useCallback)(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    navigate(window.location.pathname);
-  }, [navigate]);
-  const returnValue = (0, import_react70.useMemo)(() => ({
-    getQueryParams,
-    updateQueryParams,
-    clearQueryParams
-  }), [getQueryParams, updateQueryParams, clearQueryParams]);
-  return returnValue;
-};
-var useQueryParams_default = useQueryParams;
+var import_react71 = require("react");
+var import_react72 = require("@remix-run/react");
 
 // app/components/Filters.tsx
-var import_react72 = __toESM(require("react"));
+var import_react70 = __toESM(require("react"));
 var Filters = ({
   totalItems,
   page,
@@ -4118,17 +4081,17 @@ var Filters = ({
   const shouldRenderPagination = typeof totalItems === "number" && typeof page === "number" && onChangePage && perPage && onChangePerPage;
   const shouldRenderSortBy = sortBy && onChangeSortBy;
   const shouldRenderViewAs = viewAs && onChangeViewAs;
-  const totalPages = (0, import_react72.useMemo)(() => {
+  const totalPages = (0, import_react70.useMemo)(() => {
     if (typeof totalItems !== "number" || typeof perPage === "undefined") {
       return 0;
     }
     return Math.ceil(totalItems / perPage);
   }, [totalItems, perPage]);
-  const pageSelectOptions = (0, import_react72.useMemo)(() => {
+  const pageSelectOptions = (0, import_react70.useMemo)(() => {
     const output = [];
     let i = 1;
     while (i <= totalPages) {
-      output.push(/* @__PURE__ */ import_react72.default.createElement("option", {
+      output.push(/* @__PURE__ */ import_react70.default.createElement("option", {
         value: i,
         key: i
       }, i));
@@ -4136,52 +4099,52 @@ var Filters = ({
     }
     return output;
   }, [totalPages]);
-  const perPageOptions = (0, import_react72.useMemo)(() => {
+  const perPageOptions = (0, import_react70.useMemo)(() => {
     const output = [];
     for (const value in PerPage) {
       if (isNaN(Number(value))) {
         continue;
       }
-      output.push(/* @__PURE__ */ import_react72.default.createElement("option", {
+      output.push(/* @__PURE__ */ import_react70.default.createElement("option", {
         value,
         key: value
       }, value));
     }
     return output;
   }, []);
-  return /* @__PURE__ */ import_react72.default.createElement("div", {
+  return /* @__PURE__ */ import_react70.default.createElement("div", {
     className: `flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 ${className ?? ""}`
-  }, shouldRenderPagination && /* @__PURE__ */ import_react72.default.createElement("div", {
+  }, shouldRenderPagination && /* @__PURE__ */ import_react70.default.createElement("div", {
     className: `flex flex-row items-center mr-0 md:mb-0 ${shouldRenderSortBy || shouldRenderViewAs ? "mb-4 md:mr-6" : ""}`
-  }, /* @__PURE__ */ import_react72.default.createElement("div", {
+  }, /* @__PURE__ */ import_react70.default.createElement("div", {
     className: "mr-6"
-  }, "Page", " ", /* @__PURE__ */ import_react72.default.createElement("select", {
+  }, "Page", " ", /* @__PURE__ */ import_react70.default.createElement("select", {
     value: page,
     onChange: onChangePage
-  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react72.default.createElement("div", null, /* @__PURE__ */ import_react72.default.createElement("select", {
+  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react70.default.createElement("div", null, /* @__PURE__ */ import_react70.default.createElement("select", {
     value: perPage,
     onChange: onChangePerPage
-  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react72.default.createElement("div", {
+  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react70.default.createElement("div", {
     className: `flex flex-row items-center mr-0 md:mb-0 ${shouldRenderViewAs ? "mb-4 md:mr-6" : ""}`
-  }, "Sort by", /* @__PURE__ */ import_react72.default.createElement("select", {
+  }, "Sort by", /* @__PURE__ */ import_react70.default.createElement("select", {
     className: "ml-1",
     value: sortBy,
     onChange: onChangeSortBy
-  }, /* @__PURE__ */ import_react72.default.createElement("option", {
+  }, /* @__PURE__ */ import_react70.default.createElement("option", {
     value: "RecentlyTagged" /* RecentlyTagged */
-  }, "Recently tagged"), /* @__PURE__ */ import_react72.default.createElement("option", {
+  }, "Recently tagged"), /* @__PURE__ */ import_react70.default.createElement("option", {
     value: "RecentlyAdded" /* RecentlyAdded */
-  }, "Recently added"))), shouldRenderViewAs && /* @__PURE__ */ import_react72.default.createElement("div", {
+  }, "Recently added"))), shouldRenderViewAs && /* @__PURE__ */ import_react70.default.createElement("div", {
     className: "flex flex-row items-center mr-0 md:mb-0"
-  }, "View as", /* @__PURE__ */ import_react72.default.createElement("select", {
+  }, "View as", /* @__PURE__ */ import_react70.default.createElement("select", {
     className: "ml-1",
     value: viewAs,
     onChange: onChangeViewAs
-  }, /* @__PURE__ */ import_react72.default.createElement("option", {
+  }, /* @__PURE__ */ import_react70.default.createElement("option", {
     value: "Cards" /* Cards */
-  }, "Cards"), /* @__PURE__ */ import_react72.default.createElement("option", {
+  }, "Cards"), /* @__PURE__ */ import_react70.default.createElement("option", {
     value: "Compact" /* Compact */
-  }, "Compact"), /* @__PURE__ */ import_react72.default.createElement("option", {
+  }, "Compact"), /* @__PURE__ */ import_react70.default.createElement("option", {
     value: "List" /* List */
   }, "List"))));
 };
@@ -4190,47 +4153,36 @@ var Filters_default = Filters;
 // app/hooks/useFilters.ts
 var useFilters = ({
   totalItems,
-  defaultPage,
-  defaultPerPage,
-  defaultSortBy,
-  defaultViewAs,
-  enableQueryParams = true
+  defaultPage = 1,
+  defaultPerPage = 20,
+  defaultSortBy = "RecentlyTagged" /* RecentlyTagged */,
+  defaultViewAs = "Cards" /* Cards */
 } = {}) => {
-  const { getQueryParams, updateQueryParams, clearQueryParams } = useQueryParams_default();
-  const queryParams = getQueryParams();
-  const initialPage = enableQueryParams ? parseInt(queryParams.page, 10) || defaultPage : defaultPage;
-  const initialPerPage = enableQueryParams ? parseInt(queryParams.perPage, 10) || defaultPerPage : defaultPerPage;
-  const initialSortBy = enableQueryParams ? queryParams.sortBy ?? defaultSortBy : defaultSortBy;
-  const initialViewAs = enableQueryParams ? queryParams.viewAs ?? defaultViewAs : defaultViewAs;
-  const [page, setPage] = (0, import_react73.useState)(initialPage);
-  const [perPage, setPerPage] = (0, import_react73.useState)(initialPerPage);
-  const [sortBy, setSortBy] = (0, import_react73.useState)(initialSortBy);
-  const [viewAs, setViewAs] = (0, import_react73.useState)(initialViewAs);
-  (0, import_react73.useEffect)(() => {
-    if (!enableQueryParams) {
-      return;
-    }
-    updateQueryParams({
-      page: page ? `${page}` : null,
-      perPage: perPage ? `${perPage}` : null,
-      sortBy,
-      viewAs
+  const navigate = (0, import_react72.useNavigate)();
+  const { pathname, search } = (0, import_react72.useLocation)();
+  const queryParams = new URLSearchParams(search);
+  const page = parseInt(queryParams.get("page") ?? "", 10) || defaultPage;
+  const perPage = parseInt(queryParams.get("perPage") ?? "", 10) || defaultPerPage;
+  const sortBy = queryParams.get("sortBy") ?? defaultSortBy;
+  const viewAs = queryParams.get("viewAs") ?? defaultViewAs;
+  const updateQueryParams = (0, import_react71.useCallback)((paramsToUpdate = {}) => {
+    const queryParams2 = new URLSearchParams(search);
+    const paramNames = Object.keys(paramsToUpdate);
+    paramNames.forEach((paramName) => {
+      const value = paramsToUpdate[paramName];
+      if (value) {
+        queryParams2.set(paramName, value);
+      } else {
+        queryParams2.delete(paramName);
+      }
     });
-  }, [enableQueryParams, page, perPage, sortBy, viewAs]);
-  (0, import_react73.useEffect)(() => {
-    if (!enableQueryParams) {
-      return;
-    }
-    return () => clearQueryParams();
-  }, [enableQueryParams]);
-  const onChangePage = (0, import_react73.useCallback)((event) => setPage(parseInt(event.target.value)), []);
-  const onChangePerPage = (0, import_react73.useCallback)((event) => {
-    setPerPage(parseInt(event.target.value));
-    setPage(1);
-  }, []);
-  const onChangeSortBy = (0, import_react73.useCallback)((event) => setSortBy(event.target.value), []);
-  const onChangeViewAs = (0, import_react73.useCallback)((event) => setViewAs(event.target.value), []);
-  const returnValue = (0, import_react73.useMemo)(() => ({
+    return navigate(`${pathname}?${queryParams2.toString()}`);
+  }, [navigate, pathname, search]);
+  const onChangePage = (0, import_react71.useCallback)((event) => updateQueryParams({ page: event.target.value }), [updateQueryParams]);
+  const onChangePerPage = (0, import_react71.useCallback)((event) => updateQueryParams({ perPage: event.target.value, page: "1" }), [updateQueryParams]);
+  const onChangeSortBy = (0, import_react71.useCallback)((event) => updateQueryParams({ sortBy: event.target.value }), [updateQueryParams]);
+  const onChangeViewAs = (0, import_react71.useCallback)((event) => updateQueryParams({ viewAs: event.target.value }), [updateQueryParams]);
+  const returnValue = (0, import_react71.useMemo)(() => ({
     Filters: Filters_default,
     filtersProps: {
       totalItems,
@@ -4248,7 +4200,6 @@ var useFilters = ({
     sortBy,
     viewAs
   }), [
-    Filters_default,
     totalItems,
     page,
     onChangePage,
@@ -4264,21 +4215,26 @@ var useFilters = ({
 var useFilters_default = useFilters;
 
 // app/components/ViewEntityAndAudioItems.tsx
-var ViewEntityAndAudioItems = ({ entity, audioItems, className }) => {
+var ViewEntityAndAudioItems = ({
+  entity,
+  audioItems,
+  totalAudioItems,
+  className
+}) => {
   var _a;
   const { name } = entity ?? {};
-  const totalAudioItems = audioItems.length;
   const { ref: metadataRef, inView: metadataInView } = (0, import_react_intersection_observer.useInView)({
     initialInView: true
   });
-  const { Filters: Filters2, filtersProps, page, perPage, viewAs } = useFilters_default({
-    defaultPage: 1,
-    totalItems: audioItems.length,
-    defaultPerPage: 20 /* Twenty */,
-    defaultViewAs: "Cards" /* Cards */
+  const { search } = (0, import_react74.useLocation)();
+  const queryParams = new URLSearchParams(search);
+  const page = queryParams.get("page");
+  const viewAs = queryParams.get("viewAs");
+  const { Filters: Filters2, filtersProps } = useFilters_default({
+    totalItems: audioItems.length
   });
-  const filtersRef = (0, import_react74.useRef)(null);
-  (0, import_react74.useEffect)(() => {
+  const filtersRef = (0, import_react73.useRef)(null);
+  (0, import_react73.useEffect)(() => {
     if (filtersRef.current) {
       filtersRef.current.scrollIntoView({
         behavior: "smooth",
@@ -4305,16 +4261,16 @@ var ViewEntityAndAudioItems = ({ entity, audioItems, className }) => {
     className: "flex flex-row mb-6"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, totalAudioItems ?? "", " Audio Item", totalAudioItems === 1 ? "" : "s"), /* @__PURE__ */ React.createElement(import_react75.Link, {
+  }, totalAudioItems ?? "", " Audio Item", totalAudioItems === 1 ? "" : "s"), /* @__PURE__ */ React.createElement(import_react74.Link, {
     to: Entity_default.makeHrefForAbout(entity),
     className: "ml-4"
-  }, "About"), /* @__PURE__ */ React.createElement(import_react75.Link, {
+  }, "About"), /* @__PURE__ */ React.createElement(import_react74.Link, {
     to: Entity_default.makeHrefForTags(entity),
     className: "ml-4"
   }, "Tags")), totalAudioItems > 0 && /* @__PURE__ */ React.createElement("div", {
     ref: filtersRef
   }, /* @__PURE__ */ React.createElement(Filters2, __spreadValues({}, filtersProps)))), totalAudioItems > 0 && audioItems.map((audioItem, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
-    viewAs,
+    viewAs: viewAs ?? "Cards" /* Cards */,
     audioItem,
     key: index,
     className: viewAs === "List" /* List */ ? "mb-4" : "mb-6"
@@ -4335,7 +4291,7 @@ var COLLECTION_QUERY = import_client31.gql`
 	${EntityFragments.collection}
 `;
 var ViewCollectionBySlug = () => {
-  const navigate = (0, import_react76.useNavigate)();
+  const navigate = (0, import_react75.useNavigate)();
   const { slug } = navigate.query;
   const { data: collectionData, error: collectionError } = (0, import_client31.useQuery)(COLLECTION_QUERY, {
     variables: { slug },
@@ -4365,11 +4321,11 @@ __export(about_exports2, {
   default: () => about_default2
 });
 var import_client33 = require("@apollo/client");
+var import_react77 = require("@remix-run/react");
 var import_react78 = require("@remix-run/react");
-var import_react79 = require("@remix-run/react");
 
 // app/routes/entities/collections/[slug].tsx
-var import_react77 = require("@remix-run/react");
+var import_react76 = require("@remix-run/react");
 var import_client32 = require("@apollo/client");
 var COLLECTION_QUERY2 = import_client32.gql`
 	query Collection($slug: String!) {
@@ -4382,7 +4338,7 @@ var COLLECTION_QUERY2 = import_client32.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/[slug]/about.tsx
 var CollectionAbout = () => {
-  const navigate = (0, import_react79.useNavigate)();
+  const navigate = (0, import_react78.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client33.useQuery)(COLLECTION_QUERY2, {
     variables: { slug },
@@ -4419,7 +4375,7 @@ var CollectionAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react78.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react77.Link, {
     to: `/entities/collections/${slug}/edit`
   }, "Edit")));
 };
@@ -4430,13 +4386,13 @@ var edit_exports2 = {};
 __export(edit_exports2, {
   default: () => edit_default2
 });
-var import_react82 = require("@remix-run/react");
+var import_react81 = require("@remix-run/react");
 var import_client35 = require("@apollo/client");
 
 // app/components/EditCollectionForm.tsx
-var import_react80 = require("react");
+var import_react79 = require("react");
 var import_client34 = require("@apollo/client");
-var import_react81 = require("@remix-run/react");
+var import_react80 = require("@remix-run/react");
 var UPDATE_COLLECTION_MUTATION = import_client34.gql`
 	mutation UpdateCollection($slug: String!, $input: UpdateCollectionInput!) {
 		updateCollection(slug: $slug, input: $input) {
@@ -4446,13 +4402,13 @@ var UPDATE_COLLECTION_MUTATION = import_client34.gql`
 	${EntityFragments.collection}
 `;
 var EditCollectionForm = ({ collection, onSuccess }) => {
-  const navigate = (0, import_react81.useNavigate)();
+  const navigate = (0, import_react80.useNavigate)();
   const [updateCollection, { loading, error: error2, data: data2 }] = (0, import_client34.useMutation)(UPDATE_COLLECTION_MUTATION, {
     errorPolicy: "all"
   });
-  const [name, setName] = (0, import_react80.useState)(collection.name);
-  const [aliases, setAliases] = (0, import_react80.useState)(collection.aliases);
-  const [description, setDescription] = (0, import_react80.useState)(collection.description);
+  const [name, setName] = (0, import_react79.useState)(collection.name);
+  const [aliases, setAliases] = (0, import_react79.useState)(collection.aliases);
+  const [description, setDescription] = (0, import_react79.useState)(collection.description);
   const onUpdateCollection = (event) => {
     event.preventDefault();
     const input = {
@@ -4462,7 +4418,7 @@ var EditCollectionForm = ({ collection, onSuccess }) => {
     };
     updateCollection({ variables: { slug: collection.slug, input } });
   };
-  (0, import_react80.useEffect)(() => {
+  (0, import_react79.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updateCollection) {
       if (onSuccess) {
         return onSuccess(data2.updateCollection);
@@ -4513,7 +4469,7 @@ var COLLECTION_QUERY3 = import_client35.gql`
 	${EntityFragments.collection}
 `;
 var CollectionEdit = () => {
-  const navigate = (0, import_react82.useNavigate)();
+  const navigate = (0, import_react81.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client35.useQuery)(COLLECTION_QUERY3, {
     variables: { slug },
@@ -4549,10 +4505,10 @@ __export(tags_exports2, {
   default: () => tags_default2
 });
 var import_client36 = require("@apollo/client");
-var import_react84 = require("@remix-run/react");
+var import_react83 = require("@remix-run/react");
 
 // app/components/TagWithRelationshipToObject.tsx
-var import_react83 = require("@remix-run/react");
+var import_react82 = require("@remix-run/react");
 var TagWithRelationshipToObject = ({ tag, className }) => {
   const { relationship, objectEntity, subjectTimeMarkerSeconds } = tag;
   if (!objectEntity) {
@@ -4563,7 +4519,7 @@ var TagWithRelationshipToObject = ({ tag, className }) => {
     className: `text-gray-500 ${className ?? ""}`
   }, /* @__PURE__ */ React.createElement("em", null, relationship.name), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "uppercase text-sm"
-  }, objectEntity.entityType), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react83.Link, {
+  }, objectEntity.entityType), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react82.Link, {
     to: Entity_default.makeHrefForView(objectEntity)
   }, objectEntity.name), /* @__PURE__ */ React.createElement("br", null), typeof subjectTimeMarkerSeconds === "number" && /* @__PURE__ */ React.createElement("em", null, `at ${DateTime_default.formatSecondsAsDuration(subjectTimeMarkerSeconds)}`));
 };
@@ -4571,7 +4527,7 @@ var TagWithRelationshipToObject_default = TagWithRelationshipToObject;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/[slug]/tags.tsx
 var CollectionTags = () => {
-  const navigate = (0, import_react84.useNavigate)();
+  const navigate = (0, import_react83.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2, refetch: refetch2 } = (0, import_client36.useQuery)(COLLECTION_QUERY2, {
     variables: { slug },
@@ -4614,7 +4570,7 @@ __export(slug_exports3, {
   INSTRUMENT_QUERY: () => INSTRUMENT_QUERY,
   default: () => slug_default3
 });
-var import_react85 = require("@remix-run/react");
+var import_react84 = require("@remix-run/react");
 var import_client37 = require("@apollo/client");
 var INSTRUMENT_QUERY = import_client37.gql`
 	query Instrument($slug: String!) {
@@ -4625,7 +4581,7 @@ var INSTRUMENT_QUERY = import_client37.gql`
 	${EntityFragments.instrument}
 `;
 var ViewInstrumentBySlug = () => {
-  const navigate = (0, import_react85.useNavigate)();
+  const navigate = (0, import_react84.useNavigate)();
   const { slug } = navigate.query;
   const { data: instrumentData, error: instrumentError } = (0, import_client37.useQuery)(INSTRUMENT_QUERY, {
     variables: { slug },
@@ -4655,11 +4611,11 @@ __export(about_exports3, {
   default: () => about_default3
 });
 var import_client39 = require("@apollo/client");
+var import_react86 = require("@remix-run/react");
 var import_react87 = require("@remix-run/react");
-var import_react88 = require("@remix-run/react");
 
 // app/routes/entities/instruments/[slug].tsx
-var import_react86 = require("@remix-run/react");
+var import_react85 = require("@remix-run/react");
 var import_client38 = require("@apollo/client");
 var INSTRUMENT_QUERY2 = import_client38.gql`
 	query Instrument($slug: String!) {
@@ -4672,7 +4628,7 @@ var INSTRUMENT_QUERY2 = import_client38.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/instruments/[slug]/about.tsx
 var InstrumentAbout = () => {
-  const navigate = (0, import_react88.useNavigate)();
+  const navigate = (0, import_react87.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client39.useQuery)(INSTRUMENT_QUERY2, {
     variables: { slug },
@@ -4699,7 +4655,7 @@ var InstrumentAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react87.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react86.Link, {
     to: `/entities/instruments/${slug}/edit`
   }, "Edit")));
 };
@@ -4710,13 +4666,13 @@ var edit_exports3 = {};
 __export(edit_exports3, {
   default: () => edit_default3
 });
-var import_react91 = require("@remix-run/react");
+var import_react90 = require("@remix-run/react");
 var import_client41 = require("@apollo/client");
 
 // app/components/EditInstrumentForm.tsx
-var import_react89 = require("react");
+var import_react88 = require("react");
 var import_client40 = require("@apollo/client");
-var import_react90 = require("@remix-run/react");
+var import_react89 = require("@remix-run/react");
 var UPDATE_INSTRUMENT_MUTATION = import_client40.gql`
 	mutation UpdateInstrument($slug: String!, $input: UpdateInstrumentInput!) {
 		updateInstrument(slug: $slug, input: $input) {
@@ -4726,13 +4682,13 @@ var UPDATE_INSTRUMENT_MUTATION = import_client40.gql`
 	${EntityFragments.instrument}
 `;
 var EditInstrumentForm = ({ instrument, onSuccess }) => {
-  const navigate = (0, import_react90.useNavigate)();
+  const navigate = (0, import_react89.useNavigate)();
   const [updateInstrument, { loading, error: error2, data: data2 }] = (0, import_client40.useMutation)(UPDATE_INSTRUMENT_MUTATION, {
     errorPolicy: "all"
   });
-  const [name, setName] = (0, import_react89.useState)(instrument.name);
-  const [aliases, setAliases] = (0, import_react89.useState)(instrument.aliases);
-  const [description, setDescription] = (0, import_react89.useState)(instrument.description);
+  const [name, setName] = (0, import_react88.useState)(instrument.name);
+  const [aliases, setAliases] = (0, import_react88.useState)(instrument.aliases);
+  const [description, setDescription] = (0, import_react88.useState)(instrument.description);
   const onUpdateInstrument = (event) => {
     event.preventDefault();
     const input = {
@@ -4742,7 +4698,7 @@ var EditInstrumentForm = ({ instrument, onSuccess }) => {
     };
     updateInstrument({ variables: { slug: instrument.slug, input } });
   };
-  (0, import_react89.useEffect)(() => {
+  (0, import_react88.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updateInstrument) {
       if (onSuccess) {
         return onSuccess(data2.updateInstrument);
@@ -4794,7 +4750,7 @@ var INSTRUMENT_QUERY3 = import_client41.gql`
 	${EntityFragments.instrument}
 `;
 var EditInstrument = () => {
-  const navigate = (0, import_react91.useNavigate)();
+  const navigate = (0, import_react90.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client41.useQuery)(INSTRUMENT_QUERY3, {
     variables: { slug },
@@ -4830,9 +4786,9 @@ __export(tags_exports3, {
   default: () => tags_default3
 });
 var import_client42 = require("@apollo/client");
-var import_react92 = require("@remix-run/react");
+var import_react91 = require("@remix-run/react");
 var InstrumentTags = () => {
-  const navigate = (0, import_react92.useNavigate)();
+  const navigate = (0, import_react91.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2, refetch: refetch2 } = (0, import_client42.useQuery)(INSTRUMENT_QUERY2, {
     variables: { slug },
@@ -4874,11 +4830,11 @@ var audio_items_exports = {};
 __export(audio_items_exports, {
   default: () => audio_items_default
 });
-var import_react93 = require("react");
-var import_react94 = require("@remix-run/react");
+var import_react92 = require("react");
+var import_react93 = require("@remix-run/react");
 var ViewAudioItems = () => {
-  const navigate = (0, import_react94.useNavigate)();
-  (0, import_react93.useEffect)(() => {
+  const navigate = (0, import_react93.useNavigate)();
+  (0, import_react92.useEffect)(() => {
     navigate("/");
   }, [navigate]);
   return null;
@@ -4890,10 +4846,10 @@ var collections_exports = {};
 __export(collections_exports, {
   default: () => collections_default
 });
-var import_react96 = require("@remix-run/react");
+var import_react95 = require("@remix-run/react");
 
 // app/hooks/useCollections.ts
-var import_react95 = require("react");
+var import_react94 = require("react");
 var import_client43 = require("@apollo/client");
 var COLLECTIONS_QUERY = import_client43.gql`
 	query Collections($input: CollectionsInput!) {
@@ -4908,18 +4864,18 @@ var useCollections = ({
   resultsPerPage = 20,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react95.useState)(0);
-  const [collections, setCollections] = (0, import_react95.useState)();
+  const [skip, setSkip] = (0, import_react94.useState)(0);
+  const [collections, setCollections] = (0, import_react94.useState)();
   const [getCollections, collectionsQuery] = (0, import_client43.useLazyQuery)(COLLECTIONS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = collectionsQuery;
-  (0, import_react95.useEffect)(() => {
+  (0, import_react94.useEffect)(() => {
     if (data2 == null ? void 0 : data2.collections) {
       setCollections(data2.collections);
     }
   }, [data2]);
-  (0, import_react95.useEffect)(() => {
+  (0, import_react94.useEffect)(() => {
     getCollections({
       variables: {
         input: {
@@ -4930,7 +4886,7 @@ var useCollections = ({
       }
     });
   }, [getCollections, resultsPerPage, sortBy]);
-  const fetchNextPageOfCollections = (0, import_react95.useCallback)(async () => {
+  const fetchNextPageOfCollections = (0, import_react94.useCallback)(async () => {
     const numToSkip = (collections == null ? void 0 : collections.length) ?? 0;
     await fetchMore({
       variables: {
@@ -4963,7 +4919,7 @@ var Collections = () => {
   }, "No Collections found"), (collections == null ? void 0 : collections.length) > 0 && /* @__PURE__ */ React.createElement("ul", null, collections.map((collection, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react96.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react95.Link, {
     to: Entity_default.makeHrefForView(collection)
   }, collection.name)))), /* @__PURE__ */ React.createElement("div", {
     className: "mt-6"
@@ -4979,10 +4935,10 @@ var instruments_exports = {};
 __export(instruments_exports, {
   default: () => instruments_default
 });
-var import_react98 = require("@remix-run/react");
+var import_react97 = require("@remix-run/react");
 
 // app/hooks/useInstruments.ts
-var import_react97 = require("react");
+var import_react96 = require("react");
 var import_client44 = require("@apollo/client");
 var INSTRUMENTS_QUERY = import_client44.gql`
 	query Instruments($input: InstrumentsInput!) {
@@ -4997,9 +4953,9 @@ var useInstruments = ({
   resultsPerPage = 20,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react97.useState)(0);
-  const [instruments, setInstruments] = (0, import_react97.useState)();
-  (0, import_react97.useEffect)(() => {
+  const [skip, setSkip] = (0, import_react96.useState)(0);
+  const [instruments, setInstruments] = (0, import_react96.useState)();
+  (0, import_react96.useEffect)(() => {
     setInstruments(void 0);
     setSkip(0);
   }, [sortBy]);
@@ -5007,12 +4963,12 @@ var useInstruments = ({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = instrumentsQuery;
-  (0, import_react97.useEffect)(() => {
+  (0, import_react96.useEffect)(() => {
     if (data2 == null ? void 0 : data2.instruments) {
       setInstruments(data2.instruments);
     }
   }, [data2]);
-  (0, import_react97.useEffect)(() => {
+  (0, import_react96.useEffect)(() => {
     getInstruments({
       variables: {
         input: {
@@ -5023,7 +4979,7 @@ var useInstruments = ({
       }
     });
   }, [getInstruments, resultsPerPage, sortBy, skip]);
-  const fetchNextPage = (0, import_react97.useCallback)(async () => {
+  const fetchNextPage = (0, import_react96.useCallback)(async () => {
     const numToSkip = (instruments == null ? void 0 : instruments.length) ?? 0;
     await fetchMore({
       variables: {
@@ -5056,7 +5012,7 @@ var Instruments = () => {
   }, "No Instruments found"), (instruments == null ? void 0 : instruments.length) > 0 && /* @__PURE__ */ React.createElement("ul", null, instruments.map((instrument, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react98.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react97.Link, {
     to: Entity_default.makeHrefForView(instrument)
   }, instrument.name)))), /* @__PURE__ */ React.createElement("div", {
     className: "mt-6"
@@ -5072,7 +5028,7 @@ var submissions_exports = {};
 __export(submissions_exports, {
   default: () => submissions_default
 });
-var import_react99 = require("@remix-run/react");
+var import_react98 = require("@remix-run/react");
 var import_client45 = require("@apollo/client");
 var SUBMISSIONS_FOR_CURRENT_USER = import_client45.gql`
 	query SubmissionsForCurrentUser {
@@ -5093,7 +5049,7 @@ var Submissions = () => {
       { label: "Submissions" }
     ],
     className: "mb-6"
-  }), /* @__PURE__ */ React.createElement(import_react99.Link, {
+  }), /* @__PURE__ */ React.createElement(import_react98.Link, {
     to: "/account/submissions/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "btn"
@@ -5106,7 +5062,7 @@ var Submissions = () => {
     key: index
   }, DateTime_default.formatDateYearTime(s.createdAt, true), " (", s.materialTypes.join(", "), ") - Status: ", s.status, /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, `${s.description.substring(0, 200)}${s.description.length > 200 ? "..." : ""}`), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react99.Link, {
+  }, `${s.description.substring(0, 200)}${s.description.length > 200 ? "..." : ""}`), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react98.Link, {
     to: `/account/submissions/${s.id}/upload`
   }, "Upload More Files to This Submission"))))));
 };
@@ -5117,10 +5073,10 @@ var new_exports = {};
 __export(new_exports, {
   default: () => new_default
 });
-var import_react102 = require("@remix-run/react");
+var import_react101 = require("@remix-run/react");
 
 // app/hooks/useAudioItems.ts
-var import_react100 = require("react");
+var import_react99 = require("react");
 var import_client46 = require("@apollo/client");
 var AUDIO_ITEMS_QUERY = import_client46.gql`
 	query AudioItems($input: AudioItemsInput!) {
@@ -5135,9 +5091,9 @@ var useAudioItems = ({
   resultsPerPage = 10,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react100.useState)(0);
-  const [audioItems, setAudioItems] = (0, import_react100.useState)();
-  (0, import_react100.useEffect)(() => {
+  const [skip, setSkip] = (0, import_react99.useState)(0);
+  const [audioItems, setAudioItems] = (0, import_react99.useState)();
+  (0, import_react99.useEffect)(() => {
     setAudioItems(void 0);
     setSkip(0);
   }, [sortBy]);
@@ -5145,31 +5101,31 @@ var useAudioItems = ({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = audioItemsQuery;
-  (0, import_react100.useEffect)(() => {
+  (0, import_react99.useEffect)(() => {
     if (data2 == null ? void 0 : data2.audioItems) {
       setAudioItems(data2.audioItems);
     }
   }, [data2]);
-  (0, import_react100.useEffect)(() => {
+  (0, import_react99.useEffect)(() => {
     getAudioItems({
       variables: {
         input: {
           sortBy,
           take: resultsPerPage + skip,
           skip: 0,
-          status: "Published" /* Published */
+          status: "PUBLISHED" /* Published */
         }
       }
     });
   }, [getAudioItems, resultsPerPage, sortBy, skip]);
-  const fetchNextPage = (0, import_react100.useCallback)(async () => {
+  const fetchNextPage = (0, import_react99.useCallback)(async () => {
     const numToSkip = (audioItems == null ? void 0 : audioItems.length) ?? 0;
     await fetchMore({
       variables: {
         input: {
           sortBy,
           take: resultsPerPage,
-          status: "Published" /* Published */,
+          status: "PUBLISHED" /* Published */,
           skip: numToSkip
         }
       }
@@ -5181,7 +5137,7 @@ var useAudioItems = ({
 var useAudioItems_default = useAudioItems;
 
 // app/components/CreateAudioItemForm.tsx
-var import_react101 = require("react");
+var import_react100 = require("react");
 var import_client47 = require("@apollo/client");
 var CREATE_AUDIO_ITEM_MUTATION = import_client47.gql`
 	mutation CreateAudioItem($input: CreateAudioItemInput!) {
@@ -5193,12 +5149,12 @@ var CREATE_AUDIO_ITEM_MUTATION = import_client47.gql`
 `;
 var CreateAudioItemForm = ({ onSuccess }) => {
   const [createAudioItem, { loading, error: error2, data: data2 }] = (0, import_client47.useMutation)(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: "all" });
-  const [name, setName] = (0, import_react101.useState)("");
-  const [urlSource, setUrlSource] = (0, import_react101.useState)("");
-  const [slug, setSlug] = (0, import_react101.useState)("");
-  const [aliases, setAliases] = (0, import_react101.useState)("");
-  const [description, setDescription] = (0, import_react101.useState)("");
-  (0, import_react101.useEffect)(() => {
+  const [name, setName] = (0, import_react100.useState)("");
+  const [urlSource, setUrlSource] = (0, import_react100.useState)("");
+  const [slug, setSlug] = (0, import_react100.useState)("");
+  const [aliases, setAliases] = (0, import_react100.useState)("");
+  const [description, setDescription] = (0, import_react100.useState)("");
+  (0, import_react100.useEffect)(() => {
     const proposedSlug = Entity_default.cleanSlug(name ?? "");
     setSlug(proposedSlug);
   }, [name]);
@@ -5208,7 +5164,7 @@ var CreateAudioItemForm = ({ onSuccess }) => {
       variables: { input: { name, urlSource, slug, aliases, description } }
     });
   };
-  (0, import_react101.useEffect)(() => {
+  (0, import_react100.useEffect)(() => {
     if (data2 == null ? void 0 : data2.createAudioItem) {
       if (onSuccess) {
         return onSuccess(data2.createAudioItem);
@@ -5269,7 +5225,7 @@ var CreateAudioItemForm_default = CreateAudioItemForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/new.tsx
 var NewAudioItem = () => {
-  const navigate = (0, import_react102.useNavigate)();
+  const navigate = (0, import_react101.useNavigate)();
   const [_, { refetch: refetch2 }] = useAudioItems_default();
   const onCreateSuccess = async (audioItem) => {
     await refetch2();
@@ -5290,9 +5246,9 @@ var new_exports2 = {};
 __export(new_exports2, {
   default: () => new_default2
 });
-var import_react103 = require("@remix-run/react");
+var import_react102 = require("@remix-run/react");
 var NewCollection = () => {
-  const navigate = (0, import_react103.useNavigate)();
+  const navigate = (0, import_react102.useNavigate)();
   const onCreateSuccess = (collection) => {
     navigate(`/entities/collections/${collection.slug}`);
   };
@@ -5311,9 +5267,9 @@ var new_exports3 = {};
 __export(new_exports3, {
   default: () => new_default3
 });
-var import_react104 = require("@remix-run/react");
+var import_react103 = require("@remix-run/react");
 var NewInstrument = () => {
-  const navigate = (0, import_react104.useNavigate)();
+  const navigate = (0, import_react103.useNavigate)();
   const onCreateSuccess = (instrument) => {
     navigate(`/entities/instruments/${instrument.slug}`);
   };
@@ -5332,10 +5288,10 @@ var new_exports4 = {};
 __export(new_exports4, {
   default: () => new_default4
 });
-var import_react106 = require("@remix-run/react");
+var import_react105 = require("@remix-run/react");
 
 // app/components/CreateSubmissionForm.tsx
-var import_react105 = require("react");
+var import_react104 = require("react");
 var import_client48 = require("@apollo/client");
 
 // app/components/Checkbox.tsx
@@ -5366,12 +5322,12 @@ var CREATE_SUBMISSION = import_client48.gql`
 `;
 var CreateSubmissionForm = ({ onSuccess }) => {
   const [currentUser] = useCurrentUser_default();
-  const [materialTypes, setMaterialTypes] = (0, import_react105.useState)([]);
-  const [userControlsCopyright, setUserControlsCopyright] = (0, import_react105.useState)(true);
-  const [copyrightDetails, setCopyrightDetails] = (0, import_react105.useState)("");
-  const [description, setDescription] = (0, import_react105.useState)("");
-  const [userGrantsPermissionToITMA, setUserGrantsPermissionToITMA] = (0, import_react105.useState)(false);
-  const [validationError, setValidationError] = (0, import_react105.useState)("");
+  const [materialTypes, setMaterialTypes] = (0, import_react104.useState)([]);
+  const [userControlsCopyright, setUserControlsCopyright] = (0, import_react104.useState)(true);
+  const [copyrightDetails, setCopyrightDetails] = (0, import_react104.useState)("");
+  const [description, setDescription] = (0, import_react104.useState)("");
+  const [userGrantsPermissionToITMA, setUserGrantsPermissionToITMA] = (0, import_react104.useState)(false);
+  const [validationError, setValidationError] = (0, import_react104.useState)("");
   const [createSubmission, { loading, data: data2, error: error2 }] = (0, import_client48.useMutation)(CREATE_SUBMISSION, { errorPolicy: "all" });
   const onMaterialTypeChecked = (materialType, isChecked) => {
     if (isChecked) {
@@ -5409,7 +5365,7 @@ var CreateSubmissionForm = ({ onSuccess }) => {
     } catch {
     }
   };
-  (0, import_react105.useEffect)(() => {
+  (0, import_react104.useEffect)(() => {
     var _a;
     if (((_a = data2 == null ? void 0 : data2.createSubmission) == null ? void 0 : _a.id) && onSuccess) {
       onSuccess(data2.createSubmission);
@@ -5492,7 +5448,7 @@ var CreateSubmissionForm_default = CreateSubmissionForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/new.tsx
 var SubmissionsNew = () => {
-  const navigate = (0, import_react106.useNavigate)();
+  const navigate = (0, import_react105.useNavigate)();
   const onCreateSuccess = (submission) => {
     navigate(`/account/submissions/${submission.id}/upload`);
   };
@@ -5524,7 +5480,7 @@ var submissions_exports2 = {};
 __export(submissions_exports2, {
   default: () => submissions_default2
 });
-var import_react107 = require("@remix-run/react");
+var import_react106 = require("@remix-run/react");
 var import_client49 = require("@apollo/client");
 var SUBMISSIONS = import_client49.gql`
 	query Submissions($input: SubmissionsInput!) {
@@ -5553,7 +5509,7 @@ var AdminSubmissions = () => {
     key: index
   }, DateTime_default.formatDateYearTime(s.createdAt, true), " (", s.materialTypes.join(", "), ") - Status: ", s.status, /* @__PURE__ */ React.createElement("br", null), "From ", s.createdByUser.username, " / ", s.createdByUser.email, /* @__PURE__ */ React.createElement("br", null), "Owns copyright? ", s.userControlsCopyright ? "Yes" : "No", s.copyrightDetails ? ` - ${s.copyrightDetails}` : "", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, s.description), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react107.Link, {
+  }, s.description), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react106.Link, {
     to: `/admin/submissions/${s.id}`
   }, "View Files"))))));
 };
@@ -5564,7 +5520,7 @@ var takedown_requests_exports = {};
 __export(takedown_requests_exports, {
   default: () => takedown_requests_default
 });
-var import_react108 = require("react");
+var import_react107 = require("react");
 var import_client50 = require("@apollo/client");
 var import_compareDesc3 = __toESM(require("date-fns/compareDesc"));
 var TAKEDOWN_REQUESTS = import_client50.gql`
@@ -5594,7 +5550,7 @@ var TakedownRequests = () => {
     variables: { input: { take: 200, skip: 0 } },
     fetchPolicy: "network-only"
   });
-  const takedownRequests = (0, import_react108.useMemo)(() => {
+  const takedownRequests = (0, import_react107.useMemo)(() => {
     if (!(takedownRequestsData == null ? void 0 : takedownRequestsData.takedownRequests)) {
       return [];
     }
@@ -5619,7 +5575,7 @@ var TakedownRequests = () => {
       variables: { input: { id, status: "Denied" /* Denied */ } }
     });
   };
-  (0, import_react108.useEffect)(() => {
+  (0, import_react107.useEffect)(() => {
     if (updateTakedownRequestStatusError) {
       window.alert("Error updating Takedown Request status. Please reload the page and try again.");
     }
@@ -5677,8 +5633,8 @@ var id_exports = {};
 __export(id_exports, {
   default: () => id_default
 });
+var import_react108 = require("@remix-run/react");
 var import_react109 = require("@remix-run/react");
-var import_react110 = require("@remix-run/react");
 var import_client51 = require("@apollo/client");
 var SUBMISSION_WITH_FILES = import_client51.gql`
 	query SubmissionWithFiles($id: String!) {
@@ -5695,7 +5651,7 @@ var SUBMISSION_WITH_FILES = import_client51.gql`
 	${SubmissionFragments.submission}
 `;
 var AdminViewSubmissionById = () => {
-  const navigate = (0, import_react110.useNavigate)();
+  const navigate = (0, import_react109.useNavigate)();
   const { id } = navigate.query;
   const submissionId = typeof id === "string" ? id : void 0;
   const { data: data2, loading } = (0, import_client51.useQuery)(SUBMISSION_WITH_FILES, {
@@ -5721,7 +5677,7 @@ var AdminViewSubmissionById = () => {
     key: index
   }, /* @__PURE__ */ React.createElement("div", {
     className: "pr-2"
-  }, f.filename), /* @__PURE__ */ React.createElement(import_react109.Link, {
+  }, f.filename), /* @__PURE__ */ React.createElement(import_react108.Link, {
     to: f.presignedDownloadUrl
   }, /* @__PURE__ */ React.createElement("a", {
     target: "_blank"
@@ -5739,7 +5695,7 @@ __export(slug_exports4, {
   PLACE_QUERY: () => PLACE_QUERY,
   default: () => slug_default4
 });
-var import_react111 = require("@remix-run/react");
+var import_react110 = require("@remix-run/react");
 var import_client52 = require("@apollo/client");
 var PLACE_QUERY = import_client52.gql`
 	query Place($slug: String!) {
@@ -5750,7 +5706,7 @@ var PLACE_QUERY = import_client52.gql`
 	${EntityFragments.place}
 `;
 var ViewPlaceBySlug = () => {
-  const navigate = (0, import_react111.useNavigate)();
+  const navigate = (0, import_react110.useNavigate)();
   const { slug } = navigate.query;
   const { data: placeData, error: placeError } = (0, import_client52.useQuery)(PLACE_QUERY, {
     variables: { slug },
@@ -5780,11 +5736,11 @@ __export(about_exports4, {
   default: () => about_default4
 });
 var import_client54 = require("@apollo/client");
+var import_react112 = require("@remix-run/react");
 var import_react113 = require("@remix-run/react");
-var import_react114 = require("@remix-run/react");
 
 // app/routes/entities/places/[slug].tsx
-var import_react112 = require("@remix-run/react");
+var import_react111 = require("@remix-run/react");
 var import_client53 = require("@apollo/client");
 var PLACE_QUERY2 = import_client53.gql`
 	query Place($slug: String!) {
@@ -5797,7 +5753,7 @@ var PLACE_QUERY2 = import_client53.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/places/[slug]/about.tsx
 var PlaceAbout = () => {
-  const navigate = (0, import_react114.useNavigate)();
+  const navigate = (0, import_react113.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client54.useQuery)(PLACE_QUERY2, {
     variables: { slug },
@@ -5834,7 +5790,7 @@ var PlaceAbout = () => {
     rel: "noreferrer"
   }, "View on Map ", /* @__PURE__ */ React.createElement("i", {
     className: "material-icons text-base"
-  }, "launch"))), /* @__PURE__ */ React.createElement(import_react113.Link, {
+  }, "launch"))), /* @__PURE__ */ React.createElement(import_react112.Link, {
     to: `/entities/places/${slug}/edit`
   }, "Edit")));
 };
@@ -5845,13 +5801,13 @@ var edit_exports4 = {};
 __export(edit_exports4, {
   default: () => edit_default4
 });
-var import_react117 = require("@remix-run/react");
+var import_react116 = require("@remix-run/react");
 var import_client56 = require("@apollo/client");
 
 // app/components/EditPlaceForm.tsx
-var import_react115 = require("react");
+var import_react114 = require("react");
 var import_client55 = require("@apollo/client");
-var import_react116 = require("@remix-run/react");
+var import_react115 = require("@remix-run/react");
 var UPDATE_PLACE_MUTATION = import_client55.gql`
 	mutation UpdatePlace($slug: String!, $input: UpdatePlaceInput!) {
 		updatePlace(slug: $slug, input: $input) {
@@ -5861,15 +5817,15 @@ var UPDATE_PLACE_MUTATION = import_client55.gql`
 	${EntityFragments.place}
 `;
 var EditPlaceForm = ({ place, onSuccess }) => {
-  const navigate = (0, import_react116.useNavigate)();
+  const navigate = (0, import_react115.useNavigate)();
   const [updatePlace, { loading, error: error2, data: data2 }] = (0, import_client55.useMutation)(UPDATE_PLACE_MUTATION, {
     errorPolicy: "all"
   });
-  const [name, setName] = (0, import_react115.useState)(place.name);
-  const [aliases, setAliases] = (0, import_react115.useState)(place.aliases);
-  const [latitude, setLatitude] = (0, import_react115.useState)(place.latitude.toString());
-  const [longitude, setLongitude] = (0, import_react115.useState)(place.longitude.toString());
-  const [description, setDescription] = (0, import_react115.useState)(place.description);
+  const [name, setName] = (0, import_react114.useState)(place.name);
+  const [aliases, setAliases] = (0, import_react114.useState)(place.aliases);
+  const [latitude, setLatitude] = (0, import_react114.useState)(place.latitude.toString());
+  const [longitude, setLongitude] = (0, import_react114.useState)(place.longitude.toString());
+  const [description, setDescription] = (0, import_react114.useState)(place.description);
   const onUpdatePlace = (event) => {
     event.preventDefault();
     const input = {
@@ -5881,7 +5837,7 @@ var EditPlaceForm = ({ place, onSuccess }) => {
     };
     updatePlace({ variables: { slug: place.slug, input } });
   };
-  (0, import_react115.useEffect)(() => {
+  (0, import_react114.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updatePlace) {
       if (onSuccess) {
         return onSuccess(data2.updatePlace);
@@ -5948,7 +5904,7 @@ var PLACE_QUERY3 = import_client56.gql`
 	${EntityFragments.place}
 `;
 var EditPlace = () => {
-  const navigate = (0, import_react117.useNavigate)();
+  const navigate = (0, import_react116.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client56.useQuery)(PLACE_QUERY3, {
     variables: { slug },
@@ -5984,9 +5940,9 @@ __export(tags_exports4, {
   default: () => tags_default4
 });
 var import_client57 = require("@apollo/client");
-var import_react118 = require("@remix-run/react");
+var import_react117 = require("@remix-run/react");
 var PlaceTags = () => {
-  const navigate = (0, import_react118.useNavigate)();
+  const navigate = (0, import_react117.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2, refetch: refetch2 } = (0, import_client57.useQuery)(PLACE_QUERY2, {
     variables: { slug },
@@ -6029,7 +5985,7 @@ __export(slug_exports5, {
   default: () => slug_default5,
   loader: () => loader
 });
-var import_react119 = require("@remix-run/react");
+var import_react118 = require("@remix-run/react");
 
 // app/utils/db.server.ts
 var import_client58 = require("@prisma/client");
@@ -6048,9 +6004,6 @@ async function loader({
   params,
   request
 }) {
-  const url = new URL(request.url);
-  const page = Number(url.searchParams.get("page") ?? 1);
-  const perPage = Number(url.searchParams.get("perPage") ?? 20);
   const { slug } = params;
   const person2 = await db.person.findUnique({
     where: {
@@ -6063,53 +6016,69 @@ async function loader({
       statusText: "Could not find this Person"
     });
   }
-  const audioItems = await db.audioItem.findMany({
-    take: perPage,
-    skip: perPage * (page - 1),
-    include: {
-      tagsAsSubject: {
-        include: {
-          objectAudioItem: true,
-          objectCollection: true,
-          objectInstrument: true,
-          objectPerson: true,
-          objectPlace: true,
-          objectTune: true,
-          relationship: true
+  const { searchParams } = new URL(request.url);
+  const page = Number(searchParams.get("page") ?? 1);
+  const perPage = Number(searchParams.get("perPage") ?? 20);
+  const sortBy = searchParams.get("sortBy") ?? "RecentlyTagged" /* RecentlyTagged */;
+  const audioItemsOrderBy = sortBy === "RecentlyTagged" /* RecentlyTagged */ ? { updatedAt: "desc" } : { createdAt: "desc" };
+  const [audioItems, totalAudioItems] = await Promise.all([
+    db.audioItem.findMany({
+      take: perPage,
+      skip: perPage * (page - 1),
+      include: {
+        tagsAsSubject: {
+          include: {
+            objectAudioItem: true,
+            objectCollection: true,
+            objectInstrument: true,
+            objectPerson: true,
+            objectPlace: true,
+            objectTune: true,
+            relationship: true
+          }
+        },
+        createdByUser: true,
+        updatedByUser: true,
+        comments: {
+          include: {
+            createdByUser: true
+          }
         }
       },
-      createdByUser: true,
-      updatedByUser: true,
-      comments: {
-        include: {
-          createdByUser: true
+      where: {
+        tagsAsObject: {
+          some: {
+            subjectPersonId: person2.id
+          }
+        }
+      },
+      orderBy: audioItemsOrderBy
+    }),
+    db.audioItem.count({
+      where: {
+        tagsAsObject: {
+          some: {
+            subjectPersonId: person2.id
+          }
         }
       }
-    },
-    where: {
-      tagsAsObject: {
-        some: {
-          subjectPersonId: person2.id
-        }
-      }
-    },
-    orderBy: {
-      updatedAt: "desc"
-    }
-  });
+    })
+  ]);
   return {
     person: person2,
-    audioItems
+    audioItems,
+    totalAudioItems
   };
 }
 var ViewPersonBySlug = () => {
-  const { person: person2, audioItems } = (0, import_react119.useLoaderData)();
+  const { person: person2, audioItems, totalAudioItems } = (0, import_react118.useLoaderData)();
   if (!person2) {
     return /* @__PURE__ */ React.createElement(Layout_default, null, "Can't find this Person.");
   }
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: person2,
-    audioItems
+    audioItems,
+    totalAudioItems
   }));
 };
 var slug_default5 = ViewPersonBySlug;
@@ -6119,10 +6088,10 @@ var about_exports5 = {};
 __export(about_exports5, {
   default: () => about_default5
 });
+var import_react119 = require("@remix-run/react");
 var import_react120 = require("@remix-run/react");
-var import_react121 = require("@remix-run/react");
 var PersonAbout = () => {
-  const navigate = (0, import_react121.useNavigate)();
+  const navigate = (0, import_react120.useNavigate)();
   const { slug } = navigate.query;
   const { name, description, aliases } = (data == null ? void 0 : data.person) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
@@ -6144,7 +6113,7 @@ var PersonAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react120.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react119.Link, {
     to: `/entities/people/${slug}/edit`
   }, "Edit")));
 };
@@ -6155,13 +6124,13 @@ var edit_exports5 = {};
 __export(edit_exports5, {
   default: () => edit_default5
 });
-var import_react124 = require("@remix-run/react");
+var import_react123 = require("@remix-run/react");
 var import_client60 = require("@apollo/client");
 
 // app/components/EditPersonForm.tsx
-var import_react122 = require("react");
+var import_react121 = require("react");
 var import_client59 = require("@apollo/client");
-var import_react123 = require("@remix-run/react");
+var import_react122 = require("@remix-run/react");
 var UPDATE_PERSON_MUTATION = import_client59.gql`
 	mutation UpdatePerson($slug: String!, $input: UpdatePersonInput!) {
 		updatePerson(slug: $slug, input: $input) {
@@ -6171,15 +6140,15 @@ var UPDATE_PERSON_MUTATION = import_client59.gql`
 	${EntityFragments.person}
 `;
 var EditPersonForm = ({ person: person2, onSuccess }) => {
-  const navigate = (0, import_react123.useNavigate)();
+  const navigate = (0, import_react122.useNavigate)();
   const [updatePerson, { loading, error: error2, data: data2 }] = (0, import_client59.useMutation)(UPDATE_PERSON_MUTATION, {
     errorPolicy: "all"
   });
-  const [firstName, setFirstName] = (0, import_react122.useState)(person2.firstName);
-  const [middleName, setMiddleName] = (0, import_react122.useState)(person2.middleName);
-  const [lastName, setLastName] = (0, import_react122.useState)(person2.lastName);
-  const [aliases, setAliases] = (0, import_react122.useState)(person2.aliases);
-  const [description, setDescription] = (0, import_react122.useState)(person2.description);
+  const [firstName, setFirstName] = (0, import_react121.useState)(person2.firstName);
+  const [middleName, setMiddleName] = (0, import_react121.useState)(person2.middleName);
+  const [lastName, setLastName] = (0, import_react121.useState)(person2.lastName);
+  const [aliases, setAliases] = (0, import_react121.useState)(person2.aliases);
+  const [description, setDescription] = (0, import_react121.useState)(person2.description);
   const onUpdatePerson = (event) => {
     event.preventDefault();
     const input = {
@@ -6191,7 +6160,7 @@ var EditPersonForm = ({ person: person2, onSuccess }) => {
     };
     updatePerson({ variables: { slug: person2.slug, input } });
   };
-  (0, import_react122.useEffect)(() => {
+  (0, import_react121.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updatePerson) {
       if (onSuccess) {
         return onSuccess(data2.updatePerson);
@@ -6253,7 +6222,7 @@ var PERSON_QUERY = import_client60.gql`
 	${EntityFragments.person}
 `;
 var EditPerson = () => {
-  const navigate = (0, import_react124.useNavigate)();
+  const navigate = (0, import_react123.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client60.useQuery)(PERSON_QUERY, {
     variables: { slug },
@@ -6288,9 +6257,9 @@ var tags_exports5 = {};
 __export(tags_exports5, {
   default: () => tags_default5
 });
-var import_react125 = require("@remix-run/react");
+var import_react124 = require("@remix-run/react");
 var PersonTags = () => {
-  const navigate = (0, import_react125.useNavigate)();
+  const navigate = (0, import_react124.useNavigate)();
   const { slug } = navigate.query;
   const { name, tags } = person ?? {};
   const sortedTags = Tag_default.sort(tags);
@@ -6326,10 +6295,10 @@ var people_exports = {};
 __export(people_exports, {
   default: () => people_default
 });
-var import_react127 = require("@remix-run/react");
+var import_react126 = require("@remix-run/react");
 
 // app/hooks/usePeople.ts
-var import_react126 = require("react");
+var import_react125 = require("react");
 var import_client61 = require("@apollo/client");
 var PEOPLE_QUERY = import_client61.gql`
 	query People($input: PeopleInput!) {
@@ -6344,9 +6313,9 @@ var usePeople = ({
   resultsPerPage = 20,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react126.useState)(0);
-  const [people, setPeople] = (0, import_react126.useState)();
-  (0, import_react126.useEffect)(() => {
+  const [skip, setSkip] = (0, import_react125.useState)(0);
+  const [people, setPeople] = (0, import_react125.useState)();
+  (0, import_react125.useEffect)(() => {
     setPeople(void 0);
     setSkip(0);
   }, [sortBy]);
@@ -6354,12 +6323,12 @@ var usePeople = ({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = peopleQuery;
-  (0, import_react126.useEffect)(() => {
+  (0, import_react125.useEffect)(() => {
     if (data2 == null ? void 0 : data2.people) {
       setPeople(data2.people);
     }
   }, [data2]);
-  (0, import_react126.useEffect)(() => {
+  (0, import_react125.useEffect)(() => {
     getPeople({
       variables: {
         input: {
@@ -6370,7 +6339,7 @@ var usePeople = ({
       }
     });
   }, [getPeople, resultsPerPage, sortBy, skip]);
-  const fetchNextPage = (0, import_react126.useCallback)(async () => {
+  const fetchNextPage = (0, import_react125.useCallback)(async () => {
     const numToSkip = (people == null ? void 0 : people.length) ?? 0;
     await fetchMore({
       variables: {
@@ -6403,7 +6372,7 @@ var People = () => {
   }, "No People found"), (people == null ? void 0 : people.length) > 0 && /* @__PURE__ */ React.createElement("ul", null, people.map((person2, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react127.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react126.Link, {
     to: Entity_default.makeHrefForView(person2)
   }, person2.name)))), /* @__PURE__ */ React.createElement("div", {
     className: "mt-6"
@@ -6419,10 +6388,10 @@ var places_exports = {};
 __export(places_exports, {
   default: () => places_default
 });
-var import_react129 = require("@remix-run/react");
+var import_react128 = require("@remix-run/react");
 
 // app/hooks/usePlaces.ts
-var import_react128 = require("react");
+var import_react127 = require("react");
 var import_client62 = require("@apollo/client");
 var PLACES_QUERY = import_client62.gql`
 	query Places($input: PlacesInput!) {
@@ -6437,9 +6406,9 @@ var usePlaces = ({
   resultsPerPage = 20,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react128.useState)(0);
-  const [places, setPlaces] = (0, import_react128.useState)();
-  (0, import_react128.useEffect)(() => {
+  const [skip, setSkip] = (0, import_react127.useState)(0);
+  const [places, setPlaces] = (0, import_react127.useState)();
+  (0, import_react127.useEffect)(() => {
     setPlaces(void 0);
     setSkip(0);
   }, [sortBy]);
@@ -6447,12 +6416,12 @@ var usePlaces = ({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = placesQuery;
-  (0, import_react128.useEffect)(() => {
+  (0, import_react127.useEffect)(() => {
     if (data2 == null ? void 0 : data2.places) {
       setPlaces(data2.places);
     }
   }, [data2]);
-  (0, import_react128.useEffect)(() => {
+  (0, import_react127.useEffect)(() => {
     getPlaces({
       variables: {
         input: {
@@ -6463,7 +6432,7 @@ var usePlaces = ({
       }
     });
   }, [getPlaces, resultsPerPage, sortBy, skip]);
-  const fetchNextPage = (0, import_react128.useCallback)(async () => {
+  const fetchNextPage = (0, import_react127.useCallback)(async () => {
     const numToSkip = (places == null ? void 0 : places.length) ?? 0;
     await fetchMore({
       variables: {
@@ -6496,7 +6465,7 @@ var Places = () => {
   }, "No Places found"), (places == null ? void 0 : places.length) > 0 && /* @__PURE__ */ React.createElement("ul", null, places.map((place, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react129.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: Entity_default.makeHrefForView(place)
   }, place.name)))), /* @__PURE__ */ React.createElement("div", {
     className: "mt-6"
@@ -6513,7 +6482,7 @@ __export(slug_exports6, {
   TUNE_QUERY: () => TUNE_QUERY,
   default: () => slug_default6
 });
-var import_react130 = require("@remix-run/react");
+var import_react129 = require("@remix-run/react");
 var import_client63 = require("@apollo/client");
 var TUNE_QUERY = import_client63.gql`
 	query Tune($slug: String!) {
@@ -6524,7 +6493,7 @@ var TUNE_QUERY = import_client63.gql`
 	${EntityFragments.tune}
 `;
 var ViewTuneBySlug = () => {
-  const navigate = (0, import_react130.useNavigate)();
+  const navigate = (0, import_react129.useNavigate)();
   const { slug } = navigate.query;
   const { data: tuneData, error: tuneError } = (0, import_client63.useQuery)(TUNE_QUERY, {
     variables: { slug },
@@ -6554,11 +6523,11 @@ __export(about_exports6, {
   default: () => about_default6
 });
 var import_client65 = require("@apollo/client");
+var import_react131 = require("@remix-run/react");
 var import_react132 = require("@remix-run/react");
-var import_react133 = require("@remix-run/react");
 
 // app/routes/entities/tunes/[slug].tsx
-var import_react131 = require("@remix-run/react");
+var import_react130 = require("@remix-run/react");
 var import_client64 = require("@apollo/client");
 var TUNE_QUERY2 = import_client64.gql`
 	query Tune($slug: String!) {
@@ -6571,7 +6540,7 @@ var TUNE_QUERY2 = import_client64.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/tunes/[slug]/about.tsx
 var TuneAbout = () => {
-  const navigate = (0, import_react133.useNavigate)();
+  const navigate = (0, import_react132.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2 } = (0, import_client65.useQuery)(TUNE_QUERY2, {
     variables: { slug },
@@ -6620,7 +6589,7 @@ var TuneAbout = () => {
     className: "mb-4"
   }, "ABC:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, abc)), /* @__PURE__ */ React.createElement(import_react132.Link, {
+  }, abc)), /* @__PURE__ */ React.createElement(import_react131.Link, {
     to: `/entities/tunes/${slug}/edit`
   }, "Edit")));
 };
@@ -6632,9 +6601,9 @@ __export(tags_exports6, {
   default: () => tags_default6
 });
 var import_client66 = require("@apollo/client");
-var import_react134 = require("@remix-run/react");
+var import_react133 = require("@remix-run/react");
 var TuneTags = () => {
-  const navigate = (0, import_react134.useNavigate)();
+  const navigate = (0, import_react133.useNavigate)();
   const { slug } = navigate.query;
   const { data: data2, error: error2, refetch: refetch2 } = (0, import_client66.useQuery)(TUNE_QUERY2, {
     variables: { slug },
@@ -6676,10 +6645,10 @@ var tunes_exports = {};
 __export(tunes_exports, {
   default: () => tunes_default
 });
-var import_react136 = require("@remix-run/react");
+var import_react135 = require("@remix-run/react");
 
 // app/hooks/useTunes.ts
-var import_react135 = require("react");
+var import_react134 = require("react");
 var import_client67 = require("@apollo/client");
 var TUNES_QUERY = import_client67.gql`
 	query Tunes($input: TunesInput!) {
@@ -6694,9 +6663,9 @@ var useTunes = ({
   resultsPerPage = 20,
   queryOptions = {}
 } = {}) => {
-  const [skip, setSkip] = (0, import_react135.useState)(0);
-  const [tunes, setTunes] = (0, import_react135.useState)();
-  (0, import_react135.useEffect)(() => {
+  const [skip, setSkip] = (0, import_react134.useState)(0);
+  const [tunes, setTunes] = (0, import_react134.useState)();
+  (0, import_react134.useEffect)(() => {
     setTunes(void 0);
     setSkip(0);
   }, [sortBy]);
@@ -6704,12 +6673,12 @@ var useTunes = ({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = tunesQuery;
-  (0, import_react135.useEffect)(() => {
+  (0, import_react134.useEffect)(() => {
     if (data2 == null ? void 0 : data2.tunes) {
       setTunes(data2.tunes);
     }
   }, [data2]);
-  (0, import_react135.useEffect)(() => {
+  (0, import_react134.useEffect)(() => {
     getTunes({
       variables: {
         input: {
@@ -6720,7 +6689,7 @@ var useTunes = ({
       }
     });
   }, [getTunes, resultsPerPage, sortBy, skip]);
-  const fetchNextPage = (0, import_react135.useCallback)(async () => {
+  const fetchNextPage = (0, import_react134.useCallback)(async () => {
     const numToSkip = (tunes == null ? void 0 : tunes.length) ?? 0;
     await fetchMore({
       variables: {
@@ -6753,7 +6722,7 @@ var Tunes = () => {
   }, "No Tunes found"), (tunes == null ? void 0 : tunes.length) > 0 && /* @__PURE__ */ React.createElement("ul", null, tunes.map((tune, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react136.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react135.Link, {
     to: Entity_default.makeHrefForView(tune)
   }, tune.name)))), /* @__PURE__ */ React.createElement("div", {
     className: "mt-6"
@@ -6769,9 +6738,9 @@ var new_exports5 = {};
 __export(new_exports5, {
   default: () => new_default5
 });
-var import_react137 = require("@remix-run/react");
+var import_react136 = require("@remix-run/react");
 var NewPerson = () => {
-  const navigate = (0, import_react137.useNavigate)();
+  const navigate = (0, import_react136.useNavigate)();
   const onCreateSuccess = (person2) => {
     navigate(`/entities/people/${person2.slug}`);
   };
@@ -6790,9 +6759,9 @@ var new_exports6 = {};
 __export(new_exports6, {
   default: () => new_default6
 });
-var import_react138 = require("@remix-run/react");
+var import_react137 = require("@remix-run/react");
 var NewPlace = () => {
-  const navigate = (0, import_react138.useNavigate)();
+  const navigate = (0, import_react137.useNavigate)();
   const onCreateSuccess = (place) => {
     navigate(`/entities/places/${place.slug}`);
   };
@@ -6811,12 +6780,12 @@ var verify_exports = {};
 __export(verify_exports, {
   default: () => verify_default
 });
-var import_react140 = require("react");
+var import_react139 = require("react");
 var import_client69 = require("@apollo/client");
-var import_react141 = require("@remix-run/react");
+var import_react140 = require("@remix-run/react");
 
 // app/hooks/useVerificationRequestsForCurrentUser.ts
-var import_react139 = require("react");
+var import_react138 = require("react");
 var import_client68 = require("@apollo/client");
 var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client68.gql`
 	query VerificationRequestsForCurrentUser {
@@ -6829,7 +6798,7 @@ var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client68.gql`
 var useVerificationRequestsForCurrentUser = () => {
   var _a;
   const [makeQuery, query] = (0, import_client68.useLazyQuery)(VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY);
-  (0, import_react139.useEffect)(() => {
+  (0, import_react138.useEffect)(() => {
     makeQuery();
   }, [makeQuery]);
   const verificationRequests = (_a = query == null ? void 0 : query.data) == null ? void 0 : _a.verificationRequestsForCurrentUser;
@@ -6855,7 +6824,7 @@ var CREATE_VERIFICATION_REQUEST_MUTATION = import_client69.gql`
 	${VerificationRequestFragments.verificationRequest}
 `;
 var AccountVerify = () => {
-  const navigate = (0, import_react141.useNavigate)();
+  const navigate = (0, import_react140.useNavigate)();
   const [
     _,
     {
@@ -6863,11 +6832,11 @@ var AccountVerify = () => {
       loading: refetchVerificationRequestsIsLoading
     }
   ] = useVerificationRequestsForCurrentUser_default();
-  const [personEntity, setPersonEntity] = (0, import_react140.useState)();
-  const [imageFile, setImageFile] = (0, import_react140.useState)();
-  const [imageFileObjectUrl, setImageFileObjectUrl] = (0, import_react140.useState)();
-  const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] = (0, import_react140.useState)(false);
-  const [formIsSubmitting, setFormIsSubmitting] = (0, import_react140.useState)(false);
+  const [personEntity, setPersonEntity] = (0, import_react139.useState)();
+  const [imageFile, setImageFile] = (0, import_react139.useState)();
+  const [imageFileObjectUrl, setImageFileObjectUrl] = (0, import_react139.useState)();
+  const [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] = (0, import_react139.useState)(false);
+  const [formIsSubmitting, setFormIsSubmitting] = (0, import_react139.useState)(false);
   const [createPresignedUploadUrl] = (0, import_client69.useMutation)(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" });
   const [createVerificationRequest] = (0, import_client69.useMutation)(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" });
   const onSelectEntity = (entity) => {
@@ -6885,7 +6854,7 @@ var AccountVerify = () => {
     const objectUrl = URL.createObjectURL(selectedFile);
     setImageFileObjectUrl(objectUrl);
   };
-  (0, import_react140.useEffect)(() => {
+  (0, import_react139.useEffect)(() => {
     return () => {
       if (imageFileObjectUrl) {
         URL.revokeObjectURL(imageFileObjectUrl);
@@ -6992,11 +6961,11 @@ var account_exports = {};
 __export(account_exports, {
   default: () => account_default
 });
-var import_react142 = require("react");
-var import_react143 = require("@remix-run/react");
+var import_react141 = require("react");
+var import_react142 = require("@remix-run/react");
 var AccountHome = () => {
   const [verificationRequests = [], { loading, data: data2, error: error2 }] = useVerificationRequestsForCurrentUser_default();
-  const verifyYourselfMarkup = (0, import_react142.useMemo)(() => {
+  const verifyYourselfMarkup = (0, import_react141.useMemo)(() => {
     if (!loading && error2) {
       return /* @__PURE__ */ React.createElement("span", {
         className: "text-red-600"
@@ -7014,7 +6983,7 @@ var AccountHome = () => {
         className: "material-icons text-base"
       }, "verified"), /* @__PURE__ */ React.createElement("span", {
         className: "ml-2 mr-1"
-      }, "You are verified as"), /* @__PURE__ */ React.createElement(import_react143.Link, {
+      }, "You are verified as"), /* @__PURE__ */ React.createElement(import_react142.Link, {
         to: Entity_default.makeHrefForView(approvedRequest.person)
       }, approvedRequest.person.name));
     }
@@ -7022,17 +6991,17 @@ var AccountHome = () => {
     if (pendingRequest) {
       return /* @__PURE__ */ React.createElement("span", null, "Your request to verify as ", pendingRequest.person.name, " is pending");
     }
-    return /* @__PURE__ */ React.createElement(import_react143.Link, {
+    return /* @__PURE__ */ React.createElement(import_react142.Link, {
       to: "/account/verify"
     }, "Verify Your Account");
   }, [data2, loading, error2, verificationRequests]);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-4"
-  }, "Account"), verifyYourselfMarkup, /* @__PURE__ */ React.createElement(import_react143.Link, {
+  }, "Account"), verifyYourselfMarkup, /* @__PURE__ */ React.createElement(import_react142.Link, {
     to: "/account/submissions"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mt-2"
-  }, "Submit Audio, Video, Images, or Documents to ITMA")), /* @__PURE__ */ React.createElement(import_react143.Link, {
+  }, "Submit Audio, Video, Images, or Documents to ITMA")), /* @__PURE__ */ React.createElement(import_react142.Link, {
     to: "/logout"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mt-2"
@@ -7045,39 +7014,39 @@ var admin_exports = {};
 __export(admin_exports, {
   default: () => admin_default
 });
-var import_react144 = require("@remix-run/react");
+var import_react143 = require("@remix-run/react");
 var AdminHome = () => {
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-4"
-  }, "Admin"), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Admin"), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/admin/verification-requests"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/admin/takedown-requests"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/admin/submissions"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-6"
-  }, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/entities/audio-items/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/entities/people/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Create Person")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Create Person")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/entities/instruments/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/entities/places/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
-  }, "Create Place")), /* @__PURE__ */ React.createElement(import_react144.Link, {
+  }, "Create Place")), /* @__PURE__ */ React.createElement(import_react143.Link, {
     to: "/entities/collections/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "block mb-2"
@@ -7090,7 +7059,7 @@ var saved_items_exports = {};
 __export(saved_items_exports, {
   default: () => saved_items_default
 });
-var import_react145 = require("@remix-run/react");
+var import_react144 = require("@remix-run/react");
 var SavedItems = () => {
   const [savedItems, { loading, error: error2 }] = useSavedItemsForUser_default();
   const { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
@@ -7108,7 +7077,7 @@ var SavedItems = () => {
     className: "mb-4"
   }, /* @__PURE__ */ React.createElement(LoadingBlock_default, null)), !loading && (savedItems == null ? void 0 : savedItems.length) === 0 && /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500"
-  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react145.Link, {
+  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react144.Link, {
     to: "/"
   }, "Audio Items"), "!"), savedItems == null ? void 0 : savedItems.map(({ audioItem }, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
     viewAs,
@@ -7124,9 +7093,9 @@ var auto_login_exports = {};
 __export(auto_login_exports, {
   default: () => auto_login_default
 });
-var import_react146 = require("react");
+var import_react145 = require("react");
+var import_react146 = require("@remix-run/react");
 var import_react147 = require("@remix-run/react");
-var import_react148 = require("@remix-run/react");
 var import_client70 = require("@apollo/client");
 var AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = import_client70.gql`
 	mutation AuthenticateWithAutoLoginToken(
@@ -7140,7 +7109,7 @@ var AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = import_client70.gql`
 `;
 var AutoLogin = () => {
   var _a;
-  const navigate = (0, import_react147.useNavigate)();
+  const navigate = (0, import_react146.useNavigate)();
   const { tokenUnhashed, userEmail, redirectTo } = navigate.query;
   const [
     currentUser,
@@ -7150,7 +7119,7 @@ var AutoLogin = () => {
     authenticateWithAutoLoginToken,
     { loading: authenticateLoading, data: data2, error: error2 }
   ] = (0, import_client70.useMutation)(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
-  (0, import_react146.useEffect)(() => {
+  (0, import_react145.useEffect)(() => {
     if (typeof tokenUnhashed !== "string" || typeof userEmail !== "string") {
       return;
     }
@@ -7164,12 +7133,12 @@ var AutoLogin = () => {
     };
     authenticate();
   }, [tokenUnhashed, authenticateWithAutoLoginToken]);
-  (0, import_react146.useEffect)(() => {
+  (0, import_react145.useEffect)(() => {
     if (data2 == null ? void 0 : data2.authenticateWithAutoLoginToken) {
       refetchCurrentUser();
     }
   }, [data2, refetchCurrentUser]);
-  (0, import_react146.useEffect)(() => {
+  (0, import_react145.useEffect)(() => {
     if (currentUser) {
       navigate(typeof redirectTo === "string" ? redirectTo : "/");
     }
@@ -7186,7 +7155,7 @@ var AutoLogin = () => {
   if (error2) {
     return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
       className: "text-red-600 mb-4"
-    }, "Error: ", (_a = error2 == null ? void 0 : error2.graphQLErrors) == null ? void 0 : _a.map(({ message }) => message)), /* @__PURE__ */ React.createElement(import_react148.Link, {
+    }, "Error: ", (_a = error2 == null ? void 0 : error2.graphQLErrors) == null ? void 0 : _a.map(({ message }) => message)), /* @__PURE__ */ React.createElement(import_react147.Link, {
       href: {
         pathname: "/login",
         query: redirectTo ? { redirectTo } : void 0
@@ -7210,7 +7179,7 @@ var AutoLogin = () => {
     className: "material-icons mr-2"
   }, "mail_outline"), "We've emailed a magic link to you. Click it to log in."), /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500"
-  }, "Didn't get it? Check your spam folder or", " ", /* @__PURE__ */ React.createElement(import_react148.Link, {
+  }, "Didn't get it? Check your spam folder or", " ", /* @__PURE__ */ React.createElement(import_react147.Link, {
     href: {
       pathname: "/login",
       query: redirectTo ? { redirectTo } : void 0
@@ -7224,13 +7193,13 @@ var id_exports2 = {};
 __export(id_exports2, {
   default: () => id_default2
 });
-var import_react150 = require("react");
+var import_react149 = require("react");
+var import_react150 = require("@remix-run/react");
 var import_react151 = require("@remix-run/react");
-var import_react152 = require("@remix-run/react");
 var import_client72 = require("@apollo/client");
 
 // app/hooks/useAudioItemsCreatedByUser.tsx
-var import_react149 = require("react");
+var import_react148 = require("react");
 var import_client71 = require("@apollo/client");
 var AUDIO_ITEMS_CREATED_BY_USER_QUERY = import_client71.gql`
 	query AudioItemsCreatedByUser($input: AudioItemsCreatedByUserInput!) {
@@ -7249,7 +7218,7 @@ var useAudioItemsCreatedByUser = (user) => {
       }
     }
   });
-  (0, import_react149.useEffect)(() => {
+  (0, import_react148.useEffect)(() => {
     if (user) {
       makeQuery();
     }
@@ -7269,7 +7238,7 @@ var USER_QUERY = import_client72.gql`
 	${UserFragments.user}
 `;
 var ViewUserById = () => {
-  const navigate = (0, import_react151.useNavigate)();
+  const navigate = (0, import_react150.useNavigate)();
   const { id } = navigate.query;
   const { data: userData, error: userError } = (0, import_client72.useQuery)(USER_QUERY, {
     variables: { id },
@@ -7283,13 +7252,13 @@ var ViewUserById = () => {
   const { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     defaultViewAs: "Cards" /* Cards */
   });
-  const aboutMarkup = (0, import_react150.useMemo)(() => /* @__PURE__ */ React.createElement(React.Fragment, null, verifiedPerson && /* @__PURE__ */ React.createElement("div", {
+  const aboutMarkup = (0, import_react149.useMemo)(() => /* @__PURE__ */ React.createElement(React.Fragment, null, verifiedPerson && /* @__PURE__ */ React.createElement("div", {
     className: "mb-4"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row items-center"
   }, /* @__PURE__ */ React.createElement("i", {
     className: "material-icons text-base mr-2"
-  }, "verified"), "Verified As Person:"), /* @__PURE__ */ React.createElement(import_react152.Link, {
+  }, "verified"), "Verified As Person:"), /* @__PURE__ */ React.createElement(import_react151.Link, {
     to: Entity_default.makeHrefForView(verifiedPerson)
   }, verifiedPerson.name)), /* @__PURE__ */ React.createElement("div", {
     className: "mb-4"
@@ -7341,8 +7310,8 @@ var logout_exports = {};
 __export(logout_exports, {
   default: () => logout_default
 });
-var import_react153 = require("react");
-var import_react154 = require("@remix-run/react");
+var import_react152 = require("react");
+var import_react153 = require("@remix-run/react");
 var import_client73 = require("@apollo/client");
 var LOG_OUT_MUTATION = import_client73.gql`
 	mutation LogOut {
@@ -7350,14 +7319,14 @@ var LOG_OUT_MUTATION = import_client73.gql`
 	}
 `;
 var LogOut = () => {
-  const navigate = (0, import_react154.useNavigate)();
+  const navigate = (0, import_react153.useNavigate)();
   const [logOut, { data: logOutData }] = (0, import_client73.useMutation)(LOG_OUT_MUTATION, {
     errorPolicy: "all"
   });
-  (0, import_react153.useEffect)(() => {
+  (0, import_react152.useEffect)(() => {
     logOut();
   }, [logOut]);
-  (0, import_react153.useEffect)(() => {
+  (0, import_react152.useEffect)(() => {
     if (logOutData == null ? void 0 : logOutData.logOut) {
       window.location.href = window.location.origin;
     }
@@ -7373,9 +7342,9 @@ var signup_exports = {};
 __export(signup_exports, {
   default: () => signup_default
 });
-var import_react155 = require("react");
+var import_react154 = require("react");
+var import_react155 = require("@remix-run/react");
 var import_react156 = require("@remix-run/react");
-var import_react157 = require("@remix-run/react");
 var import_client74 = require("@apollo/client");
 var SIGN_UP_MUTATION = import_client74.gql`
 	mutation SignUp($input: SignUpInput!) {
@@ -7386,12 +7355,12 @@ var SIGN_UP_MUTATION = import_client74.gql`
 	${UserFragments.currentUser}
 `;
 var SignUp = () => {
-  const navigate = (0, import_react156.useNavigate)();
+  const navigate = (0, import_react155.useNavigate)();
   const { redirectTo } = navigate.query;
   const [currentUser] = useCurrentUser_default();
-  const [email, setEmail] = (0, import_react155.useState)("");
-  const [username, setUsername] = (0, import_react155.useState)("");
-  const [validationError, setValidationError] = (0, import_react155.useState)("");
+  const [email, setEmail] = (0, import_react154.useState)("");
+  const [username, setUsername] = (0, import_react154.useState)("");
+  const [validationError, setValidationError] = (0, import_react154.useState)("");
   const [signUp, { loading, data: data2, error: error2 }] = (0, import_client74.useMutation)(SIGN_UP_MUTATION, {
     errorPolicy: "all"
   });
@@ -7405,7 +7374,7 @@ var SignUp = () => {
       }
     });
   };
-  (0, import_react155.useEffect)(() => {
+  (0, import_react154.useEffect)(() => {
     if (data2 == null ? void 0 : data2.signUp) {
       navigate("/auto-login");
     }
@@ -7440,7 +7409,7 @@ var SignUp = () => {
     className: "text-red-600 mb-4"
   }, validationError), error2 && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-4"
-  }, error2.message), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react157.Link, {
+  }, error2.message), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react156.Link, {
     to: { pathname: "/login", query: logInLinkQueryParams }
   }, "Log in"))));
 };
@@ -7452,8 +7421,8 @@ __export(routes_exports, {
   default: () => Home,
   loader: () => loader2
 });
-var import_react158 = require("react");
-var import_react159 = require("@remix-run/react");
+var import_react157 = require("react");
+var import_react158 = require("@remix-run/react");
 
 // app/services/LocalStorage.ts
 var localStorageIsAvailable = typeof window !== "undefined" && (window == null ? void 0 : window.localStorage);
@@ -7493,8 +7462,20 @@ var ProjectIntro = ({ className, onClose }) => {
 var ProjectIntro_default = ProjectIntro;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/index.tsx
-async function loader2() {
-  const [audioItems, collections, comments] = await Promise.all([
+async function loader2({
+  request
+}) {
+  const { searchParams } = new URL(request.url);
+  const sortBy = searchParams.get("sortBy") ?? "RecentlyTagged" /* RecentlyTagged */;
+  const audioItemsOrderBy = sortBy === "RecentlyTagged" /* RecentlyTagged */ ? { updatedAt: "desc" } : { createdAt: "desc" };
+  const [
+    audioItems,
+    collections,
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
+  ] = await Promise.all([
     db.audioItem.findMany({
       take: 10,
       include: {
@@ -7517,9 +7498,7 @@ async function loader2() {
           }
         }
       },
-      orderBy: {
-        updatedAt: "desc"
-      }
+      orderBy: audioItemsOrderBy
     }),
     db.collection.findMany({
       take: 5,
@@ -7541,28 +7520,39 @@ async function loader2() {
       orderBy: {
         createdAt: "desc"
       }
-    })
+    }),
+    db.audioItem.count(),
+    db.tag.count(),
+    db.comment.count()
   ]);
   return {
     audioItems,
     collections,
-    comments
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
   };
 }
 function Home() {
-  const { audioItems, collections, comments } = (0, import_react159.useLoaderData)();
-  const { Filters: Filters2, filtersProps, sortBy, viewAs } = useFilters_default({
-    defaultSortBy: "RecentlyTagged" /* RecentlyTagged */,
-    defaultViewAs: "Cards" /* Cards */,
-    enableQueryParams: false
-  });
-  const [shouldShowIntro, setShouldShowIntro] = (0, import_react158.useState)(false);
-  (0, import_react158.useEffect)(() => {
+  const {
+    audioItems,
+    collections,
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
+  } = (0, import_react158.useLoaderData)();
+  const { search } = (0, import_react158.useLocation)();
+  const viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */;
+  const { Filters: Filters2, filtersProps } = useFilters_default();
+  const [shouldShowIntro, setShouldShowIntro] = (0, import_react157.useState)(false);
+  (0, import_react157.useEffect)(() => {
     if (LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false") {
       setShouldShowIntro(true);
     }
   }, []);
-  const onCloseIntro = (0, import_react158.useCallback)(() => {
+  const onCloseIntro = (0, import_react157.useCallback)(() => {
     LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false");
     setShouldShowIntro(false);
   }, []);
@@ -7586,22 +7576,30 @@ function Home() {
     className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300"
   }, /* @__PURE__ */ React.createElement("h3", {
     className: "mb-4"
-  }, "Browse"), /* @__PURE__ */ React.createElement(import_react159.Link, {
+  }, "Browse"), /* @__PURE__ */ React.createElement(import_react158.Link, {
     to: "/entities/people",
     className: "mb-2"
-  }, "People"), /* @__PURE__ */ React.createElement(import_react159.Link, {
+  }, "People"), /* @__PURE__ */ React.createElement(import_react158.Link, {
     to: "/entities/instruments",
     className: "mb-2"
-  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react159.Link, {
+  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react158.Link, {
     to: "/entities/places",
     className: "mb-2"
-  }, "Places"), /* @__PURE__ */ React.createElement(import_react159.Link, {
+  }, "Places"), /* @__PURE__ */ React.createElement(import_react158.Link, {
     to: "/entities/tunes",
     className: "mb-2"
-  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react159.Link, {
+  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react158.Link, {
     to: "/entities/collections",
     className: "mb-2"
   }, "Collections"), /* @__PURE__ */ React.createElement("h3", {
+    className: "mt-6 mb-4"
+  }, "Stats"), /* @__PURE__ */ React.createElement("span", {
+    className: "mb-2 text-gray-500"
+  }, numAudioItemsAllTime, " Audio Items"), /* @__PURE__ */ React.createElement("span", {
+    className: "mb-2 text-gray-500"
+  }, numTagsAllTime, " Tags"), /* @__PURE__ */ React.createElement("span", {
+    className: "mb-2 text-gray-500"
+  }, numCommentsAllTime, " Comments"), /* @__PURE__ */ React.createElement("h3", {
     className: "mt-6 mb-4"
   }, "Latest Collections"), collections.map((collection, index) => {
     const { name } = collection;
@@ -7611,7 +7609,7 @@ function Home() {
     return /* @__PURE__ */ React.createElement("div", {
       className: "mb-2 text-gray-500",
       key: index
-    }, /* @__PURE__ */ React.createElement(import_react159.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react158.Link, {
       to: Entity_default.makeHrefForView(collection)
     }, collection.name));
   }), /* @__PURE__ */ React.createElement("h3", {
@@ -7637,9 +7635,9 @@ function Home() {
       key: index
     }, /* @__PURE__ */ React.createElement("div", {
       className: " mb-1"
-    }, /* @__PURE__ */ React.createElement(import_react159.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react158.Link, {
       to: `/users/${createdByUser.id}`
-    }, createdByUser.username), ` commented on `, /* @__PURE__ */ React.createElement(import_react159.Link, {
+    }, createdByUser.username), ` commented on `, /* @__PURE__ */ React.createElement(import_react158.Link, {
       to: Entity_default.makeHrefForView(parentAudioItem)
     }, parentAudioItem.name), ":"), /* @__PURE__ */ React.createElement("div", {
       className: "whitespace-pre-line text-sm"
@@ -7652,9 +7650,9 @@ var login_exports = {};
 __export(login_exports, {
   default: () => login_default
 });
-var import_react160 = require("react");
+var import_react159 = require("react");
+var import_react160 = require("@remix-run/react");
 var import_react161 = require("@remix-run/react");
-var import_react162 = require("@remix-run/react");
 var import_client75 = require("@apollo/client");
 var LOG_IN_MUTATION = import_client75.gql`
 	mutation LogIn($input: LogInInput!) {
@@ -7665,10 +7663,10 @@ var LOG_IN_MUTATION = import_client75.gql`
 	${UserFragments.currentUser}
 `;
 var Login = () => {
-  const navigate = (0, import_react161.useNavigate)();
+  const navigate = (0, import_react160.useNavigate)();
   const { redirectTo } = navigate.query;
   const [currentUser] = useCurrentUser_default();
-  const [email, setEmail] = (0, import_react160.useState)("");
+  const [email, setEmail] = (0, import_react159.useState)("");
   const [logIn, { loading, data: data2, error: error2 }] = (0, import_client75.useMutation)(LOG_IN_MUTATION, {
     errorPolicy: "all"
   });
@@ -7679,7 +7677,7 @@ var Login = () => {
       variables: { input: { email: cleanedEmail, redirectTo } }
     });
   };
-  (0, import_react160.useEffect)(() => {
+  (0, import_react159.useEffect)(() => {
     if (data2 == null ? void 0 : data2.logIn) {
       navigate("/auto-login");
     }
@@ -7707,14 +7705,14 @@ var Login = () => {
     value: "Log In"
   })), error2 && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-4"
-  }, error2.message), /* @__PURE__ */ React.createElement("div", null, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react162.Link, {
+  }, error2.message), /* @__PURE__ */ React.createElement("div", null, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react161.Link, {
     to: { pathname: "/signup", query: signUpLinkQueryParams }
   }, "Sign Up"))));
 };
 var login_default = Login;
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "325aaabe", "entry": { "module": "/build/entry.client-J6ZSRDNF.js", "imports": ["/build/_shared/chunk-FQNH2CWN.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-OVQN7UHO.js", "imports": ["/build/_shared/chunk-S7PN3G6T.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": true, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-QUBBZ7CM.js", "imports": ["/build/_shared/chunk-62AN4TPO.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-HI6XUQHH.js", "imports": ["/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-7YDBN62N.js", "imports": ["/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-D3HA3NIX.js", "imports": ["/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-N42NAGY7.js", "imports": ["/build/_shared/chunk-62AN4TPO.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-R7TMBY2T.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-VXXUBJEE.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-ENFCATS7.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-NCRE6APH.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-IQN63IPG.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-33KOB7XZ.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-IZTOFYKE.js", "imports": ["/build/_shared/chunk-PZBYYJS2.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-VHC2ZAAB.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-7DYQ4DKS.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-KYR4GC7F.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-B4GRYLE2.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-QNFK6THC.js", "imports": ["/build/_shared/chunk-4TS4YP7T.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-TV3BYIPZ.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-EU35M3BQ.js", "imports": ["/build/_shared/chunk-OIF45POS.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-M765DECW.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-3BWTOX7N.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-L5DV7MJX.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-UHZHW24E.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-HCFWR4JB.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-HCHQV4VF.js", "imports": ["/build/_shared/chunk-ACA63UUA.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-XHJVU7TD.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-MK7YEX2L.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-R3HB2H2O.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-HK6P4I5X.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-YKBBPFT4.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-622MUYCI.js", "imports": ["/build/_shared/chunk-HNK6Q7JI.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-AQ36QIUN.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-BUXHYEPZ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-IUW7LBDR.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-YYC4F7AL.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-UUBNZVIJ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-AXVPCGJK.js", "imports": ["/build/_shared/chunk-3FWRNUQS.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-5GOSUSUC.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-ISMJRHEQ.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-VUDC3VBH.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-7E73KRMS.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-GLFL47W5.js", "imports": ["/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-ZN6FDLTO.js", "imports": ["/build/_shared/chunk-NNKVZEE5.js", "/build/_shared/chunk-3OMBFM6P.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-Z3KCHFBO.js", "imports": ["/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-VL6QMHQH.js", "imports": ["/build/_shared/chunk-C2P423LU.js", "/build/_shared/chunk-U4SO2ZKI.js", "/build/_shared/chunk-V244WU4E.js", "/build/_shared/chunk-XXVUHGO5.js", "/build/_shared/chunk-FZM6XB7V.js", "/build/_shared/chunk-2V5ZX7E4.js", "/build/_shared/chunk-U3VMZZX6.js", "/build/_shared/chunk-RQXF7JDZ.js", "/build/_shared/chunk-QGIXXPFB.js", "/build/_shared/chunk-L4XE2JID.js", "/build/_shared/chunk-WTK4W7BI.js", "/build/_shared/chunk-3B7CKEFK.js", "/build/_shared/chunk-SHKHU5KD.js", "/build/_shared/chunk-VY6ZK2W7.js", "/build/_shared/chunk-5JE6OLFF.js", "/build/_shared/chunk-EF6EH4CP.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-57UMYXAJ.js", "imports": ["/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-LFUWZLUH.js", "imports": ["/build/_shared/chunk-HNK6Q7JI.js", "/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-VAQPOK4E.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-X66U2SOU.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-3I6GMCGC.js", "imports": ["/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-YWQVSLYC.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-IT42G6XD.js", "imports": ["/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-S4I243MJ.js", "imports": ["/build/_shared/chunk-BQDKVWAC.js", "/build/_shared/chunk-SF2QRHJD.js", "/build/_shared/chunk-R4MAIRTL.js", "/build/_shared/chunk-FYENCAKH.js", "/build/_shared/chunk-MTKGZDM3.js", "/build/_shared/chunk-UASOFUJK.js", "/build/_shared/chunk-QQLBJQTC.js", "/build/_shared/chunk-U2JCGAVL.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-325AAABE.js" };
+var assets_manifest_default = { "version": "1f0a02ba", "entry": { "module": "/build/entry.client-24CXC3PV.js", "imports": ["/build/_shared/chunk-LAZS6NQD.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-4VHDC7X4.js", "imports": ["/build/_shared/chunk-ZQEJ35XF.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": true, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-3NMV4EDL.js", "imports": ["/build/_shared/chunk-SRDA4TBH.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-DIKPSL6I.js", "imports": ["/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-762HRXQJ.js", "imports": ["/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-WLQF6EJC.js", "imports": ["/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-ICRX2ZTU.js", "imports": ["/build/_shared/chunk-SRDA4TBH.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-BC47TDU4.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-E4STYVZJ.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-JXAO3GLB.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-FTTZIVBI.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-7PQVISF4.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-P74PJYZU.js", "imports": ["/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-XTYR2475.js", "imports": ["/build/_shared/chunk-HC4CZDGH.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-BR4FWYON.js", "imports": ["/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-CAA7BSAC.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-WM2LXBG6.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-TEMN42UK.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-OW2KQCM6.js", "imports": ["/build/_shared/chunk-INVGBW77.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-ZKMJHD7Z.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-NNP6CCAW.js", "imports": ["/build/_shared/chunk-3JFS42ZJ.js", "/build/_shared/chunk-7AHRJAPS.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-A7NVDOL5.js", "imports": ["/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-ZRQPFPEZ.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-34HDC6VG.js", "imports": ["/build/_shared/chunk-WSE2P2MR.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-4BOICKIP.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-PWYROEAA.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-MDW5OROS.js", "imports": ["/build/_shared/chunk-HASMV6WV.js", "/build/_shared/chunk-7AHRJAPS.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-MVWTW5SQ.js", "imports": ["/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-6UGQQ57K.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-ALMEYZRM.js", "imports": ["/build/_shared/chunk-WSE2P2MR.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-MYB3NKT6.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-RGTOQTUK.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-OLKK2FAX.js", "imports": ["/build/_shared/chunk-I3V7J4HZ.js", "/build/_shared/chunk-7AHRJAPS.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-UTEOB3HO.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-ZD54S3RV.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-TZAR3Y5W.js", "imports": ["/build/_shared/chunk-WSE2P2MR.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-LYNIYUJ2.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-Z2MJKYJR.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-GU5AOGPQ.js", "imports": ["/build/_shared/chunk-UWSAPTSJ.js", "/build/_shared/chunk-7AHRJAPS.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-N3RYMLMY.js", "imports": ["/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-FE2OQ5PS.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-TOLRXNUF.js", "imports": ["/build/_shared/chunk-WSE2P2MR.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-X4BT5K2I.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-BRGMI6QE.js", "imports": ["/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-2XSDYAXL.js", "imports": ["/build/_shared/chunk-N44PCBKF.js", "/build/_shared/chunk-7AHRJAPS.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-LNOPULIM.js", "imports": ["/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-2COR3YQF.js", "imports": ["/build/_shared/chunk-WSE2P2MR.js", "/build/_shared/chunk-JDG6WXNN.js", "/build/_shared/chunk-5DALBYVT.js", "/build/_shared/chunk-ETNNQXWI.js", "/build/_shared/chunk-YNOSSSX4.js", "/build/_shared/chunk-4ZS4RKQK.js", "/build/_shared/chunk-MUPKMBMF.js", "/build/_shared/chunk-VBOJUJRE.js", "/build/_shared/chunk-BBABTPQA.js", "/build/_shared/chunk-NCJMDQTL.js", "/build/_shared/chunk-AIAI25GH.js", "/build/_shared/chunk-YLJS2KAL.js", "/build/_shared/chunk-R6HNRM76.js", "/build/_shared/chunk-J3PUV6G7.js", "/build/_shared/chunk-2CUMPA3P.js", "/build/_shared/chunk-QGKSSSWD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-XFYVLU2A.js", "imports": ["/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-4OSMIBN7.js", "imports": ["/build/_shared/chunk-I3V7J4HZ.js", "/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-PIV3B63A.js", "imports": ["/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-RSKHGHIN.js", "imports": ["/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-JYVQER3C.js", "imports": ["/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-M3HSCS3E.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-JGVDQR5E.js", "imports": ["/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-EZO255AZ.js", "imports": ["/build/_shared/chunk-F44BCDAE.js", "/build/_shared/chunk-LNL5MASJ.js", "/build/_shared/chunk-TURQZNPG.js", "/build/_shared/chunk-F73BS3PK.js", "/build/_shared/chunk-CPZGTRZW.js", "/build/_shared/chunk-NPBM62RR.js", "/build/_shared/chunk-HRHI5VCY.js", "/build/_shared/chunk-ZO5LPNA6.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-1F0A02BA.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

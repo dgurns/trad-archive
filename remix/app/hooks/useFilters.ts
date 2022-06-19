@@ -1,8 +1,10 @@
 import type React from "react";
-import { useState, useCallback, useMemo, useEffect } from "react";
-import type { PerPage, SortBy, ViewAs } from "~/types";
+import { useCallback, useMemo } from "react";
+import { useLocation, useNavigate } from "@remix-run/react";
 
-import useQueryParams from "~/hooks/useQueryParams";
+import type { PerPage } from "~/types";
+import { SortBy, ViewAs } from "~/types";
+
 import type { Props as FiltersProps } from "~/components/Filters";
 import Filters from "~/components/Filters";
 
@@ -28,77 +30,60 @@ interface ReturnValue {
 // viewAs values.
 const useFilters = ({
 	totalItems,
-	defaultPage,
-	defaultPerPage,
-	defaultSortBy,
-	defaultViewAs,
-	enableQueryParams = true,
+	defaultPage = 1,
+	defaultPerPage = 20,
+	defaultSortBy = SortBy.RecentlyTagged,
+	defaultViewAs = ViewAs.Cards,
 }: Args = {}): ReturnValue => {
-	const { getQueryParams, updateQueryParams, clearQueryParams } =
-		useQueryParams();
-	const queryParams = getQueryParams();
+	const navigate = useNavigate();
+	const { pathname, search } = useLocation();
+	const queryParams = new URLSearchParams(search);
 
-	// If query params are enabled and set in the URL, use them as default values
-	const initialPage = enableQueryParams
-		? parseInt(queryParams.page, 10) || defaultPage
-		: defaultPage;
-	const initialPerPage = enableQueryParams
-		? parseInt(queryParams.perPage, 10) || defaultPerPage
-		: defaultPerPage;
-	const initialSortBy = enableQueryParams
-		? (queryParams.sortBy as SortBy) ?? defaultSortBy
-		: defaultSortBy;
-	const initialViewAs = enableQueryParams
-		? (queryParams.viewAs as ViewAs) ?? defaultViewAs
-		: defaultViewAs;
+	// Pull filter values from query params. If not set, use defaults.
+	const page = parseInt(queryParams.get("page") ?? "", 10) || defaultPage;
+	const perPage =
+		parseInt(queryParams.get("perPage") ?? "", 10) || defaultPerPage;
+	const sortBy = (queryParams.get("sortBy") as SortBy) ?? defaultSortBy;
+	const viewAs = (queryParams.get("viewAs") as ViewAs) ?? defaultViewAs;
 
-	const [page, setPage] = useState<number>(initialPage);
-	const [perPage, setPerPage] = useState<number>(initialPerPage);
-	const [sortBy, setSortBy] = useState<SortBy>(initialSortBy);
-	const [viewAs, setViewAs] = useState<ViewAs>(initialViewAs);
+	const updateQueryParams = useCallback(
+		(paramsToUpdate: Record<string, string | null> = {}) => {
+			const queryParams = new URLSearchParams(search);
 
-	// Update query params when state changes
-	useEffect(() => {
-		if (!enableQueryParams) {
-			return;
-		}
-		updateQueryParams({
-			page: page ? `${page}` : null,
-			perPage: perPage ? `${perPage}` : null,
-			sortBy,
-			viewAs,
-		});
-	}, [enableQueryParams, page, perPage, sortBy, viewAs]);
+			const paramNames = Object.keys(paramsToUpdate);
+			paramNames.forEach((paramName) => {
+				const value = paramsToUpdate[paramName];
+				if (value) {
+					queryParams.set(paramName, value);
+				} else {
+					queryParams.delete(paramName);
+				}
+			});
 
-	// Clear query params on unmount
-	useEffect(() => {
-		if (!enableQueryParams) {
-			return;
-		}
-		return () => clearQueryParams();
-	}, [enableQueryParams]);
+			return navigate(`${pathname}?${queryParams.toString()}`);
+		},
+		[navigate, pathname, search]
+	);
 
 	const onChangePage = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>
-			setPage(parseInt(event.target.value)),
-		[]
+			updateQueryParams({ page: event.target.value }),
+		[updateQueryParams]
 	);
 	const onChangePerPage = useCallback(
-		(event: React.ChangeEvent<HTMLSelectElement>) => {
-			setPerPage(parseInt(event.target.value));
-			setPage(1);
-		},
-		[]
+		(event: React.ChangeEvent<HTMLSelectElement>) =>
+			updateQueryParams({ perPage: event.target.value, page: "1" }),
+		[updateQueryParams]
 	);
 	const onChangeSortBy = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>
-			setSortBy(event.target.value as SortBy),
-		[]
+			updateQueryParams({ sortBy: event.target.value as SortBy }),
+		[updateQueryParams]
 	);
 	const onChangeViewAs = useCallback(
 		(event: React.ChangeEvent<HTMLSelectElement>) =>
-			setViewAs(event.target.value as ViewAs),
-		[]
+			updateQueryParams({ viewAs: event.target.value as ViewAs }),
+		[updateQueryParams]
 	);
 
 	const returnValue = useMemo(
@@ -121,7 +106,6 @@ const useFilters = ({
 			viewAs,
 		}),
 		[
-			Filters,
 			totalItems,
 			page,
 			onChangePage,

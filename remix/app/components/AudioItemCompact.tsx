@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { Link } from "@remix-run/react";
+import { type Tune } from "@prisma/client";
 
-import type { AudioItem } from "~/types";
+import type { AudioItemWithRelations } from "~/types";
 import { EntityStatus, EntityType } from "~/types";
 import EntityService from "~/services/Entity";
 import TagService from "~/services/Tag";
@@ -15,19 +16,22 @@ import ViewCommentsButton from "~/components/ViewCommentsButton";
 import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
-	audioItem: AudioItem;
+	audioItem: AudioItemWithRelations;
 	className?: string;
 }
 const AudioItemCompact = ({ audioItem, className }: Props) => {
-	const { name, slug, description, tags, status } = audioItem;
+	const { name, slug, description, tagsAsSubject, status } = audioItem;
 	const isTakenDown = status === EntityStatus.TakenDown;
-	const sortedTags = useMemo(() => TagService.sort(tags), [tags]);
+	const sortedTags = useMemo(
+		() => TagService.sort(tagsAsSubject),
+		[tagsAsSubject]
+	);
 
 	const { activeAudioItem, setActiveAudioItem } = usePlayerContext();
 
 	const onPlayPressed = useCallback(() => {
 		setActiveAudioItem(audioItem);
-	}, [audioItem]);
+	}, [audioItem, setActiveAudioItem]);
 
 	const playButtonMarkup = useMemo(() => {
 		const audioItemIsInPlayer = activeAudioItem?.id === audioItem.id;
@@ -65,21 +69,25 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 
 				<div className="flex flex-row flex-wrap text-sm mt-1 mb-1">
 					Tags:
-					{sortedTags.map((tag, index) => (
-						<div key={index} className="ml-1 whitespace-pre">
-							<Link to={EntityService.makeHrefForView(tag.objectEntity)}>
-								<a>
-									{tag.objectEntity.name}
-									{tag.objectEntity.entityType === EntityType.Tune
-										? ` (${tag.objectEntity.type})`
+					{sortedTags.map((tag, index) => {
+						const objectEntity = TagService.getObjectEntity(tag);
+						if (!objectEntity) {
+							return null;
+						}
+						return (
+							<div key={index} className="ml-1 whitespace-pre">
+								<Link to={EntityService.makeHrefForView(objectEntity)}>
+									{objectEntity.name}
+									{objectEntity.entityType === EntityType.Tune
+										? ` (${(objectEntity as Tune).type})`
 										: ""}
-								</a>
-							</Link>
-							{index !== sortedTags.length - 1 && ", "}
-						</div>
-					))}
+								</Link>
+								{index !== sortedTags.length - 1 && ", "}
+							</div>
+						);
+					})}
 					<AddTagButton entity={audioItem} className="ml-2" />
-					{tags?.length > 0 && (
+					{tagsAsSubject?.length > 0 && (
 						<div className="flex ml-1">
 							<span className="text-gray-500 mr-1">/</span>
 							<EditTagsButton entity={audioItem} />

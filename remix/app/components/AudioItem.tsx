@@ -1,4 +1,4 @@
-import type { AudioItem } from "~/types";
+import type { AudioItemWithRelations } from "~/types";
 import { ViewAs } from "~/types";
 
 import AudioItemCard from "~/components/AudioItemCard";
@@ -7,7 +7,7 @@ import AudioItemTextOnly from "~/components/AudioItemTextOnly";
 
 interface Props {
 	viewAs?: ViewAs;
-	audioItem: AudioItem;
+	audioItem: AudioItemWithRelations;
 	showTitle?: boolean;
 	className?: string;
 }
@@ -15,7 +15,7 @@ interface Props {
 // AudioItem handles wrapping the different variants of AudioItem components. It
 // returns the variant requested in the `viewAs` prop. Default is Card.
 const AudioItemComponent = ({
-	viewAs = ViewAs.Cards,
+	viewAs,
 	audioItem,
 	showTitle,
 	className,

@@ -1,5 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData, useLocation } from "@remix-run/react";
+import { type DataFunctionArgs } from "@remix-run/node";
+import { type Prisma } from "@prisma/client";
 
 import type {
 	CollectionWithRelations,
@@ -20,10 +22,29 @@ interface LoaderData {
 	audioItems: AudioItemWithRelations[];
 	collections: CollectionWithRelations[];
 	comments: CommentWithRelations[];
+	numAudioItemsAllTime: number;
+	numTagsAllTime: number;
+	numCommentsAllTime: number;
 }
 
-export async function loader(): Promise<LoaderData> {
-	const [audioItems, collections, comments] = await Promise.all([
+export async function loader({
+	request,
+}: DataFunctionArgs): Promise<LoaderData> {
+	const { searchParams } = new URL(request.url);
+	const sortBy = searchParams.get("sortBy") ?? SortBy.RecentlyTagged;
+	const audioItemsOrderBy: Prisma.Enumerable<Prisma.AudioItemOrderByWithRelationInput> =
+		sortBy === SortBy.RecentlyTagged
+			? { updatedAt: "desc" }
+			: { createdAt: "desc" };
+
+	const [
+		audioItems,
+		collections,
+		comments,
+		numAudioItemsAllTime,
+		numTagsAllTime,
+		numCommentsAllTime,
+	] = await Promise.all([
 		db.audioItem.findMany({
 			take: 10,
 			include: {
@@ -46,9 +67,7 @@ export async function loader(): Promise<LoaderData> {
 					},
 				},
 			},
-			orderBy: {
-				updatedAt: "desc",
-			},
+			orderBy: audioItemsOrderBy,
 		}),
 		db.collection.findMany({
 			take: 5,
@@ -71,22 +90,34 @@ export async function loader(): Promise<LoaderData> {
 				createdAt: "desc",
 			},
 		}),
+		db.audioItem.count(),
+		db.tag.count(),
+		db.comment.count(),
 	]);
 	return {
 		audioItems,
 		collections,
 		comments,
+		numAudioItemsAllTime,
+		numTagsAllTime,
+		numCommentsAllTime,
 	};
 }
 
 export default function Home() {
-	const { audioItems, collections, comments } = useLoaderData<LoaderData>();
+	const {
+		audioItems,
+		collections,
+		comments,
+		numAudioItemsAllTime,
+		numTagsAllTime,
+		numCommentsAllTime,
+	} = useLoaderData<LoaderData>();
+	const { search } = useLocation();
+	const viewAs =
+		(new URLSearchParams(search).get("viewAs") as ViewAs) ?? ViewAs.Cards;
 
-	const { Filters, filtersProps, sortBy, viewAs } = useFilters({
-		defaultSortBy: SortBy.RecentlyTagged,
-		defaultViewAs: ViewAs.Cards,
-		enableQueryParams: false,
-	});
+	const { Filters, filtersProps } = useFilters();
 
 	// Due to static rendering, we need to check localStorage for intro status
 	// after client-side hydration.
@@ -144,20 +175,14 @@ export default function Home() {
 						Collections
 					</Link>
 
-					{/* {prefetchedStats && (
-						<>
-							<h3 className="mt-6 mb-4">Stats</h3>
-							<span className="mb-2 text-gray-500">
-								{prefetchedStats.numAudioItemsAllTime} Audio Items
-							</span>
-							<span className="mb-2 text-gray-500">
-								{prefetchedStats.numTagsAllTime} Tags
-							</span>
-							<span className="mb-2 text-gray-500">
-								{prefetchedStats.numCommentsAllTime} Comments
-							</span>
-						</>
-					)} */}
+					<h3 className="mt-6 mb-4">Stats</h3>
+					<span className="mb-2 text-gray-500">
+						{numAudioItemsAllTime} Audio Items
+					</span>
+					<span className="mb-2 text-gray-500">{numTagsAllTime} Tags</span>
+					<span className="mb-2 text-gray-500">
+						{numCommentsAllTime} Comments
+					</span>
 
 					<h3 className="mt-6 mb-4">Latest Collections</h3>
 					{collections.map((collection, index) => {

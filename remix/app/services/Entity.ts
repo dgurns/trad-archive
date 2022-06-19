@@ -6,7 +6,7 @@ const cleanSlug = (rawSlug: string) => {
 };
 
 interface EntityArg {
-	entityType: EntityType;
+	entityType: EntityType | null;
 	slug: string;
 }
 

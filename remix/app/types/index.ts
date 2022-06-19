@@ -112,8 +112,8 @@ export enum CopyrightPermissionStatus {
 }
 
 export enum EntityStatus {
-	Published = "Published",
-	TakenDown = "TakenDown",
+	Published = "PUBLISHED",
+	TakenDown = "TAKEN_DOWN",
 }
 
 export function isAudioItem(entity: Entity): entity is AudioItem {

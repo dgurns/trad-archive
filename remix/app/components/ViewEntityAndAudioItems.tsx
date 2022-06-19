@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { useInView } from "react-intersection-observer";
 
 import type { AudioItemWithRelations, Entity } from "~/types";
@@ -13,21 +13,28 @@ import AudioItem from "~/components/AudioItem";
 interface Props {
 	entity: Entity;
 	audioItems: AudioItemWithRelations[];
+	totalAudioItems: number;
 	className?: string;
 }
-const ViewEntityAndAudioItems = ({ entity, audioItems, className }: Props) => {
+const ViewEntityAndAudioItems = ({
+	entity,
+	audioItems,
+	totalAudioItems,
+	className,
+}: Props) => {
 	const { name } = entity ?? {};
-	const totalAudioItems = audioItems.length;
 
 	const { ref: metadataRef, inView: metadataInView } = useInView({
 		initialInView: true,
 	});
 
-	const { Filters, filtersProps, page, perPage, viewAs } = useFilters({
-		defaultPage: 1,
+	const { search } = useLocation();
+	const queryParams = new URLSearchParams(search);
+	const page = queryParams.get("page");
+	const viewAs = queryParams.get("viewAs") as ViewAs;
+
+	const { Filters, filtersProps } = useFilters({
 		totalItems: audioItems.length,
-		defaultPerPage: PerPage.Twenty,
-		defaultViewAs: ViewAs.Cards,
 	});
 	const filtersRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +87,7 @@ const ViewEntityAndAudioItems = ({ entity, audioItems, className }: Props) => {
 			{totalAudioItems > 0 &&
 				audioItems.map((audioItem, index) => (
 					<AudioItem
-						viewAs={viewAs}
+						viewAs={viewAs ?? ViewAs.Cards}
 						audioItem={audioItem}
 						key={index}
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}

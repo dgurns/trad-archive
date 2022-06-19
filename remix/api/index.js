@@ -76,13 +76,14 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/root.tsx
 var root_exports = {};
 __export(root_exports, {
+  CatchBoundary: () => CatchBoundary,
   ErrorBoundary: () => ErrorBoundary,
   default: () => App,
   links: () => links,
   meta: () => meta
 });
 var import_react21 = require("@remix-run/react");
-var import_client10 = require("@apollo/client");
+var import_client11 = require("@apollo/client");
 
 // app/styles/globals-generated-do-not-edit.css
 var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-SEJGMZM7.css";
@@ -1010,23 +1011,24 @@ var UserService = {
 var User_default = UserService;
 
 // app/services/Entity.ts
+var import_client5 = require("@prisma/client");
 var cleanSlug = (rawSlug) => {
   const slugWithHyphens = rawSlug.replace(/[\s]/g, "-");
   return slugWithHyphens.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
 };
 var makeHrefForTopLevel = (entity) => {
   switch (entity == null ? void 0 : entity.entityType) {
-    case "AudioItem" /* AudioItem */:
+    case import_client5.EntityType.AudioItem:
       return "/entities/audio-items";
-    case "Person" /* Person */:
+    case import_client5.EntityType.Person:
       return "/entities/people";
-    case "Instrument" /* Instrument */:
+    case import_client5.EntityType.Instrument:
       return "/entities/instruments";
-    case "Place" /* Place */:
+    case import_client5.EntityType.Place:
       return "/entities/places";
-    case "Tune" /* Tune */:
+    case import_client5.EntityType.Tune:
       return "/entities/tunes";
-    case "Collection" /* Collection */:
+    case import_client5.EntityType.Collection:
       return "/entities/collections";
     default:
       return "";
@@ -1058,17 +1060,17 @@ var makeHrefForTags = (entity) => {
 };
 var makeReadableNamePlural = (entity) => {
   switch (entity == null ? void 0 : entity.entityType) {
-    case "AudioItem" /* AudioItem */:
+    case import_client5.EntityType.AudioItem:
       return "Audio Items";
-    case "Person" /* Person */:
+    case import_client5.EntityType.Person:
       return "People";
-    case "Instrument" /* Instrument */:
+    case import_client5.EntityType.Instrument:
       return "Instruments";
-    case "Place" /* Place */:
+    case import_client5.EntityType.Place:
       return "Places";
-    case "Tune" /* Tune */:
+    case import_client5.EntityType.Tune:
       return "Tunes";
-    case "Collection" /* Collection */:
+    case import_client5.EntityType.Collection:
       return "Collections";
     default:
       return "";
@@ -1127,7 +1129,7 @@ var Modal_default = Modal;
 // app/components/SearchEntities.tsx
 var import_react16 = require("@remix-run/react");
 var import_react17 = require("react");
-var import_client9 = require("@apollo/client");
+var import_client10 = require("@apollo/client");
 var import_debounce = __toESM(require("lodash/debounce"));
 
 // app/components/LoadingCircle.tsx
@@ -1159,8 +1161,8 @@ var useRequireLogin_default = useRequireLogin;
 
 // app/components/CreatePersonForm.tsx
 var import_react11 = require("react");
-var import_client5 = require("@apollo/client");
-var CREATE_PERSON_MUTATION = import_client5.gql`
+var import_client6 = require("@apollo/client");
+var CREATE_PERSON_MUTATION = import_client6.gql`
 	mutation CreatePerson($input: CreatePersonInput!) {
 		createPerson(input: $input) {
 			...Person
@@ -1169,7 +1171,7 @@ var CREATE_PERSON_MUTATION = import_client5.gql`
 	${EntityFragments.person}
 `;
 var CreatePersonForm = ({ onSuccess }) => {
-  const [createPerson, { loading, error: error2, data: data2 }] = (0, import_client5.useMutation)(CREATE_PERSON_MUTATION, {
+  const [createPerson, { loading, error: error2, data: data2 }] = (0, import_client6.useMutation)(CREATE_PERSON_MUTATION, {
     errorPolicy: "all"
   });
   const [firstName, setFirstName] = (0, import_react11.useState)("");
@@ -1270,8 +1272,8 @@ var CreatePersonForm_default = CreatePersonForm;
 
 // app/components/CreateInstrumentForm.tsx
 var import_react12 = require("react");
-var import_client6 = require("@apollo/client");
-var CREATE_INSTRUMENT_MUTATION = import_client6.gql`
+var import_client7 = require("@apollo/client");
+var CREATE_INSTRUMENT_MUTATION = import_client7.gql`
 	mutation CreateInstrument($input: CreateInstrumentInput!) {
 		createInstrument(input: $input) {
 			...Instrument
@@ -1280,7 +1282,7 @@ var CREATE_INSTRUMENT_MUTATION = import_client6.gql`
 	${EntityFragments.instrument}
 `;
 var CreateInstrumentForm = ({ onSuccess }) => {
-  const [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client6.useMutation)(CREATE_INSTRUMENT_MUTATION, {
+  const [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client7.useMutation)(CREATE_INSTRUMENT_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react12.useState)("");
@@ -1356,8 +1358,8 @@ var CreateInstrumentForm_default = CreateInstrumentForm;
 
 // app/components/CreatePlaceForm.tsx
 var import_react13 = require("react");
-var import_client7 = require("@apollo/client");
-var CREATE_PLACE_MUTATION = import_client7.gql`
+var import_client8 = require("@apollo/client");
+var CREATE_PLACE_MUTATION = import_client8.gql`
 	mutation CreatePlace($input: CreatePlaceInput!) {
 		createPlace(input: $input) {
 			...Place
@@ -1366,7 +1368,7 @@ var CREATE_PLACE_MUTATION = import_client7.gql`
 	${EntityFragments.place}
 `;
 var CreatePlaceForm = ({ onSuccess }) => {
-  const [createPlace, { loading, error: error2, data: data2 }] = (0, import_client7.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" });
+  const [createPlace, { loading, error: error2, data: data2 }] = (0, import_client8.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" });
   const [name, setName] = (0, import_react13.useState)("");
   const [slug, setSlug] = (0, import_react13.useState)("");
   const [aliases, setAliases] = (0, import_react13.useState)("");
@@ -1465,8 +1467,8 @@ var CreatePlaceForm_default = CreatePlaceForm;
 
 // app/components/CreateCollectionForm.tsx
 var import_react14 = require("react");
-var import_client8 = require("@apollo/client");
-var CREATE_COLLECTION_MUTATION = import_client8.gql`
+var import_client9 = require("@apollo/client");
+var CREATE_COLLECTION_MUTATION = import_client9.gql`
 	mutation CreateCollection($input: CreateCollectionInput!) {
 		createCollection(input: $input) {
 			...Collection
@@ -1475,7 +1477,7 @@ var CREATE_COLLECTION_MUTATION = import_client8.gql`
 	${EntityFragments.collection}
 `;
 var CreateCollectionForm = ({ onSuccess }) => {
-  const [createCollection, { loading, error: error2, data: data2 }] = (0, import_client8.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" });
+  const [createCollection, { loading, error: error2, data: data2 }] = (0, import_client9.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" });
   const [name, setName] = (0, import_react14.useState)("");
   const [slug, setSlug] = (0, import_react14.useState)("");
   const [aliases, setAliases] = (0, import_react14.useState)("");
@@ -1649,7 +1651,7 @@ var CreateNewEntities = ({ entityTypes, onNewEntityCreated }) => {
 var CreateNewEntities_default = CreateNewEntities;
 
 // app/components/SearchEntities.tsx
-var SEARCH_ENTITIES_QUERY = import_client9.gql`
+var SEARCH_ENTITIES_QUERY = import_client10.gql`
 	query SearchEntities($input: SearchEntitiesInput!) {
 		searchEntities(input: $input) {
 			...AudioItem
@@ -1679,7 +1681,7 @@ var SearchEntities = ({
   const onChangeSearchTerm = (event) => {
     setSearchTerm(event.target.value);
   };
-  const [searchEntities, { loading, data: data2, error: error2 }] = (0, import_client9.useLazyQuery)(SEARCH_ENTITIES_QUERY, {
+  const [searchEntities, { loading, data: data2, error: error2 }] = (0, import_client10.useLazyQuery)(SEARCH_ENTITIES_QUERY, {
     fetchPolicy: "no-cache"
   });
   const debouncedSearchEntities = (0, import_react17.useCallback)((0, import_debounce.default)(searchEntities, 300, { trailing: true }), [searchEntities]);
@@ -1926,7 +1928,7 @@ function links() {
 function App() {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client10.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1944,7 +1946,7 @@ function App() {
 function ErrorBoundary({ error: error2 }) {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client10.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1961,6 +1963,27 @@ function ErrorBoundary({ error: error2 }) {
     id: "header"
   }, /* @__PURE__ */ React.createElement(Header_default, null))), /* @__PURE__ */ React.createElement(import_react21.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react21.Scripts, null), /* @__PURE__ */ React.createElement(import_react21.LiveReload, null)))));
 }
+function CatchBoundary() {
+  const caught = (0, import_react21.useCatch)();
+  return /* @__PURE__ */ React.createElement("html", {
+    lang: "en"
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react21.Meta, null), /* @__PURE__ */ React.createElement(import_react21.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+    client: apolloClient
+  }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
+    className: "bg-gray-100"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col w-full relative pt-12"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col justify-start items-center"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center"
+  }, /* @__PURE__ */ React.createElement("h1", null, "Oops! There was an error."), /* @__PURE__ */ React.createElement("p", {
+    className: "text-red-500 mt-2"
+  }, caught.status, " - ", caught.statusText)), /* @__PURE__ */ React.createElement(Footer, null)), /* @__PURE__ */ React.createElement("div", {
+    className: "fixed top-0 right-0 left-0",
+    id: "header"
+  }, /* @__PURE__ */ React.createElement(Header_default, null))), /* @__PURE__ */ React.createElement(import_react21.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react21.Scripts, null), /* @__PURE__ */ React.createElement(import_react21.LiveReload, null)))));
+}
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/[id]/upload.tsx
 var upload_exports = {};
@@ -1969,7 +1992,7 @@ __export(upload_exports, {
 });
 var import_react25 = require("react");
 var import_react26 = require("@remix-run/react");
-var import_client11 = require("@apollo/client");
+var import_client12 = require("@apollo/client");
 
 // app/components/Layout.tsx
 var Layout = ({ children }) => {
@@ -2189,7 +2212,7 @@ var DateTimeService = {
 var DateTime_default = DateTimeService;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/[id]/upload.tsx
-var SUBMISSION = import_client11.gql`
+var SUBMISSION = import_client12.gql`
 	query Submission($input: SubmissionInput!) {
 		submission(input: $input) {
 			...Submission
@@ -2197,7 +2220,7 @@ var SUBMISSION = import_client11.gql`
 	}
 	${SubmissionFragments.submission}
 `;
-var CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client11.gql`
+var CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client12.gql`
 	mutation CreatePresignedFileUploadUrls(
 		$input: CreatePresignedFileUploadUrlsInput!
 	) {
@@ -2211,13 +2234,13 @@ var SubmissionsViewByIdUpload = () => {
   const navigate = (0, import_react26.useNavigate)();
   const { id } = navigate.query;
   const submissionId = typeof id === "string" ? id : void 0;
-  const { data: data2, error: error2 } = (0, import_client11.useQuery)(SUBMISSION, {
+  const { data: data2, error: error2 } = (0, import_client12.useQuery)(SUBMISSION, {
     variables: { input: { id: submissionId } },
     skip: !submissionId
   });
   const [files, setFiles] = (0, import_react25.useState)([]);
   const [uploadQueue, setUploadQueue] = (0, import_react25.useState)();
-  const [getPresignedUrls] = (0, import_client11.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS);
+  const [getPresignedUrls] = (0, import_client12.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS);
   const onUploadClicked = async () => {
     if (!submissionId) {
       return;
@@ -2315,7 +2338,7 @@ __export(verification_requests_exports, {
 });
 var import_react28 = require("react");
 var import_react29 = require("@remix-run/react");
-var import_client12 = require("@apollo/client");
+var import_client13 = require("@apollo/client");
 var import_compareDesc = __toESM(require("date-fns/compareDesc"));
 
 // app/components/RequireAdmin.tsx
@@ -2339,7 +2362,7 @@ var RequireAdmin = ({ children }) => {
 var RequireAdmin_default = RequireAdmin;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/admin/verification-requests.tsx
-var VERIFICATION_REQUESTS = import_client12.gql`
+var VERIFICATION_REQUESTS = import_client13.gql`
 	query VerificationRequests($input: VerificationRequestsInput!) {
 		verificationRequests(input: $input) {
 			...VerificationRequest
@@ -2347,7 +2370,7 @@ var VERIFICATION_REQUESTS = import_client12.gql`
 	}
 	${VerificationRequestFragments.verificationRequest}
 `;
-var UPDATE_VERIFICATION_REQUEST_STATUS = import_client12.gql`
+var UPDATE_VERIFICATION_REQUEST_STATUS = import_client13.gql`
 	mutation UpdateVerificationRequestStatus(
 		$input: UpdateVerificationRequestStatusInput!
 	) {
@@ -2371,7 +2394,7 @@ var VerificationRequests = () => {
     loading: verificationRequestsLoading,
     data: verificationRequestsData,
     error: verificationRequestsError
-  } = (0, import_client12.useQuery)(VERIFICATION_REQUESTS, {
+  } = (0, import_client13.useQuery)(VERIFICATION_REQUESTS, {
     variables: { input: { take: 200, skip: 0, status: statusToFetch } },
     fetchPolicy: "network-only"
   });
@@ -2391,7 +2414,7 @@ var VerificationRequests = () => {
       loading: updateVerificationRequestStatusLoading,
       error: updateVerificationRequestStatusError
     }
-  ] = (0, import_client12.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" });
+  ] = (0, import_client13.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" });
   const onApproveClicked = (id) => {
     updateVerificationRequestStatus({
       variables: { input: { id, status: "Approved" /* Approved */ } }
@@ -2482,7 +2505,7 @@ __export(slug_exports, {
 });
 var import_react57 = require("@remix-run/react");
 var import_react58 = require("@remix-run/react");
-var import_client25 = require("@apollo/client");
+var import_client26 = require("@apollo/client");
 
 // app/components/AudioItemCard.tsx
 var import_react50 = require("react");
@@ -2542,16 +2565,16 @@ var Tag_default = {
 
 // app/components/AddTagButton.tsx
 var import_react33 = require("react");
-var import_client16 = require("@apollo/client");
+var import_client17 = require("@apollo/client");
 
 // app/components/CreateTagForm.tsx
 var import_react32 = require("react");
-var import_client15 = require("@apollo/client");
+var import_client16 = require("@apollo/client");
 
 // app/hooks/useTags.ts
 var import_react30 = require("react");
-var import_client13 = require("@apollo/client");
-var TAGS_QUERY = import_client13.gql`
+var import_client14 = require("@apollo/client");
+var TAGS_QUERY = import_client14.gql`
 	query Tags($input: TagsInput!) {
 		tags(input: $input) {
 			...Tag
@@ -2564,7 +2587,7 @@ var useTags = ({
   queryOptions = {}
 } = {}) => {
   var _a;
-  const [getTags, tagsQuery] = (0, import_client13.useLazyQuery)(TAGS_QUERY, __spreadValues({
+  const [getTags, tagsQuery] = (0, import_client14.useLazyQuery)(TAGS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = tagsQuery;
@@ -2599,8 +2622,8 @@ var useTags_default = useTags;
 
 // app/components/SelectRelationship.tsx
 var import_react31 = require("react");
-var import_client14 = require("@apollo/client");
-var SEARCH_RELATIONSHIPS_QUERY = import_client14.gql`
+var import_client15 = require("@apollo/client");
+var SEARCH_RELATIONSHIPS_QUERY = import_client15.gql`
 	query SearchRelationships(
 		$subjectEntityType: String!
 		$objectEntityType: String!
@@ -2620,7 +2643,7 @@ var SelectRelationship = ({
   onSelect
 }) => {
   const [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react31.useState)("");
-  const { loading, data: data2, error: error2 } = (0, import_client14.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
+  const { loading, data: data2, error: error2 } = (0, import_client15.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
     variables: {
       subjectEntityType: subjectEntity.entityType,
       objectEntityType: objectEntity.entityType
@@ -2715,7 +2738,7 @@ var TimestampInput = ({ valueInSeconds, onChange, className }) => {
 var TimestampInput_default = TimestampInput;
 
 // app/components/CreateTagForm.tsx
-var CREATE_TAG_MUTATION = import_client15.gql`
+var CREATE_TAG_MUTATION = import_client16.gql`
 	mutation CreateTag($input: CreateTagInput!) {
 		createTag(input: $input) {
 			id
@@ -2736,7 +2759,7 @@ var CreateTagForm = ({ entity, onSuccess }) => {
   const [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react32.useState)("");
   const [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] = (0, import_react32.useState)(true);
   const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react32.useState)("");
-  const [createTag, { data: data2, error: error2 }] = (0, import_client15.useMutation)(CREATE_TAG_MUTATION, {
+  const [createTag, { data: data2, error: error2 }] = (0, import_client16.useMutation)(CREATE_TAG_MUTATION, {
     errorPolicy: "all"
   });
   const [tagsAreCreating, setTagsAreCreating] = (0, import_react32.useState)(false);
@@ -2884,7 +2907,7 @@ var CreateTagForm = ({ entity, onSuccess }) => {
 var CreateTagForm_default = CreateTagForm;
 
 // app/components/AddTagButton.tsx
-var PARENT_ENTITY_QUERY = import_client16.gql`
+var PARENT_ENTITY_QUERY = import_client17.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2905,7 +2928,7 @@ var PARENT_ENTITY_QUERY = import_client16.gql`
 var AddTagButton = ({ entity, onSuccess, className, children }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [addTagModalIsVisible, setAddTagModalIsVisible] = (0, import_react33.useState)(false);
-  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client16.useLazyQuery)(PARENT_ENTITY_QUERY, {
+  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client17.useLazyQuery)(PARENT_ENTITY_QUERY, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
   });
@@ -2939,8 +2962,8 @@ var AddTagButton_default = AddTagButton;
 
 // app/components/EditTagsButton.tsx
 var import_react34 = require("react");
-var import_client17 = require("@apollo/client");
-var PARENT_ENTITY_QUERY2 = import_client17.gql`
+var import_client18 = require("@apollo/client");
+var PARENT_ENTITY_QUERY2 = import_client18.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2958,7 +2981,7 @@ var PARENT_ENTITY_QUERY2 = import_client17.gql`
 	${EntityFragments.place}
 	${EntityFragments.tune}
 `;
-var DELETE_TAG_MUTATION = import_client17.gql`
+var DELETE_TAG_MUTATION = import_client18.gql`
 	mutation DeleteTag($id: String!) {
 		deleteTag(id: $id)
 	}
@@ -2966,11 +2989,11 @@ var DELETE_TAG_MUTATION = import_client17.gql`
 var EditTagsButton = ({ entity, className, children, onSuccess }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react34.useState)(false);
-  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client17.useLazyQuery)(PARENT_ENTITY_QUERY2, {
+  const [getParentEntity, { loading: parentEntityLoading }] = (0, import_client18.useLazyQuery)(PARENT_ENTITY_QUERY2, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
   });
-  const [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client17.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" });
+  const [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client18.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" });
   const {
     tagsQuery: { refetch: refetchTopLevelTags }
   } = useTags_default();
@@ -3158,12 +3181,12 @@ var Menu_default = Menu;
 // app/components/SaveItemButton.tsx
 var import_react40 = require("react");
 var import_react41 = require("@remix-run/react");
-var import_client20 = require("@apollo/client");
+var import_client21 = require("@apollo/client");
 
 // app/hooks/useAudioItem.ts
 var import_react38 = require("react");
-var import_client18 = require("@apollo/client");
-var AUDIO_ITEM_QUERY = import_client18.gql`
+var import_client19 = require("@apollo/client");
+var AUDIO_ITEM_QUERY = import_client19.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -3174,8 +3197,8 @@ var AUDIO_ITEM_QUERY = import_client18.gql`
 
 // app/hooks/useSavedItemsForUser.ts
 var import_react39 = require("react");
-var import_client19 = require("@apollo/client");
-var SAVED_ITEMS_FOR_USER_QUERY = import_client19.gql`
+var import_client20 = require("@apollo/client");
+var SAVED_ITEMS_FOR_USER_QUERY = import_client20.gql`
 	query SavedItemsForUser {
 		savedItemsForUser {
 			...SavedItem
@@ -3186,7 +3209,7 @@ var SAVED_ITEMS_FOR_USER_QUERY = import_client19.gql`
 var useSavedItemsForUser = () => {
   var _a;
   const [currentUser] = useCurrentUser_default();
-  const [makeQuery, query] = (0, import_client19.useLazyQuery)(SAVED_ITEMS_FOR_USER_QUERY, { fetchPolicy: "cache-first" });
+  const [makeQuery, query] = (0, import_client20.useLazyQuery)(SAVED_ITEMS_FOR_USER_QUERY, { fetchPolicy: "cache-first" });
   (0, import_react39.useEffect)(() => {
     if (currentUser) {
       makeQuery();
@@ -3198,14 +3221,14 @@ var useSavedItemsForUser = () => {
 var useSavedItemsForUser_default = useSavedItemsForUser;
 
 // app/components/SaveItemButton.tsx
-var CREATE_SAVED_ITEM_MUTATION = import_client20.gql`
+var CREATE_SAVED_ITEM_MUTATION = import_client21.gql`
 	mutation CreateSavedItem($input: CreateSavedItemInput!) {
 		createSavedItem(input: $input) {
 			id
 		}
 	}
 `;
-var DELETE_SAVED_ITEM_MUTATION = import_client20.gql`
+var DELETE_SAVED_ITEM_MUTATION = import_client21.gql`
 	mutation DeleteSavedItem($input: DeleteSavedItemInput!) {
 		deleteSavedItem(input: $input)
 	}
@@ -3214,18 +3237,18 @@ var SaveItemButton = ({ audioItem }) => {
   const { id, slug, isSavedByUser } = audioItem;
   const navigate = (0, import_react41.useNavigate)();
   const { currentUser, requireLogin } = useRequireLogin_default();
-  const [refetchAudioItem] = (0, import_client20.useLazyQuery)(AUDIO_ITEM_QUERY, {
+  const [refetchAudioItem] = (0, import_client21.useLazyQuery)(AUDIO_ITEM_QUERY, {
     fetchPolicy: "network-only"
   });
   const [, { refetch: refetchSavedItemsForUser }] = useSavedItemsForUser_default();
   const [
     createSavedItem,
     { loading: createLoading, data: createData, error: createError }
-  ] = (0, import_client20.useMutation)(CREATE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
+  ] = (0, import_client21.useMutation)(CREATE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
   const [
     deleteSavedItem,
     { loading: deleteLoading, data: deleteData, error: deleteError }
-  ] = (0, import_client20.useMutation)(DELETE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
+  ] = (0, import_client21.useMutation)(DELETE_SAVED_ITEM_MUTATION, { errorPolicy: "all" });
   const onButtonClicked = (0, import_react40.useCallback)(async () => {
     if (!currentUser) {
       const redirectTo = Entity_default.makeHrefForView(audioItem);
@@ -3291,12 +3314,12 @@ var import_react45 = require("@remix-run/react");
 
 // app/components/CreateCommentForm.tsx
 var import_react43 = require("react");
-var import_client22 = require("@apollo/client");
+var import_client23 = require("@apollo/client");
 
 // app/hooks/useComments.ts
 var import_react42 = require("react");
-var import_client21 = require("@apollo/client");
-var COMMENTS_QUERY = import_client21.gql`
+var import_client22 = require("@apollo/client");
+var COMMENTS_QUERY = import_client22.gql`
 	query Comments($input: CommentsInput!) {
 		comments(input: $input) {
 			...Comment
@@ -3309,7 +3332,7 @@ var useComments = ({
   queryOptions = {}
 } = {}) => {
   var _a;
-  const [getComments, commentsQuery] = (0, import_client21.useLazyQuery)(COMMENTS_QUERY, __spreadValues({
+  const [getComments, commentsQuery] = (0, import_client22.useLazyQuery)(COMMENTS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: true
   }, queryOptions));
   const { data: data2, fetchMore } = commentsQuery;
@@ -3343,7 +3366,7 @@ var useComments = ({
 var useComments_default = useComments;
 
 // app/components/CreateCommentForm.tsx
-var CREATE_COMMENT_MUTATION = import_client22.gql`
+var CREATE_COMMENT_MUTATION = import_client23.gql`
 	mutation CreateComment($input: CreateCommentInput!) {
 		createComment(input: $input) {
 			...CommentWithoutParentEntity
@@ -3354,7 +3377,7 @@ var CREATE_COMMENT_MUTATION = import_client22.gql`
 var CreateCommentForm = ({ parentEntity, onSuccess }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [text, setText] = (0, import_react43.useState)("");
-  const [createComment, { loading, data: data2, error: error2 }] = (0, import_client22.useMutation)(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
+  const [createComment, { loading, data: data2, error: error2 }] = (0, import_client23.useMutation)(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
   const {
     commentsQuery: { refetch: refetchTopLevelComments }
   } = useComments_default();
@@ -3543,12 +3566,12 @@ var TimeMarkers_default = TimeMarkers;
 
 // app/components/RequestTakedownButton.tsx
 var import_react49 = require("react");
-var import_client24 = require("@apollo/client");
+var import_client25 = require("@apollo/client");
 
 // app/components/CreateTakedownRequestForm.tsx
 var import_react48 = require("react");
-var import_client23 = require("@apollo/client");
-var CREATE_TAKEDOWN_REQUEST = import_client23.gql`
+var import_client24 = require("@apollo/client");
+var CREATE_TAKEDOWN_REQUEST = import_client24.gql`
 	mutation CreateTakedownRequest($input: CreateTakedownRequestInput!) {
 		createTakedownRequest(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -3561,7 +3584,7 @@ var CreateTakedownRequestForm = ({ entity, onSuccess }) => {
   const [type, setType] = (0, import_react48.useState)(defaultType);
   const [message, setMessage] = (0, import_react48.useState)("");
   const [validationError, setValidationError] = (0, import_react48.useState)("");
-  const [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client23.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" });
+  const [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client24.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" });
   const getLabelForType = (type2) => {
     switch (TakedownRequestType[type2]) {
       case "Performer" /* Performer */:
@@ -3632,7 +3655,7 @@ var CreateTakedownRequestForm = ({ entity, onSuccess }) => {
 var CreateTakedownRequestForm_default = CreateTakedownRequestForm;
 
 // app/components/RequestTakedownButton.tsx
-var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client24.gql`
+var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client25.gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
 		takedownRequestsForEntity(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -3644,7 +3667,7 @@ var RequestTakedownButton = ({ entity, onTakedownRequestCreated }) => {
   const { currentUser, requireLogin } = useRequireLogin_default();
   const [modalIsVisible, setModalIsVisible] = (0, import_react49.useState)(false);
   const closeModal = (0, import_react49.useCallback)(() => setModalIsVisible(false), []);
-  const { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client24.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
+  const { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client25.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
     variables: {
       input: {
         entityType: entity.entityType,
@@ -3961,7 +3984,7 @@ var AudioItemComponent = ({
 var AudioItem_default = AudioItemComponent;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/[slug].tsx
-var AUDIO_ITEM_QUERY2 = import_client25.gql`
+var AUDIO_ITEM_QUERY2 = import_client26.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -3972,7 +3995,7 @@ var AUDIO_ITEM_QUERY2 = import_client25.gql`
 var ViewAudioItemBySlug = () => {
   const navigate = (0, import_react57.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client25.useQuery)(AUDIO_ITEM_QUERY2, {
+  const { data: data2, error: error2 } = (0, import_client26.useQuery)(AUDIO_ITEM_QUERY2, {
     variables: { slug },
     skip: !slug
   });
@@ -4010,15 +4033,15 @@ var about_exports = {};
 __export(about_exports, {
   default: () => about_default
 });
-var import_client27 = require("@apollo/client");
+var import_client28 = require("@apollo/client");
 var import_react61 = require("@remix-run/react");
 var import_react62 = require("@remix-run/react");
 
 // app/routes/entities/audio-items/[slug].tsx
 var import_react59 = require("@remix-run/react");
 var import_react60 = require("@remix-run/react");
-var import_client26 = require("@apollo/client");
-var AUDIO_ITEM_QUERY3 = import_client26.gql`
+var import_client27 = require("@apollo/client");
+var AUDIO_ITEM_QUERY3 = import_client27.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -4031,7 +4054,7 @@ var AUDIO_ITEM_QUERY3 = import_client26.gql`
 var AudioItemAbout = () => {
   const navigate = (0, import_react62.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client27.useQuery)(AUDIO_ITEM_QUERY3, {
+  const { data: data2, error: error2 } = (0, import_client28.useQuery)(AUDIO_ITEM_QUERY3, {
     variables: { slug },
     skip: !slug
   });
@@ -4078,13 +4101,13 @@ __export(edit_exports, {
   default: () => edit_default
 });
 var import_react65 = require("@remix-run/react");
-var import_client29 = require("@apollo/client");
+var import_client30 = require("@apollo/client");
 
 // app/components/EditAudioItemForm.tsx
 var import_react63 = require("react");
-var import_client28 = require("@apollo/client");
+var import_client29 = require("@apollo/client");
 var import_react64 = require("@remix-run/react");
-var UPDATE_AUDIO_ITEM_MUTATION = import_client28.gql`
+var UPDATE_AUDIO_ITEM_MUTATION = import_client29.gql`
 	mutation UpdateAudioItem($slug: String!, $input: UpdateAudioItemInput!) {
 		updateAudioItem(slug: $slug, input: $input) {
 			...AudioItem
@@ -4094,7 +4117,7 @@ var UPDATE_AUDIO_ITEM_MUTATION = import_client28.gql`
 `;
 var EditAudioItemForm = ({ audioItem, onSuccess }) => {
   const navigate = (0, import_react64.useNavigate)();
-  const [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client28.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
+  const [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client29.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
     errorPolicy: "all"
   });
   const [name, setName] = (0, import_react63.useState)(audioItem.name);
@@ -4152,7 +4175,7 @@ var EditAudioItemForm = ({ audioItem, onSuccess }) => {
 var EditAudioItemForm_default = EditAudioItemForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/[slug]/edit.tsx
-var AUDIO_ITEM_QUERY4 = import_client29.gql`
+var AUDIO_ITEM_QUERY4 = import_client30.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -4163,7 +4186,7 @@ var AUDIO_ITEM_QUERY4 = import_client29.gql`
 var EditAudioItem = () => {
   const navigate = (0, import_react65.useNavigate)();
   const { slug } = navigate.query;
-  const { data: data2, error: error2 } = (0, import_client29.useQuery)(AUDIO_ITEM_QUERY4, {
+  const { data: data2, error: error2 } = (0, import_client30.useQuery)(AUDIO_ITEM_QUERY4, {
     variables: { slug },
     skip: !slug
   });
@@ -4219,8 +4242,8 @@ var import_react68 = require("react");
 var import_react69 = require("@remix-run/react");
 
 // app/hooks/useAudioItemRandom.ts
-var import_client30 = require("@apollo/client");
-var AUDIO_ITEM_RANDOM_QUERY = import_client30.gql`
+var import_client31 = require("@apollo/client");
+var AUDIO_ITEM_RANDOM_QUERY = import_client31.gql`
 	query AudioItemRandom {
 		audioItemRandom {
 			...AudioItem
@@ -4229,7 +4252,7 @@ var AUDIO_ITEM_RANDOM_QUERY = import_client30.gql`
 	${EntityFragments.audioItem}
 `;
 var useAudioItemRandom = ({ queryOptions = {} } = {}) => {
-  const audioItemRandomQuery = (0, import_client30.useQuery)(AUDIO_ITEM_RANDOM_QUERY, __spreadValues({
+  const audioItemRandomQuery = (0, import_client31.useQuery)(AUDIO_ITEM_RANDOM_QUERY, __spreadValues({
     fetchPolicy: "network-only"
   }, queryOptions));
   const { data: data2 } = audioItemRandomQuery;
@@ -4266,48 +4289,6 @@ var import_client32 = require("@apollo/client");
 var import_react74 = require("react");
 var import_react75 = require("@remix-run/react");
 var import_react_intersection_observer = require("react-intersection-observer");
-
-// app/hooks/useAudioItemsTaggedWithEntity.ts
-var import_client31 = require("@apollo/client");
-var AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY = import_client31.gql`
-	query AudioItemsTaggedWithEntity($input: AudioItemsTaggedWithEntityInput!) {
-		audioItemsTaggedWithEntity(input: $input) {
-			audioItems {
-				...AudioItem
-			}
-			total
-		}
-	}
-	${EntityFragments.audioItem}
-`;
-var useAudioItemsTaggedWithEntity = ({
-  entity,
-  page = 1,
-  perPage = 10,
-  queryOptions = {}
-}) => {
-  var _a, _b;
-  const query = (0, import_client31.useQuery)(AUDIO_ITEMS_TAGGED_WITH_ENTITY_QUERY, __spreadValues({
-    variables: {
-      input: {
-        entityType: entity == null ? void 0 : entity.entityType,
-        entityId: entity == null ? void 0 : entity.id,
-        skip: (page - 1) * perPage,
-        take: perPage
-      }
-    },
-    skip: !entity
-  }, queryOptions));
-  const { data: data2 } = query;
-  const audioItems = (_a = data2 == null ? void 0 : data2.audioItemsTaggedWithEntity) == null ? void 0 : _a.audioItems;
-  const total = (_b = data2 == null ? void 0 : data2.audioItemsTaggedWithEntity) == null ? void 0 : _b.total;
-  return {
-    audioItems,
-    total,
-    query
-  };
-};
-var useAudioItemsTaggedWithEntity_default = useAudioItemsTaggedWithEntity;
 
 // app/hooks/useFilters.ts
 var import_react73 = require("react");
@@ -4522,16 +4503,16 @@ var useFilters = ({
 var useFilters_default = useFilters;
 
 // app/components/ViewEntityAndAudioItems.tsx
-var ViewEntityAndAudioItems = ({ entity, className }) => {
+var ViewEntityAndAudioItems = ({ entity, audioItems, className }) => {
   var _a;
   const { name } = entity ?? {};
+  const totalAudioItems = audioItems.length;
   const { ref: metadataRef, inView: metadataInView } = (0, import_react_intersection_observer.useInView)({
     initialInView: true
   });
-  const [totalAudioItems, setTotalAudioItems] = (0, import_react74.useState)();
   const { Filters: Filters2, filtersProps, page, perPage, viewAs } = useFilters_default({
     defaultPage: 1,
-    totalItems: totalAudioItems,
+    totalItems: audioItems.length,
     defaultPerPage: 20 /* Twenty */,
     defaultViewAs: "Cards" /* Cards */
   });
@@ -4544,21 +4525,7 @@ var ViewEntityAndAudioItems = ({ entity, className }) => {
       });
     }
   }, [page, filtersRef]);
-  const {
-    audioItems = [],
-    total,
-    query: { loading: audioItemsLoading, error: audioItemsError }
-  } = useAudioItemsTaggedWithEntity_default({
-    entity,
-    page,
-    perPage
-  });
-  (0, import_react74.useEffect)(() => {
-    if (typeof total === "number") {
-      setTotalAudioItems(total);
-    }
-  }, [total]);
-  const headerOffset = ((_a = window.document.getElementById("header")) == null ? void 0 : _a.offsetHeight) ?? 0;
+  const headerOffset = typeof document !== "undefined" ? (_a = document.getElementById("header")) == null ? void 0 : _a.offsetHeight : 0;
   return /* @__PURE__ */ React.createElement("div", {
     className: `flex flex-1 flex-col mb-8 ${className ?? ""}`
   }, /* @__PURE__ */ React.createElement("div", {
@@ -4578,23 +4545,19 @@ var ViewEntityAndAudioItems = ({ entity, className }) => {
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
   }, totalAudioItems ?? "", " Audio Item", totalAudioItems === 1 ? "" : "s"), /* @__PURE__ */ React.createElement(import_react75.Link, {
-    to: Entity_default.makeHrefForAbout(entity)
-  }, /* @__PURE__ */ React.createElement("a", {
+    to: Entity_default.makeHrefForAbout(entity),
     className: "ml-4"
-  }, "About")), /* @__PURE__ */ React.createElement(import_react75.Link, {
-    to: Entity_default.makeHrefForTags(entity)
-  }, /* @__PURE__ */ React.createElement("a", {
+  }, "About"), /* @__PURE__ */ React.createElement(import_react75.Link, {
+    to: Entity_default.makeHrefForTags(entity),
     className: "ml-4"
-  }, "Tags"))), totalAudioItems > 0 && /* @__PURE__ */ React.createElement("div", {
+  }, "Tags")), totalAudioItems > 0 && /* @__PURE__ */ React.createElement("div", {
     ref: filtersRef
-  }, /* @__PURE__ */ React.createElement(Filters2, __spreadValues({}, filtersProps)))), audioItemsLoading && /* @__PURE__ */ React.createElement(LoadingBlock_default, null), totalAudioItems > 0 && audioItems.map((audioItem, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
+  }, /* @__PURE__ */ React.createElement(Filters2, __spreadValues({}, filtersProps)))), totalAudioItems > 0 && audioItems.map((audioItem, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
     viewAs,
     audioItem,
     key: index,
     className: viewAs === "List" /* List */ ? "mb-4" : "mb-6"
-  })), audioItemsError && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600"
-  }, "Error fetching Audio Items"), /* @__PURE__ */ React.createElement("div", {
+  })), /* @__PURE__ */ React.createElement("div", {
     className: `${metadataInView ? "hidden" : "visible"} fixed left-0 right-0 p-4 bg-gray-100 shadow-lg`,
     style: { top: `${headerOffset}px` }
   }, totalAudioItems > 0 && /* @__PURE__ */ React.createElement(Filters2, __spreadValues({}, filtersProps))));
@@ -6321,22 +6284,71 @@ if (false) {
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/people/$slug.tsx
 async function loader({
-  params
+  params,
+  request
 }) {
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page") ?? 1);
+  const perPage = Number(url.searchParams.get("perPage") ?? 20);
   const { slug } = params;
-  return db.person.findUnique({
+  const person2 = await db.person.findUnique({
     where: {
       slug
     }
   });
+  if (!person2) {
+    throw new Response("Not Found", {
+      status: 404,
+      statusText: "Could not find this Person"
+    });
+  }
+  const audioItems = await db.audioItem.findMany({
+    take: perPage,
+    skip: perPage * (page - 1),
+    include: {
+      tagsAsSubject: {
+        include: {
+          objectAudioItem: true,
+          objectCollection: true,
+          objectInstrument: true,
+          objectPerson: true,
+          objectPlace: true,
+          objectTune: true,
+          relationship: true
+        }
+      },
+      createdByUser: true,
+      updatedByUser: true,
+      comments: {
+        include: {
+          createdByUser: true
+        }
+      }
+    },
+    where: {
+      tagsAsObject: {
+        some: {
+          subjectPersonId: person2.id
+        }
+      }
+    },
+    orderBy: {
+      updatedAt: "desc"
+    }
+  });
+  return {
+    person: person2,
+    audioItems
+  };
 }
 var ViewPersonBySlug = () => {
-  const person2 = (0, import_react119.useLoaderData)();
+  const { person: person2, audioItems } = (0, import_react119.useLoaderData)();
   if (!person2) {
     return /* @__PURE__ */ React.createElement(Layout_default, null, "Can't find this Person.");
   }
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
-    entity: person2
+    entity: person2,
+    audioItems
   }));
 };
 var slug_default5 = ViewPersonBySlug;
@@ -7941,7 +7953,7 @@ var Login = () => {
 var login_default = Login;
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { "version": "8525b899", "entry": { "module": "/build/entry.client-PO6P6Q3E.js", "imports": ["/build/_shared/chunk-NKCQBZLE.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-MGISRY7H.js", "imports": ["/build/_shared/chunk-F6BVVHF4.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-VGSUNG5J.js", "imports": ["/build/_shared/chunk-XIYWUEDT.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-EJSZCRHM.js", "imports": ["/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-TKFFTP5C.js", "imports": ["/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-7FKGY23Q.js", "imports": ["/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-GHADHLGX.js", "imports": ["/build/_shared/chunk-XIYWUEDT.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-NUAYSD2I.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-G2EFOLR7.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-6Q6TEQ5R.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-5764OMGU.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-74527VW5.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-NADT32UM.js", "imports": ["/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-VO5WPJRA.js", "imports": ["/build/_shared/chunk-H5XHVOPM.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-HHOAVTNB.js", "imports": ["/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-RKZQQK24.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-ZWLBK3ZO.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-DSAPLD2Y.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-STECPBLE.js", "imports": ["/build/_shared/chunk-EFV5LEUR.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-QZBLQSZQ.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-XKUUIXBX.js", "imports": ["/build/_shared/chunk-E2YENFV4.js", "/build/_shared/chunk-6CLNMK4E.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-5RLUEUNO.js", "imports": ["/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-A2OKOUNS.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-FRNEZTLS.js", "imports": ["/build/_shared/chunk-7BJ5WQVZ.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-TZO3L7GD.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-7OD2G3HL.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-7B7XKDZD.js", "imports": ["/build/_shared/chunk-QOXSO3C6.js", "/build/_shared/chunk-6CLNMK4E.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-LMLAF6U4.js", "imports": ["/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-YTRN2QLF.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-K2CBCAY7.js", "imports": ["/build/_shared/chunk-7BJ5WQVZ.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-ZLRFBB23.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-7HDSKRJM.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-POVVRX7E.js", "imports": ["/build/_shared/chunk-2SYXAOOS.js", "/build/_shared/chunk-6CLNMK4E.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-AMN76R7P.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-SLEFPTMC.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-5BAKOGSY.js", "imports": ["/build/_shared/chunk-7BJ5WQVZ.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-Z4BAD62Q.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-W2FFYAQY.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-VNYFUK7P.js", "imports": ["/build/_shared/chunk-CJWKCVPA.js", "/build/_shared/chunk-6CLNMK4E.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-4TZRQYSD.js", "imports": ["/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-VTC6FHOH.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-O5MOYPKG.js", "imports": ["/build/_shared/chunk-7BJ5WQVZ.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-NGGBZSMV.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-YF7ONCUV.js", "imports": ["/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-RY5SPKIX.js", "imports": ["/build/_shared/chunk-BMO4U4IP.js", "/build/_shared/chunk-6CLNMK4E.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-HXSWMCVS.js", "imports": ["/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-MWSO4X6Y.js", "imports": ["/build/_shared/chunk-7BJ5WQVZ.js", "/build/_shared/chunk-BTLKXQOU.js", "/build/_shared/chunk-GZQV6GGZ.js", "/build/_shared/chunk-WUWA6RTS.js", "/build/_shared/chunk-NFIDBEBP.js", "/build/_shared/chunk-WIX7LD6K.js", "/build/_shared/chunk-NXZTK6VW.js", "/build/_shared/chunk-ATLXULX2.js", "/build/_shared/chunk-NJ35MRQ7.js", "/build/_shared/chunk-GMPEYQHE.js", "/build/_shared/chunk-ORH3VRRW.js", "/build/_shared/chunk-5PGFEVKV.js", "/build/_shared/chunk-5K4JGIUC.js", "/build/_shared/chunk-7Z2JZ2JB.js", "/build/_shared/chunk-NYBXUIUQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-MO5YYNYF.js", "imports": ["/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-VMWGZ6X3.js", "imports": ["/build/_shared/chunk-2SYXAOOS.js", "/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-RLJCRO2E.js", "imports": ["/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-5TDEFM4Q.js", "imports": ["/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-IGZNNR2F.js", "imports": ["/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-XTXSOJY2.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-KZ2PKC4U.js", "imports": ["/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-ECXJJI62.js", "imports": ["/build/_shared/chunk-OR2YWZ7J.js", "/build/_shared/chunk-OPTH6VZT.js", "/build/_shared/chunk-I5UQB75Q.js", "/build/_shared/chunk-Z73P3LVI.js", "/build/_shared/chunk-7UHV3W27.js", "/build/_shared/chunk-KIDFHP63.js", "/build/_shared/chunk-EXVO35IS.js", "/build/_shared/chunk-3KHNMJP5.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-8525B899.js" };
+var assets_manifest_default = { "version": "a6502eb6", "entry": { "module": "/build/entry.client-XZMPU6EP.js", "imports": ["/build/_shared/chunk-SIEGJXK6.js"] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "module": "/build/root-BNJKRZVH.js", "imports": ["/build/_shared/chunk-5NZPHOME.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": true, "hasErrorBoundary": true }, "routes/account/index": { "id": "routes/account/index", "parentId": "root", "path": "account", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/index-LVM2HC7M.js", "imports": ["/build/_shared/chunk-B6LXBBUF.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/[id]/upload": { "id": "routes/account/submissions/[id]/upload", "parentId": "root", "path": "account/submissions/id/upload", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/[id]/upload-5YJUYJKL.js", "imports": ["/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/index": { "id": "routes/account/submissions/index", "parentId": "root", "path": "account/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/account/submissions/index-CURQ6XNE.js", "imports": ["/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/submissions/new": { "id": "routes/account/submissions/new", "parentId": "root", "path": "account/submissions/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/submissions/new-CCGUCNM6.js", "imports": ["/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/account/verify": { "id": "routes/account/verify", "parentId": "root", "path": "account/verify", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/account/verify-UATGOJXZ.js", "imports": ["/build/_shared/chunk-B6LXBBUF.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/index": { "id": "routes/admin/index", "parentId": "root", "path": "admin", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/index-3DLIXALA.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/[id]": { "id": "routes/admin/submissions/[id]", "parentId": "root", "path": "admin/submissions/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/[id]-XXO3S27P.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/submissions/index": { "id": "routes/admin/submissions/index", "parentId": "root", "path": "admin/submissions", "index": true, "caseSensitive": void 0, "module": "/build/routes/admin/submissions/index-QBGD22HY.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/takedown-requests": { "id": "routes/admin/takedown-requests", "parentId": "root", "path": "admin/takedown-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/takedown-requests-TAVNNZNN.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/admin/verification-requests": { "id": "routes/admin/verification-requests", "parentId": "root", "path": "admin/verification-requests", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/admin/verification-requests-FNYRWEOM.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/auto-login": { "id": "routes/auto-login", "parentId": "root", "path": "auto-login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/auto-login-LXEAHWGZ.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]": { "id": "routes/entities/audio-items/[slug]", "parentId": "root", "path": "entities/audio-items/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]-T2DI4XE5.js", "imports": ["/build/_shared/chunk-J3DRKT76.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/about": { "id": "routes/entities/audio-items/[slug]/about", "parentId": "routes/entities/audio-items/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/about-JNA2YCXW.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/edit": { "id": "routes/entities/audio-items/[slug]/edit", "parentId": "routes/entities/audio-items/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/edit-NY4ID3T4.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/[slug]/tags": { "id": "routes/entities/audio-items/[slug]/tags", "parentId": "routes/entities/audio-items/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/[slug]/tags-AXSDXI2H.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/index": { "id": "routes/entities/audio-items/index", "parentId": "root", "path": "entities/audio-items", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/index-AH322W72.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/new": { "id": "routes/entities/audio-items/new", "parentId": "root", "path": "entities/audio-items/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/new-LYMRFJL5.js", "imports": ["/build/_shared/chunk-JJYNNA3B.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/audio-items/random": { "id": "routes/entities/audio-items/random", "parentId": "root", "path": "entities/audio-items/random", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/audio-items/random-JAT5DRKJ.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]": { "id": "routes/entities/collections/[slug]", "parentId": "root", "path": "entities/collections/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]-KEJAQRP3.js", "imports": ["/build/_shared/chunk-HVW4YIXU.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/about": { "id": "routes/entities/collections/[slug]/about", "parentId": "routes/entities/collections/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/about-K5ETEWYG.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/edit": { "id": "routes/entities/collections/[slug]/edit", "parentId": "routes/entities/collections/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/edit-3PF56SJT.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/[slug]/tags": { "id": "routes/entities/collections/[slug]/tags", "parentId": "routes/entities/collections/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/[slug]/tags-MVMOZDWF.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/index": { "id": "routes/entities/collections/index", "parentId": "root", "path": "entities/collections", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/collections/index-BCG2FIM5.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/collections/new": { "id": "routes/entities/collections/new", "parentId": "root", "path": "entities/collections/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/collections/new-X2NMERM3.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]": { "id": "routes/entities/instruments/[slug]", "parentId": "root", "path": "entities/instruments/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]-TPCIVL76.js", "imports": ["/build/_shared/chunk-XIHXT5R4.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/about": { "id": "routes/entities/instruments/[slug]/about", "parentId": "routes/entities/instruments/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/about-XOCHVTFU.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/edit": { "id": "routes/entities/instruments/[slug]/edit", "parentId": "routes/entities/instruments/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/edit-2FUYJEUF.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/[slug]/tags": { "id": "routes/entities/instruments/[slug]/tags", "parentId": "routes/entities/instruments/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/[slug]/tags-URPJZ27F.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/index": { "id": "routes/entities/instruments/index", "parentId": "root", "path": "entities/instruments", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/index-NH226JIE.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/instruments/new": { "id": "routes/entities/instruments/new", "parentId": "root", "path": "entities/instruments/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/instruments/new-GJDRBOGR.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug": { "id": "routes/entities/people/$slug", "parentId": "root", "path": "entities/people/:slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug-XH4UYVKX.js", "imports": ["/build/_shared/chunk-EXRK4ZUP.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/about": { "id": "routes/entities/people/$slug/about", "parentId": "routes/entities/people/$slug", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/about-7QHYLNRN.js", "imports": void 0, "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/edit": { "id": "routes/entities/people/$slug/edit", "parentId": "routes/entities/people/$slug", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/edit-S52YMY53.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/$slug/tags": { "id": "routes/entities/people/$slug/tags", "parentId": "routes/entities/people/$slug", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/$slug/tags-A72LKY4V.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/index": { "id": "routes/entities/people/index", "parentId": "root", "path": "entities/people", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/people/index-YLKBNOXE.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/people/new": { "id": "routes/entities/people/new", "parentId": "root", "path": "entities/people/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/people/new-53D5PH7B.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]": { "id": "routes/entities/places/[slug]", "parentId": "root", "path": "entities/places/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]-Y4XKTV2K.js", "imports": ["/build/_shared/chunk-FXGKUFG3.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/about": { "id": "routes/entities/places/[slug]/about", "parentId": "routes/entities/places/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/about-7OZNGZNX.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/edit": { "id": "routes/entities/places/[slug]/edit", "parentId": "routes/entities/places/[slug]", "path": "edit", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/edit-QN2X6LN2.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/[slug]/tags": { "id": "routes/entities/places/[slug]/tags", "parentId": "routes/entities/places/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/[slug]/tags-GMAQE7RU.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/index": { "id": "routes/entities/places/index", "parentId": "root", "path": "entities/places", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/places/index-OZ4B3YN2.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/places/new": { "id": "routes/entities/places/new", "parentId": "root", "path": "entities/places/new", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/places/new-6RKHALID.js", "imports": ["/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]": { "id": "routes/entities/tunes/[slug]", "parentId": "root", "path": "entities/tunes/slug", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]-QMKWOHGU.js", "imports": ["/build/_shared/chunk-Z436PMIP.js", "/build/_shared/chunk-24CEVSAE.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/about": { "id": "routes/entities/tunes/[slug]/about", "parentId": "routes/entities/tunes/[slug]", "path": "about", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/about-2ZM4EJEM.js", "imports": ["/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/[slug]/tags": { "id": "routes/entities/tunes/[slug]/tags", "parentId": "routes/entities/tunes/[slug]", "path": "tags", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/[slug]/tags-VGDQVE7H.js", "imports": ["/build/_shared/chunk-RQBWYVMW.js", "/build/_shared/chunk-HDL7IZTN.js", "/build/_shared/chunk-WRH6JCPQ.js", "/build/_shared/chunk-7QU5X6ZB.js", "/build/_shared/chunk-JG6W2LJ7.js", "/build/_shared/chunk-CANYOJTZ.js", "/build/_shared/chunk-SEGW4OC6.js", "/build/_shared/chunk-EEVGFXHD.js", "/build/_shared/chunk-SIPERQNA.js", "/build/_shared/chunk-PPPT4MQS.js", "/build/_shared/chunk-MC2EGFZ6.js", "/build/_shared/chunk-DPIZCYMR.js", "/build/_shared/chunk-W73T3FSN.js", "/build/_shared/chunk-XDS4CUES.js", "/build/_shared/chunk-IZVK6IDM.js", "/build/_shared/chunk-FY76XVDQ.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/entities/tunes/index": { "id": "routes/entities/tunes/index", "parentId": "root", "path": "entities/tunes", "index": true, "caseSensitive": void 0, "module": "/build/routes/entities/tunes/index-INQTGBZ5.js", "imports": ["/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/index": { "id": "routes/index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "module": "/build/routes/index-GLFO773N.js", "imports": ["/build/_shared/chunk-EXRK4ZUP.js", "/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": true, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/login": { "id": "routes/login", "parentId": "root", "path": "login", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/login-7XKAZFLF.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/logout": { "id": "routes/logout", "parentId": "root", "path": "logout", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/logout-IQE4A5KU.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/saved-items": { "id": "routes/saved-items", "parentId": "root", "path": "saved-items", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/saved-items-VMMRDVHP.js", "imports": ["/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-GOVXEOH4.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/signup": { "id": "routes/signup", "parentId": "root", "path": "signup", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/signup-L2WPP7EV.js", "imports": ["/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false }, "routes/users/[id]": { "id": "routes/users/[id]", "parentId": "root", "path": "users/id", "index": void 0, "caseSensitive": void 0, "module": "/build/routes/users/[id]-RKQH724B.js", "imports": ["/build/_shared/chunk-E4ZTLC24.js", "/build/_shared/chunk-G25ZTHRP.js", "/build/_shared/chunk-W7CIDWIE.js", "/build/_shared/chunk-FDMQT2KM.js", "/build/_shared/chunk-GR2WXHQD.js", "/build/_shared/chunk-X3Q46E67.js", "/build/_shared/chunk-EXMSIPWG.js", "/build/_shared/chunk-BHRTNVSD.js"], "hasAction": false, "hasLoader": false, "hasCatchBoundary": false, "hasErrorBoundary": false } }, "url": "/build/manifest-A6502EB6.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports };

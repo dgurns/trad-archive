@@ -6,7 +6,6 @@ import type {
 	Instrument,
 	Person,
 	Place,
-	Tag,
 	Tune,
 } from "@prisma/client";
 import type { TagWithRelations } from "~/types";

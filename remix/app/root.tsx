@@ -6,6 +6,7 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	useCatch,
 } from "@remix-run/react";
 import { ApolloProvider } from "@apollo/client";
 import styles from "~/styles/globals-generated-do-not-edit.css";
@@ -112,6 +113,44 @@ export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
 								<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
 									<h1>Oops! There was an error.</h1>
 									<p className="text-red-500 mt-2">{error.message}</p>
+								</div>
+								<Footer />
+							</div>
+
+							{/* Add header to the DOM after child content so its modals overlay */}
+							<div className="fixed top-0 right-0 left-0" id="header">
+								<Header />
+							</div>
+						</div>
+
+						<ScrollRestoration />
+						<Scripts />
+						<LiveReload />
+					</body>
+				</PlayerContextProvider>
+			</ApolloProvider>
+		</html>
+	);
+}
+
+export function CatchBoundary() {
+	const caught = useCatch();
+	return (
+		<html lang="en">
+			<head>
+				<Meta />
+				<Links />
+			</head>
+			<ApolloProvider client={apolloClient}>
+				<PlayerContextProvider>
+					<body className="bg-gray-100">
+						<div className="flex flex-col w-full relative pt-12">
+							<div className="flex flex-col justify-start items-center">
+								<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
+									<h1>Oops! There was an error.</h1>
+									<p className="text-red-500 mt-2">
+										{caught.status} - {caught.statusText}
+									</p>
 								</div>
 								<Footer />
 							</div>

@@ -64,6 +64,16 @@ const relationship1: Pick<
 	objectEntityType: EntityType.Person,
 	createdByUserId: user1.id,
 };
+const relationship1Reversed: Pick<
+	Relationship,
+	"id" | "name" | "subjectEntityType" | "objectEntityType" | "createdByUserId"
+> = {
+	id: "relationship_1_reversed",
+	name: "recorded",
+	subjectEntityType: EntityType.Person,
+	objectEntityType: EntityType.AudioItem,
+	createdByUserId: user1.id,
+};
 const relationship2: Pick<
 	Relationship,
 	"id" | "name" | "subjectEntityType" | "objectEntityType" | "createdByUserId"
@@ -72,6 +82,16 @@ const relationship2: Pick<
 	name: "is contained in",
 	subjectEntityType: EntityType.AudioItem,
 	objectEntityType: EntityType.Collection,
+	createdByUserId: user1.id,
+};
+const relationship2Reversed: Pick<
+	Relationship,
+	"id" | "name" | "subjectEntityType" | "objectEntityType" | "createdByUserId"
+> = {
+	id: "relationship_2_reversed",
+	name: "contains",
+	subjectEntityType: EntityType.Collection,
+	objectEntityType: EntityType.AudioItem,
 	createdByUserId: user1.id,
 };
 const tag1: Pick<
@@ -88,6 +108,20 @@ const tag1: Pick<
 	relationshipId: relationship1.id,
 	createdByUserId: user1.id,
 };
+const tag1Reversed: Pick<
+	Tag,
+	| "id"
+	| "subjectPersonId"
+	| "objectAudioItemId"
+	| "relationshipId"
+	| "createdByUserId"
+> = {
+	id: "tag_1_reversed",
+	subjectPersonId: person1.id,
+	objectAudioItemId: audioItem1.id,
+	relationshipId: relationship1Reversed.id,
+	createdByUserId: user1.id,
+};
 const tag2: Pick<
 	Tag,
 	| "id"
@@ -100,6 +134,20 @@ const tag2: Pick<
 	subjectAudioItemId: audioItem1.id,
 	objectCollectionId: collection1.id,
 	relationshipId: relationship2.id,
+	createdByUserId: user1.id,
+};
+const tag2Reversed: Pick<
+	Tag,
+	| "id"
+	| "subjectCollectionId"
+	| "objectAudioItemId"
+	| "relationshipId"
+	| "createdByUserId"
+> = {
+	id: "tag_2_reversed",
+	subjectCollectionId: collection1.id,
+	objectAudioItemId: audioItem1.id,
+	relationshipId: relationship2Reversed.id,
 	createdByUserId: user1.id,
 };
 const comment1: Pick<
@@ -150,10 +198,24 @@ async function main() {
 	});
 	await prisma.relationship.upsert({
 		where: {
+			id: relationship1Reversed.id,
+		},
+		update: relationship1Reversed,
+		create: relationship1Reversed,
+	});
+	await prisma.relationship.upsert({
+		where: {
 			id: relationship2.id,
 		},
 		update: relationship2,
 		create: relationship2,
+	});
+	await prisma.relationship.upsert({
+		where: {
+			id: relationship2Reversed.id,
+		},
+		update: relationship2Reversed,
+		create: relationship2Reversed,
 	});
 	await prisma.tag.upsert({
 		where: {
@@ -164,10 +226,24 @@ async function main() {
 	});
 	await prisma.tag.upsert({
 		where: {
+			id: tag1Reversed.id,
+		},
+		update: tag1Reversed,
+		create: tag1Reversed,
+	});
+	await prisma.tag.upsert({
+		where: {
 			id: tag2.id,
 		},
 		update: tag2,
 		create: tag2,
+	});
+	await prisma.tag.upsert({
+		where: {
+			id: tag2Reversed.id,
+		},
+		update: tag2Reversed,
+		create: tag2Reversed,
 	});
 	await prisma.comment.upsert({
 		where: {

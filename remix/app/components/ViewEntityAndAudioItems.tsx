@@ -1,33 +1,31 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "@remix-run/react";
 import { useInView } from "react-intersection-observer";
 
-import type { Entity } from "~/types";
+import type { AudioItemWithRelations, Entity } from "~/types";
 import { PerPage, ViewAs } from "~/types";
-import useAudioItemsTaggedWithEntity from "~/hooks/useAudioItemsTaggedWithEntity";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
 
-import LoadingBlock from "~/components/LoadingBlock";
 import Breadcrumb from "~/components/Breadcrumb";
 import AudioItem from "~/components/AudioItem";
 
 interface Props {
 	entity: Entity;
+	audioItems: AudioItemWithRelations[];
 	className?: string;
 }
-const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
+const ViewEntityAndAudioItems = ({ entity, audioItems, className }: Props) => {
 	const { name } = entity ?? {};
+	const totalAudioItems = audioItems.length;
 
 	const { ref: metadataRef, inView: metadataInView } = useInView({
 		initialInView: true,
 	});
 
-	const [totalAudioItems, setTotalAudioItems] = useState<number | undefined>();
-
 	const { Filters, filtersProps, page, perPage, viewAs } = useFilters({
 		defaultPage: 1,
-		totalItems: totalAudioItems,
+		totalItems: audioItems.length,
 		defaultPerPage: PerPage.Twenty,
 		defaultViewAs: ViewAs.Cards,
 	});
@@ -43,23 +41,10 @@ const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 		}
 	}, [page, filtersRef]);
 
-	const {
-		audioItems = [],
-		total,
-		query: { loading: audioItemsLoading, error: audioItemsError },
-	} = useAudioItemsTaggedWithEntity({
-		entity,
-		page,
-		perPage: perPage as number,
-	});
-	useEffect(() => {
-		if (typeof total === "number") {
-			setTotalAudioItems(total);
-		}
-	}, [total]);
-
 	const headerOffset =
-		window.document.getElementById("header")?.offsetHeight ?? 0;
+		typeof document !== "undefined"
+			? document.getElementById("header")?.offsetHeight
+			: 0;
 
 	return (
 		<div className={`flex flex-1 flex-col mb-8 ${className ?? ""}`}>
@@ -79,11 +64,11 @@ const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 					<span className="text-gray-500">
 						{totalAudioItems ?? ""} Audio Item{totalAudioItems === 1 ? "" : "s"}
 					</span>
-					<Link to={EntityService.makeHrefForAbout(entity)}>
-						<a className="ml-4">About</a>
+					<Link to={EntityService.makeHrefForAbout(entity)} className="ml-4">
+						About
 					</Link>
-					<Link to={EntityService.makeHrefForTags(entity)}>
-						<a className="ml-4">Tags</a>
+					<Link to={EntityService.makeHrefForTags(entity)} className="ml-4">
+						Tags
 					</Link>
 				</div>
 				{totalAudioItems > 0 && (
@@ -92,7 +77,6 @@ const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 					</div>
 				)}
 			</div>
-			{audioItemsLoading && <LoadingBlock />}
 			{totalAudioItems > 0 &&
 				audioItems.map((audioItem, index) => (
 					<AudioItem
@@ -102,9 +86,6 @@ const ViewEntityAndAudioItems = ({ entity, className }: Props) => {
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 					/>
 				))}
-			{audioItemsError && (
-				<div className="text-red-600">Error fetching Audio Items</div>
-			)}
 
 			{/* Fixed overlay metadata when scrolling. Render after AudioItems so it takes z-index precedence */}
 			<div

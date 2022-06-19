@@ -1,12 +1,16 @@
-import type { Entity } from "~/types";
-import { EntityType } from "~/types";
+import { EntityType } from "@prisma/client";
 
 const cleanSlug = (rawSlug: string) => {
 	const slugWithHyphens = rawSlug.replace(/[\s]/g, "-");
 	return slugWithHyphens.replace(/[^a-zA-Z0-9-]/g, "").toLowerCase();
 };
 
-const makeHrefForTopLevel = (entity?: Entity | null) => {
+interface EntityArg {
+	entityType: EntityType;
+	slug: string;
+}
+
+const makeHrefForTopLevel = (entity?: EntityArg | null) => {
 	switch (entity?.entityType) {
 		case EntityType.AudioItem:
 			return "/entities/audio-items";
@@ -25,35 +29,35 @@ const makeHrefForTopLevel = (entity?: Entity | null) => {
 	}
 };
 
-const makeHrefForView = (entity?: Entity | null) => {
+const makeHrefForView = (entity?: EntityArg | null) => {
 	if (!entity) {
 		return "";
 	}
 	return `${makeHrefForTopLevel(entity)}/${entity.slug}`;
 };
 
-const makeHrefForEdit = (entity?: Entity | null) => {
+const makeHrefForEdit = (entity?: EntityArg | null) => {
 	if (!entity) {
 		return "";
 	}
 	return `${makeHrefForView(entity)}/edit`;
 };
 
-const makeHrefForAbout = (entity?: Entity | null) => {
+const makeHrefForAbout = (entity?: EntityArg | null) => {
 	if (!entity) {
 		return "";
 	}
 	return `${makeHrefForView(entity)}/about`;
 };
 
-const makeHrefForTags = (entity?: Entity | null) => {
+const makeHrefForTags = (entity?: EntityArg | null) => {
 	if (!entity) {
 		return "";
 	}
 	return `${makeHrefForView(entity)}/tags`;
 };
 
-const makeReadableNamePlural = (entity?: Entity | null) => {
+const makeReadableNamePlural = (entity?: EntityArg | null) => {
 	switch (entity?.entityType) {
 		case EntityType.AudioItem:
 			return "Audio Items";

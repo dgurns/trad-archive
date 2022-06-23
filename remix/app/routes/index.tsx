@@ -32,7 +32,6 @@ export async function loader({
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
-
 	const [
 		audioItems,
 		collections,
@@ -42,7 +41,7 @@ export async function loader({
 		numCommentsAllTime,
 	] = await Promise.all([
 		db.audioItem.findMany({
-			skip: page,
+			skip: (page - 1) * perPage,
 			take: perPage,
 			include: {
 				tagsAsSubject: {

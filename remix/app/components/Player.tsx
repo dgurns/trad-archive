@@ -9,16 +9,16 @@ import AudioPlayer from "~/components/AudioPlayer";
 const Player = () => {
 	const { activeAudioItem, setActiveAudioItem } = usePlayerContext();
 
-	if (!activeAudioItem) {
-		return null;
-	}
-
 	const itemHref = useMemo(() => {
 		if (isAudioItem(activeAudioItem)) {
 			return `/entities/audio-items/${activeAudioItem.slug}`;
 		}
 		return window.location.href;
 	}, [activeAudioItem]);
+
+	if (!activeAudioItem) {
+		return null;
+	}
 
 	return (
 		<div className="flex flex-col align-center justify-center px-4 pb-4 pt-2 bg-white">
@@ -28,8 +28,8 @@ const Player = () => {
 					<span className="text-gray-500">{activeAudioItem.name}</span>
 				</div>
 				<div className="flex flex-row items-center ml-4">
-					<Link to={itemHref}>
-						<a className="whitespace-nowrap">View</a>
+					<Link to={itemHref} className="whitespace-nowrap">
+						View
 					</Link>
 					<button
 						className="btn-icon flex ml-2 md:ml-4"

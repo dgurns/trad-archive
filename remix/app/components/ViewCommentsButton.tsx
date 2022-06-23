@@ -91,7 +91,7 @@ const ViewCommentsButton = ({ audioItem }: Props) => {
 				)}
 
 				<div className="mt-4">
-					<CreateCommentForm parentEntity={audioItem} onSuccess={() => {}} />
+					<CreateCommentForm parentAudioItem={audioItem} />
 				</div>
 			</Modal>
 		</>

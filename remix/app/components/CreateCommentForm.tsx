@@ -1,81 +1,39 @@
-import { useState, useCallback, useEffect } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useState, useCallback } from "react";
+import { useFetcher, useLocation } from "@remix-run/react";
+import type { AudioItem } from "@prisma/client";
 
-import type { Comment, Entity } from "~/types";
-import { isAudioItem } from "~/types";
-import { CommentFragments } from "~/fragments";
 import useRequireLogin from "~/hooks/useRequireLogin";
-import useComments from "~/hooks/useComments";
 import EntityService from "~/services/Entity";
 
-const CREATE_COMMENT_MUTATION = gql`
-	mutation CreateComment($input: CreateCommentInput!) {
-		createComment(input: $input) {
-			...CommentWithoutParentEntity
-		}
-	}
-	${CommentFragments.commentWithoutParentEntity}
-`;
-
-interface MutationData {
-	createComment: Comment;
-}
-interface MutationVariables {
-	input: {
-		parentAudioItemId: string;
-		text: string;
-	};
-}
 interface Props {
-	parentEntity: Entity;
-	onSuccess?: (comment: Comment) => void;
+	parentAudioItem: AudioItem;
 }
-const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
+const CreateCommentForm = ({ parentAudioItem }: Props) => {
+	const fetcher = useFetcher();
+	const { pathname } = useLocation();
 	const { currentUser, requireLogin } = useRequireLogin();
 
 	const [text, setText] = useState("");
-
-	const [createComment, { loading, data, error }] = useMutation<
-		MutationData,
-		MutationVariables
-	>(CREATE_COMMENT_MUTATION, { errorPolicy: "all" });
-
-	const {
-		commentsQuery: { refetch: refetchTopLevelComments },
-	} = useComments();
 
 	const onSubmit = useCallback(
 		async (event) => {
 			event.preventDefault();
 			if (!currentUser) {
-				const redirectTo = EntityService.makeHrefForView(parentEntity);
+				const redirectTo = EntityService.makeHrefForView(parentAudioItem);
 				return await requireLogin({ redirectTo });
 			}
 
-			let parentAudioItemId;
-			if (isAudioItem(parentEntity)) {
-				parentAudioItemId = parentEntity.id;
-			}
-			const input = { parentAudioItemId, text };
-			createComment({ variables: { input } });
+			fetcher.submit(
+				{ parentAudioItemId: parentAudioItem.id, text },
+				{ method: "post" }
+			);
+			fetcher.load(pathname);
 		},
-		[createComment, parentEntity, text]
+		[parentAudioItem, text, currentUser, fetcher, requireLogin, pathname]
 	);
 
-	useEffect(() => {
-		if (data?.createComment) {
-			setText("");
-			if (onSuccess) {
-				onSuccess(data.createComment);
-			}
-			// Now that a new Comment has been created, update the top-level
-			// `comments` query
-			refetchTopLevelComments();
-		}
-	}, [data, refetchTopLevelComments]);
-
 	return (
-		<form onSubmit={onSubmit} className="w-full">
+		<fetcher.Form onSubmit={onSubmit} className="w-full">
 			<textarea
 				placeholder="Add a comment..."
 				autoFocus
@@ -87,12 +45,14 @@ const CreateCommentForm = ({ parentEntity, onSuccess }: Props) => {
 				<input
 					className="btn mt-3 w-auto"
 					type="submit"
-					disabled={loading}
+					disabled={fetcher.state === "loading"}
 					value="Add Comment"
 				/>
 			)}
-			{error && <div className="text-red-600 mt-3">{error.message}</div>}
-		</form>
+			{fetcher.data?.error && (
+				<div className="text-red-600 mt-3">{fetcher.data.error.message}</div>
+			)}
+		</fetcher.Form>
 	);
 };
 

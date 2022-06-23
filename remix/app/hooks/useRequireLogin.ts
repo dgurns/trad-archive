@@ -1,7 +1,6 @@
-import { useCallback } from "react";
-import { useNavigate } from "@remix-run/react";
+import { useLocation, useNavigate } from "@remix-run/react";
+import type { User } from "@prisma/client";
 
-import type { User } from "~/types";
 import useCurrentUser from "~/hooks/useCurrentUser";
 
 interface RequireLoginFunctionArgs {
@@ -9,7 +8,7 @@ interface RequireLoginFunctionArgs {
 }
 
 interface HookReturnValue {
-	requireLogin: (args?: RequireLoginFunctionArgs) => Promise<boolean>;
+	requireLogin: (args?: RequireLoginFunctionArgs) => void;
 	currentUser: User | null | undefined;
 }
 
@@ -17,18 +16,13 @@ interface HookReturnValue {
 // and then back to the given redirect path, if specified.
 const useRequireLogin = (): HookReturnValue => {
 	const navigate = useNavigate();
+	const { pathname } = useLocation();
 	const [currentUser] = useCurrentUser();
 
-	const requireLogin = useCallback(
-		({ redirectTo }: RequireLoginFunctionArgs = {}): Promise<boolean> =>
-			navigate({
-				pathname: "/login",
-				query: {
-					redirectTo: redirectTo ?? window.location.pathname,
-				},
-			}),
-		[navigate]
-	);
+	const requireLogin = ({ redirectTo }: RequireLoginFunctionArgs = {}) => {
+		const params = new URLSearchParams({ redirectTo: redirectTo ?? pathname });
+		navigate(`/login?${params.toString()}`);
+	};
 
 	return { requireLogin, currentUser };
 };

@@ -1,58 +1,57 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "@remix-run/react";
+import { useActionData, useLocation, useNavigate } from "@remix-run/react";
 import { Link } from "@remix-run/react";
-import { useMutation, gql } from "@apollo/client";
+import type { ActionFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
+import { db } from "~/utils/db.server";
 import useCurrentUser from "~/hooks/useCurrentUser";
 import Layout from "~/components/Layout";
-import type { User } from "~/types";
-import { UserFragments } from "~/fragments";
 
-const LOG_IN_MUTATION = gql`
-	mutation LogIn($input: LogInInput!) {
-		logIn(input: $input) {
-			...CurrentUser
-		}
-	}
-	${UserFragments.currentUser}
-`;
-interface MutationData {
-	logIn: User;
-}
-
-const Login = () => {
-	const navigate = useNavigate();
-	const { redirectTo } = navigate.query;
-	const [currentUser] = useCurrentUser();
-
-	const [email, setEmail] = useState("");
-
-	const [logIn, { loading, data, error }] = useMutation<MutationData>(
-		LOG_IN_MUTATION,
-		{
-			errorPolicy: "all",
-		}
-	);
-
-	const onLogIn = (event) => {
-		event.preventDefault();
-		const cleanedEmail = email.trim().toLowerCase();
-		logIn({
-			variables: { input: { email: cleanedEmail, redirectTo } },
+export const action: ActionFunction = async ({ request }) => {
+	const formData = await request.formData();
+	const email = String(formData.get("email") ?? "");
+	if (!email) {
+		return json("Must provide an email", {
+			status: 401,
 		});
-	};
+	}
 
-	useEffect(() => {
-		if (data?.logIn) {
-			navigate("/auto-login");
-		}
-	}, [data, navigate]);
+	const user = await db.user.findUnique({ where: { email } });
+	if (!user) {
+		return json("Could not find a user with that email address", {
+			status: 401,
+		});
+	}
+
+	// const { tokenUnhashed, tokenHashed, tokenExpiry } =
+	// 	await AuthService.createAutoLoginToken();
+	// user.autoLoginTokenHashed = tokenHashed;
+	// user.autoLoginTokenExpiry = tokenExpiry;
+	// await user.save();
+
+	// await MailerService.sendEmailWithAutoLoginUrl({
+	// 	user,
+	// 	autoLoginTokenUnhashed: tokenUnhashed,
+	// 	redirectTo,
+	// });
+};
+
+export default function Login() {
+	const error = useActionData();
+
+	const navigate = useNavigate();
+	const { search } = useLocation();
+	const params = new URLSearchParams(search);
+	const redirectTo = params.get("redirectTo");
+	const [currentUser] = useCurrentUser();
 
 	if (currentUser) {
 		navigate(typeof redirectTo === "string" ? redirectTo : "/");
 	}
 
-	const signUpLinkQueryParams = redirectTo ? { redirectTo } : undefined;
+	const signUpLinkQueryParams = new URLSearchParams(
+		redirectTo ? { redirectTo } : undefined
+	);
 
 	return (
 		<Layout>
@@ -60,31 +59,29 @@ const Login = () => {
 				Log in to {redirectTo ? "continue" : "Trad Archive"}
 			</h1>
 			<div className="flex flex-col align-start max-w-xs">
-				<form onSubmit={onLogIn}>
+				<form method="post">
 					<input
 						placeholder="Your email"
 						autoFocus
+						required
 						className="mb-4"
-						value={email}
-						onChange={(event) => setEmail(event.target.value)}
+						name="email"
 					/>
 					<input
 						type="submit"
 						className="btn mb-4 w-auto"
-						disabled={loading}
+						// disabled={loading}
 						value="Log In"
 					/>
 				</form>
 				{error && <div className="text-red-600 mb-4">{error.message}</div>}
 				<div>
 					Don't have an account yet?{" "}
-					<Link to={{ pathname: "/signup", query: signUpLinkQueryParams }}>
+					<Link to={`/signup?${signUpLinkQueryParams.toString()}`}>
 						Sign Up
 					</Link>
 				</div>
 			</div>
 		</Layout>
 	);
-};
-
-export default Login;
+}

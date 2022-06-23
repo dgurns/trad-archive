@@ -36,8 +36,12 @@ const Filters = ({
 	const shouldRenderViewAs = viewAs && onChangeViewAs;
 
 	const totalPages = useMemo<number>(() => {
-		if (typeof totalItems !== "number" || typeof perPage === "undefined") {
-			return 0;
+		if (
+			typeof totalItems !== "number" ||
+			typeof perPage === "undefined" ||
+			totalItems === 0
+		) {
+			return 1;
 		}
 		return Math.ceil(totalItems / perPage);
 	}, [totalItems, perPage]);
@@ -76,6 +80,7 @@ const Filters = ({
 			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 ${
 				className ?? ""
 			}`}
+			id="filters"
 		>
 			{shouldRenderPagination && (
 				<div

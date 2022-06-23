@@ -40,9 +40,9 @@ const useFilters = ({
 	const queryParams = new URLSearchParams(search);
 
 	// Pull filter values from query params. If not set, use defaults.
-	const page = parseInt(queryParams.get("page") ?? "", 10) || defaultPage;
+	const page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage;
 	const perPage =
-		parseInt(queryParams.get("perPage") ?? "", 10) || defaultPerPage;
+		parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage;
 	const sortBy = (queryParams.get("sortBy") as SortBy) ?? defaultSortBy;
 	const viewAs = (queryParams.get("viewAs") as ViewAs) ?? defaultViewAs;
 

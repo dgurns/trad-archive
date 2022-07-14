@@ -1,7 +1,6 @@
 import type { LoaderFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { getSession, destroySession } from "~/sessions";
-import Layout from "~/components/Layout";
+import { getSession, destroySession } from "~/sessions.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const session = await getSession(request.headers.get("Cookie"));
@@ -11,11 +10,3 @@ export const loader: LoaderFunction = async ({ request }) => {
 		},
 	});
 };
-
-const LogOut = () => (
-	<Layout>
-		<span className="text-gray-500">Logging out...</span>
-	</Layout>
-);
-
-export default LogOut;

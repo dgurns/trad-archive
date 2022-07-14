@@ -13,7 +13,7 @@ import {
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import styles from "~/styles/globals-generated-do-not-edit.css";
 
-import { getSession } from "~/sessions";
+import { getSession } from "~/sessions.server";
 import { db } from "~/utils/db.server";
 
 import PlayerContextProvider from "~/components/PlayerContextProvider";

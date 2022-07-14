@@ -9,7 +9,7 @@ import { redirect, json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
 
 import { db } from "~/utils/db.server";
-import { getSession, commitSession } from "~/sessions";
+import { getSession, commitSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 
 export const loader: LoaderFunction = async ({ request }) => {

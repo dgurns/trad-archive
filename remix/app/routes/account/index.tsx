@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import type { User } from "@prisma/client";
 
 import Layout from "~/components/Layout";
-import { getSession } from "~/sessions";
+import { getSession } from "~/sessions.server";
 import { db } from "~/utils/db.server";
 
 interface LoaderData {

@@ -9,7 +9,7 @@ const { getSession, commitSession, destroySession } =
 			path: "/",
 			sameSite: "none",
 			secure: true,
-			secrets: ["jwt_secret"],
+			secrets: [process.env.JWT_SECRET_KEY ?? "jwt_secret_key"],
 		},
 	});
 

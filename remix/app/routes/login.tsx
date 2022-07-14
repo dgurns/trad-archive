@@ -1,4 +1,9 @@
-import { useLocation, Link, useLoaderData } from "@remix-run/react";
+import {
+	useLocation,
+	Link,
+	useLoaderData,
+	useTransition,
+} from "@remix-run/react";
 import type { ActionFunction, LoaderFunction } from "@remix-run/node";
 import { redirect, json } from "@remix-run/node";
 import bcrypt from "bcryptjs";
@@ -16,7 +21,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 	}
 
 	const data = { error: session.get("error") };
-
 	return json(data, {
 		headers: {
 			"Set-Cookie": await commitSession(session),
@@ -76,6 +80,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
 	const { error } = useLoaderData();
+	const transition = useTransition();
 
 	const { search } = useLocation();
 	const params = new URLSearchParams(search);
@@ -91,30 +96,30 @@ export default function Login() {
 				Log in to {redirectTo ? "continue" : "Trad Archive"}
 			</h1>
 			<div className="flex flex-col align-start max-w-xs">
-				<form method="post">
+				<form method="post" className="space-y-4 mb-4">
 					<input
 						type="text"
 						placeholder="Email"
 						autoFocus
 						required
-						className="mb-4"
 						name="email"
 					/>
 					<input
 						type="password"
 						placeholder="Password"
 						required
-						className="mb-4"
 						name="password"
 					/>
 					<input
 						type="submit"
-						className="btn mb-4 w-auto"
-						// disabled={loading}
+						className="btn w-auto"
+						disabled={transition.state !== "idle"}
 						value="Log In"
 					/>
 				</form>
+
 				{error && <div className="text-red-600 mb-4">{error}</div>}
+
 				<div>
 					Don't have an account yet?{" "}
 					<Link to={`/signup?${signUpLinkQueryParams.toString()}`}>

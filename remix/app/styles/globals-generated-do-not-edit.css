@@ -1428,10 +1428,6 @@ select {
   color: rgb(243 244 246 / var(--tw-text-opacity));
 }
 
-.text-current {
-  color: currentColor;
-}
-
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -1440,6 +1436,10 @@ select {
 .text-yellow-200 {
   --tw-text-opacity: 1;
   color: rgb(254 240 138 / var(--tw-text-opacity));
+}
+
+.text-current {
+  color: currentColor;
 }
 
 .text-black {

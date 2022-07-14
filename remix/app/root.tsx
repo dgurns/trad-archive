@@ -125,8 +125,6 @@ interface ErrorBoundaryArgs {
 	error: Error;
 }
 export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
-	const { currentUser } = useLoaderData<LoaderData>();
-
 	return (
 		<html lang="en">
 			<head>
@@ -147,7 +145,7 @@ export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
 
 							{/* Add header to the DOM after child content so its modals overlay */}
 							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header currentUser={currentUser} />
+								<Header />
 							</div>
 						</div>
 

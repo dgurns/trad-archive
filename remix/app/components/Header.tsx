@@ -12,7 +12,7 @@ import SearchEntities from "~/components/SearchEntities";
 import type { User } from "@prisma/client";
 
 interface Props {
-	currentUser: User | null;
+	currentUser?: User | null;
 }
 
 const Header = ({ currentUser }: Props) => {

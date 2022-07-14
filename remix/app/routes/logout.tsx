@@ -1,36 +1,21 @@
-import { useEffect } from "react";
-import { useNavigate } from "@remix-run/react";
-import { useMutation, gql } from "@apollo/client";
+import type { LoaderFunction } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
+import { getSession, destroySession } from "~/sessions";
 import Layout from "~/components/Layout";
 
-const LOG_OUT_MUTATION = gql`
-	mutation LogOut {
-		logOut
-	}
-`;
-
-const LogOut = () => {
-	const navigate = useNavigate();
-
-	const [logOut, { data: logOutData }] = useMutation(LOG_OUT_MUTATION, {
-		errorPolicy: "all",
+export const loader: LoaderFunction = async ({ request }) => {
+	const session = await getSession(request.headers.get("Cookie"));
+	return redirect("/login", {
+		headers: {
+			"Set-Cookie": await destroySession(session),
+		},
 	});
-
-	useEffect(() => {
-		logOut();
-	}, [logOut]);
-
-	useEffect(() => {
-		if (logOutData?.logOut) {
-			window.location.href = window.location.origin;
-		}
-	}, [logOutData]);
-
-	return (
-		<Layout>
-			<span className="text-gray-500">Logging out...</span>
-		</Layout>
-	);
 };
+
+const LogOut = () => (
+	<Layout>
+		<span className="text-gray-500">Logging out...</span>
+	</Layout>
+);
 
 export default LogOut;

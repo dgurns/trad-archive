@@ -10,11 +10,16 @@ import type {
 import { PrismaClient, EntityType } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const user1: Pick<User, "id" | "email" | "username" | "role"> = {
+const user1: Pick<
+	User,
+	"id" | "email" | "username" | "role" | "passwordHashed"
+> = {
 	id: "user_1",
 	email: "dan@dangurney.net",
 	username: "dgurney",
 	role: "Admin",
+	passwordHashed:
+		"$2a$10$K81HlhTOwa.vmZ0zwhNiFOFgNta1e3RX8bBpT1KApP97inzkJ0Fk.", // raw is `password`
 };
 const audioItem1: Pick<
 	AudioItem,

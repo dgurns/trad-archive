@@ -288,6 +288,7 @@ model User {
   role                        UserRole                   @default(User)
   email                       String                     @unique(map: "IDX_e12875dfb3b1d92d7d7c5377e2") @db.VarChar(255)
   username                    String                     @unique(map: "IDX_78a916df40e02a9deb1c4b75ed") @db.VarChar(255)
+  passwordHashed              String?                    @db.VarChar(255)
   autoLoginTokenHashed        String?                    @db.VarChar(255)
   autoLoginTokenExpiry        DateTime?
   copyrightPermissionStatus   CopyrightPermissionStatus?

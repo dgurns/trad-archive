@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
 	Links,
 	LiveReload,
@@ -7,13 +8,18 @@ import {
 	Scripts,
 	ScrollRestoration,
 	useCatch,
+	useLoaderData,
 } from "@remix-run/react";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import styles from "~/styles/globals-generated-do-not-edit.css";
 
+import { getSession } from "~/sessions";
+import { db } from "~/utils/db.server";
+
 import PlayerContextProvider from "~/components/PlayerContextProvider";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
+import type { User } from "@prisma/client";
 
 // TODO: Remove this
 const apolloClient = new ApolloClient({ cache: new InMemoryCache() });
@@ -63,7 +69,25 @@ export function links() {
 	];
 }
 
+interface LoaderData {
+	currentUser: User | null;
+}
+
+export const loader: LoaderFunction = async ({ request }) => {
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+	let currentUser: User | null = null;
+	if (userId) {
+		currentUser = await db.user.findUnique({ where: { id: userId } });
+	}
+
+	const data = { currentUser };
+	return json<LoaderData>(data);
+};
+
 export default function App() {
+	const { currentUser } = useLoaderData<LoaderData>();
+
 	return (
 		<html lang="en">
 			<head>
@@ -83,7 +107,7 @@ export default function App() {
 
 							{/* Add header to the DOM after child content so its modals overlay */}
 							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header />
+								<Header currentUser={currentUser} />
 							</div>
 						</div>
 
@@ -101,6 +125,8 @@ interface ErrorBoundaryArgs {
 	error: Error;
 }
 export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
+	const { currentUser } = useLoaderData<LoaderData>();
+
 	return (
 		<html lang="en">
 			<head>
@@ -121,7 +147,7 @@ export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
 
 							{/* Add header to the DOM after child content so its modals overlay */}
 							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header />
+								<Header currentUser={currentUser} />
 							</div>
 						</div>
 
@@ -136,6 +162,8 @@ export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
 }
 
 export function CatchBoundary() {
+	const { currentUser } = useLoaderData<LoaderData>();
+
 	const caught = useCatch();
 	return (
 		<html lang="en">
@@ -159,7 +187,7 @@ export function CatchBoundary() {
 
 							{/* Add header to the DOM after child content so its modals overlay */}
 							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header />
+								<Header currentUser={currentUser} />
 							</div>
 						</div>
 

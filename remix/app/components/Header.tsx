@@ -1,20 +1,22 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "@remix-run/react";
 import { useNavigate } from "@remix-run/react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import type { Entity } from "~/types";
-import useCurrentUser from "~/hooks/useCurrentUser";
 import UserService from "~/services/User";
 import EntityService from "~/services/Entity";
 
 import Modal from "~/components/Modal";
 import SearchEntities from "~/components/SearchEntities";
+import type { User } from "@prisma/client";
 
-const Header = () => {
+interface Props {
+	currentUser: User | null;
+}
+
+const Header = ({ currentUser }: Props) => {
 	const navigate = useNavigate();
-
-	const [currentUser, { loading }] = useCurrentUser();
 
 	const [searchModalIsVisible, setSearchModalIsVisible] = useState(false);
 
@@ -45,63 +47,9 @@ const Header = () => {
 		[navigate]
 	);
 
-	const userActions = useMemo(() => {
-		if (loading || typeof currentUser === "undefined") {
-			return null;
-		} else if (currentUser) {
-			return (
-				<div className="flex flex-row items-center">
-					<Link
-						to="/saved-items"
-						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
-					>
-						<i className="material-icons">bookmark</i>
-						<span className="hidden md:block md:pl-1">Saved</span>
-					</Link>
-					{UserService.isAdmin(currentUser) && (
-						<Link
-							to="/admin"
-							className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
-						>
-							<i className="material-icons">manage_accounts</i>
-							<span className="hidden md:block md:pl-1">Admin</span>
-						</Link>
-					)}
-					<Link
-						to="/account"
-						className="btn-text text-current flex flex-row items-center whitespace-nowrap hover:text-gray-400 ml-4"
-					>
-						<i className="material-icons">account_circle</i>
-						<span className="hidden md:block md:pl-1">Account</span>
-					</Link>
-				</div>
-			);
-		} else {
-			return (
-				<div>
-					<Link
-						to="/login"
-						className="whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-					>
-						Log In
-					</Link>
-					<Link
-						to="/signup"
-						className="btn text-current no-underline whitespace-nowrap hover:text-current ml-4"
-					>
-						Sign Up
-					</Link>
-				</div>
-			);
-		}
-	}, [loading, currentUser]);
-
 	return (
 		<>
-			<div
-				className="flex flex-row py-3 px-4 justify-between text-white items-center bg-teal-700"
-				suppressHydrationWarning
-			>
+			<div className="flex flex-row py-3 px-4 justify-between text-white items-center bg-teal-700">
 				<div className="flex flex-row">
 					<Link
 						to="/"
@@ -128,7 +76,48 @@ const Header = () => {
 					</Link>
 				</div>
 
-				{userActions}
+				{!currentUser ? (
+					<div>
+						<Link
+							to="/login"
+							className="whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
+						>
+							Log In
+						</Link>
+						<Link
+							to="/signup"
+							className="btn text-current no-underline whitespace-nowrap hover:text-current ml-4"
+						>
+							Sign Up
+						</Link>
+					</div>
+				) : (
+					<div className="flex flex-row items-center">
+						<Link
+							to="/saved-items"
+							className="flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
+						>
+							<i className="material-icons">bookmark</i>
+							<span className="hidden md:block md:pl-1">Saved</span>
+						</Link>
+						{UserService.isAdmin(currentUser) && (
+							<Link
+								to="/admin"
+								className="flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
+							>
+								<i className="material-icons">manage_accounts</i>
+								<span className="hidden md:block md:pl-1">Admin</span>
+							</Link>
+						)}
+						<Link
+							to="/account"
+							className="flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
+						>
+							<i className="material-icons">account_circle</i>
+							<span className="hidden md:block md:pl-1">Account</span>
+						</Link>
+					</div>
+				)}
 			</div>
 
 			<Modal

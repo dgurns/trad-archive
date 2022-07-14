@@ -81,6 +81,7 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Login() {
 	const { error } = useLoaderData();
 	const transition = useTransition();
+	console.log(transition);
 
 	const { search } = useLocation();
 	const params = new URLSearchParams(search);
@@ -96,7 +97,7 @@ export default function Login() {
 				Log in to {redirectTo ? "continue" : "Trad Archive"}
 			</h1>
 			<div className="flex flex-col align-start max-w-xs">
-				<form method="post" className="space-y-4 mb-4">
+				<form method="post" className="space-y-4 mb-6">
 					<input
 						type="text"
 						placeholder="Email"
@@ -113,19 +114,22 @@ export default function Login() {
 					<input
 						type="submit"
 						className="btn w-auto"
-						disabled={transition.state !== "idle"}
+						disabled={transition.state === "submitting"}
 						value="Log In"
 					/>
 				</form>
 
-				{error && <div className="text-red-600 mb-4">{error}</div>}
+				{error && <div className="text-red-600 mb-6">{error}</div>}
 
-				<div>
+				<p className="mb-2">
 					Don't have an account yet?{" "}
 					<Link to={`/signup?${signUpLinkQueryParams.toString()}`}>
 						Sign Up
 					</Link>
-				</div>
+				</p>
+				<p>
+					<Link to="/reset-password">Reset Password</Link>
+				</p>
 			</div>
 		</Layout>
 	);

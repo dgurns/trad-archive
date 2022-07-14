@@ -229,11 +229,6 @@ var PlayerContextProvider_default = PlayerContextProvider;
 // app/components/Header.tsx
 var import_react17 = __toESM(require("react")), import_react18 = require("@remix-run/react"), import_react19 = require("@remix-run/react"), import_react_hotkeys_hook2 = require("react-hotkeys-hook");
 
-// app/services/User.ts
-var isAdmin = (user) => user ? user.role === "Admin" /* Admin */ : !1, UserService = {
-  isAdmin
-}, User_default = UserService;
-
 // app/services/Entity.ts
 var import_client3 = require("@prisma/client"), cleanSlug = (rawSlug) => rawSlug.replace(/[\s]/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase(), makeHrefForTopLevel = (entity) => {
   switch (entity == null ? void 0 : entity.entityType) {
@@ -1303,14 +1298,7 @@ var Header = ({ currentUser }) => {
     className: "material-icons"
   }, "bookmark"), /* @__PURE__ */ import_react17.default.createElement("span", {
     className: "hidden md:block md:pl-1"
-  }, "Saved")), User_default.isAdmin(currentUser) && /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
-    to: "/admin",
-    className: "flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-  }, /* @__PURE__ */ import_react17.default.createElement("i", {
-    className: "material-icons"
-  }, "manage_accounts"), /* @__PURE__ */ import_react17.default.createElement("span", {
-    className: "hidden md:block md:pl-1"
-  }, "Admin")), /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, "Saved")), /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
     to: "/account",
     className: "flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
   }, /* @__PURE__ */ import_react17.default.createElement("i", {
@@ -1728,6 +1716,13 @@ var import_react27 = require("react"), import_react28 = require("@remix-run/reac
 
 // app/components/RequireAdmin.tsx
 var import_react26 = require("@remix-run/react");
+
+// app/services/User.ts
+var isAdmin = (user) => user ? user.role === "Admin" /* Admin */ : !1, UserService = {
+  isAdmin
+}, User_default = UserService;
+
+// app/components/RequireAdmin.tsx
 var RequireAdmin = ({ children }) => {
   let navigate = (0, import_react26.useNavigate)(), [currentUser, { data: data2, error: error2 }] = useCurrentUser_default();
   return currentUser && User_default.isAdmin(currentUser) ? /* @__PURE__ */ React.createElement(React.Fragment, null, children) : !data2 && !error2 ? /* @__PURE__ */ React.createElement("div", null, "Checking admin permissions...") : (typeof window < "u" && navigate({
@@ -5483,13 +5478,46 @@ var action = async ({ request }) => {
   console.log(formData);
 };
 
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/reset-password.tsx
+var reset_password_exports = {};
+__export(reset_password_exports, {
+  default: () => ResetPassword
+});
+var import_react125 = require("@remix-run/react");
+function ResetPassword() {
+  let transition = (0, import_react125.useTransition)();
+  return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
+    className: "mb-4"
+  }, "Reset your password"), /* @__PURE__ */ React.createElement("p", {
+    className: "text-gray-500 mb-4"
+  }, "We'll send you an email with a link to reset your password."), /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col align-start max-w-xs"
+  }, /* @__PURE__ */ React.createElement("form", {
+    method: "post",
+    className: "space-y-4 mb-6"
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "text",
+    placeholder: "Email",
+    autoFocus: !0,
+    required: !0,
+    name: "email"
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "submit",
+    className: "btn w-auto",
+    disabled: transition.state === "submitting",
+    value: "Send Email"
+  })), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react125.Link, {
+    to: "/login"
+  }, "Go Back"))));
+}
+
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/index.tsx
 var account_exports = {};
 __export(account_exports, {
   default: () => AccountHome,
   loader: () => loader14
 });
-var import_react125 = require("@remix-run/react"), import_node4 = require("@remix-run/node");
+var import_react126 = require("@remix-run/react"), import_node4 = require("@remix-run/node");
 var loader14 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
     where: { id: currentUserId }
@@ -5503,7 +5531,7 @@ var loader14 = async ({ request }) => {
 function AccountHome() {
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-4"
-  }, "Account"), /* @__PURE__ */ React.createElement(import_react125.Link, {
+  }, "Account"), /* @__PURE__ */ React.createElement(import_react126.Link, {
     to: "/logout"
   }, "Log Out "));
 }
@@ -5513,38 +5541,38 @@ var admin_exports = {};
 __export(admin_exports, {
   default: () => admin_default
 });
-var import_react126 = require("@remix-run/react");
+var import_react127 = require("@remix-run/react");
 var AdminHome = () => /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("h1", {
   className: "mb-4"
-}, "Admin"), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Admin"), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/admin/verification-requests"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/admin/takedown-requests"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/admin/submissions"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-6"
-}, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/entities/audio-items/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/entities/people/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Person")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Create Person")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/entities/instruments/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/entities/places/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Place")), /* @__PURE__ */ React.createElement(import_react126.Link, {
+}, "Create Place")), /* @__PURE__ */ React.createElement(import_react127.Link, {
   to: "/entities/collections/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
@@ -5555,7 +5583,7 @@ var saved_items_exports = {};
 __export(saved_items_exports, {
   default: () => saved_items_default
 });
-var import_react127 = require("@remix-run/react");
+var import_react128 = require("@remix-run/react");
 var SavedItems = () => {
   let [savedItems, { loading, error: error2 }] = useSavedItemsForUser_default(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     defaultViewAs: "List" /* List */
@@ -5572,7 +5600,7 @@ var SavedItems = () => {
     className: "mb-4"
   }, /* @__PURE__ */ React.createElement(LoadingBlock_default, null)), !loading && (savedItems == null ? void 0 : savedItems.length) === 0 && /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500"
-  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react127.Link, {
+  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/"
   }, "Audio Items"), "!"), savedItems == null ? void 0 : savedItems.map(({ audioItem }, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
     viewAs,
@@ -5582,87 +5610,13 @@ var SavedItems = () => {
   })))));
 }, saved_items_default = SavedItems;
 
-// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/auto-login.tsx
-var auto_login_exports = {};
-__export(auto_login_exports, {
-  default: () => auto_login_default
-});
-var import_react128 = require("react"), import_react129 = require("@remix-run/react"), import_react130 = require("@remix-run/react"), import_client43 = require("@apollo/client");
-var AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN = import_client43.gql`
-	mutation AuthenticateWithAutoLoginToken(
-		$input: AuthenticateWithAutoLoginTokenInput!
-	) {
-		authenticateWithAutoLoginToken(input: $input) {
-			...CurrentUser
-		}
-	}
-	${UserFragments.currentUser}
-`, AutoLogin = () => {
-  var _a;
-  let navigate = (0, import_react129.useNavigate)(), { tokenUnhashed, userEmail, redirectTo } = navigate.query, [
-    currentUser,
-    { loading: currentUserLoading, refetch: refetchCurrentUser }
-  ] = useCurrentUser_default(), [
-    authenticateWithAutoLoginToken,
-    { loading: authenticateLoading, data: data2, error: error2 }
-  ] = (0, import_client43.useMutation)(AUTHENTICATE_WITH_AUTO_LOGIN_TOKEN);
-  return (0, import_react128.useEffect)(() => {
-    if (typeof tokenUnhashed != "string" || typeof userEmail != "string")
-      return;
-    (async () => {
-      try {
-        await authenticateWithAutoLoginToken({
-          variables: { input: { tokenUnhashed, userEmail } }
-        });
-      } catch {
-      }
-    })();
-  }, [tokenUnhashed, authenticateWithAutoLoginToken]), (0, import_react128.useEffect)(() => {
-    (data2 == null ? void 0 : data2.authenticateWithAutoLoginToken) && refetchCurrentUser();
-  }, [data2, refetchCurrentUser]), (0, import_react128.useEffect)(() => {
-    currentUser && navigate(typeof redirectTo == "string" ? redirectTo : "/");
-  }, [currentUser]), currentUser ? /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-row items-center justify-center"
-  }, /* @__PURE__ */ React.createElement(LoadingCircle_default, {
-    className: "mr-4"
-  }), /* @__PURE__ */ React.createElement("span", {
-    className: "text-gray-500"
-  }, "Loading..."))) : error2 ? /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600 mb-4"
-  }, "Error: ", (_a = error2 == null ? void 0 : error2.graphQLErrors) == null ? void 0 : _a.map(({ message }) => message)), /* @__PURE__ */ React.createElement(import_react130.Link, {
-    href: {
-      pathname: "/login",
-      query: redirectTo ? { redirectTo } : void 0
-    }
-  }, "Send a new login link")) : authenticateLoading || currentUserLoading ? /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-row items-center justify-center"
-  }, /* @__PURE__ */ React.createElement(LoadingCircle_default, {
-    className: "mr-4"
-  }), /* @__PURE__ */ React.createElement("span", {
-    className: "text-gray-500"
-  }, "Loading..."))) : /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
-    className: "mb-3"
-  }, "Check your email"), /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-row mb-6"
-  }, /* @__PURE__ */ React.createElement("i", {
-    className: "material-icons mr-2"
-  }, "mail_outline"), "We've emailed a magic link to you. Click it to log in."), /* @__PURE__ */ React.createElement("div", {
-    className: "text-gray-500"
-  }, "Didn't get it? Check your spam folder or", " ", /* @__PURE__ */ React.createElement(import_react130.Link, {
-    href: {
-      pathname: "/login",
-      query: redirectTo ? { redirectTo } : void 0
-    }
-  }, "send a new one")));
-}, auto_login_default = AutoLogin;
-
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/users/$id.tsx
 var id_exports2 = {};
 __export(id_exports2, {
   default: () => id_default2,
   loader: () => loader15
 });
-var import_react131 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
+var import_react129 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
 var loader15 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -5672,7 +5626,7 @@ var loader15 = async ({ params }) => {
     });
   return (0, import_node5.json)({ user });
 }, ViewUserById = () => {
-  let { user } = (0, import_react131.useLoaderData)(), { username, createdAt } = user;
+  let { user } = (0, import_react129.useLoaderData)(), { username, createdAt } = user;
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col-reverse md:flex-row"
   }, /* @__PURE__ */ React.createElement("div", {
@@ -5709,7 +5663,7 @@ __export(signup_exports, {
   default: () => SignUp,
   loader: () => loader17
 });
-var import_react132 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs"));
+var import_react130 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs"));
 var import_node7 = require("@remix-run/node");
 var loader17 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
@@ -5767,14 +5721,14 @@ var loader17 = async ({ request }) => {
   });
 };
 function SignUp() {
-  let { error: error2 } = (0, import_react132.useLoaderData)(), { state } = (0, import_react132.useTransition)(), { search } = (0, import_react132.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error: error2 } = (0, import_react130.useLoaderData)(), { state } = (0, import_react130.useTransition)(), { search } = (0, import_react130.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, redirectTo ? "Create an account to continue" : "Create your account"), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col align-start max-w-xs"
   }, /* @__PURE__ */ React.createElement("form", {
     method: "post",
-    className: "space-y-4 mb-4"
+    className: "space-y-4 mb-6"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "text",
     name: "email",
@@ -5799,11 +5753,11 @@ function SignUp() {
   }), /* @__PURE__ */ React.createElement("input", {
     type: "submit",
     className: "btn mb-4 w-auto",
-    disabled: state !== "idle",
+    disabled: state === "submitting",
     value: "Sign Up"
   })), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600 mb-4"
-  }, error2), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react132.Link, {
+    className: "text-red-600 mb-6"
+  }, error2), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react130.Link, {
     to: `/login?${logInLinkQueryParams.toString()}`
   }, "Log in"))));
 }
@@ -5814,7 +5768,7 @@ __export(routes_exports, {
   default: () => Home,
   loader: () => loader18
 });
-var import_react133 = require("react"), import_react134 = require("@remix-run/react");
+var import_react131 = require("react"), import_react132 = require("@remix-run/react");
 
 // app/services/LocalStorage.ts
 var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
@@ -5923,13 +5877,13 @@ function Home() {
     numAudioItemsAllTime,
     numTagsAllTime,
     numCommentsAllTime
-  } = (0, import_react134.useLoaderData)(), { search } = (0, import_react134.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
+  } = (0, import_react132.useLoaderData)(), { search } = (0, import_react132.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: numAudioItemsAllTime
-  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react133.useState)(!1);
-  (0, import_react133.useEffect)(() => {
+  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react131.useState)(!1);
+  (0, import_react131.useEffect)(() => {
     LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
   }, []);
-  let onCloseIntro = (0, import_react133.useCallback)(() => {
+  let onCloseIntro = (0, import_react131.useCallback)(() => {
     LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
   }, []);
   return /* @__PURE__ */ React.createElement(Layout_default, null, shouldShowIntro && /* @__PURE__ */ React.createElement(ProjectIntro_default, {
@@ -5952,19 +5906,19 @@ function Home() {
     className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300"
   }, /* @__PURE__ */ React.createElement("h3", {
     className: "mb-4"
-  }, "Browse"), /* @__PURE__ */ React.createElement(import_react134.Link, {
+  }, "Browse"), /* @__PURE__ */ React.createElement(import_react132.Link, {
     to: "/entities/people",
     className: "mb-2"
-  }, "People"), /* @__PURE__ */ React.createElement(import_react134.Link, {
+  }, "People"), /* @__PURE__ */ React.createElement(import_react132.Link, {
     to: "/entities/instruments",
     className: "mb-2"
-  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react134.Link, {
+  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react132.Link, {
     to: "/entities/places",
     className: "mb-2"
-  }, "Places"), /* @__PURE__ */ React.createElement(import_react134.Link, {
+  }, "Places"), /* @__PURE__ */ React.createElement(import_react132.Link, {
     to: "/entities/tunes",
     className: "mb-2"
-  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react134.Link, {
+  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react132.Link, {
     to: "/entities/collections",
     className: "mb-2"
   }, "Collections"), /* @__PURE__ */ React.createElement("h3", {
@@ -5982,7 +5936,7 @@ function Home() {
     return name ? /* @__PURE__ */ React.createElement("div", {
       className: "mb-2 text-gray-500",
       key: index
-    }, /* @__PURE__ */ React.createElement(import_react134.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react132.Link, {
       to: Entity_default.makeHrefForView(collection)
     }, collection.name)) : null;
   }), /* @__PURE__ */ React.createElement("h3", {
@@ -6005,9 +5959,9 @@ function Home() {
       key: index
     }, /* @__PURE__ */ React.createElement("div", {
       className: " mb-1"
-    }, /* @__PURE__ */ React.createElement(import_react134.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react132.Link, {
       to: `/users/${createdByUser.id}`
-    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react134.Link, {
+    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react132.Link, {
       to: Entity_default.makeHrefForView(parentAudioItem)
     }, parentAudioItem.name), ":"), /* @__PURE__ */ React.createElement("div", {
       className: "whitespace-pre-line text-sm"
@@ -6022,7 +5976,7 @@ __export(login_exports, {
   default: () => Login,
   loader: () => loader19
 });
-var import_react135 = require("@remix-run/react"), import_node8 = require("@remix-run/node"), import_bcryptjs2 = __toESM(require("bcryptjs"));
+var import_react133 = require("@remix-run/react"), import_node8 = require("@remix-run/node"), import_bcryptjs2 = __toESM(require("bcryptjs"));
 var loader19 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
@@ -6054,14 +6008,16 @@ var loader19 = async ({ request }) => {
   }));
 };
 function Login() {
-  let { error: error2 } = (0, import_react135.useLoaderData)(), transition = (0, import_react135.useTransition)(), { search } = (0, import_react135.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error: error2 } = (0, import_react133.useLoaderData)(), transition = (0, import_react133.useTransition)();
+  console.log(transition);
+  let { search } = (0, import_react133.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Log in to ", redirectTo ? "continue" : "Trad Archive"), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col align-start max-w-xs"
   }, /* @__PURE__ */ React.createElement("form", {
     method: "post",
-    className: "space-y-4 mb-4"
+    className: "space-y-4 mb-6"
   }, /* @__PURE__ */ React.createElement("input", {
     type: "text",
     placeholder: "Email",
@@ -6076,17 +6032,21 @@ function Login() {
   }), /* @__PURE__ */ React.createElement("input", {
     type: "submit",
     className: "btn w-auto",
-    disabled: transition.state !== "idle",
+    disabled: transition.state === "submitting",
     value: "Log In"
   })), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600 mb-4"
-  }, error2), /* @__PURE__ */ React.createElement("div", null, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react135.Link, {
+    className: "text-red-600 mb-6"
+  }, error2), /* @__PURE__ */ React.createElement("p", {
+    className: "mb-2"
+  }, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react133.Link, {
     to: `/signup?${signUpLinkQueryParams.toString()}`
-  }, "Sign Up"))));
+  }, "Sign Up")), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react133.Link, {
+    to: "/reset-password"
+  }, "Reset Password"))));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "11437b92", entry: { module: "/build/entry.client-EDJETDD3.js", imports: ["/build/_shared/chunk-XEYHAT46.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-TBLOJOSE.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-DTAELTGB.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-PQJWRTRS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-TG64GLT2.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/[id]/upload": { id: "routes/account/submissions/[id]/upload", parentId: "root", path: "account/submissions/id/upload", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/[id]/upload-CRU27CAK.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/index": { id: "routes/account/submissions/index", parentId: "root", path: "account/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/account/submissions/index-55NBZZYY.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/new": { id: "routes/account/submissions/new", parentId: "root", path: "account/submissions/new", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/new-P74A2KCG.js", imports: ["/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/verify": { id: "routes/account/verify", parentId: "root", path: "account/verify", index: void 0, caseSensitive: void 0, module: "/build/routes/account/verify-5OXXN37G.js", imports: ["/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-AXFH4NET.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/[id]": { id: "routes/admin/submissions/[id]", parentId: "root", path: "admin/submissions/id", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/submissions/[id]-QRMM6BDP.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/index": { id: "routes/admin/submissions/index", parentId: "root", path: "admin/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/admin/submissions/index-OMFGU4HE.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/takedown-requests": { id: "routes/admin/takedown-requests", parentId: "root", path: "admin/takedown-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/takedown-requests-VJFZQK4A.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/verification-requests": { id: "routes/admin/verification-requests", parentId: "root", path: "admin/verification-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/verification-requests-E4ETDCBT.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/auto-login": { id: "routes/auto-login", parentId: "root", path: "auto-login", index: void 0, caseSensitive: void 0, module: "/build/routes/auto-login-UWC4XGFZ.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments/index": { id: "routes/comments/index", parentId: "root", path: "comments", index: !0, caseSensitive: void 0, module: "/build/routes/comments/index-R6FV2G4C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-KJW5IAAC.js", imports: ["/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/about": { id: "routes/entities/audio-items/$slug/about", parentId: "routes/entities/audio-items/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/about-2IP44ITB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/edit": { id: "routes/entities/audio-items/$slug/edit", parentId: "routes/entities/audio-items/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/edit-RLH3Y3OM.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/tags": { id: "routes/entities/audio-items/$slug/tags", parentId: "routes/entities/audio-items/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/tags-2DB7NQVH.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-SKRCP2K4.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/new": { id: "routes/entities/audio-items/new", parentId: "root", path: "entities/audio-items/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/new-LH5UWW7Z.js", imports: ["/build/_shared/chunk-3MMXENOP.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-6ER23EE2.js", imports: ["/build/_shared/chunk-WR7VLUAO.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/about": { id: "routes/entities/collections/$slug/about", parentId: "routes/entities/collections/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/about-SFBRBBQG.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/edit": { id: "routes/entities/collections/$slug/edit", parentId: "routes/entities/collections/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/edit-A2MFKV5J.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/tags": { id: "routes/entities/collections/$slug/tags", parentId: "routes/entities/collections/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/tags-C2AQ4GGA.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-JHVJQNTD.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/new": { id: "routes/entities/collections/new", parentId: "root", path: "entities/collections/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/new-AJT7IU7S.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-53DASHWD.js", imports: ["/build/_shared/chunk-WR7VLUAO.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/about": { id: "routes/entities/instruments/$slug/about", parentId: "routes/entities/instruments/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/about-VMH3AW4C.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/edit": { id: "routes/entities/instruments/$slug/edit", parentId: "routes/entities/instruments/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/edit-Z3EITGD7.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/tags": { id: "routes/entities/instruments/$slug/tags", parentId: "routes/entities/instruments/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/tags-SO5XGCS7.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-6GYH57W5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/new": { id: "routes/entities/instruments/new", parentId: "root", path: "entities/instruments/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/new-VPNGTI76.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-KGLJZYDQ.js", imports: ["/build/_shared/chunk-WR7VLUAO.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/about": { id: "routes/entities/people/$slug/about", parentId: "routes/entities/people/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/about-SEIUMN2E.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/edit": { id: "routes/entities/people/$slug/edit", parentId: "routes/entities/people/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/edit-QT6RTGXL.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/tags": { id: "routes/entities/people/$slug/tags", parentId: "routes/entities/people/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/tags-D7D47AHU.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-AXRMHJT7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/new": { id: "routes/entities/people/new", parentId: "root", path: "entities/people/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/new-SYS4RKC4.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-KMVS3LWB.js", imports: ["/build/_shared/chunk-WR7VLUAO.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/about": { id: "routes/entities/places/$slug/about", parentId: "routes/entities/places/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/about-D4HIUMME.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/edit": { id: "routes/entities/places/$slug/edit", parentId: "routes/entities/places/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/edit-QFPLLM6X.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/tags": { id: "routes/entities/places/$slug/tags", parentId: "routes/entities/places/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/tags-Z2GVVEAL.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-MYO5OGFE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/new": { id: "routes/entities/places/new", parentId: "root", path: "entities/places/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/new-IYLLN3BY.js", imports: ["/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-AMQEFIUA.js", imports: ["/build/_shared/chunk-WR7VLUAO.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/about": { id: "routes/entities/tunes/$slug/about", parentId: "routes/entities/tunes/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/about-JSB5LPR4.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/tags": { id: "routes/entities/tunes/$slug/tags", parentId: "routes/entities/tunes/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/tags-KU7URY76.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-42V43E7X.js", "/build/_shared/chunk-N4DUM6GF.js", "/build/_shared/chunk-RMNFHXFO.js", "/build/_shared/chunk-GUZ36LDL.js", "/build/_shared/chunk-AQ2DXFXD.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-J7QV6FGV.js", "/build/_shared/chunk-K4HDVXKX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-C3SFJZKL.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-A7RRS2UO.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-F6ITYIRS.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-MJI7FLJE.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-X45AONHT.js", "/build/_shared/chunk-ECF22UQ4.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-DNCH5EXW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-N43QNLZY.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-IDJJ2SNN.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-11437B92.js" };
+var assets_manifest_default = { version: "6b272161", entry: { module: "/build/entry.client-EDJETDD3.js", imports: ["/build/_shared/chunk-XEYHAT46.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-VJBYJKRK.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-PQJWRTRS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-TG64GLT2.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/[id]/upload": { id: "routes/account/submissions/[id]/upload", parentId: "root", path: "account/submissions/id/upload", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/[id]/upload-2J6GFNOS.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/index": { id: "routes/account/submissions/index", parentId: "root", path: "account/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/account/submissions/index-UEMB7BFD.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/new": { id: "routes/account/submissions/new", parentId: "root", path: "account/submissions/new", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/new-VSZSUYWV.js", imports: ["/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/verify": { id: "routes/account/verify", parentId: "root", path: "account/verify", index: void 0, caseSensitive: void 0, module: "/build/routes/account/verify-PRQJOBFA.js", imports: ["/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-GJCNRP2W.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/[id]": { id: "routes/admin/submissions/[id]", parentId: "root", path: "admin/submissions/id", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/submissions/[id]-FVT4I3JS.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/index": { id: "routes/admin/submissions/index", parentId: "root", path: "admin/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/admin/submissions/index-XPDHUHCK.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/takedown-requests": { id: "routes/admin/takedown-requests", parentId: "root", path: "admin/takedown-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/takedown-requests-FVAFEXF4.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/verification-requests": { id: "routes/admin/verification-requests", parentId: "root", path: "admin/verification-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/verification-requests-FATRX57F.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments/index": { id: "routes/comments/index", parentId: "root", path: "comments", index: !0, caseSensitive: void 0, module: "/build/routes/comments/index-R6FV2G4C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-QH4HM3NJ.js", imports: ["/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/about": { id: "routes/entities/audio-items/$slug/about", parentId: "routes/entities/audio-items/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/about-2IP44ITB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/edit": { id: "routes/entities/audio-items/$slug/edit", parentId: "routes/entities/audio-items/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/edit-6JTV5DWO.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/tags": { id: "routes/entities/audio-items/$slug/tags", parentId: "routes/entities/audio-items/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/tags-2DB7NQVH.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-SKRCP2K4.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/new": { id: "routes/entities/audio-items/new", parentId: "root", path: "entities/audio-items/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/new-O4AXGEF3.js", imports: ["/build/_shared/chunk-U23TXCRR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-BLGIGEX4.js", imports: ["/build/_shared/chunk-HSBMLDYV.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/about": { id: "routes/entities/collections/$slug/about", parentId: "routes/entities/collections/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/about-SFBRBBQG.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/edit": { id: "routes/entities/collections/$slug/edit", parentId: "routes/entities/collections/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/edit-PJ7GETP4.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/tags": { id: "routes/entities/collections/$slug/tags", parentId: "routes/entities/collections/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/tags-PEN7NRWF.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-JHVJQNTD.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/new": { id: "routes/entities/collections/new", parentId: "root", path: "entities/collections/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/new-CLXVDPMK.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-RNRMJCIT.js", imports: ["/build/_shared/chunk-HSBMLDYV.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/about": { id: "routes/entities/instruments/$slug/about", parentId: "routes/entities/instruments/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/about-VMH3AW4C.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/edit": { id: "routes/entities/instruments/$slug/edit", parentId: "routes/entities/instruments/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/edit-RTYDPL4V.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/tags": { id: "routes/entities/instruments/$slug/tags", parentId: "routes/entities/instruments/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/tags-M646WQKD.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-6GYH57W5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/new": { id: "routes/entities/instruments/new", parentId: "root", path: "entities/instruments/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/new-FC35W2BW.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-EDGE7JB2.js", imports: ["/build/_shared/chunk-HSBMLDYV.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/about": { id: "routes/entities/people/$slug/about", parentId: "routes/entities/people/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/about-SEIUMN2E.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/edit": { id: "routes/entities/people/$slug/edit", parentId: "routes/entities/people/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/edit-2J6M4KZL.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/tags": { id: "routes/entities/people/$slug/tags", parentId: "routes/entities/people/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/tags-NOTYMW2A.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-AXRMHJT7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/new": { id: "routes/entities/people/new", parentId: "root", path: "entities/people/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/new-HQKG7X7U.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-YAQSNSZH.js", imports: ["/build/_shared/chunk-HSBMLDYV.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/about": { id: "routes/entities/places/$slug/about", parentId: "routes/entities/places/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/about-D4HIUMME.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/edit": { id: "routes/entities/places/$slug/edit", parentId: "routes/entities/places/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/edit-SNIMYO7W.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/tags": { id: "routes/entities/places/$slug/tags", parentId: "routes/entities/places/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/tags-6N2RMAGW.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-MYO5OGFE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/new": { id: "routes/entities/places/new", parentId: "root", path: "entities/places/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/new-77DMZMJY.js", imports: ["/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-3KPPKI3M.js", imports: ["/build/_shared/chunk-HSBMLDYV.js", "/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/about": { id: "routes/entities/tunes/$slug/about", parentId: "routes/entities/tunes/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/about-JSB5LPR4.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/tags": { id: "routes/entities/tunes/$slug/tags", parentId: "routes/entities/tunes/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/tags-SXXHBEAB.js", imports: ["/build/_shared/chunk-54HILGMV.js", "/build/_shared/chunk-T7RHUPER.js", "/build/_shared/chunk-3B2HFGGL.js", "/build/_shared/chunk-UDMLOEFF.js", "/build/_shared/chunk-D32GMNSE.js", "/build/_shared/chunk-TYKBLAJF.js", "/build/_shared/chunk-WWWKGDA4.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-YQEOIYP7.js", "/build/_shared/chunk-QZPZTLRC.js", "/build/_shared/chunk-XNJMNUGD.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-RVMIZXZO.js", "/build/_shared/chunk-VSNN2R3A.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-C3SFJZKL.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-HSVW2NKY.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-6RGDTJPN.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-ZS6SZWDU.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-QYEZ7FVB.js", imports: ["/build/_shared/chunk-AMWVENZA.js", "/build/_shared/chunk-7VZCTOM6.js", "/build/_shared/chunk-ZQ57QJI3.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-OQCJJNOR.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-QJ3HNRQP.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-IDJJ2SNN.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-XJ4XEANZ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-6B272161.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports }, routes = {
@@ -6450,6 +6410,14 @@ var entry = { module: entry_server_exports }, routes = {
     caseSensitive: void 0,
     module: comments_exports
   },
+  "routes/reset-password": {
+    id: "routes/reset-password",
+    parentId: "root",
+    path: "reset-password",
+    index: void 0,
+    caseSensitive: void 0,
+    module: reset_password_exports
+  },
   "routes/account/index": {
     id: "routes/account/index",
     parentId: "root",
@@ -6473,14 +6441,6 @@ var entry = { module: entry_server_exports }, routes = {
     index: void 0,
     caseSensitive: void 0,
     module: saved_items_exports
-  },
-  "routes/auto-login": {
-    id: "routes/auto-login",
-    parentId: "root",
-    path: "auto-login",
-    index: void 0,
-    caseSensitive: void 0,
-    module: auto_login_exports
   },
   "routes/users/$id": {
     id: "routes/users/$id",

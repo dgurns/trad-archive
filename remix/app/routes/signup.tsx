@@ -129,7 +129,7 @@ export default function SignUp() {
 				{redirectTo ? "Create an account to continue" : "Create your account"}
 			</h1>
 			<div className="flex flex-col align-start max-w-xs">
-				<form method="post" className="space-y-4 mb-4">
+				<form method="post" className="space-y-4 mb-6">
 					<input
 						type="text"
 						name="email"
@@ -158,12 +158,12 @@ export default function SignUp() {
 					<input
 						type="submit"
 						className="btn mb-4 w-auto"
-						disabled={state !== "idle"}
+						disabled={state === "submitting"}
 						value="Sign Up"
 					/>
 				</form>
 
-				{error && <div className="text-red-600 mb-4">{error}</div>}
+				{error && <div className="text-red-600 mb-6">{error}</div>}
 
 				<div>
 					Already have an account?{" "}

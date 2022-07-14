@@ -4,7 +4,6 @@ import { useNavigate } from "@remix-run/react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 import type { Entity } from "~/types";
-import UserService from "~/services/User";
 import EntityService from "~/services/Entity";
 
 import Modal from "~/components/Modal";
@@ -100,15 +99,6 @@ const Header = ({ currentUser }: Props) => {
 							<i className="material-icons">bookmark</i>
 							<span className="hidden md:block md:pl-1">Saved</span>
 						</Link>
-						{UserService.isAdmin(currentUser) && (
-							<Link
-								to="/admin"
-								className="flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-							>
-								<i className="material-icons">manage_accounts</i>
-								<span className="hidden md:block md:pl-1">Admin</span>
-							</Link>
-						)}
 						<Link
 							to="/account"
 							className="flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"

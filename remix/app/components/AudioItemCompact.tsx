@@ -47,8 +47,8 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 				onClick={onPlayPressed}
 				aria-label="Play"
 			>
-				<i className="material-icons text-6xl text-teal-600 hover:text-teal-800">
-					play_arrow
+				<i className="material-icons text-teal-600 hover:text-teal-800">
+					<span className="text-6xl">play_arrow</span>
 				</i>
 			</button>
 		);

@@ -1,18 +1,15 @@
 import { useCallback, useMemo } from "react";
 import { Link } from "@remix-run/react";
-import { useNavigate } from "@remix-run/react";
-import type { TakedownRequest, Tag } from "@prisma/client";
+import type { Tag } from "@prisma/client";
 
 import type { AudioItemWithRelations } from "~/types";
 import DateTime from "~/services/DateTime";
 import usePlayerContext from "~/hooks/usePlayerContext";
 
 import Tags from "~/components/Tags";
-import Menu from "~/components/Menu";
 import SaveItemButton from "~/components/SaveItemButton";
 import ViewCommentsButton from "~/components/ViewCommentsButton";
 import TimeMarkers from "~/components/TimeMarkers";
-import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
 	audioItem: AudioItemWithRelations;
@@ -29,8 +26,6 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 		createdByUser,
 		createdAt,
 	} = audioItem;
-
-	const navigate = useNavigate();
 
 	const {
 		activeAudioItem,
@@ -52,15 +47,6 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 	const onPlayPressed = useCallback(() => {
 		setActiveAudioItem(audioItem);
 	}, [audioItem, setActiveAudioItem]);
-
-	const onTakedownRequestCreated = useCallback(
-		(takedownRequest: TakedownRequest) => {
-			if (takedownRequest.status === "APPROVED") {
-				navigate(`/entities/audio-items/${slug}`);
-			}
-		},
-		[navigate, slug]
-	);
 
 	const shouldShowPositionAndDuration =
 		audioItemIsInPlayer &&
@@ -166,15 +152,6 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 						<SaveItemButton audioItem={audioItem} />
 					</div>
 				</div>
-
-				<Menu>
-					{!isTakenDown && (
-						<RequestTakedownButton
-							entity={audioItem}
-							onTakedownRequestCreated={onTakedownRequestCreated}
-						/>
-					)}
-				</Menu>
 			</div>
 		</div>
 	);

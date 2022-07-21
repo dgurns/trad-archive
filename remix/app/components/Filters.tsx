@@ -77,26 +77,29 @@ const Filters = ({
 
 	return (
 		<div
-			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 ${
+			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 text-sm space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
 				className ?? ""
 			}`}
 			id="filters"
 		>
 			{shouldRenderPagination && (
-				<div
-					className={`flex flex-row items-center mr-0 md:mb-0 ${
-						shouldRenderSortBy || shouldRenderViewAs ? "mb-4 md:mr-6" : ""
-					}`}
-				>
-					<div className="mr-6">
+				<div className="flex flex-row items-center space-x-5">
+					<div>
+						{totalItems} Item{totalItems === 1 ? "" : "s"}
+					</div>
+					<div>
 						Page{" "}
-						<select value={page} onChange={onChangePage}>
+						<select value={page} onChange={onChangePage} className="text-sm">
 							{pageSelectOptions}
 						</select>
 						{totalPages ? ` of ${totalPages}` : ""}
 					</div>
 					<div>
-						<select value={perPage} onChange={onChangePerPage}>
+						<select
+							value={perPage}
+							onChange={onChangePerPage}
+							className="text-sm"
+						>
 							{perPageOptions}
 						</select>{" "}
 						per page
@@ -105,13 +108,13 @@ const Filters = ({
 			)}
 
 			{shouldRenderSortBy && (
-				<div
-					className={`flex flex-row items-center mr-0 md:mb-0 ${
-						shouldRenderViewAs ? "mb-4 md:mr-6" : ""
-					}`}
-				>
+				<div className="flex flex-row items-center">
 					Sort by
-					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
+					<select
+						className="ml-1 text-sm"
+						value={sortBy}
+						onChange={onChangeSortBy}
+					>
 						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
 						<option value={SortBy.RecentlyAdded}>Newest</option>
 					</select>
@@ -119,9 +122,13 @@ const Filters = ({
 			)}
 
 			{shouldRenderViewAs && (
-				<div className="flex flex-row items-center mr-0 md:mb-0">
+				<div className="hidden md:flex flex-row items-center">
 					View as
-					<select className="ml-1" value={viewAs} onChange={onChangeViewAs}>
+					<select
+						className="ml-1 text-sm"
+						value={viewAs}
+						onChange={onChangeViewAs}
+					>
 						<option value={ViewAs.Cards}>Cards</option>
 						<option value={ViewAs.Compact}>Compact</option>
 						<option value={ViewAs.List}>List</option>

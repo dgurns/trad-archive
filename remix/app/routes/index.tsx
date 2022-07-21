@@ -163,7 +163,7 @@ export default function Home() {
 						{...filtersProps}
 						viewAs={undefined}
 						sortBy={undefined}
-						className="sticky left-0 right-0 py-4 px-4 -ml-4 -mr-4 bg-gray-100 top-[48px] mb-2 z-10"
+						className="sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px] z-10"
 					/>
 
 					{audioItems.map((audioItem, index) => (

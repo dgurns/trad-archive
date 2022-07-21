@@ -24,10 +24,6 @@ const ViewEntityAndAudioItems = ({
 }: Props) => {
 	const { name } = entity ?? {};
 
-	const { ref: metadataRef, inView: metadataInView } = useInView({
-		initialInView: true,
-	});
-
 	const { search } = useLocation();
 	const queryParams = new URLSearchParams(search);
 	const viewAs = queryParams.get("viewAs") as ViewAs;
@@ -35,57 +31,37 @@ const ViewEntityAndAudioItems = ({
 	const { Filters, filtersProps } = useFilters({
 		totalItems: totalAudioItems,
 	});
-	const filtersRef = useRef<HTMLDivElement>(null);
 
 	return (
-		<div className={`flex flex-1 flex-col mb-8 ${className ?? ""}`}>
-			{/* Initial metadata at top of page */}
-			<div className="mb-6" ref={metadataRef}>
-				<Breadcrumb
-					items={[
-						{
-							label: EntityService.makeReadableNamePlural(entity),
-							href: EntityService.makeHrefForTopLevel(entity),
-						},
-						{ label: name },
-					]}
-					className="mb-2"
-				/>
-				<div className="flex flex-row mb-6">
-					<span className="text-gray-500">
-						{totalAudioItems ?? ""} Audio Item{totalAudioItems === 1 ? "" : "s"}
-					</span>
-					<Link to={EntityService.makeHrefForAbout(entity)} className="ml-4">
-						About
-					</Link>
-					<Link to={EntityService.makeHrefForTags(entity)} className="ml-4">
-						Tags
-					</Link>
-				</div>
-				{totalAudioItems > 0 && (
-					<div ref={filtersRef}>
+		<div className={`flex flex-1 flex-col ${className ?? ""}`}>
+			<Breadcrumb
+				items={[
+					{
+						label: EntityService.makeReadableNamePlural(entity),
+						href: EntityService.makeHrefForTopLevel(entity),
+					},
+					{ label: name },
+				]}
+				className="mb-2"
+			/>
+
+			<div className="text-gray-500 text-sm">{entity.description}</div>
+
+			{totalAudioItems > 0 && (
+				<>
+					<div className="sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px] z-10">
 						<Filters {...filtersProps} />
 					</div>
-				)}
-			</div>
-			{totalAudioItems > 0 &&
-				audioItems.map((audioItem, index) => (
-					<AudioItem
-						viewAs={viewAs ?? ViewAs.Cards}
-						audioItem={audioItem}
-						key={index}
-						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
-					/>
-				))}
-
-			{/* Fixed overlay metadata when scrolling. Render after AudioItems so it takes z-index precedence */}
-			<div
-				className={`${
-					metadataInView ? "hidden" : "visible"
-				} fixed left-0 right-0 p-4 bg-gray-100 shadow-lg top-[48px]`}
-			>
-				{totalAudioItems > 0 && <Filters {...filtersProps} />}
-			</div>
+					{audioItems.map((audioItem, index) => (
+						<AudioItem
+							viewAs={viewAs ?? ViewAs.Cards}
+							audioItem={audioItem}
+							key={index}
+							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
+						/>
+					))}
+				</>
+			)}
 		</div>
 	);
 };

@@ -6,7 +6,7 @@ interface Props {
 	isSaved: boolean;
 }
 export default function SaveItemButton({ audioItem, isSaved }: Props) {
-	const fetcher = useFetcher();
+	const fetcher = useFetcher<{ error?: string; ok: boolean }>();
 
 	function onButtonClicked() {
 		fetcher.submit(

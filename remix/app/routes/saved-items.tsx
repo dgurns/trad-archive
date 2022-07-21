@@ -62,6 +62,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 		skip: (page - 1) * perPage,
 		take: perPage,
 	});
+
 	return json<LoaderData>({ savedItems });
 };
 
@@ -93,11 +94,10 @@ export const action: ActionFunction = async ({ request }) => {
 	});
 	if (existing) {
 		await db.savedItem.delete({ where: { id: existing.id } });
-		return json<ActionData>({ ok: true }, { status: 204 });
 	} else {
 		await db.savedItem.create({ data: { userId, audioItemId } });
-		return json<ActionData>({ ok: true }, { status: 201 });
 	}
+	return json<ActionData>({ ok: true }, { status: 200 });
 };
 
 export default function SavedItems() {

@@ -113,7 +113,7 @@ export default function SavedItems() {
 	const { audioItems } = useLoaderData<LoaderData>();
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		defaultViewAs: ViewAs.Compact,
+		defaultViewAs: ViewAs.List,
 	});
 
 	return (

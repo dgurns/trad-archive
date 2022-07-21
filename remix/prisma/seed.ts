@@ -55,9 +55,9 @@ const person1: Pick<
 > = {
 	id: "person_1",
 	slug: "seamus-ennis",
-	name: "Seamus Ennis",
+	name: "Séamus Ennis",
 	description: "Uilleann piper and collector",
-	firstName: "Seamus",
+	firstName: "Séamus",
 	lastName: "Ennis",
 	createdByUserId: user1.id,
 };

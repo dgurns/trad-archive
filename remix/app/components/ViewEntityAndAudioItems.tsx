@@ -1,6 +1,4 @@
-import { useRef } from "react";
-import { Link, useLocation } from "@remix-run/react";
-import { useInView } from "react-intersection-observer";
+import { useLocation } from "@remix-run/react";
 
 import type { AudioItemWithRelations, Entity } from "~/types";
 import { ViewAs } from "~/types";

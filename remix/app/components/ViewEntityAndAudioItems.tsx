@@ -73,6 +73,7 @@ const ViewEntityAndAudioItems = ({
 					<AudioItem
 						viewAs={viewAs ?? ViewAs.Cards}
 						audioItem={audioItem}
+						isSaved={audioItem.savedItems.length === 1}
 						key={index}
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 					/>

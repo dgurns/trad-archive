@@ -61,6 +61,7 @@ export async function loader({
 						createdByUser: true,
 					},
 				},
+				savedItems: true,
 			},
 			where: {
 				tagsAsObject: {

@@ -1,5 +1,10 @@
 import { Link, useLoaderData } from "@remix-run/react";
-import { json, redirect, type LoaderFunction } from "@remix-run/node";
+import {
+	type ActionFunction,
+	json,
+	redirect,
+	type LoaderFunction,
+} from "@remix-run/node";
 
 import useFilters from "~/hooks/useFilters";
 import { ViewAs, type SavedItemWithRelations } from "~/types";
@@ -50,6 +55,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 							createdByUser: true,
 						},
 					},
+					savedItems: true,
 				},
 			},
 		},
@@ -57,6 +63,41 @@ export const loader: LoaderFunction = async ({ request }) => {
 		take: perPage,
 	});
 	return json<LoaderData>({ savedItems });
+};
+
+interface ActionData {
+	error?: string;
+	ok: boolean;
+}
+
+export const action: ActionFunction = async ({ request }) => {
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+	const referer = String(request.headers.get("referer") ?? "");
+	const redirectParams = new URLSearchParams({
+		redirectTo: referer ? new URL(referer).pathname : "/",
+	});
+	if (!userId) {
+		return redirect(`/login?${redirectParams.toString()}`);
+	}
+
+	const formData = await request.formData();
+	const audioItemId = String(formData.get("audioItemId") ?? "");
+	const existing = await db.savedItem.findUnique({
+		where: {
+			userId_audioItemId: {
+				userId,
+				audioItemId,
+			},
+		},
+	});
+	if (existing) {
+		await db.savedItem.delete({ where: { id: existing.id } });
+		return json<ActionData>({ ok: true }, { status: 204 });
+	} else {
+		await db.savedItem.create({ data: { userId, audioItemId } });
+		return json<ActionData>({ ok: true }, { status: 201 });
+	}
 };
 
 export default function SavedItems() {
@@ -85,6 +126,7 @@ export default function SavedItems() {
 				{savedItems.map(({ audioItem }, index) => (
 					<AudioItem
 						viewAs={viewAs}
+						isSaved={true}
 						audioItem={audioItem}
 						key={index}
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}

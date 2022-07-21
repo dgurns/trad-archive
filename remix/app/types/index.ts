@@ -39,6 +39,7 @@ const audioItemWithRelations = Prisma.validator<Prisma.AudioItemArgs>()({
 				createdByUser: true,
 			},
 		},
+		savedItems: true,
 	},
 });
 export type AudioItemWithRelations = Prisma.AudioItemGetPayload<
@@ -81,6 +82,7 @@ const savedItemWithRelations = Prisma.validator<Prisma.SavedItemArgs>()({
 						createdByUser: true,
 					},
 				},
+				savedItems: true,
 			},
 		},
 	},

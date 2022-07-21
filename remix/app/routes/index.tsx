@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
+import { type SavedItem } from "@prisma/client";
 
 import type {
 	CollectionWithRelations,
@@ -12,6 +13,7 @@ import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
 import LocalStorageService from "~/services/LocalStorage";
 import { db } from "~/utils/db.server";
+import { getSession } from "~/sessions.server";
 
 import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
@@ -29,6 +31,9 @@ interface LoaderData {
 export async function loader({
 	request,
 }: DataFunctionArgs): Promise<LoaderData> {
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
@@ -65,6 +70,11 @@ export async function loader({
 						createdAt: "asc",
 					},
 				},
+				savedItems: {
+					where: {
+						userId,
+					},
+				},
 			},
 			orderBy: {
 				updatedAt: "desc",
@@ -95,6 +105,7 @@ export async function loader({
 		db.tag.count(),
 		db.comment.count(),
 	]);
+
 	return {
 		audioItems,
 		collections,
@@ -158,6 +169,7 @@ export default function Home() {
 					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent
 							viewAs={viewAs}
+							isSaved={audioItem.savedItems.length === 1}
 							audioItem={audioItem}
 							key={index}
 							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}

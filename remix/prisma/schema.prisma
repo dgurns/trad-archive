@@ -31,7 +31,6 @@ model AudioItem {
   savedItems       SavedItem[]
   takedownRequests TakedownRequest[]
 
-
   @@index([name], map: "IDX_17c0f6ea1cd539cbd513a02926")
   @@index([createdAt], map: "idx_createdAt")
   @@index([name], map: "idx_name")
@@ -56,7 +55,6 @@ model Collection {
   updatedByUser   User?        @relation("collection_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
   tagsAsObject    Tag[]        @relation("collectionTotag_objectCollectionId")
   tagsAsSubject   Tag[]        @relation("collectionTotag_subjectCollectionId")
-
 
   @@index([name], map: "IDX_926e7bdc3f52cd582078a379f1")
   @@index([createdAt], map: "idx_createdAt")
@@ -178,6 +176,7 @@ model SavedItem {
   audioItem   AudioItem @relation(fields: [audioItemId], references: [id])
   user        User      @relation(fields: [userId], references: [id])
 
+  @@unique([userId, audioItemId], name: "userId_audioItemId")
   @@map("saved_item")
 }
 
@@ -316,6 +315,7 @@ model User {
   verificationRequestsUpdated VerificationRequest[]      @relation("UserToverification_request_updatedByUserId")
 
   Submission Submission[]
+
   @@map("user")
 }
 

@@ -13,10 +13,16 @@ import TimeMarkers from "~/components/TimeMarkers";
 
 interface Props {
 	audioItem: AudioItemWithRelations;
+	isSaved: boolean;
 	showTitle?: boolean;
 	className?: string;
 }
-const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
+const AudioItemCard = ({
+	audioItem,
+	isSaved,
+	showTitle = true,
+	className,
+}: Props) => {
 	const {
 		name,
 		slug,
@@ -149,7 +155,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 					<ViewCommentsButton audioItem={audioItem} />
 
 					<div className="ml-2">
-						<SaveItemButton audioItem={audioItem} />
+						<SaveItemButton audioItem={audioItem} isSaved={isSaved} />
 					</div>
 				</div>
 			</div>

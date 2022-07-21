@@ -17,10 +17,12 @@
 
 	/* Links */
 	a,
-	.link {
+	.link,
+	button.link {
 		@apply text-teal-600 underline hover:text-teal-800;
 	}
-	.link-bare {
+	.link-bare,
+	button.link-bare {
 		@apply text-gray-700 no-underline cursor-pointer hover:text-teal-800;
 	}
 
@@ -41,12 +43,14 @@
 	}
 
 	/* Text buttons (look like links but have no underline, for example "Add Tag") */
-	.btn-text {
+	.btn-text,
+	button.btn-text {
 		@apply text-teal-600 no-underline hover:no-underline hover:text-teal-800;
 	}
 
 	/* Icon buttons (for example, the "X" on a modal) */
-	.btn-icon {
+	.btn-icon,
+	button.btn-icon {
 		@apply text-gray-500 no-underline hover:no-underline p-1 rounded flex flex-row items-center justify-center hover:text-gray-800 hover:bg-gray-200;
 	}
 

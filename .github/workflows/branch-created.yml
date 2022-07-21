@@ -39,5 +39,5 @@ jobs:
       - name: Set DB branch password as env variable on Vercel for this branch
         run: |
           touch .env.preview
-          echo "DATABASE_URL=mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict" > .env.preview
+          echo "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict" > .env.preview
           vercel env add DATABASE_URL preview ${BRANCH_NAME} < .env.preview --token ${{ secrets.VERCEL_SERVICE_TOKEN }}

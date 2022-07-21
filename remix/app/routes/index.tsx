@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
-import { type SavedItem } from "@prisma/client";
 
 import type {
 	CollectionWithRelations,

@@ -19,7 +19,7 @@ const user1: Pick<
 	username: "dgurney",
 	role: "Admin",
 	passwordHashed:
-		"$2a$10$K81HlhTOwa.vmZ0zwhNiFOFgNta1e3RX8bBpT1KApP97inzkJ0Fk.", // raw is `password`
+		"$2a$10$K81HlhTOwa.vmZ0zwhNiFOFgNta1e3RX8bBpT1KApP97inzkJ0Fk.",
 };
 const audioItem1: Pick<
 	AudioItem,

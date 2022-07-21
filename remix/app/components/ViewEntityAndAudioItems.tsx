@@ -9,6 +9,8 @@ import EntityService from "~/services/Entity";
 
 import Breadcrumb from "~/components/Breadcrumb";
 import AudioItem from "~/components/AudioItem";
+import type { Tune } from "@prisma/client";
+import { EntityType } from "@prisma/client";
 
 interface Props {
 	entity: Entity;
@@ -45,7 +47,29 @@ const ViewEntityAndAudioItems = ({
 				className="mb-2"
 			/>
 
-			<div className="text-gray-500 text-sm">{entity.description}</div>
+			<div className="text-gray-500 text-sm flex-col space-y-2">
+				{entity.description && <p>{entity.description}</p>}
+				{entity.aliases && <p>Also known as: {entity.aliases}</p>}
+				{entity.entityType === EntityType.Tune && (
+					<>
+						<p>Type: {(entity as Tune).type}</p>
+						<p>Meter: {(entity as Tune).meter}</p>
+						<p>Mode: {(entity as Tune).mode}</p>
+						<p>ABC: {(entity as Tune).abc}</p>
+						<p>
+							<a
+								href={`https://thesession.org/tunes/${
+									(entity as Tune).theSessionTuneId
+								}`}
+								target="_blank"
+								rel="noreferrer"
+							>
+								View or Edit This Tune on The Session ↗
+							</a>
+						</p>
+					</>
+				)}
+			</div>
 
 			{totalAudioItems > 0 && (
 				<>

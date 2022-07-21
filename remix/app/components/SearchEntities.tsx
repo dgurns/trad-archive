@@ -80,9 +80,9 @@ const SearchEntities = ({ entityTypes, take, onSelect, className }: Props) => {
 									to={EntityService.makeHrefForView(entity)}
 									target="_blank"
 									aria-label={`Open ${entity.name} in New Tab`}
-									className="btn-icon w-auto px-2"
+									className="btn-icon w-auto"
 								>
-									<i className="material-icons text-base">launch</i>
+									<span className="px-1.5">↗</span>
 								</Link>
 							</li>
 						))}

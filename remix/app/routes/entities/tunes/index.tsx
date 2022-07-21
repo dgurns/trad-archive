@@ -61,7 +61,7 @@ const Tunes = () => {
 				{...filtersProps}
 				sortBy={undefined}
 				viewAs={undefined}
-				className="sticky left-0 right-0 py-4 bg-gray-100 top-[48px] mb-6"
+				className="sticky left-0 right-0 py-3 bg-gray-100 top-[48px] mb-2"
 			/>
 
 			{tunes.length === 0 && (

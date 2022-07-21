@@ -85,7 +85,7 @@ const Filters = ({
 			{shouldRenderPagination && (
 				<div className="flex flex-row items-center space-x-5">
 					<div>
-						{totalItems} Item{totalItems === 1 ? "" : "s"}
+						{totalItems.toLocaleString()} Item{totalItems === 1 ? "" : "s"}
 					</div>
 					<div>
 						Page{" "}

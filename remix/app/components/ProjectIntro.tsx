@@ -11,8 +11,9 @@ const ProjectIntro = ({ className, onClose }: Props) => {
 			}`}
 		>
 			<img
-				src="/logo-square.png"
+				src="/images/logo-square.png"
 				className="absolute top-5 -left-1 lg:-left-8 w-12 lg:w-20 -rotate-12"
+				alt="Logo"
 			/>
 			<strong>Welcome!</strong>
 			<br />

@@ -3,9 +3,8 @@ import { type AudioItemWithRelations } from "~/types";
 
 interface Props {
 	audioItem: AudioItemWithRelations;
-	isSaved: boolean;
 }
-export default function SaveItemButton({ audioItem, isSaved }: Props) {
+export default function SaveItemButton({ audioItem }: Props) {
 	const fetcher = useFetcher<{ error?: string; ok: boolean }>();
 
 	function onButtonClicked() {
@@ -14,6 +13,8 @@ export default function SaveItemButton({ audioItem, isSaved }: Props) {
 			{ method: "post", action: "/saved-items" }
 		);
 	}
+
+	const isSaved = audioItem.savedItems.length === 1;
 
 	return (
 		<button

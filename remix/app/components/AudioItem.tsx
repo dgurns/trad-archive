@@ -8,7 +8,6 @@ import AudioItemTextOnly from "~/components/AudioItemTextOnly";
 interface Props {
 	viewAs?: ViewAs;
 	audioItem: AudioItemWithRelations;
-	isSaved?: boolean;
 	showTitle?: boolean;
 	className?: string;
 }
@@ -18,7 +17,6 @@ interface Props {
 const AudioItemComponent = ({
 	viewAs,
 	audioItem,
-	isSaved = false,
 	showTitle,
 	className,
 }: Props) => {
@@ -26,19 +24,12 @@ const AudioItemComponent = ({
 		return (
 			<AudioItemCard
 				audioItem={audioItem}
-				isSaved={isSaved}
 				showTitle={showTitle}
 				className={className}
 			/>
 		);
 	} else if (viewAs === ViewAs.Compact) {
-		return (
-			<AudioItemCompact
-				audioItem={audioItem}
-				isSaved={isSaved}
-				className={className}
-			/>
-		);
+		return <AudioItemCompact audioItem={audioItem} className={className} />;
 	} else if (viewAs === ViewAs.List) {
 		return <AudioItemTextOnly audioItem={audioItem} className={className} />;
 	} else {

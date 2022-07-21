@@ -76,11 +76,7 @@ const ViewAudioItemBySlug = () => {
 					<Link to={EntityService.makeHrefForAbout(audioItem)}>About</Link>
 				</div>
 			</div>
-			<AudioItemComponent
-				audioItem={audioItem}
-				isSaved={audioItem.savedItems.length === 1}
-				viewAs={ViewAs.Cards}
-			/>
+			<AudioItemComponent audioItem={audioItem} viewAs={ViewAs.Cards} />
 		</Layout>
 	);
 };

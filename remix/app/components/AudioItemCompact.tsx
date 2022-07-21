@@ -17,10 +17,9 @@ import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
 	audioItem: AudioItemWithRelations;
-	isSaved: boolean;
 	className?: string;
 }
-const AudioItemCompact = ({ audioItem, isSaved, className }: Props) => {
+const AudioItemCompact = ({ audioItem, className }: Props) => {
 	const { name, slug, description, tagsAsSubject, status } = audioItem;
 	const isTakenDown = status === EntityStatus.TakenDown;
 	const sortedTags = useMemo(
@@ -105,7 +104,7 @@ const AudioItemCompact = ({ audioItem, isSaved, className }: Props) => {
 						<ViewCommentsButton audioItem={audioItem} />
 
 						<div className="ml-2">
-							<SaveItemButton audioItem={audioItem} isSaved={isSaved} />
+							<SaveItemButton audioItem={audioItem} />
 						</div>
 					</div>
 

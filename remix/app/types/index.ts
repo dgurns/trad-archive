@@ -60,37 +60,6 @@ export type CommentWithRelations = Prisma.CommentGetPayload<
 	typeof commentWithRelations
 >;
 
-const savedItemWithRelations = Prisma.validator<Prisma.SavedItemArgs>()({
-	include: {
-		audioItem: {
-			include: {
-				tagsAsSubject: {
-					include: {
-						objectAudioItem: true,
-						objectCollection: true,
-						objectInstrument: true,
-						objectPerson: true,
-						objectPlace: true,
-						objectTune: true,
-						relationship: true,
-					},
-				},
-				createdByUser: true,
-				updatedByUser: true,
-				comments: {
-					include: {
-						createdByUser: true,
-					},
-				},
-				savedItems: true,
-			},
-		},
-	},
-});
-export type SavedItemWithRelations = Prisma.SavedItemGetPayload<
-	typeof savedItemWithRelations
->;
-
 const tagWithRelations = Prisma.validator<Prisma.TagArgs>()({
 	include: {
 		objectAudioItem: true,

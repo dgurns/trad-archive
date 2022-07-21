@@ -169,7 +169,6 @@ export default function Home() {
 					{audioItems.map((audioItem, index) => (
 						<AudioItemComponent
 							viewAs={viewAs}
-							isSaved={audioItem.savedItems.length === 1}
 							audioItem={audioItem}
 							key={index}
 							className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}

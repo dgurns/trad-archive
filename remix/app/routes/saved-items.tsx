@@ -7,7 +7,7 @@ import {
 } from "@remix-run/node";
 
 import useFilters from "~/hooks/useFilters";
-import { ViewAs, type SavedItemWithRelations } from "~/types";
+import { type AudioItemWithRelations, ViewAs } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 
@@ -15,7 +15,7 @@ import Layout from "~/components/Layout";
 import AudioItem from "~/components/AudioItem";
 
 interface LoaderData {
-	savedItems: SavedItemWithRelations[];
+	audioItems: AudioItemWithRelations[];
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -32,30 +32,39 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
-	const savedItems = await db.savedItem.findMany({
-		where: { userId },
+	const audioItems = await db.audioItem.findMany({
+		where: {
+			savedItems: {
+				some: {
+					userId,
+				},
+			},
+		},
 		include: {
-			audioItem: {
+			tagsAsSubject: {
 				include: {
-					tagsAsSubject: {
-						include: {
-							objectAudioItem: true,
-							objectCollection: true,
-							objectInstrument: true,
-							objectPerson: true,
-							objectPlace: true,
-							objectTune: true,
-							relationship: true,
-						},
-					},
+					objectAudioItem: true,
+					objectCollection: true,
+					objectInstrument: true,
+					objectPerson: true,
+					objectPlace: true,
+					objectTune: true,
+					relationship: true,
+				},
+			},
+			createdByUser: true,
+			updatedByUser: true,
+			comments: {
+				include: {
 					createdByUser: true,
-					updatedByUser: true,
-					comments: {
-						include: {
-							createdByUser: true,
-						},
-					},
-					savedItems: true,
+				},
+				orderBy: {
+					createdAt: "asc",
+				},
+			},
+			savedItems: {
+				where: {
+					userId,
 				},
 			},
 		},
@@ -63,7 +72,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 		take: perPage,
 	});
 
-	return json<LoaderData>({ savedItems });
+	return json<LoaderData>({ audioItems });
 };
 
 interface ActionData {
@@ -101,7 +110,7 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function SavedItems() {
-	const { savedItems } = useLoaderData<LoaderData>();
+	const { audioItems } = useLoaderData<LoaderData>();
 
 	const { Filters, filtersProps, viewAs } = useFilters({
 		defaultViewAs: ViewAs.List,
@@ -112,21 +121,20 @@ export default function SavedItems() {
 			<div className="flex flex-col">
 				<h1 className="mb-6">Saved Items</h1>
 
-				{savedItems.length > 0 && (
+				{audioItems.length > 0 && (
 					<Filters {...filtersProps} className="mb-6" />
 				)}
 
-				{savedItems.length === 0 && (
+				{audioItems.length === 0 && (
 					<div className="text-gray-500">
 						Nothing saved yet - try browsing some{" "}
 						<Link to="/">Audio Items</Link>!
 					</div>
 				)}
 
-				{savedItems.map(({ audioItem }, index) => (
+				{audioItems.map((audioItem, index) => (
 					<AudioItem
 						viewAs={viewAs}
-						isSaved={true}
 						audioItem={audioItem}
 						key={index}
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}

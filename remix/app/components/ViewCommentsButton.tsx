@@ -1,7 +1,7 @@
-import { useCallback, useState, useEffect, useRef, useMemo } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { Link } from "@remix-run/react";
 
-import type { AudioItemWithRelations, CommentWithRelations } from "~/types";
+import type { AudioItemWithRelations } from "~/types";
 import DateTimeService from "~/services/DateTime";
 
 import Modal from "~/components/Modal";

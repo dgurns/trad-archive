@@ -81,7 +81,6 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Login() {
 	const { error } = useLoaderData();
 	const transition = useTransition();
-	console.log(transition);
 
 	const { search } = useLocation();
 	const params = new URLSearchParams(search);

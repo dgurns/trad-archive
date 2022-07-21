@@ -56,10 +56,10 @@ __export(root_exports, {
   loader: () => loader,
   meta: () => meta
 });
-var import_node2 = require("@remix-run/node"), import_react20 = require("@remix-run/react"), import_client11 = require("@apollo/client");
+var import_node2 = require("@remix-run/node"), import_react12 = require("@remix-run/react"), import_client5 = require("@apollo/client");
 
 // app/styles/globals-generated-do-not-edit.css
-var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-GMZSTQXR.css";
+var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-3ONW4JDK.css";
 
 // app/sessions.server.ts
 var import_node = require("@remix-run/node"), { getSession, commitSession, destroySession } = (0, import_node.createCookieSessionStorage)({
@@ -228,7 +228,7 @@ function PlayerContextProvider({ children }) {
 var PlayerContextProvider_default = PlayerContextProvider;
 
 // app/components/Header.tsx
-var import_react17 = __toESM(require("react")), import_react18 = require("@remix-run/react"), import_react19 = require("@remix-run/react"), import_react_hotkeys_hook2 = require("react-hotkeys-hook");
+var import_react9 = __toESM(require("react")), import_react10 = require("@remix-run/react"), import_react11 = require("@remix-run/react"), import_react_hotkeys_hook2 = require("react-hotkeys-hook");
 
 // app/services/Entity.ts
 var import_client3 = require("@prisma/client"), cleanSlug = (rawSlug) => rawSlug.replace(/[\s]/g, "-").replace(/[^a-zA-Z0-9-]/g, "").toLowerCase(), makeHrefForTopLevel = (entity) => {
@@ -293,7 +293,7 @@ var import_react7 = __toESM(require("react")), import_react_hotkeys_hook = requi
   className: "absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-40",
   onClick: onClose
 }), /* @__PURE__ */ import_react7.default.createElement("div", {
-  className: `bg-white cursor-auto rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${className ?? ""}`
+  className: `bg-white cursor-auto rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-[90vh] overflow-y-auto overflow-x-hidden md:max-w-xl ${className ?? ""}`
 }, /* @__PURE__ */ import_react7.default.createElement("div", {
   className: "flex flex-row justify-between items-center mb-4 text-black"
 }, /* @__PURE__ */ import_react7.default.createElement("h2", null, title), /* @__PURE__ */ import_react7.default.createElement("button", {
@@ -309,433 +309,7 @@ var import_react7 = __toESM(require("react")), import_react_hotkeys_hook = requi
 }, children))) : null), Modal_default = Modal;
 
 // app/components/SearchEntities.tsx
-var import_react15 = require("@remix-run/react"), import_react16 = require("react"), import_client10 = require("@apollo/client"), import_debounce = __toESM(require("lodash/debounce"));
-
-// app/fragments/index.ts
-var import_client4 = require("@apollo/client"), UserFragments = {
-  user: import_client4.gql`
-		fragment User on User {
-			id
-			username
-			copyrightPermissionStatus
-			verifiedPerson {
-				id
-				entityType
-				slug
-				name
-			}
-			createdAt
-		}
-	`,
-  currentUser: import_client4.gql`
-		fragment CurrentUser on User {
-			id
-			role
-			email
-			username
-			copyrightPermissionStatus
-		}
-	`
-}, RelationshipFragments = {
-  relationship: import_client4.gql`
-		fragment Relationship on Relationship {
-			id
-			name
-			subjectEntityType
-			objectEntityType
-		}
-	`
-}, TagEntityFragments = {
-  tagAudioItem: import_client4.gql`
-		fragment TagAudioItem on AudioItem {
-			id
-			entityType
-			name
-			slug
-		}
-	`,
-  tagInstrument: import_client4.gql`
-		fragment TagInstrument on Instrument {
-			id
-			entityType
-			name
-			slug
-		}
-	`,
-  tagPerson: import_client4.gql`
-		fragment TagPerson on Person {
-			id
-			entityType
-			name
-			slug
-		}
-	`,
-  tagPlace: import_client4.gql`
-		fragment TagPlace on Place {
-			id
-			entityType
-			name
-			slug
-		}
-	`,
-  tagTune: import_client4.gql`
-		fragment TagTune on Tune {
-			id
-			entityType
-			name
-			slug
-			type
-		}
-	`,
-  tagCollection: import_client4.gql`
-		fragment TagCollection on Collection {
-			id
-			entityType
-			name
-			slug
-		}
-	`
-}, TagFragments = {
-  tag: import_client4.gql`
-		fragment Tag on Tag {
-			id
-			relationship {
-				...Relationship
-			}
-			subjectEntity {
-				...TagAudioItem
-				...TagInstrument
-				...TagPerson
-				...TagPlace
-				...TagTune
-				...TagCollection
-			}
-			objectEntity {
-				...TagAudioItem
-				...TagInstrument
-				...TagPerson
-				...TagPlace
-				...TagTune
-				...TagCollection
-			}
-			subjectTimeMarkerSeconds
-			createdByUser {
-				...User
-			}
-			createdAt
-		}
-		${RelationshipFragments.relationship}
-		${TagEntityFragments.tagAudioItem}
-		${TagEntityFragments.tagInstrument}
-		${TagEntityFragments.tagPerson}
-		${TagEntityFragments.tagPlace}
-		${TagEntityFragments.tagTune}
-		${TagEntityFragments.tagCollection}
-		${UserFragments.user}
-	`,
-  tagForEntity: import_client4.gql`
-		fragment TagForEntity on Tag {
-			id
-			relationship {
-				...Relationship
-			}
-			objectEntity {
-				...TagAudioItem
-				...TagInstrument
-				...TagPerson
-				...TagPlace
-				...TagTune
-				...TagCollection
-			}
-			subjectTimeMarkerSeconds
-			createdByUser {
-				...User
-			}
-			createdAt
-		}
-		${RelationshipFragments.relationship}
-		${TagEntityFragments.tagAudioItem}
-		${TagEntityFragments.tagInstrument}
-		${TagEntityFragments.tagPerson}
-		${TagEntityFragments.tagPlace}
-		${TagEntityFragments.tagTune}
-		${TagEntityFragments.tagCollection}
-		${UserFragments.user}
-	`
-}, EntityFragments = {
-  audioItem: import_client4.gql`
-		fragment AudioItem on AudioItem {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...TagForEntity
-			}
-			commentsCount
-			isSavedByUser
-			status
-			createdByUser {
-				id
-				username
-				verifiedPerson {
-					id
-					entityType
-					slug
-				}
-			}
-			createdAt
-			updatedAt
-			urlSource
-			itmaAtomSlug
-		}
-		${TagFragments.tagForEntity}
-	`,
-  person: import_client4.gql`
-		fragment Person on Person {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...Tag
-			}
-			verifiedUser {
-				...User
-			}
-			createdByUser {
-				id
-				username
-			}
-			createdAt
-			updatedAt
-			firstName
-			middleName
-			lastName
-		}
-		${TagFragments.tag}
-		${UserFragments.user}
-	`,
-  instrument: import_client4.gql`
-		fragment Instrument on Instrument {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...Tag
-			}
-			createdByUser {
-				id
-				username
-			}
-		}
-		${TagFragments.tag}
-	`,
-  place: import_client4.gql`
-		fragment Place on Place {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...Tag
-			}
-			latitude
-			longitude
-			createdByUser {
-				id
-				username
-			}
-		}
-		${TagFragments.tag}
-	`,
-  tune: import_client4.gql`
-		fragment Tune on Tune {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...Tag
-			}
-			theSessionTuneId
-			type
-			meter
-			mode
-			abc
-		}
-		${TagFragments.tag}
-	`,
-  collection: import_client4.gql`
-		fragment Collection on Collection {
-			id
-			entityType
-			name
-			slug
-			aliases
-			description
-			tags {
-				...Tag
-			}
-			itmaAtomSlug
-			createdByUser {
-				id
-				username
-			}
-			createdAt
-			updatedAt
-		}
-		${TagFragments.tag}
-		${UserFragments.user}
-	`
-}, CommentFragments = {
-  comment: import_client4.gql`
-		fragment Comment on Comment {
-			id
-			text
-			parentAudioItem {
-				...AudioItem
-			}
-			createdByUser {
-				...User
-			}
-			createdAt
-			updatedAt
-		}
-		${EntityFragments.audioItem}
-		${UserFragments.user}
-	`,
-  commentWithoutParentEntity: import_client4.gql`
-		fragment CommentWithoutParentEntity on Comment {
-			id
-			text
-			createdByUser {
-				...User
-			}
-			createdAt
-			updatedAt
-		}
-		${UserFragments.user}
-	`
-}, SavedItemFragments = {
-  savedItem: import_client4.gql`
-		fragment SavedItem on SavedItem {
-			id
-			audioItem {
-				...AudioItem
-			}
-			createdAt
-		}
-		${EntityFragments.audioItem}
-	`
-}, TakedownRequestFragments = {
-  takedownRequest: import_client4.gql`
-		fragment TakedownRequest on TakedownRequest {
-			id
-			entity {
-				...AudioItem
-			}
-			type
-			message
-			status
-			createdByUser {
-				id
-				username
-				email
-			}
-			createdAt
-			updatedByUser {
-				id
-				username
-				email
-			}
-			updatedAt
-		}
-		${EntityFragments.audioItem}
-	`,
-  takedownRequestWithoutEntity: import_client4.gql`
-		fragment TakedownRequestWithoutEntity on TakedownRequest {
-			id
-			type
-			message
-			status
-			createdByUser {
-				id
-				username
-				email
-			}
-			createdAt
-			updatedByUser {
-				id
-				username
-				email
-			}
-			updatedAt
-		}
-	`
-}, VerificationRequestFragments = {
-  verificationRequest: import_client4.gql`
-		fragment VerificationRequest on VerificationRequest {
-			id
-			person {
-				id
-				entityType
-				name
-				slug
-			}
-			presignedImageDownloadUrl
-			copyrightPermissionStatus
-			status
-			createdByUser {
-				id
-				username
-				email
-			}
-			createdAt
-			updatedByUser {
-				id
-				username
-				email
-			}
-			updatedAt
-		}
-	`
-}, SubmissionFragments = {
-  submission: import_client4.gql`
-		fragment Submission on Submission {
-			id
-			status
-			materialTypes
-			userControlsCopyright
-			copyrightDetails
-			description
-			s3DirectoryKey
-			createdByUser {
-				id
-				username
-				email
-			}
-			createdAt
-			updatedByUser {
-				id
-				username
-				email
-			}
-			updatedAt
-		}
-	`
-};
+var import_react8 = require("@remix-run/react"), import_debounce = __toESM(require("lodash/debounce")), import_client4 = require("@prisma/client");
 
 // app/components/LoadingCircle.tsx
 var LoadingCircle = ({ className }) => /* @__PURE__ */ React.createElement("div", {
@@ -744,581 +318,121 @@ var LoadingCircle = ({ className }) => /* @__PURE__ */ React.createElement("div"
   className: `material-icons animate-spin text-gray-500 ${className ?? ""}`
 }, "scatter_plot")), LoadingCircle_default = LoadingCircle;
 
-// app/components/CreateNewEntities.tsx
-var import_react14 = require("react");
-
-// app/hooks/useRequireLogin.ts
-var import_react9 = require("@remix-run/react");
-
-// app/hooks/useCurrentUser.ts
-var import_react8 = require("react"), import_client5 = require("@apollo/client");
-var CURRENT_USER_QUERY = import_client5.gql`
-	query CurrentUser {
-		currentUser {
-			...CurrentUser
-		}
-	}
-	${UserFragments.currentUser}
-`, useCurrentUser = () => {
-  var _a;
-  let [getCurrentUser, currentUserQuery] = (0, import_client5.useLazyQuery)(CURRENT_USER_QUERY);
-  return (0, import_react8.useEffect)(() => {
-    getCurrentUser();
-  }, [getCurrentUser]), [(_a = currentUserQuery.data) == null ? void 0 : _a.currentUser, currentUserQuery];
-}, useCurrentUser_default = useCurrentUser;
-
-// app/hooks/useRequireLogin.ts
-var useRequireLogin = () => {
-  let navigate = (0, import_react9.useNavigate)(), { pathname } = (0, import_react9.useLocation)(), [currentUser] = useCurrentUser_default();
-  return { requireLogin: ({ redirectTo } = {}) => {
-    let params = new URLSearchParams({ redirectTo: redirectTo ?? pathname });
-    navigate(`/login?${params.toString()}`);
-  }, currentUser };
-}, useRequireLogin_default = useRequireLogin;
-
-// app/components/CreatePersonForm.tsx
-var import_react10 = require("react"), import_client6 = require("@apollo/client");
-var CREATE_PERSON_MUTATION = import_client6.gql`
-	mutation CreatePerson($input: CreatePersonInput!) {
-		createPerson(input: $input) {
-			...Person
-		}
-	}
-	${EntityFragments.person}
-`, CreatePersonForm = ({ onSuccess }) => {
-  let [createPerson, { loading, error: error2, data: data2 }] = (0, import_client6.useMutation)(CREATE_PERSON_MUTATION, {
-    errorPolicy: "all"
-  }), [firstName, setFirstName] = (0, import_react10.useState)(""), [middleName, setMiddleName] = (0, import_react10.useState)(""), [lastName, setLastName] = (0, import_react10.useState)(""), [slug, setSlug] = (0, import_react10.useState)(""), [aliases, setAliases] = (0, import_react10.useState)(""), [description, setDescription] = (0, import_react10.useState)("");
-  (0, import_react10.useEffect)(() => {
-    let proposedSlug = "";
-    firstName && (proposedSlug = firstName), middleName && (proposedSlug = `${proposedSlug}-${middleName}`), lastName && (proposedSlug = `${proposedSlug}-${lastName}`), setSlug(Entity_default.cleanSlug(proposedSlug));
-  }, [firstName, middleName, lastName]);
-  let onCreatePerson = (event) => {
-    event.preventDefault(), createPerson({ variables: { input: {
-      firstName,
-      middleName,
-      lastName,
-      slug,
-      aliases,
-      description
-    } } });
-  };
-  return (0, import_react10.useEffect)(() => {
-    if (data2 == null ? void 0 : data2.createPerson) {
-      if (onSuccess)
-        return onSuccess(data2.createPerson);
-      window.alert("Person created successfully!"), setFirstName(""), setMiddleName(""), setLastName(""), setSlug(""), setAliases(""), setDescription("");
-    }
-  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-col align-start"
-  }, /* @__PURE__ */ React.createElement("form", {
-    onSubmit: onCreatePerson
-  }, /* @__PURE__ */ React.createElement("input", {
-    placeholder: "First name",
-    autoFocus: !0,
-    className: "mb-2",
-    value: firstName,
-    onChange: (event) => setFirstName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Middle name (optional)",
-    className: "mb-2",
-    value: middleName,
-    onChange: (event) => setMiddleName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Last name",
-    className: "mb-2",
-    value: lastName,
-    onChange: (event) => setLastName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "URL slug (ie. kitty-hayes)",
-    className: "mb-2",
-    value: slug,
-    onChange: (event) => setSlug(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "This will be used for the URL of this Person, for example", " ", `https://trad-archive.com/entities/people/${slug || "kitty-hayes"}`), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Aliases",
-    className: "mb-2",
-    value: aliases,
-    onChange: (event) => setAliases(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "A list of comma-separated aliases for this Person. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Tony D, The Tradfather, Tony from the County Calamari")), /* @__PURE__ */ React.createElement("textarea", {
-    placeholder: "Description",
-    className: "mb-2",
-    value: description,
-    rows: 5,
-    onChange: (event) => setDescription(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "submit",
-    className: "btn mb-4 w-auto",
-    disabled: loading,
-    value: "Create"
-  }))), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600"
-  }, error2.message));
-}, CreatePersonForm_default = CreatePersonForm;
-
-// app/components/CreateInstrumentForm.tsx
-var import_react11 = require("react"), import_client7 = require("@apollo/client");
-var CREATE_INSTRUMENT_MUTATION = import_client7.gql`
-	mutation CreateInstrument($input: CreateInstrumentInput!) {
-		createInstrument(input: $input) {
-			...Instrument
-		}
-	}
-	${EntityFragments.instrument}
-`, CreateInstrumentForm = ({ onSuccess }) => {
-  let [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client7.useMutation)(CREATE_INSTRUMENT_MUTATION, {
-    errorPolicy: "all"
-  }), [name, setName] = (0, import_react11.useState)(""), [slug, setSlug] = (0, import_react11.useState)(""), [aliases, setAliases] = (0, import_react11.useState)(""), [description, setDescription] = (0, import_react11.useState)("");
-  (0, import_react11.useEffect)(() => {
-    let proposedSlug = Entity_default.cleanSlug(name ?? "");
-    setSlug(proposedSlug);
-  }, [name]);
-  let onCreateInstrument = (event) => {
-    event.preventDefault(), createInstrument({ variables: { input: {
-      name,
-      slug,
-      aliases,
-      description
-    } } });
-  };
-  return (0, import_react11.useEffect)(() => {
-    if (data2 == null ? void 0 : data2.createInstrument) {
-      if (onSuccess)
-        return onSuccess(data2.createInstrument);
-      window.alert("Instrument created successfully!"), setName(""), setSlug(""), setAliases(""), setDescription("");
-    }
-  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-col align-start"
-  }, /* @__PURE__ */ React.createElement("form", {
-    onSubmit: onCreateInstrument
-  }, /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Name",
-    autoFocus: !0,
-    className: "mb-2",
-    value: name,
-    onChange: (event) => setName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "URL slug (ie. button-accordion)",
-    className: "mb-2",
-    value: slug,
-    onChange: (event) => setSlug(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "This will be used for the URL of this Instrument, for example", " ", `https://trad-archive.com/entities/instruments/${slug || "button-accordion"}`), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Aliases",
-    className: "mb-2",
-    value: aliases,
-    onChange: (event) => setAliases(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "A list of comma-separated aliases for this Instrument. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Stomach Steinway, Squeezebox, Belly Organ")), /* @__PURE__ */ React.createElement("textarea", {
-    placeholder: "Description",
-    className: "mb-2",
-    value: description,
-    rows: 5,
-    onChange: (event) => setDescription(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "submit",
-    className: "btn mb-4 w-auto",
-    disabled: loading,
-    value: "Create"
-  }))), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600"
-  }, error2.message));
-}, CreateInstrumentForm_default = CreateInstrumentForm;
-
-// app/components/CreatePlaceForm.tsx
-var import_react12 = require("react"), import_client8 = require("@apollo/client");
-var CREATE_PLACE_MUTATION = import_client8.gql`
-	mutation CreatePlace($input: CreatePlaceInput!) {
-		createPlace(input: $input) {
-			...Place
-		}
-	}
-	${EntityFragments.place}
-`, CreatePlaceForm = ({ onSuccess }) => {
-  let [createPlace, { loading, error: error2, data: data2 }] = (0, import_client8.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react12.useState)(""), [slug, setSlug] = (0, import_react12.useState)(""), [aliases, setAliases] = (0, import_react12.useState)(""), [latitude, setLatitude] = (0, import_react12.useState)(""), [longitude, setLongitude] = (0, import_react12.useState)(""), [description, setDescription] = (0, import_react12.useState)("");
-  (0, import_react12.useEffect)(() => {
-    let proposedSlug = Entity_default.cleanSlug(name ?? "");
-    setSlug(proposedSlug);
-  }, [name]);
-  let onCreatePlace = async (event) => {
-    event.preventDefault();
-    let input = {
-      name,
-      slug,
-      aliases,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      description
-    };
-    try {
-      await createPlace({ variables: { input } });
-    } catch {
-    }
-  };
-  return (0, import_react12.useEffect)(() => {
-    if (data2 == null ? void 0 : data2.createPlace) {
-      if (onSuccess)
-        return onSuccess(data2.createPlace);
-      window.alert("Place created successfully!"), setName(""), setSlug(""), setAliases(""), setLatitude(""), setLongitude(""), setDescription("");
-    }
-  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-col align-start"
-  }, /* @__PURE__ */ React.createElement("form", {
-    onSubmit: onCreatePlace
-  }, /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Name",
-    autoFocus: !0,
-    className: "mb-2",
-    value: name,
-    onChange: (event) => setName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "URL slug (ie. galway-city)",
-    className: "mb-2",
-    value: slug,
-    onChange: (event) => setSlug(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "This will be used for the URL of this Place, for example", " ", `https://trad-archive.com/entities/places/${slug || "galway-city"}`), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Aliases",
-    className: "mb-2",
-    value: aliases,
-    onChange: (event) => setAliases(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "A list of comma-separated aliases for this Place. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Gaillimh, The City of Tribes")), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Latitude",
-    className: "mb-2",
-    value: latitude,
-    onChange: (event) => setLatitude(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Longitude",
-    className: "mb-2",
-    value: longitude,
-    onChange: (event) => setLongitude(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "To find the latitude and longitude, visit", " ", /* @__PURE__ */ React.createElement("a", {
-    href: `https://www.google.com/maps/place/${name}`,
-    target: "_blank",
-    rel: "noreferrer"
-  }, name ? `${name} on ` : "", "Google Maps (will open in new tab)"), " ", `and right-click on the exact location you'd like. You'll see numbers like "53.2838294,-9.1888286". Click to copy them to your clipboard. The first one is latitude, and the second is longitude.`), /* @__PURE__ */ React.createElement("textarea", {
-    placeholder: "Description",
-    className: "mb-2",
-    value: description,
-    rows: 5,
-    onChange: (event) => setDescription(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "submit",
-    className: "btn mb-4 w-auto",
-    disabled: loading,
-    value: "Create"
-  }))), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600"
-  }, error2.message));
-}, CreatePlaceForm_default = CreatePlaceForm;
-
-// app/components/CreateCollectionForm.tsx
-var import_react13 = require("react"), import_client9 = require("@apollo/client");
-var CREATE_COLLECTION_MUTATION = import_client9.gql`
-	mutation CreateCollection($input: CreateCollectionInput!) {
-		createCollection(input: $input) {
-			...Collection
-		}
-	}
-	${EntityFragments.collection}
-`, CreateCollectionForm = ({ onSuccess }) => {
-  let [createCollection, { loading, error: error2, data: data2 }] = (0, import_client9.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react13.useState)(""), [slug, setSlug] = (0, import_react13.useState)(""), [aliases, setAliases] = (0, import_react13.useState)(""), [description, setDescription] = (0, import_react13.useState)("");
-  (0, import_react13.useEffect)(() => {
-    let proposedSlug = Entity_default.cleanSlug(name ?? "");
-    setSlug(proposedSlug);
-  }, [name]);
-  let onCreateCollection = async (event) => {
-    event.preventDefault();
-    let input = {
-      name,
-      slug,
-      aliases,
-      description
-    };
-    try {
-      await createCollection({ variables: { input } });
-    } catch {
-    }
-  };
-  return (0, import_react13.useEffect)(() => {
-    if (data2 == null ? void 0 : data2.createCollection) {
-      if (onSuccess)
-        return onSuccess(data2.createCollection);
-      window.alert("Collection created successfully!"), setName(""), setSlug(""), setAliases(""), setDescription("");
-    }
-  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
-    className: "flex flex-col align-start"
-  }, /* @__PURE__ */ React.createElement("div", {
-    className: "text-gray-500 mb-8"
-  }, `A Collection is a logical grouping of other entities. For example, "O'Neill's Music of Ireland" would be a Collection of Tunes. Or the "Alen MacWeeney Collection" would be a Collection of AudioItems.`), /* @__PURE__ */ React.createElement("form", {
-    onSubmit: onCreateCollection
-  }, /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Name",
-    autoFocus: !0,
-    className: "mb-2",
-    value: name,
-    onChange: (event) => setName(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "URL slug (ie. alan-macweeney-collection)",
-    className: "mb-2",
-    value: slug,
-    onChange: (event) => setSlug(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "This will be used for the URL of this Collection, for example", " ", `https://trad-archive.com/entities/collections/${slug || "alan-macweeney-collection"}`), /* @__PURE__ */ React.createElement("input", {
-    placeholder: "Aliases",
-    className: "mb-2",
-    value: aliases,
-    onChange: (event) => setAliases(event.target.value)
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "text-sm text-gray-400 mb-2 ml-2"
-  }, "A list of comma-separated aliases for this Collection. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "O'Neill's, 1000 Fiddle Tunes")), /* @__PURE__ */ React.createElement("textarea", {
-    placeholder: "Description",
-    className: "mb-2",
-    value: description,
-    rows: 5,
-    onChange: (event) => setDescription(event.target.value)
-  }), /* @__PURE__ */ React.createElement("input", {
-    type: "submit",
-    className: "btn mb-4 w-auto",
-    disabled: loading,
-    value: "Create"
-  }))), error2 && /* @__PURE__ */ React.createElement("div", {
-    className: "text-red-600"
-  }, error2.message));
-}, CreateCollectionForm_default = CreateCollectionForm;
-
-// app/components/CreateNewEntities.tsx
-var CreateNewEntities = ({ entityTypes, onNewEntityCreated }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [createPersonModalIsVisible, setCreatePersonModalIsVisible] = (0, import_react14.useState)(!1), [createInstrumentModalIsVisible, setCreateInstrumentModalIsVisible] = (0, import_react14.useState)(!1), [createPlaceModalIsVisible, setCreatePlaceModalIsVisible] = (0, import_react14.useState)(!1), [createCollectionModalIsVisible, setCreateCollectionModalIsVisible] = (0, import_react14.useState)(!1), onCreateNewPersonClicked = (0, import_react14.useCallback)(async () => {
-    if (!currentUser)
-      return await requireLogin();
-    setCreatePersonModalIsVisible(!0);
-  }, [requireLogin, currentUser]), onCreateNewInstrumentClicked = (0, import_react14.useCallback)(async () => {
-    if (!currentUser)
-      return await requireLogin();
-    setCreateInstrumentModalIsVisible(!0);
-  }, [requireLogin, currentUser]), onCreateNewPlaceClicked = (0, import_react14.useCallback)(async () => {
-    if (!currentUser)
-      return await requireLogin();
-    setCreatePlaceModalIsVisible(!0);
-  }, [requireLogin, currentUser]), onCreateNewCollectionClicked = (0, import_react14.useCallback)(async () => {
-    if (!currentUser)
-      return await requireLogin();
-    setCreateCollectionModalIsVisible(!0);
-  }, [requireLogin, currentUser]), onNewPersonCreated = (0, import_react14.useCallback)((person2) => {
-    setCreatePersonModalIsVisible(!1), onNewEntityCreated(person2);
-  }, [onNewEntityCreated]), onNewInstrumentCreated = (0, import_react14.useCallback)((instrument) => {
-    setCreateInstrumentModalIsVisible(!1), onNewEntityCreated(instrument);
-  }, []), onNewPlaceCreated = (0, import_react14.useCallback)((place) => {
-    setCreatePlaceModalIsVisible(!1), onNewEntityCreated(place);
-  }, []), onNewCollectionCreated = (0, import_react14.useCallback)((collection) => {
-    setCreateCollectionModalIsVisible(!1), onNewEntityCreated(collection);
-  }, []), shouldShowCreatePerson = typeof entityTypes > "u" || entityTypes.includes("Person" /* Person */), shouldShowCreateInstrument = typeof entityTypes > "u" || entityTypes.includes("Instrument" /* Instrument */), shouldShowCreatePlace = typeof entityTypes > "u" || entityTypes.includes("Place" /* Place */), shouldShowCreateCollection = typeof entityTypes > "u" || entityTypes.includes("Collection" /* Collection */);
-  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
-    className: "text-gray-500"
-  }, "Can't find it? Create new:", " ", shouldShowCreatePerson && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
-    className: "btn-text",
-    onClick: onCreateNewPersonClicked
-  }, "Person"), (!entityTypes || shouldShowCreateInstrument || shouldShowCreatePlace || shouldShowCreateCollection) && ", "), shouldShowCreateInstrument && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
-    className: "btn-text",
-    onClick: onCreateNewInstrumentClicked
-  }, "Instrument"), (!entityTypes || shouldShowCreatePlace || shouldShowCreateCollection) && ", "), shouldShowCreatePlace && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
-    className: "btn-text",
-    onClick: onCreateNewPlaceClicked
-  }, "Place"), (!entityTypes || shouldShowCreateCollection) && ", "), shouldShowCreateCollection && /* @__PURE__ */ React.createElement("button", {
-    className: "btn-text",
-    onClick: onCreateNewCollectionClicked
-  }, "Collection")), /* @__PURE__ */ React.createElement(Modal_default, {
-    title: "Create New Person",
-    isVisible: createPersonModalIsVisible,
-    onClose: () => setCreatePersonModalIsVisible(!1)
-  }, /* @__PURE__ */ React.createElement(CreatePersonForm_default, {
-    onSuccess: onNewPersonCreated
-  })), /* @__PURE__ */ React.createElement(Modal_default, {
-    title: "Create New Instrument",
-    isVisible: createInstrumentModalIsVisible,
-    onClose: () => setCreateInstrumentModalIsVisible(!1)
-  }, /* @__PURE__ */ React.createElement(CreateInstrumentForm_default, {
-    onSuccess: onNewInstrumentCreated
-  })), /* @__PURE__ */ React.createElement(Modal_default, {
-    title: "Create New Place",
-    isVisible: createPlaceModalIsVisible,
-    onClose: () => setCreatePlaceModalIsVisible(!1)
-  }, /* @__PURE__ */ React.createElement(CreatePlaceForm_default, {
-    onSuccess: onNewPlaceCreated
-  })), /* @__PURE__ */ React.createElement(Modal_default, {
-    title: "Create New Collection",
-    isVisible: createCollectionModalIsVisible,
-    onClose: () => setCreateCollectionModalIsVisible(!1)
-  }, /* @__PURE__ */ React.createElement(CreateCollectionForm_default, {
-    onSuccess: onNewCollectionCreated
-  })));
-}, CreateNewEntities_default = CreateNewEntities;
-
 // app/components/SearchEntities.tsx
-var SEARCH_ENTITIES_QUERY = import_client10.gql`
-	query SearchEntities($input: SearchEntitiesInput!) {
-		searchEntities(input: $input) {
-			...AudioItem
-			...Person
-			...Instrument
-			...Place
-			...Tune
-			...Collection
-		}
-	}
-	${EntityFragments.audioItem}
-	${EntityFragments.person}
-	${EntityFragments.instrument}
-	${EntityFragments.place}
-	${EntityFragments.tune}
-	${EntityFragments.collection}
-`, SearchEntities = ({
-  entityTypes,
-  take,
-  onSelect,
-  onNewEntityCreated,
-  className
-}) => {
-  let [searchTerm, setSearchTerm] = (0, import_react16.useState)(""), [searchResults, setSearchResults] = (0, import_react16.useState)(), onChangeSearchTerm = (event) => {
-    setSearchTerm(event.target.value);
-  }, [searchEntities, { loading, data: data2, error: error2 }] = (0, import_client10.useLazyQuery)(SEARCH_ENTITIES_QUERY, {
-    fetchPolicy: "no-cache"
-  }), debouncedSearchEntities = (0, import_react16.useCallback)((0, import_debounce.default)(searchEntities, 300, { trailing: !0 }), [searchEntities]);
-  return (0, import_react16.useEffect)(() => {
-    let cleanedSearchTerm = (searchTerm == null ? void 0 : searchTerm.trim()) ?? "";
-    cleanedSearchTerm.length >= 3 && debouncedSearchEntities({
-      variables: {
-        input: {
-          searchTerm: cleanedSearchTerm,
-          entityTypes,
-          take: take ?? 24
-        }
-      }
+var SearchEntities = ({ entityTypes, take, onSelect, className }) => {
+  var _a, _b;
+  let fetcher = (0, import_react8.useFetcher)(), searchResults = (_a = fetcher.data) == null ? void 0 : _a.results;
+  function onChangeSearchTerm(e) {
+    let searchTerm = e.target.value;
+    if (searchTerm.length < 3)
+      return;
+    let params = new URLSearchParams({
+      searchTerm
     });
-  }, [searchTerm]), (0, import_react16.useEffect)(() => {
-    (data2 == null ? void 0 : data2.searchEntities) && setSearchResults(data2.searchEntities);
-  }, [data2]), /* @__PURE__ */ React.createElement("div", {
+    typeof take == "number" && params.set("take", String(take)), entityTypes && entityTypes.forEach((e2) => params.append("entityTypes", e2)), fetcher.load(`/search?${params.toString()}`);
+  }
+  return /* @__PURE__ */ React.createElement("div", {
     className: className ?? ""
   }, /* @__PURE__ */ React.createElement("div", {
     className: "relative"
   }, /* @__PURE__ */ React.createElement("input", {
     autoFocus: !0,
     placeholder: "Start typing...",
-    value: searchTerm,
-    onChange: onChangeSearchTerm
-  }), loading && /* @__PURE__ */ React.createElement("div", {
+    onChange: (0, import_debounce.default)(onChangeSearchTerm, 300, {
+      trailing: !0
+    })
+  }), fetcher.state !== "idle" && /* @__PURE__ */ React.createElement("div", {
     className: "absolute top-2 right-2"
-  }, /* @__PURE__ */ React.createElement(LoadingCircle_default, null))), error2 && /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement(LoadingCircle_default, null))), ((_b = fetcher.data) == null ? void 0 : _b.error) && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mt-4 ml-2"
-  }, "Error fetching results"), searchResults && /* @__PURE__ */ React.createElement("div", {
+  }, fetcher.data.error), searchResults && /* @__PURE__ */ React.createElement("div", {
     className: "mt-4"
-  }, /* @__PURE__ */ React.createElement("ul", {
-    className: "max-h-40"
-  }, searchResults.map((entity, index) => /* @__PURE__ */ React.createElement("li", {
+  }, /* @__PURE__ */ React.createElement("ul", null, searchResults.map((entity, index) => /* @__PURE__ */ React.createElement("li", {
     className: "flex flex-row",
     key: index
   }, /* @__PURE__ */ React.createElement("button", {
     className: "flex flex-1 justify-between items-center text-left p-2 rounded cursor-pointer hover:bg-gray-200",
     onClick: () => onSelect(entity)
-  }, /* @__PURE__ */ React.createElement("span", null, entity.name, entity.entityType === "Tune" /* Tune */ ? ` (${entity.type})` : ""), /* @__PURE__ */ React.createElement("span", {
+  }, /* @__PURE__ */ React.createElement("span", null, entity.name, entity.entityType === import_client4.EntityType.Tune ? ` (${entity.entityType})` : ""), /* @__PURE__ */ React.createElement("span", {
     className: "uppercase text-gray-500 text-sm"
-  }, entity.entityType)), /* @__PURE__ */ React.createElement(import_react15.Link, {
-    to: Entity_default.makeHrefForAbout(entity)
-  }, /* @__PURE__ */ React.createElement("a", {
-    className: "btn-icon w-auto px-2",
+  }, entity.entityType)), /* @__PURE__ */ React.createElement(import_react8.Link, {
+    to: Entity_default.makeHrefForAbout(entity),
     target: "_blank",
-    "aria-label": `Open ${entity.name} in New Tab`
+    "aria-label": `Open ${entity.name} in New Tab`,
+    className: "btn-icon w-auto px-2"
   }, /* @__PURE__ */ React.createElement("i", {
     className: "material-icons text-base"
-  }, "launch")))))), searchResults.length === 0 && /* @__PURE__ */ React.createElement("div", {
+  }, "launch"))))), searchResults.length === 0 && /* @__PURE__ */ React.createElement("div", {
     className: "p-2 block text-gray-500"
-  }, "No results"), onNewEntityCreated && /* @__PURE__ */ React.createElement("div", {
-    className: "mt-2 ml-2"
-  }, /* @__PURE__ */ React.createElement(CreateNewEntities_default, {
-    entityTypes,
-    onNewEntityCreated
-  }))));
+  }, "No results")));
 }, SearchEntities_default = SearchEntities;
 
 // app/components/Header.tsx
 var Header = ({ currentUser }) => {
-  let navigate = (0, import_react19.useNavigate)(), [searchModalIsVisible, setSearchModalIsVisible] = (0, import_react17.useState)(!1), openSearchModal = (event) => {
+  let navigate = (0, import_react11.useNavigate)(), [searchModalIsVisible, setSearchModalIsVisible] = (0, import_react9.useState)(!1), openSearchModal = (event) => {
     event.preventDefault(), setSearchModalIsVisible(!0);
   }, closeSearchModal = () => {
     setSearchModalIsVisible(!1);
   };
   (0, import_react_hotkeys_hook2.useHotkeys)("/", openSearchModal);
-  let onSelectSearchResult = (0, import_react17.useCallback)((entity) => {
+  let onSelectSearchResult = (0, import_react9.useCallback)((entity) => {
     setSearchModalIsVisible(!1), navigate(Entity_default.makeHrefForView(entity));
-  }, [navigate]), onNewEntityCreated = (0, import_react17.useCallback)((entity) => {
+  }, [navigate]), onNewEntityCreated = (0, import_react9.useCallback)((entity) => {
     navigate(Entity_default.makeHrefForView(entity));
   }, [navigate]);
-  return /* @__PURE__ */ import_react17.default.createElement(import_react17.default.Fragment, null, /* @__PURE__ */ import_react17.default.createElement("div", {
+  return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, /* @__PURE__ */ import_react9.default.createElement("div", {
     className: "flex flex-row py-3 px-4 justify-between text-white items-center bg-teal-700"
-  }, /* @__PURE__ */ import_react17.default.createElement("div", {
+  }, /* @__PURE__ */ import_react9.default.createElement("div", {
     className: "flex flex-row"
-  }, /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/",
     className: "whitespace-nowrap no-underline text-yellow-200 hover:text-gray-400"
-  }, "Trad Archive"), /* @__PURE__ */ import_react17.default.createElement("button", {
+  }, "Trad Archive"), /* @__PURE__ */ import_react9.default.createElement("button", {
     className: "flex flex-row items-center whitespace-nowrap text-white hover:text-gray-400 group ml-4",
     onClick: openSearchModal
-  }, /* @__PURE__ */ import_react17.default.createElement("i", {
+  }, /* @__PURE__ */ import_react9.default.createElement("i", {
     className: "material-icons"
-  }, "search"), /* @__PURE__ */ import_react17.default.createElement("span", {
+  }, "search"), /* @__PURE__ */ import_react9.default.createElement("span", {
     className: "hidden md:block md:pl-1"
-  }, "Search"), /* @__PURE__ */ import_react17.default.createElement("span", {
+  }, "Search"), /* @__PURE__ */ import_react9.default.createElement("span", {
     className: "hidden md:block border border-gray-300 group-hover:border-gray-400 rounded text-xs px-1.5 ml-2.5"
-  }, "/")), /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, "/")), /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/entities/audio-items/random",
     className: "flex flex-row items-center no-underline text-white hover:text-gray-400 ml-4"
-  }, /* @__PURE__ */ import_react17.default.createElement("div", {
+  }, /* @__PURE__ */ import_react9.default.createElement("div", {
     className: "block h-6"
-  }, /* @__PURE__ */ import_react17.default.createElement("i", {
+  }, /* @__PURE__ */ import_react9.default.createElement("i", {
     className: "material-icons"
-  }, "shuffle")), /* @__PURE__ */ import_react17.default.createElement("div", {
+  }, "shuffle")), /* @__PURE__ */ import_react9.default.createElement("div", {
     className: "md:pl-2 hidden md:block"
-  }, "Random"))), currentUser ? /* @__PURE__ */ import_react17.default.createElement("div", {
+  }, "Random"))), currentUser ? /* @__PURE__ */ import_react9.default.createElement("div", {
     className: "flex flex-row items-center"
-  }, /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/saved-items",
     className: "flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-  }, /* @__PURE__ */ import_react17.default.createElement("i", {
+  }, /* @__PURE__ */ import_react9.default.createElement("i", {
     className: "material-icons"
-  }, "bookmark"), /* @__PURE__ */ import_react17.default.createElement("span", {
+  }, "bookmark"), /* @__PURE__ */ import_react9.default.createElement("span", {
     className: "hidden md:block md:pl-1"
-  }, "Saved")), /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, "Saved")), /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/account",
     className: "flex flex-row items-center whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-  }, /* @__PURE__ */ import_react17.default.createElement("i", {
+  }, /* @__PURE__ */ import_react9.default.createElement("i", {
     className: "material-icons"
-  }, "account_circle"), /* @__PURE__ */ import_react17.default.createElement("span", {
+  }, "account_circle"), /* @__PURE__ */ import_react9.default.createElement("span", {
     className: "hidden md:block md:pl-1"
-  }, "Account"))) : /* @__PURE__ */ import_react17.default.createElement("div", null, /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, "Account"))) : /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/login",
     className: "whitespace-nowrap text-white no-underline hover:text-gray-400 ml-4"
-  }, "Log In"), /* @__PURE__ */ import_react17.default.createElement(import_react18.Link, {
+  }, "Log In"), /* @__PURE__ */ import_react9.default.createElement(import_react10.Link, {
     to: "/signup",
     className: "btn text-current no-underline whitespace-nowrap hover:text-current ml-4"
-  }, "Sign Up"))), /* @__PURE__ */ import_react17.default.createElement(Modal_default, {
+  }, "Sign Up"))), /* @__PURE__ */ import_react9.default.createElement(Modal_default, {
     title: "Search",
     isVisible: searchModalIsVisible,
     onClose: closeSearchModal
-  }, /* @__PURE__ */ import_react17.default.createElement(SearchEntities_default, {
-    onSelect: onSelectSearchResult,
-    onNewEntityCreated
+  }, /* @__PURE__ */ import_react9.default.createElement(SearchEntities_default, {
+    onSelect: onSelectSearchResult
   })));
 }, Header_default = Header;
 
@@ -1361,7 +475,7 @@ function Footer() {
 }
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/root.tsx
-var apolloClient = new import_client11.ApolloClient({ cache: new import_client11.InMemoryCache() }), meta = () => ({
+var apolloClient = new import_client5.ApolloClient({ cache: new import_client5.InMemoryCache() }), meta = () => ({
   charset: "utf-8",
   title: "Trad Archive",
   viewport: "width=device-width,initial-scale=1"
@@ -1409,10 +523,10 @@ var loader = async ({ request }) => {
   return userId && (currentUser = await db.user.findUnique({ where: { id: userId } })), (0, import_node2.json)({ currentUser });
 };
 function App() {
-  let { currentUser } = (0, import_react20.useLoaderData)();
+  let { currentUser } = (0, import_react12.useLoaderData)();
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react20.Meta, null), /* @__PURE__ */ React.createElement(import_react20.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react12.Meta, null), /* @__PURE__ */ React.createElement(import_react12.Links, null)), /* @__PURE__ */ React.createElement(import_client5.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1422,17 +536,17 @@ function App() {
     className: "flex flex-col justify-start items-center"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44"
-  }, /* @__PURE__ */ React.createElement(import_react20.Outlet, null)), /* @__PURE__ */ React.createElement(Footer, null)), /* @__PURE__ */ React.createElement("div", {
+  }, /* @__PURE__ */ React.createElement(import_react12.Outlet, null)), /* @__PURE__ */ React.createElement(Footer, null)), /* @__PURE__ */ React.createElement("div", {
     className: "fixed top-0 right-0 left-0",
     id: "header"
   }, /* @__PURE__ */ React.createElement(Header_default, {
     currentUser
-  }))), /* @__PURE__ */ React.createElement(import_react20.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react20.Scripts, null), /* @__PURE__ */ React.createElement(import_react20.LiveReload, null)))));
+  }))), /* @__PURE__ */ React.createElement(import_react12.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react12.Scripts, null), /* @__PURE__ */ React.createElement(import_react12.LiveReload, null)))));
 }
 function ErrorBoundary({ error: error2 }) {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react20.Meta, null), /* @__PURE__ */ React.createElement(import_react20.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react12.Meta, null), /* @__PURE__ */ React.createElement(import_react12.Links, null)), /* @__PURE__ */ React.createElement(import_client5.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1447,13 +561,13 @@ function ErrorBoundary({ error: error2 }) {
   }, error2.message)), /* @__PURE__ */ React.createElement(Footer, null)), /* @__PURE__ */ React.createElement("div", {
     className: "fixed top-0 right-0 left-0",
     id: "header"
-  }, /* @__PURE__ */ React.createElement(Header_default, null))), /* @__PURE__ */ React.createElement(import_react20.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react20.Scripts, null), /* @__PURE__ */ React.createElement(import_react20.LiveReload, null)))));
+  }, /* @__PURE__ */ React.createElement(Header_default, null))), /* @__PURE__ */ React.createElement(import_react12.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react12.Scripts, null), /* @__PURE__ */ React.createElement(import_react12.LiveReload, null)))));
 }
 function CatchBoundary() {
-  let { currentUser } = (0, import_react20.useLoaderData)(), caught = (0, import_react20.useCatch)();
+  let { currentUser } = (0, import_react12.useLoaderData)(), caught = (0, import_react12.useCatch)();
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
-  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react20.Meta, null), /* @__PURE__ */ React.createElement(import_react20.Links, null)), /* @__PURE__ */ React.createElement(import_client11.ApolloProvider, {
+  }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react12.Meta, null), /* @__PURE__ */ React.createElement(import_react12.Links, null)), /* @__PURE__ */ React.createElement(import_client5.ApolloProvider, {
     client: apolloClient
   }, /* @__PURE__ */ React.createElement(PlayerContextProvider_default, null, /* @__PURE__ */ React.createElement("body", {
     className: "bg-gray-100"
@@ -1470,7 +584,7 @@ function CatchBoundary() {
     id: "header"
   }, /* @__PURE__ */ React.createElement(Header_default, {
     currentUser
-  }))), /* @__PURE__ */ React.createElement(import_react20.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react20.Scripts, null), /* @__PURE__ */ React.createElement(import_react20.LiveReload, null)))));
+  }))), /* @__PURE__ */ React.createElement(import_react12.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react12.Scripts, null), /* @__PURE__ */ React.createElement(import_react12.LiveReload, null)))));
 }
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/[id]/upload.tsx
@@ -1478,7 +592,433 @@ var upload_exports = {};
 __export(upload_exports, {
   default: () => upload_default
 });
-var import_react24 = require("react"), import_react25 = require("@remix-run/react"), import_client12 = require("@apollo/client");
+var import_react17 = require("react"), import_react18 = require("@remix-run/react"), import_client8 = require("@apollo/client");
+
+// app/fragments/index.ts
+var import_client6 = require("@apollo/client"), UserFragments = {
+  user: import_client6.gql`
+		fragment User on User {
+			id
+			username
+			copyrightPermissionStatus
+			verifiedPerson {
+				id
+				entityType
+				slug
+				name
+			}
+			createdAt
+		}
+	`,
+  currentUser: import_client6.gql`
+		fragment CurrentUser on User {
+			id
+			role
+			email
+			username
+			copyrightPermissionStatus
+		}
+	`
+}, RelationshipFragments = {
+  relationship: import_client6.gql`
+		fragment Relationship on Relationship {
+			id
+			name
+			subjectEntityType
+			objectEntityType
+		}
+	`
+}, TagEntityFragments = {
+  tagAudioItem: import_client6.gql`
+		fragment TagAudioItem on AudioItem {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
+  tagInstrument: import_client6.gql`
+		fragment TagInstrument on Instrument {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
+  tagPerson: import_client6.gql`
+		fragment TagPerson on Person {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
+  tagPlace: import_client6.gql`
+		fragment TagPlace on Place {
+			id
+			entityType
+			name
+			slug
+		}
+	`,
+  tagTune: import_client6.gql`
+		fragment TagTune on Tune {
+			id
+			entityType
+			name
+			slug
+			type
+		}
+	`,
+  tagCollection: import_client6.gql`
+		fragment TagCollection on Collection {
+			id
+			entityType
+			name
+			slug
+		}
+	`
+}, TagFragments = {
+  tag: import_client6.gql`
+		fragment Tag on Tag {
+			id
+			relationship {
+				...Relationship
+			}
+			subjectEntity {
+				...TagAudioItem
+				...TagInstrument
+				...TagPerson
+				...TagPlace
+				...TagTune
+				...TagCollection
+			}
+			objectEntity {
+				...TagAudioItem
+				...TagInstrument
+				...TagPerson
+				...TagPlace
+				...TagTune
+				...TagCollection
+			}
+			subjectTimeMarkerSeconds
+			createdByUser {
+				...User
+			}
+			createdAt
+		}
+		${RelationshipFragments.relationship}
+		${TagEntityFragments.tagAudioItem}
+		${TagEntityFragments.tagInstrument}
+		${TagEntityFragments.tagPerson}
+		${TagEntityFragments.tagPlace}
+		${TagEntityFragments.tagTune}
+		${TagEntityFragments.tagCollection}
+		${UserFragments.user}
+	`,
+  tagForEntity: import_client6.gql`
+		fragment TagForEntity on Tag {
+			id
+			relationship {
+				...Relationship
+			}
+			objectEntity {
+				...TagAudioItem
+				...TagInstrument
+				...TagPerson
+				...TagPlace
+				...TagTune
+				...TagCollection
+			}
+			subjectTimeMarkerSeconds
+			createdByUser {
+				...User
+			}
+			createdAt
+		}
+		${RelationshipFragments.relationship}
+		${TagEntityFragments.tagAudioItem}
+		${TagEntityFragments.tagInstrument}
+		${TagEntityFragments.tagPerson}
+		${TagEntityFragments.tagPlace}
+		${TagEntityFragments.tagTune}
+		${TagEntityFragments.tagCollection}
+		${UserFragments.user}
+	`
+}, EntityFragments = {
+  audioItem: import_client6.gql`
+		fragment AudioItem on AudioItem {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...TagForEntity
+			}
+			commentsCount
+			isSavedByUser
+			status
+			createdByUser {
+				id
+				username
+				verifiedPerson {
+					id
+					entityType
+					slug
+				}
+			}
+			createdAt
+			updatedAt
+			urlSource
+			itmaAtomSlug
+		}
+		${TagFragments.tagForEntity}
+	`,
+  person: import_client6.gql`
+		fragment Person on Person {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			verifiedUser {
+				...User
+			}
+			createdByUser {
+				id
+				username
+			}
+			createdAt
+			updatedAt
+			firstName
+			middleName
+			lastName
+		}
+		${TagFragments.tag}
+		${UserFragments.user}
+	`,
+  instrument: import_client6.gql`
+		fragment Instrument on Instrument {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			createdByUser {
+				id
+				username
+			}
+		}
+		${TagFragments.tag}
+	`,
+  place: import_client6.gql`
+		fragment Place on Place {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			latitude
+			longitude
+			createdByUser {
+				id
+				username
+			}
+		}
+		${TagFragments.tag}
+	`,
+  tune: import_client6.gql`
+		fragment Tune on Tune {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			theSessionTuneId
+			type
+			meter
+			mode
+			abc
+		}
+		${TagFragments.tag}
+	`,
+  collection: import_client6.gql`
+		fragment Collection on Collection {
+			id
+			entityType
+			name
+			slug
+			aliases
+			description
+			tags {
+				...Tag
+			}
+			itmaAtomSlug
+			createdByUser {
+				id
+				username
+			}
+			createdAt
+			updatedAt
+		}
+		${TagFragments.tag}
+		${UserFragments.user}
+	`
+}, CommentFragments = {
+  comment: import_client6.gql`
+		fragment Comment on Comment {
+			id
+			text
+			parentAudioItem {
+				...AudioItem
+			}
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${EntityFragments.audioItem}
+		${UserFragments.user}
+	`,
+  commentWithoutParentEntity: import_client6.gql`
+		fragment CommentWithoutParentEntity on Comment {
+			id
+			text
+			createdByUser {
+				...User
+			}
+			createdAt
+			updatedAt
+		}
+		${UserFragments.user}
+	`
+}, SavedItemFragments = {
+  savedItem: import_client6.gql`
+		fragment SavedItem on SavedItem {
+			id
+			audioItem {
+				...AudioItem
+			}
+			createdAt
+		}
+		${EntityFragments.audioItem}
+	`
+}, TakedownRequestFragments = {
+  takedownRequest: import_client6.gql`
+		fragment TakedownRequest on TakedownRequest {
+			id
+			entity {
+				...AudioItem
+			}
+			type
+			message
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+		${EntityFragments.audioItem}
+	`,
+  takedownRequestWithoutEntity: import_client6.gql`
+		fragment TakedownRequestWithoutEntity on TakedownRequest {
+			id
+			type
+			message
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`
+}, VerificationRequestFragments = {
+  verificationRequest: import_client6.gql`
+		fragment VerificationRequest on VerificationRequest {
+			id
+			person {
+				id
+				entityType
+				name
+				slug
+			}
+			presignedImageDownloadUrl
+			copyrightPermissionStatus
+			status
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`
+}, SubmissionFragments = {
+  submission: import_client6.gql`
+		fragment Submission on Submission {
+			id
+			status
+			materialTypes
+			userControlsCopyright
+			copyrightDetails
+			description
+			s3DirectoryKey
+			createdByUser {
+				id
+				username
+				email
+			}
+			createdAt
+			updatedByUser {
+				id
+				username
+				email
+			}
+			updatedAt
+		}
+	`
+};
 
 // app/components/Layout.tsx
 var Layout = ({ children }) => /* @__PURE__ */ React.createElement("div", {
@@ -1488,12 +1028,31 @@ var Layout = ({ children }) => /* @__PURE__ */ React.createElement("div", {
 }, children)), Layout_default = Layout;
 
 // app/components/RequireUser.tsx
-var import_react21 = require("@remix-run/react");
+var import_react14 = require("@remix-run/react");
+
+// app/hooks/useCurrentUser.ts
+var import_react13 = require("react"), import_client7 = require("@apollo/client");
+var CURRENT_USER_QUERY = import_client7.gql`
+	query CurrentUser {
+		currentUser {
+			...CurrentUser
+		}
+	}
+	${UserFragments.currentUser}
+`, useCurrentUser = () => {
+  var _a;
+  let [getCurrentUser, currentUserQuery] = (0, import_client7.useLazyQuery)(CURRENT_USER_QUERY);
+  return (0, import_react13.useEffect)(() => {
+    getCurrentUser();
+  }, [getCurrentUser]), [(_a = currentUserQuery.data) == null ? void 0 : _a.currentUser, currentUserQuery];
+}, useCurrentUser_default = useCurrentUser;
+
+// app/components/RequireUser.tsx
 var RequireUser = ({
   children,
   requireUserId
 }) => {
-  let navigate = (0, import_react21.useNavigate)(), [currentUser, { data: data2, error: error2 }] = useCurrentUser_default();
+  let navigate = (0, import_react14.useNavigate)(), [currentUser, { data: data2, error: error2 }] = useCurrentUser_default();
   return !data2 && !error2 ? /* @__PURE__ */ React.createElement("div", null, "Checking for logged-in user...") : requireUserId && (currentUser == null ? void 0 : currentUser.id) !== requireUserId ? /* @__PURE__ */ React.createElement("div", null, "You do not have access to this page") : currentUser ? /* @__PURE__ */ React.createElement(React.Fragment, null, children) : (typeof window < "u" && navigate({
     pathname: "/login",
     query: { redirectTo: window.location.pathname }
@@ -1501,7 +1060,7 @@ var RequireUser = ({
 }, RequireUser_default = RequireUser;
 
 // app/components/Breadcrumb.tsx
-var import_react22 = require("@remix-run/react"), Breadcrumb = ({ items = [], className }) => {
+var import_react15 = require("@remix-run/react"), Breadcrumb = ({ items = [], className }) => {
   if (items.length === 0)
     return null;
   if (items.length === 1)
@@ -1516,7 +1075,7 @@ var import_react22 = require("@remix-run/react"), Breadcrumb = ({ items = [], cl
   }, subItems.map(({ label, href }, index) => /* @__PURE__ */ React.createElement("div", {
     className: "flex",
     key: index
-  }, href ? /* @__PURE__ */ React.createElement(import_react22.Link, {
+  }, href ? /* @__PURE__ */ React.createElement(import_react15.Link, {
     to: href
   }, label) : /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
@@ -1537,14 +1096,14 @@ var LoadingBlock = ({ className }) => /* @__PURE__ */ React.createElement("div",
 })), LoadingBlock_default = LoadingBlock;
 
 // app/components/FileUploader.tsx
-var import_react23 = require("react");
+var import_react16 = require("react");
 var FileUploader = ({ filesWithUploadUrls, onSuccess }) => {
-  let queue = (0, import_react23.useRef)({
+  let queue = (0, import_react16.useRef)({
     pending: filesWithUploadUrls,
     inProgress: [],
     failed: [],
     succeeded: []
-  }), [ticker, setTicker] = (0, import_react23.useState)(0), moveFromPendingToInProgress = (file) => {
+  }), [ticker, setTicker] = (0, import_react16.useState)(0), moveFromPendingToInProgress = (file) => {
     let updated = __spreadValues({}, queue.current);
     updated.pending = updated.pending.filter((f) => f.uploadUrl !== file.uploadUrl), updated.inProgress = [...updated.inProgress, file], queue.current = updated;
   }, moveFromInProgressToSucceeded = (file) => {
@@ -1569,10 +1128,10 @@ var FileUploader = ({ filesWithUploadUrls, onSuccess }) => {
     }
     queue.current.pending.length === 0 || queue.current.inProgress.length >= 2 || uploadFile(queue.current.pending[0]);
   };
-  (0, import_react23.useEffect)(() => {
+  (0, import_react16.useEffect)(() => {
     let interval = setInterval(checkForFilesToUpload, 1e3);
     return () => clearInterval(interval);
-  }, [checkForFilesToUpload]), (0, import_react23.useEffect)(() => {
+  }, [checkForFilesToUpload]), (0, import_react16.useEffect)(() => {
     let interval = setInterval(() => setTicker(ticker + 1), 1e3);
     return () => clearInterval(interval);
   }, [ticker]);
@@ -1617,14 +1176,14 @@ var import_format = __toESM(require("date-fns/format")), import_isToday = __toES
 }, DateTime_default = DateTimeService;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/[id]/upload.tsx
-var SUBMISSION = import_client12.gql`
+var SUBMISSION = import_client8.gql`
 	query Submission($input: SubmissionInput!) {
 		submission(input: $input) {
 			...Submission
 		}
 	}
 	${SubmissionFragments.submission}
-`, CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client12.gql`
+`, CREATE_PRESIGNED_FILE_UPLOAD_URLS = import_client8.gql`
 	mutation CreatePresignedFileUploadUrls(
 		$input: CreatePresignedFileUploadUrlsInput!
 	) {
@@ -1634,10 +1193,10 @@ var SUBMISSION = import_client12.gql`
 		}
 	}
 `, SubmissionsViewByIdUpload = () => {
-  let navigate = (0, import_react25.useNavigate)(), { id } = navigate.query, submissionId = typeof id == "string" ? id : void 0, { data: data2, error: error2 } = (0, import_client12.useQuery)(SUBMISSION, {
+  let navigate = (0, import_react18.useNavigate)(), { id } = navigate.query, submissionId = typeof id == "string" ? id : void 0, { data: data2, error: error2 } = (0, import_client8.useQuery)(SUBMISSION, {
     variables: { input: { id: submissionId } },
     skip: !submissionId
-  }), [files, setFiles] = (0, import_react24.useState)([]), [uploadQueue, setUploadQueue] = (0, import_react24.useState)(), [getPresignedUrls] = (0, import_client12.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS), onUploadClicked = async () => {
+  }), [files, setFiles] = (0, import_react17.useState)([]), [uploadQueue, setUploadQueue] = (0, import_react17.useState)(), [getPresignedUrls] = (0, import_client8.useMutation)(CREATE_PRESIGNED_FILE_UPLOAD_URLS), onUploadClicked = async () => {
     if (!!submissionId)
       try {
         let filenamesForUrls = files.map((f) => `${f.size}_${f.name}`), uploadUrls = (await getPresignedUrls({
@@ -1713,10 +1272,10 @@ var verification_requests_exports = {};
 __export(verification_requests_exports, {
   default: () => verification_requests_default
 });
-var import_react27 = require("react"), import_react28 = require("@remix-run/react"), import_client13 = require("@apollo/client"), import_compareDesc = __toESM(require("date-fns/compareDesc"));
+var import_react20 = require("react"), import_react21 = require("@remix-run/react"), import_client9 = require("@apollo/client"), import_compareDesc = __toESM(require("date-fns/compareDesc"));
 
 // app/components/RequireAdmin.tsx
-var import_react26 = require("@remix-run/react");
+var import_react19 = require("@remix-run/react");
 
 // app/services/User.ts
 var isAdmin = (user) => user ? user.role === "Admin" /* Admin */ : !1, UserService = {
@@ -1725,7 +1284,7 @@ var isAdmin = (user) => user ? user.role === "Admin" /* Admin */ : !1, UserServi
 
 // app/components/RequireAdmin.tsx
 var RequireAdmin = ({ children }) => {
-  let navigate = (0, import_react26.useNavigate)(), [currentUser, { data: data2, error: error2 }] = useCurrentUser_default();
+  let navigate = (0, import_react19.useNavigate)(), [currentUser, { data: data2, error: error2 }] = useCurrentUser_default();
   return currentUser && User_default.isAdmin(currentUser) ? /* @__PURE__ */ React.createElement(React.Fragment, null, children) : !data2 && !error2 ? /* @__PURE__ */ React.createElement("div", null, "Checking admin permissions...") : (typeof window < "u" && navigate({
     pathname: "/login",
     query: { redirectTo: window.location.pathname }
@@ -1733,14 +1292,14 @@ var RequireAdmin = ({ children }) => {
 }, RequireAdmin_default = RequireAdmin;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/admin/verification-requests.tsx
-var VERIFICATION_REQUESTS = import_client13.gql`
+var VERIFICATION_REQUESTS = import_client9.gql`
 	query VerificationRequests($input: VerificationRequestsInput!) {
 		verificationRequests(input: $input) {
 			...VerificationRequest
 		}
 	}
 	${VerificationRequestFragments.verificationRequest}
-`, UPDATE_VERIFICATION_REQUEST_STATUS = import_client13.gql`
+`, UPDATE_VERIFICATION_REQUEST_STATUS = import_client9.gql`
 	mutation UpdateVerificationRequestStatus(
 		$input: UpdateVerificationRequestStatusInput!
 	) {
@@ -1750,17 +1309,17 @@ var VERIFICATION_REQUESTS = import_client13.gql`
 	}
 	${VerificationRequestFragments.verificationRequest}
 `, VerificationRequests = () => {
-  let [statusToFetch, setStatusToFetch] = (0, import_react27.useState)("Pending" /* Pending */), onChangeStatusToFetch = (event) => {
+  let [statusToFetch, setStatusToFetch] = (0, import_react20.useState)("Pending" /* Pending */), onChangeStatusToFetch = (event) => {
     let updatedStatus = event.target.value;
     setStatusToFetch(updatedStatus ? event.target.value : void 0);
   }, {
     loading: verificationRequestsLoading,
     data: verificationRequestsData,
     error: verificationRequestsError
-  } = (0, import_client13.useQuery)(VERIFICATION_REQUESTS, {
+  } = (0, import_client9.useQuery)(VERIFICATION_REQUESTS, {
     variables: { input: { take: 200, skip: 0, status: statusToFetch } },
     fetchPolicy: "network-only"
-  }), verificationRequests = (0, import_react27.useMemo)(() => {
+  }), verificationRequests = (0, import_react20.useMemo)(() => {
     if (!(verificationRequestsData == null ? void 0 : verificationRequestsData.verificationRequests))
       return [];
     let sortedVerificationRequests = [
@@ -1773,7 +1332,7 @@ var VERIFICATION_REQUESTS = import_client13.gql`
       loading: updateVerificationRequestStatusLoading,
       error: updateVerificationRequestStatusError
     }
-  ] = (0, import_client13.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" }), onApproveClicked = (id) => {
+  ] = (0, import_client9.useMutation)(UPDATE_VERIFICATION_REQUEST_STATUS, { errorPolicy: "all" }), onApproveClicked = (id) => {
     updateVerificationRequestStatus({
       variables: { input: { id, status: "Approved" /* Approved */ } }
     });
@@ -1782,7 +1341,7 @@ var VERIFICATION_REQUESTS = import_client13.gql`
       variables: { input: { id, status: "Denied" /* Denied */ } }
     });
   };
-  return (0, import_react27.useEffect)(() => {
+  return (0, import_react20.useEffect)(() => {
     updateVerificationRequestStatusError && window.alert("Error updating Verification Request status. Please reload the page and try again.");
   }, [updateVerificationRequestStatusError]), /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
     items: [
@@ -1819,11 +1378,11 @@ var VERIFICATION_REQUESTS = import_client13.gql`
     return /* @__PURE__ */ React.createElement("div", {
       className: "mb-4",
       key: index
-    }, "Created ", DateTime_default.formatDateYearTime(createdAt), /* @__PURE__ */ React.createElement("br", null), "User", " ", /* @__PURE__ */ React.createElement(import_react28.Link, {
+    }, "Created ", DateTime_default.formatDateYearTime(createdAt), /* @__PURE__ */ React.createElement("br", null), "User", " ", /* @__PURE__ */ React.createElement(import_react21.Link, {
       to: `/users/${createdByUser.id}`
     }, /* @__PURE__ */ React.createElement("a", {
       target: "_blank"
-    }, createdByUser.username)), " ", "is asking to be verified as Person", " ", /* @__PURE__ */ React.createElement(import_react28.Link, {
+    }, createdByUser.username)), " ", "is asking to be verified as Person", " ", /* @__PURE__ */ React.createElement(import_react21.Link, {
       to: Entity_default.makeHrefForView(person2)
     }, /* @__PURE__ */ React.createElement("a", {
       target: "_blank"
@@ -1870,13 +1429,13 @@ __export(slug_exports, {
   default: () => slug_default,
   loader: () => loader3
 });
-var import_react52 = require("@remix-run/react");
+var import_react46 = require("@remix-run/react");
 
 // app/components/AudioItemCard.tsx
-var import_react43 = require("react"), import_react44 = require("@remix-run/react");
+var import_react37 = require("react"), import_react38 = require("@remix-run/react");
 
 // app/components/Tags.tsx
-var import_react34 = require("react"), import_react35 = require("@remix-run/react");
+var import_react28 = require("react"), import_react29 = require("@remix-run/react");
 
 // app/services/Tag.ts
 var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareDesc2 = __toESM(require("date-fns/compareDesc")), TagSortStrategy = /* @__PURE__ */ ((TagSortStrategy2) => (TagSortStrategy2.CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER", TagSortStrategy2.CreatedAtDesc = "CREATED_AT_DESC", TagSortStrategy2))(TagSortStrategy || {}), sortByCreatedAtThenTimeMarker = (tags) => {
@@ -1901,14 +1460,24 @@ var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareD
 };
 
 // app/components/AddTagButton.tsx
-var import_react32 = require("react"), import_client17 = require("@apollo/client");
+var import_react26 = require("react"), import_client13 = require("@apollo/client");
+
+// app/hooks/useRequireLogin.ts
+var import_react22 = require("@remix-run/react");
+var useRequireLogin = () => {
+  let navigate = (0, import_react22.useNavigate)(), { pathname } = (0, import_react22.useLocation)(), [currentUser] = useCurrentUser_default();
+  return { requireLogin: ({ redirectTo } = {}) => {
+    let params = new URLSearchParams({ redirectTo: redirectTo ?? pathname });
+    navigate(`/login?${params.toString()}`);
+  }, currentUser };
+}, useRequireLogin_default = useRequireLogin;
 
 // app/components/CreateTagForm.tsx
-var import_react31 = require("react"), import_client16 = require("@apollo/client");
+var import_react25 = require("react"), import_client12 = require("@apollo/client");
 
 // app/hooks/useTags.ts
-var import_react29 = require("react"), import_client14 = require("@apollo/client");
-var TAGS_QUERY = import_client14.gql`
+var import_react23 = require("react"), import_client10 = require("@apollo/client");
+var TAGS_QUERY = import_client10.gql`
 	query Tags($input: TagsInput!) {
 		tags(input: $input) {
 			...Tag
@@ -1920,10 +1489,10 @@ var TAGS_QUERY = import_client14.gql`
   queryOptions = {}
 } = {}) => {
   var _a;
-  let [getTags, tagsQuery] = (0, import_client14.useLazyQuery)(TAGS_QUERY, __spreadValues({
+  let [getTags, tagsQuery] = (0, import_client10.useLazyQuery)(TAGS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: !0
   }, queryOptions)), { data: data2, fetchMore } = tagsQuery;
-  (0, import_react29.useEffect)(() => {
+  (0, import_react23.useEffect)(() => {
     getTags({
       variables: {
         input: {
@@ -1932,7 +1501,7 @@ var TAGS_QUERY = import_client14.gql`
       }
     });
   }, [getTags, resultsPerPage]);
-  let tags = data2 == null ? void 0 : data2.tags, fetchNextPageOfTags = (0, import_react29.useCallback)(() => {
+  let tags = data2 == null ? void 0 : data2.tags, fetchNextPageOfTags = (0, import_react23.useCallback)(() => {
     fetchMore({
       variables: {
         input: {
@@ -1951,8 +1520,8 @@ var TAGS_QUERY = import_client14.gql`
 }, useTags_default = useTags;
 
 // app/components/SelectRelationship.tsx
-var import_react30 = require("react"), import_client15 = require("@apollo/client");
-var SEARCH_RELATIONSHIPS_QUERY = import_client15.gql`
+var import_react24 = require("react"), import_client11 = require("@apollo/client");
+var SEARCH_RELATIONSHIPS_QUERY = import_client11.gql`
 	query SearchRelationships(
 		$subjectEntityType: String!
 		$objectEntityType: String!
@@ -1970,14 +1539,14 @@ var SEARCH_RELATIONSHIPS_QUERY = import_client15.gql`
   objectEntity,
   onSelect
 }) => {
-  let [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react30.useState)(""), { loading, data: data2, error: error2 } = (0, import_client15.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
+  let [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react24.useState)(""), { loading, data: data2, error: error2 } = (0, import_client11.useQuery)(SEARCH_RELATIONSHIPS_QUERY, {
     variables: {
       subjectEntityType: subjectEntity.entityType,
       objectEntityType: objectEntity.entityType
     },
     fetchPolicy: "no-cache"
   }), relationshipOptions = (data2 == null ? void 0 : data2.searchRelationships) ?? [];
-  (0, import_react30.useEffect)(() => {
+  (0, import_react24.useEffect)(() => {
     relationshipOptions.length > 0 && onSelectRelationshipId(relationshipOptions[0].id);
   }, [relationshipOptions]);
   let onSelectRelationshipId = (relationshipId) => {
@@ -2051,7 +1620,7 @@ var TimestampInput = ({ valueInSeconds, onChange, className }) => {
 }, TimestampInput_default = TimestampInput;
 
 // app/components/CreateTagForm.tsx
-var CREATE_TAG_MUTATION = import_client16.gql`
+var CREATE_TAG_MUTATION = import_client12.gql`
 	mutation CreateTag($input: CreateTagInput!) {
 		createTag(input: $input) {
 			id
@@ -2062,33 +1631,33 @@ var CREATE_TAG_MUTATION = import_client16.gql`
     activeAudioItem,
     playbackPositionSeconds,
     activeItemDurationSeconds
-  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react31.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react31.useState)(defaultTimeMarkerValue), [selectedEntity, setSelectedEntity] = (0, import_react31.useState)(null), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react31.useState)(""), [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] = (0, import_react31.useState)(!0), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react31.useState)(""), [createTag, { data: data2, error: error2 }] = (0, import_client16.useMutation)(CREATE_TAG_MUTATION, {
+  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react25.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react25.useState)(defaultTimeMarkerValue), [selectedEntity, setSelectedEntity] = (0, import_react25.useState)(null), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react25.useState)(""), [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] = (0, import_react25.useState)(!0), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react25.useState)(""), [createTag, { data: data2, error: error2 }] = (0, import_client12.useMutation)(CREATE_TAG_MUTATION, {
     errorPolicy: "all"
-  }), [tagsAreCreating, setTagsAreCreating] = (0, import_react31.useState)(!1), [primaryCreatedTag, setPrimaryCreatedTag] = (0, import_react31.useState)(void 0), [tagsAreCreated, setTagsAreCreated] = (0, import_react31.useState)(!1), {
+  }), [tagsAreCreating, setTagsAreCreating] = (0, import_react25.useState)(!1), [primaryCreatedTag, setPrimaryCreatedTag] = (0, import_react25.useState)(void 0), [tagsAreCreated, setTagsAreCreated] = (0, import_react25.useState)(!1), {
     tagsQuery: { refetch: refetchTopLevelTags }
   } = useTags_default({
     queryOptions: { fetchPolicy: "network-only" }
   });
-  (0, import_react31.useEffect)(() => {
+  (0, import_react25.useEffect)(() => {
     if (!tagsAreCreated)
       return;
     primaryCreatedTag && (async (tag) => {
       refetchTopLevelTags && await refetchTopLevelTags(), await onSuccess(tag);
     })(primaryCreatedTag);
   }, [data2, refetchTopLevelTags, onSuccess, tagsAreCreated, primaryCreatedTag]);
-  let onSelectEntity = (0, import_react31.useCallback)((selectedEntityFromResults) => {
+  let onSelectEntity = (0, import_react25.useCallback)((selectedEntityFromResults) => {
     if (selectedEntityFromResults.id === entity.id)
       return window.alert("Cannot tag an entity with itself");
     setSelectedEntity(selectedEntityFromResults);
-  }, [entity]), onNewEntityCreated = (0, import_react31.useCallback)((entity2) => {
+  }, [entity]), onNewEntityCreated = (0, import_react25.useCallback)((entity2) => {
     setSelectedEntity(entity2);
-  }, []), onTimeMarkerValueChanged = (0, import_react31.useCallback)((newTimeMarkerValueSeconds) => {
+  }, []), onTimeMarkerValueChanged = (0, import_react25.useCallback)((newTimeMarkerValueSeconds) => {
     setShouldAddTimeMarker(!0), newTimeMarkerValueSeconds >= activeItemDurationSeconds ? setTimeMarkerValue(activeItemDurationSeconds) : newTimeMarkerValueSeconds <= 0 ? setTimeMarkerValue(0) : setTimeMarkerValue(newTimeMarkerValueSeconds);
-  }, [activeItemDurationSeconds]), onSelectRelationship = (0, import_react31.useCallback)((relationshipId) => {
+  }, [activeItemDurationSeconds]), onSelectRelationship = (0, import_react25.useCallback)((relationshipId) => {
     setSelectedRelationshipId(relationshipId);
-  }, [setSelectedRelationshipId]), onSelectInverseRelationship = (0, import_react31.useCallback)((relationshipId) => {
+  }, [setSelectedRelationshipId]), onSelectInverseRelationship = (0, import_react25.useCallback)((relationshipId) => {
     setSelectedInverseRelationshipId(relationshipId);
-  }, [setSelectedInverseRelationshipId]), onCreateTagClicked = (0, import_react31.useCallback)(async () => {
+  }, [setSelectedInverseRelationshipId]), onCreateTagClicked = (0, import_react25.useCallback)(async () => {
     var _a;
     setTagsAreCreating(!0);
     let subjectTimeMarkerSeconds;
@@ -2179,7 +1748,7 @@ var CREATE_TAG_MUTATION = import_client16.gql`
 }, CreateTagForm_default = CreateTagForm;
 
 // app/components/AddTagButton.tsx
-var PARENT_ENTITY_QUERY = import_client17.gql`
+var PARENT_ENTITY_QUERY = import_client13.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2197,12 +1766,12 @@ var PARENT_ENTITY_QUERY = import_client17.gql`
 	${EntityFragments.place}
 	${EntityFragments.tune}
 `, AddTagButton = ({ entity, onSuccess, className, children }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [addTagModalIsVisible, setAddTagModalIsVisible] = (0, import_react32.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client17.useLazyQuery)(PARENT_ENTITY_QUERY, {
+  let { currentUser, requireLogin } = useRequireLogin_default(), [addTagModalIsVisible, setAddTagModalIsVisible] = (0, import_react26.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client13.useLazyQuery)(PARENT_ENTITY_QUERY, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
-  }), onCreateTagSuccess = (0, import_react32.useCallback)(async (tag) => {
+  }), onCreateTagSuccess = (0, import_react26.useCallback)(async (tag) => {
     await getParentEntity(), setAddTagModalIsVisible(!1), onSuccess && onSuccess(tag);
-  }, [getParentEntity, setAddTagModalIsVisible, onSuccess]), onAddTagClicked = (0, import_react32.useCallback)(async () => {
+  }, [getParentEntity, setAddTagModalIsVisible, onSuccess]), onAddTagClicked = (0, import_react26.useCallback)(async () => {
     if (!currentUser) {
       let redirectTo = Entity_default.makeHrefForView(entity);
       return await requireLogin({ redirectTo });
@@ -2223,8 +1792,8 @@ var PARENT_ENTITY_QUERY = import_client17.gql`
 }, AddTagButton_default = AddTagButton;
 
 // app/components/EditTagsButton.tsx
-var import_react33 = require("react"), import_client18 = require("@apollo/client");
-var PARENT_ENTITY_QUERY2 = import_client18.gql`
+var import_react27 = require("react"), import_client14 = require("@apollo/client");
+var PARENT_ENTITY_QUERY2 = import_client14.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -2241,22 +1810,22 @@ var PARENT_ENTITY_QUERY2 = import_client18.gql`
 	${EntityFragments.person}
 	${EntityFragments.place}
 	${EntityFragments.tune}
-`, DELETE_TAG_MUTATION = import_client18.gql`
+`, DELETE_TAG_MUTATION = import_client14.gql`
 	mutation DeleteTag($id: String!) {
 		deleteTag(id: $id)
 	}
 `, EditTagsButton = ({ entity, className, children, onSuccess }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react33.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client18.useLazyQuery)(PARENT_ENTITY_QUERY2, {
+  let { currentUser, requireLogin } = useRequireLogin_default(), [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react27.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client14.useLazyQuery)(PARENT_ENTITY_QUERY2, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
-  }), [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client18.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" }), {
+  }), [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client14.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" }), {
     tagsQuery: { refetch: refetchTopLevelTags }
-  } = useTags_default(), onDeleteTag = (0, import_react33.useCallback)(async (id) => {
+  } = useTags_default(), onDeleteTag = (0, import_react27.useCallback)(async (id) => {
     if (!currentUser)
       return await requireLogin();
     window.confirm("Are you sure you want to delete this Tag?") && deleteTag({ variables: { id } });
   }, [deleteTag, currentUser, requireLogin]);
-  (0, import_react33.useEffect)(() => {
+  (0, import_react27.useEffect)(() => {
     let onDeleteSuccess = async () => {
       await Promise.all([refetchTopLevelTags(), getParentEntity()]), setEditTagsModalIsVisible(!1);
     };
@@ -2268,7 +1837,7 @@ var PARENT_ENTITY_QUERY2 = import_client18.gql`
     refetchTopLevelTags,
     onSuccess
   ]);
-  let { tags } = entity, sortedTags = (0, import_react33.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
+  let { tags } = entity, sortedTags = (0, import_react27.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
   if (!sortedTags || sortedTags.length === 0)
     return null;
   let isLoading2 = parentEntityLoading || deleteTagLoading;
@@ -2302,16 +1871,16 @@ var PARENT_ENTITY_QUERY2 = import_client18.gql`
 // app/components/Tags.tsx
 var TagLink = ({ tag }) => {
   var _a;
-  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react34.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react34.useState)(), onMouseEnter = (0, import_react34.useCallback)(() => {
+  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react28.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react28.useState)(), onMouseEnter = (0, import_react28.useCallback)(() => {
     setTimeoutFunc(setTimeout(() => setTooltipIsVisible(!0), 400));
-  }, []), onMouseLeave = (0, import_react34.useCallback)(() => {
+  }, []), onMouseLeave = (0, import_react28.useCallback)(() => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0)), setTooltipIsVisible(!1);
   }, [timeoutFunc]);
-  (0, import_react34.useEffect)(() => () => {
+  (0, import_react28.useEffect)(() => () => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0));
   }, [timeoutFunc]);
   let { relationship } = tag, objectEntity = Tag_default.getObjectEntity(tag), href = Entity_default.makeHrefForView(objectEntity);
-  return !objectEntity || !href ? null : /* @__PURE__ */ React.createElement(import_react35.Link, {
+  return !objectEntity || !href ? null : /* @__PURE__ */ React.createElement(import_react29.Link, {
     to: href,
     className: "relative block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800",
     onMouseEnter,
@@ -2320,7 +1889,7 @@ var TagLink = ({ tag }) => {
     className: `${tooltipIsVisible ? "flex" : "hidden"} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`
   }, relationship.name, " ", (_a = objectEntity.entityType) == null ? void 0 : _a.toUpperCase()));
 }, Tags = ({ audioItem }) => {
-  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react34.useMemo)(() => {
+  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react28.useMemo)(() => {
     if (!Array.isArray(tagsAsSubject))
       return [];
     let tagsWithoutTimeMarkers = tagsAsSubject.filter((tag) => typeof tag.subjectTimeMarkerSeconds != "number");
@@ -2347,9 +1916,9 @@ var TagLink = ({ tag }) => {
 }, Tags_default = Tags;
 
 // app/components/SaveItemButton.tsx
-var import_react36 = require("@remix-run/react");
+var import_react30 = require("@remix-run/react");
 function SaveItemButton({ audioItem }) {
-  let fetcher = (0, import_react36.useFetcher)();
+  let fetcher = (0, import_react30.useFetcher)();
   function onButtonClicked() {
     fetcher.submit({ audioItemId: audioItem.id }, { method: "post", action: "/saved-items" });
   }
@@ -2367,13 +1936,13 @@ function SaveItemButton({ audioItem }) {
 }
 
 // app/components/ViewCommentsButton.tsx
-var import_react39 = require("react"), import_react40 = require("@remix-run/react");
+var import_react33 = require("react"), import_react34 = require("@remix-run/react");
 
 // app/components/CreateCommentForm.tsx
-var import_react37 = require("@remix-run/react"), import_react38 = require("react"), CreateCommentForm = ({ parentAudioItem }) => {
+var import_react31 = require("@remix-run/react"), import_react32 = require("react"), CreateCommentForm = ({ parentAudioItem }) => {
   var _a;
-  let formRef = (0, import_react38.useRef)(null), fetcher = (0, import_react37.useFetcher)();
-  return (0, import_react38.useEffect)(() => {
+  let formRef = (0, import_react32.useRef)(null), fetcher = (0, import_react31.useFetcher)();
+  return (0, import_react32.useEffect)(() => {
     var _a2;
     fetcher.type === "done" && fetcher.data.comment && ((_a2 = formRef.current) == null || _a2.reset());
   }, [fetcher]), /* @__PURE__ */ React.createElement(fetcher.Form, {
@@ -2403,10 +1972,10 @@ var import_react37 = require("@remix-run/react"), import_react38 = require("reac
 
 // app/components/ViewCommentsButton.tsx
 var ViewCommentsButton = ({ audioItem }) => {
-  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react39.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react39.useState)(!1), onViewCommentsButtonClicked = (0, import_react39.useCallback)(async () => {
+  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react33.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react33.useState)(!1), onViewCommentsButtonClicked = (0, import_react33.useCallback)(async () => {
     setModalIsVisible(!0);
-  }, []), onCloseModal = (0, import_react39.useCallback)(() => setModalIsVisible(!1), []);
-  (0, import_react39.useEffect)(() => {
+  }, []), onCloseModal = (0, import_react33.useCallback)(() => setModalIsVisible(!1), []);
+  (0, import_react33.useEffect)(() => {
     var _a;
     if (!commentsRef.current)
       return;
@@ -2440,7 +2009,7 @@ var ViewCommentsButton = ({ audioItem }) => {
     key: index
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500 text-sm mb-1 flex flex-row items-center"
-  }, /* @__PURE__ */ React.createElement(import_react40.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react34.Link, {
     to: `/users/${createdByUser == null ? void 0 : createdByUser.id}`,
     className: "mr-1 flex flex-row items-center"
   }, /* @__PURE__ */ React.createElement("span", null, createdByUser == null ? void 0 : createdByUser.username)), " ", DateTime_default.formatDateYearTime(createdAt)), /* @__PURE__ */ React.createElement("div", {
@@ -2453,14 +2022,14 @@ var ViewCommentsButton = ({ audioItem }) => {
 }, ViewCommentsButton_default = ViewCommentsButton;
 
 // app/components/TimeMarkers.tsx
-var import_react41 = require("react"), import_react42 = require("@remix-run/react");
+var import_react35 = require("react"), import_react36 = require("@remix-run/react");
 var TimeMarkers = ({ audioItem }) => {
   let { tagsAsSubject } = audioItem, {
     activeAudioItem,
     setActiveAudioItem,
     playbackPositionSeconds,
     setSeekPositionSeconds
-  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react41.useMemo)(() => {
+  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react35.useMemo)(() => {
     let output = {};
     if (!tagsAsSubject)
       return output;
@@ -2471,13 +2040,13 @@ var TimeMarkers = ({ audioItem }) => {
       let existingTagsAtTimeMarker = output[tag.subjectTimeMarkerSeconds] ?? [];
       output[tag.subjectTimeMarkerSeconds] = [...existingTagsAtTimeMarker, tag];
     }), output;
-  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react41.useCallback)((event, timeMarker) => {
+  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react35.useCallback)((event, timeMarker) => {
     if (event.target.id === "time-marker-tag-link") {
       event.stopPropagation();
       return;
     }
     (activeAudioItem == null ? void 0 : activeAudioItem.id) !== audioItem.id && setActiveAudioItem(audioItem), setSeekPositionSeconds(parseInt(timeMarker));
-  }, [audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react41.useMemo)(() => {
+  }, [audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react35.useMemo)(() => {
     if (!audioItemIsInPlayer)
       return;
     let result;
@@ -2504,7 +2073,7 @@ var TimeMarkers = ({ audioItem }) => {
     return objectEntity ? /* @__PURE__ */ React.createElement("span", {
       className: "flex flex-row items-center",
       key: index2
-    }, /* @__PURE__ */ React.createElement(import_react42.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react36.Link, {
       to: Entity_default.makeHrefForView(objectEntity),
       id: "time-marker-tag-link"
     }, objectEntity.name, objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""), index2 !== tagsAsSubjectAtTimeMarker.length - 1 && /* @__PURE__ */ React.createElement("span", {
@@ -2528,14 +2097,14 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
     setActiveAudioItem,
     activeItemDurationSeconds,
     playbackPositionSeconds
-  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react43.useMemo)(() => Array.isArray(tags) ? tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds == "number") : [], [tags]), onPlayPressed = (0, import_react43.useCallback)(() => {
+  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react37.useMemo)(() => Array.isArray(tags) ? tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds == "number") : [], [tags]), onPlayPressed = (0, import_react37.useCallback)(() => {
     setActiveAudioItem(audioItem);
   }, [audioItem, setActiveAudioItem]), shouldShowPositionAndDuration = audioItemIsInPlayer && typeof playbackPositionSeconds == "number" && typeof activeItemDurationSeconds == "number", positionAndDuration = `${DateTime_default.formatSecondsAsDuration(playbackPositionSeconds ?? 0)} / ${DateTime_default.formatSecondsAsDuration(activeItemDurationSeconds ?? 0)}`, isTakenDown = status === "TAKEN_DOWN";
   return /* @__PURE__ */ React.createElement("div", {
     className: `flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 ${className ?? ""}`
   }, showTitle && /* @__PURE__ */ React.createElement("h2", {
     className: "mb-2"
-  }, /* @__PURE__ */ React.createElement(import_react44.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react38.Link, {
     to: `/entities/audio-items/${slug}`,
     className: "no-underline text-gray-700"
   }, name)), /* @__PURE__ */ React.createElement("div", {
@@ -2570,7 +2139,7 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
     className: "mt-4"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500 text-sm flex flex-col sm:flex-row"
-  }, "Added", createdByUser && /* @__PURE__ */ React.createElement(React.Fragment, null, " ", "by", " ", /* @__PURE__ */ React.createElement(import_react44.Link, {
+  }, "Added", createdByUser && /* @__PURE__ */ React.createElement(React.Fragment, null, " ", "by", " ", /* @__PURE__ */ React.createElement(import_react38.Link, {
     to: `/users/${createdByUser.id}`,
     className: "flex flex-row px-0 sm:px-1"
   }, createdByUser.username)), " ", DateTime_default.formatDateYearTime(createdAt)), /* @__PURE__ */ React.createElement("div", {
@@ -2589,49 +2158,49 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
 }, AudioItemCard_default = AudioItemCard;
 
 // app/components/AudioItemCompact.tsx
-var import_react48 = require("react"), import_react49 = require("@remix-run/react");
+var import_react42 = require("react"), import_react43 = require("@remix-run/react");
 
 // app/components/Menu.tsx
-var import_react45 = __toESM(require("react")), Menu = ({ children }) => {
-  let containerRef = (0, import_react45.useRef)(), [shouldOpenLeft, setShouldOpenLeft] = (0, import_react45.useState)(!0), [isOpen, setIsOpen] = (0, import_react45.useState)(!1);
-  (0, import_react45.useEffect)(() => {
+var import_react39 = __toESM(require("react")), Menu = ({ children }) => {
+  let containerRef = (0, import_react39.useRef)(), [shouldOpenLeft, setShouldOpenLeft] = (0, import_react39.useState)(!0), [isOpen, setIsOpen] = (0, import_react39.useState)(!1);
+  (0, import_react39.useEffect)(() => {
     let container = containerRef.current;
     if (container) {
       let { x } = container.getBoundingClientRect();
       x < 200 && setShouldOpenLeft(!1);
     }
   }, []);
-  let onIconClicked = (0, import_react45.useCallback)((event) => {
+  let onIconClicked = (0, import_react39.useCallback)((event) => {
     event.stopPropagation(), setIsOpen(!0);
-  }, []), onBackgroundClicked = (0, import_react45.useCallback)((event) => {
+  }, []), onBackgroundClicked = (0, import_react39.useCallback)((event) => {
     event.stopPropagation(), setIsOpen(!1);
   }, []), childrenAsArray = Array.isArray(children) ? children : [children];
-  return children ? /* @__PURE__ */ import_react45.default.createElement("div", {
+  return children ? /* @__PURE__ */ import_react39.default.createElement("div", {
     className: "relative",
     ref: containerRef
-  }, /* @__PURE__ */ import_react45.default.createElement("button", {
+  }, /* @__PURE__ */ import_react39.default.createElement("button", {
     className: "btn-secondary",
     onClick: onIconClicked,
     "aria-label": isOpen ? "Close Menu" : "Show Menu"
-  }, /* @__PURE__ */ import_react45.default.createElement("i", {
+  }, /* @__PURE__ */ import_react39.default.createElement("i", {
     className: "material-icons"
-  }, "expand_more")), isOpen && /* @__PURE__ */ import_react45.default.createElement(import_react45.default.Fragment, null, /* @__PURE__ */ import_react45.default.createElement("div", {
+  }, "expand_more")), isOpen && /* @__PURE__ */ import_react39.default.createElement(import_react39.default.Fragment, null, /* @__PURE__ */ import_react39.default.createElement("div", {
     className: "fixed top-0 right-0 bottom-0 left-0",
     onClick: onBackgroundClicked
-  }), /* @__PURE__ */ import_react45.default.createElement("ul", {
+  }), /* @__PURE__ */ import_react39.default.createElement("ul", {
     className: `absolute top-9 ${shouldOpenLeft ? "right-0 text-right" : "left-0 text-left"} flex flex-col bg-white rounded shadow-xl`
-  }, childrenAsArray.map((child, index) => /* @__PURE__ */ import_react45.default.createElement("li", {
+  }, childrenAsArray.map((child, index) => /* @__PURE__ */ import_react39.default.createElement("li", {
     className: `cursor-pointer first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200 ${index === 0 ? "hover:rounded-t" : ""} ${index === childrenAsArray.length - 1 ? "hover:rounded-b" : ""}`,
     key: index
   }, child))))) : null;
 }, Menu_default = Menu;
 
 // app/components/RequestTakedownButton.tsx
-var import_react47 = require("react"), import_client20 = require("@apollo/client");
+var import_react41 = require("react"), import_client16 = require("@apollo/client");
 
 // app/components/CreateTakedownRequestForm.tsx
-var import_react46 = require("react"), import_client19 = require("@apollo/client");
-var CREATE_TAKEDOWN_REQUEST = import_client19.gql`
+var import_react40 = require("react"), import_client15 = require("@apollo/client");
+var CREATE_TAKEDOWN_REQUEST = import_client15.gql`
 	mutation CreateTakedownRequest($input: CreateTakedownRequestInput!) {
 		createTakedownRequest(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -2639,7 +2208,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client19.gql`
 	}
 	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `, CreateTakedownRequestForm = ({ entity, onSuccess }) => {
-  let defaultType = Object.keys(TakedownRequestType)[0], [type, setType] = (0, import_react46.useState)(defaultType), [message, setMessage] = (0, import_react46.useState)(""), [validationError, setValidationError] = (0, import_react46.useState)(""), [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client19.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" }), getLabelForType = (type2) => {
+  let defaultType = Object.keys(TakedownRequestType)[0], [type, setType] = (0, import_react40.useState)(defaultType), [message, setMessage] = (0, import_react40.useState)(""), [validationError, setValidationError] = (0, import_react40.useState)(""), [createTakedownRequest, { loading, data: data2, error: error2 }] = (0, import_client15.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" }), getLabelForType = (type2) => {
     switch (TakedownRequestType[type2]) {
       case "Performer" /* Performer */:
         return "I'm a performer in it";
@@ -2648,7 +2217,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client19.gql`
       default:
         return type2;
     }
-  }, onSubmitForm = (0, import_react46.useCallback)((event) => {
+  }, onSubmitForm = (0, import_react40.useCallback)((event) => {
     if (event.preventDefault(), setValidationError(""), !message)
       return setValidationError("Please include details about your request");
     let input = {
@@ -2666,7 +2235,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client19.gql`
     } catch {
     }
   }, [message, entity, type, createTakedownRequest]);
-  return (0, import_react46.useEffect)(() => {
+  return (0, import_react40.useEffect)(() => {
     var _a;
     ((_a = data2 == null ? void 0 : data2.createTakedownRequest) == null ? void 0 : _a.id) && onSuccess && onSuccess(data2.createTakedownRequest);
   }, [data2, onSuccess]), /* @__PURE__ */ React.createElement("form", {
@@ -2701,7 +2270,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client19.gql`
 }, CreateTakedownRequestForm_default = CreateTakedownRequestForm;
 
 // app/components/RequestTakedownButton.tsx
-var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client20.gql`
+var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client16.gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
 		takedownRequestsForEntity(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -2709,7 +2278,7 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client20.gql`
 	}
 	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `, RequestTakedownButton = ({ entity, onTakedownRequestCreated }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [modalIsVisible, setModalIsVisible] = (0, import_react47.useState)(!1), closeModal = (0, import_react47.useCallback)(() => setModalIsVisible(!1), []), { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client20.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
+  let { currentUser, requireLogin } = useRequireLogin_default(), [modalIsVisible, setModalIsVisible] = (0, import_react41.useState)(!1), closeModal = (0, import_react41.useCallback)(() => setModalIsVisible(!1), []), { loading, data: data2, error: error2, refetch: refetch2 } = (0, import_client16.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
     variables: {
       input: {
         entityType: entity.entityType,
@@ -2717,19 +2286,19 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client20.gql`
       }
     },
     skip: !modalIsVisible
-  }), takedownRequests = (data2 == null ? void 0 : data2.takedownRequestsForEntity) ?? [], onButtonClicked = (0, import_react47.useCallback)(async () => {
+  }), takedownRequests = (data2 == null ? void 0 : data2.takedownRequestsForEntity) ?? [], onButtonClicked = (0, import_react41.useCallback)(async () => {
     if (currentUser)
       setModalIsVisible(!0);
     else {
       let redirectTo = Entity_default.makeHrefForView(entity);
       await requireLogin({ redirectTo });
     }
-  }, [currentUser, entity, requireLogin]), onSuccess = (0, import_react47.useCallback)(async (takedownRequest) => {
+  }, [currentUser, entity, requireLogin]), onSuccess = (0, import_react41.useCallback)(async (takedownRequest) => {
     try {
       await refetch2(), onTakedownRequestCreated && await onTakedownRequestCreated(takedownRequest);
     } catch {
     }
-  }, [refetch2, onTakedownRequestCreated]), modalContent = (0, import_react47.useMemo)(() => {
+  }, [refetch2, onTakedownRequestCreated]), modalContent = (0, import_react41.useMemo)(() => {
     let pendingTakedown = takedownRequests.find(isPendingTakedownRequest), approvedTakedown = takedownRequests.find(isApprovedTakedownRequest);
     return loading ? /* @__PURE__ */ React.createElement(LoadingBlock_default, null) : error2 ? /* @__PURE__ */ React.createElement("div", {
       className: "text-red-600"
@@ -2758,9 +2327,9 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client20.gql`
 
 // app/components/AudioItemCompact.tsx
 var AudioItemCompact = ({ audioItem, className }) => {
-  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react48.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react48.useCallback)(() => {
+  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react42.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react42.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react48.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react42.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     return isTakenDown ? /* @__PURE__ */ React.createElement("div", {
       className: "text-gray-500"
@@ -2782,7 +2351,7 @@ var AudioItemCompact = ({ audioItem, className }) => {
     className: "flex justify-center items-center w-14 mr-3"
   }, playButtonMarkup), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-1 flex-col overflow-hidden"
-  }, /* @__PURE__ */ React.createElement(import_react49.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react43.Link, {
     to: `/entities/audio-items/${slug}`
   }, name), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
@@ -2791,7 +2360,7 @@ var AudioItemCompact = ({ audioItem, className }) => {
     return objectEntity ? /* @__PURE__ */ React.createElement("div", {
       key: index,
       className: "ml-1 whitespace-pre"
-    }, /* @__PURE__ */ React.createElement(import_react49.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react43.Link, {
       to: Entity_default.makeHrefForView(objectEntity)
     }, objectEntity.name, objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""), index !== sortedTags.length - 1 && ", ") : null;
   }), /* @__PURE__ */ React.createElement(AddTagButton_default, {
@@ -2821,11 +2390,11 @@ var AudioItemCompact = ({ audioItem, className }) => {
 }, AudioItemCompact_default = AudioItemCompact;
 
 // app/components/AudioItemTextOnly.tsx
-var import_react50 = require("react"), import_react51 = require("@remix-run/react");
+var import_react44 = require("react"), import_react45 = require("@remix-run/react");
 var AudioItemTextOnly = ({ audioItem, className }) => {
-  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react50.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react50.useCallback)(() => {
+  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react44.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react44.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react50.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react44.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     return isTakenDown ? /* @__PURE__ */ React.createElement("div", {
       className: "text-gray-500"
@@ -2847,7 +2416,7 @@ var AudioItemTextOnly = ({ audioItem, className }) => {
     className: "flex justify-center items-center w-14 mr-3"
   }, playButtonMarkup), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-1 flex-col overflow-hidden"
-  }, /* @__PURE__ */ React.createElement(import_react51.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react45.Link, {
     to: `/entities/audio-items/${slug}`
   }, name), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
@@ -2858,7 +2427,7 @@ var AudioItemTextOnly = ({ audioItem, className }) => {
     return /* @__PURE__ */ React.createElement("div", {
       key: index,
       className: "ml-1 whitespace-pre"
-    }, /* @__PURE__ */ React.createElement(import_react51.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react45.Link, {
       to: Entity_default.makeHrefForView(objectEntity)
     }, objectEntity == null ? void 0 : objectEntity.name), index !== sortedTags.length - 1 && ", ");
   }))));
@@ -2925,7 +2494,7 @@ async function loader3({
   };
 }
 var ViewAudioItemBySlug = () => {
-  let { audioItem } = (0, import_react52.useLoaderData)();
+  let { audioItem } = (0, import_react46.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "mb-6"
   }, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -2939,7 +2508,7 @@ var ViewAudioItemBySlug = () => {
     className: "mb-2"
   }), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row mb-6"
-  }, /* @__PURE__ */ React.createElement(import_react52.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react46.Link, {
     to: Entity_default.makeHrefForAbout(audioItem)
   }, "About"))), /* @__PURE__ */ React.createElement(AudioItem_default, {
     audioItem,
@@ -2952,9 +2521,9 @@ var about_exports = {};
 __export(about_exports, {
   default: () => about_default
 });
-var import_react53 = require("@remix-run/react"), import_react54 = require("@remix-run/react");
+var import_react47 = require("@remix-run/react"), import_react48 = require("@remix-run/react");
 var AudioItemAbout = () => {
-  let navigate = (0, import_react54.useNavigate)(), { slug } = navigate.query, { name, description, aliases, itmaAtomSlug } = (data == null ? void 0 : data.audioItem) ?? {};
+  let navigate = (0, import_react48.useNavigate)(), { slug } = navigate.query, { name, description, aliases, itmaAtomSlug } = (data == null ? void 0 : data.audioItem) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -2982,7 +2551,7 @@ var AudioItemAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react53.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react47.Link, {
     to: `/entities/audio-items/${slug}/edit`
   }, "Edit")));
 }, about_default = AudioItemAbout;
@@ -2992,11 +2561,11 @@ var edit_exports = {};
 __export(edit_exports, {
   default: () => edit_default
 });
-var import_react57 = require("@remix-run/react"), import_client22 = require("@apollo/client");
+var import_react51 = require("@remix-run/react"), import_client18 = require("@apollo/client");
 
 // app/components/EditAudioItemForm.tsx
-var import_react55 = require("react"), import_client21 = require("@apollo/client"), import_react56 = require("@remix-run/react");
-var UPDATE_AUDIO_ITEM_MUTATION = import_client21.gql`
+var import_react49 = require("react"), import_client17 = require("@apollo/client"), import_react50 = require("@remix-run/react");
+var UPDATE_AUDIO_ITEM_MUTATION = import_client17.gql`
 	mutation UpdateAudioItem($slug: String!, $input: UpdateAudioItemInput!) {
 		updateAudioItem(slug: $slug, input: $input) {
 			...AudioItem
@@ -3004,9 +2573,9 @@ var UPDATE_AUDIO_ITEM_MUTATION = import_client21.gql`
 	}
 	${EntityFragments.audioItem}
 `, EditAudioItemForm = ({ audioItem, onSuccess }) => {
-  let navigate = (0, import_react56.useNavigate)(), [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client21.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
+  let navigate = (0, import_react50.useNavigate)(), [updateAudioItem, { loading, error: error2, data: data2 }] = (0, import_client17.useMutation)(UPDATE_AUDIO_ITEM_MUTATION, {
     errorPolicy: "all"
-  }), [name, setName] = (0, import_react55.useState)(audioItem.name), [aliases, setAliases] = (0, import_react55.useState)(audioItem.aliases), [description, setDescription] = (0, import_react55.useState)(audioItem.description), onUpdateAudioItem = (event) => {
+  }), [name, setName] = (0, import_react49.useState)(audioItem.name), [aliases, setAliases] = (0, import_react49.useState)(audioItem.aliases), [description, setDescription] = (0, import_react49.useState)(audioItem.description), onUpdateAudioItem = (event) => {
     event.preventDefault();
     let input = {
       name,
@@ -3015,7 +2584,7 @@ var UPDATE_AUDIO_ITEM_MUTATION = import_client21.gql`
     };
     updateAudioItem({ variables: { slug: audioItem.slug, input } });
   };
-  return (0, import_react55.useEffect)(() => {
+  return (0, import_react49.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updateAudioItem) {
       if (onSuccess)
         return onSuccess(data2.updateAudioItem);
@@ -3055,7 +2624,7 @@ var UPDATE_AUDIO_ITEM_MUTATION = import_client21.gql`
 }, EditAudioItemForm_default = EditAudioItemForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/$slug/edit.tsx
-var AUDIO_ITEM_QUERY = import_client22.gql`
+var AUDIO_ITEM_QUERY = import_client18.gql`
 	query AudioItem($slug: String!) {
 		audioItem(slug: $slug) {
 			...AudioItem
@@ -3063,7 +2632,7 @@ var AUDIO_ITEM_QUERY = import_client22.gql`
 	}
 	${EntityFragments.audioItem}
 `, EditAudioItem = () => {
-  let navigate = (0, import_react57.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client22.useQuery)(AUDIO_ITEM_QUERY, {
+  let navigate = (0, import_react51.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client18.useQuery)(AUDIO_ITEM_QUERY, {
     variables: { slug },
     skip: !slug
   }), onEditSuccess = (audioItem2) => {
@@ -3087,9 +2656,9 @@ var tags_exports = {};
 __export(tags_exports, {
   default: () => tags_default
 });
-var import_react58 = require("react"), import_react59 = require("@remix-run/react"), ViewAudioItemTags = () => {
-  let navigate = (0, import_react59.useNavigate)(), { slug } = navigate.query;
-  return (0, import_react58.useEffect)(() => {
+var import_react52 = require("react"), import_react53 = require("@remix-run/react"), ViewAudioItemTags = () => {
+  let navigate = (0, import_react53.useNavigate)(), { slug } = navigate.query;
+  return (0, import_react52.useEffect)(() => {
     slug && navigate(`/entities/audio-items/${slug}`);
   }, [navigate, slug]), null;
 }, tags_default = ViewAudioItemTags;
@@ -3099,9 +2668,9 @@ var audio_items_exports = {};
 __export(audio_items_exports, {
   default: () => audio_items_default
 });
-var import_react60 = require("react"), import_react61 = require("@remix-run/react"), ViewAudioItems = () => {
-  let navigate = (0, import_react61.useNavigate)();
-  return (0, import_react60.useEffect)(() => {
+var import_react54 = require("react"), import_react55 = require("@remix-run/react"), ViewAudioItems = () => {
+  let navigate = (0, import_react55.useNavigate)();
+  return (0, import_react54.useEffect)(() => {
     navigate("/");
   }, [navigate]), null;
 }, audio_items_default = ViewAudioItems;
@@ -3112,16 +2681,16 @@ __export(slug_exports2, {
   default: () => slug_default2,
   loader: () => loader4
 });
-var import_react67 = require("@remix-run/react");
+var import_react61 = require("@remix-run/react");
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_react65 = require("react"), import_react66 = require("@remix-run/react"), import_react_intersection_observer = require("react-intersection-observer");
+var import_react59 = require("react"), import_react60 = require("@remix-run/react"), import_react_intersection_observer = require("react-intersection-observer");
 
 // app/hooks/useFilters.ts
-var import_react63 = require("react"), import_react64 = require("@remix-run/react");
+var import_react57 = require("react"), import_react58 = require("@remix-run/react");
 
 // app/components/Filters.tsx
-var import_react62 = __toESM(require("react"));
+var import_react56 = __toESM(require("react"));
 var Filters = ({
   totalItems,
   page,
@@ -3134,57 +2703,57 @@ var Filters = ({
   onChangeViewAs,
   className
 }) => {
-  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react62.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react62.useMemo)(() => {
+  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react56.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react56.useMemo)(() => {
     let output = [], i = 1;
     for (; i <= totalPages; )
-      output.push(/* @__PURE__ */ import_react62.default.createElement("option", {
+      output.push(/* @__PURE__ */ import_react56.default.createElement("option", {
         value: i,
         key: i
       }, i)), i++;
     return output;
-  }, [totalPages]), perPageOptions = (0, import_react62.useMemo)(() => {
+  }, [totalPages]), perPageOptions = (0, import_react56.useMemo)(() => {
     let output = [];
     for (let value in PerPage)
-      isNaN(Number(value)) || output.push(/* @__PURE__ */ import_react62.default.createElement("option", {
+      isNaN(Number(value)) || output.push(/* @__PURE__ */ import_react56.default.createElement("option", {
         value,
         key: value
       }, value));
     return output;
   }, []);
-  return /* @__PURE__ */ import_react62.default.createElement("div", {
+  return /* @__PURE__ */ import_react56.default.createElement("div", {
     className: `flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 ${className ?? ""}`,
     id: "filters"
-  }, shouldRenderPagination && /* @__PURE__ */ import_react62.default.createElement("div", {
+  }, shouldRenderPagination && /* @__PURE__ */ import_react56.default.createElement("div", {
     className: `flex flex-row items-center mr-0 md:mb-0 ${shouldRenderSortBy || shouldRenderViewAs ? "mb-4 md:mr-6" : ""}`
-  }, /* @__PURE__ */ import_react62.default.createElement("div", {
+  }, /* @__PURE__ */ import_react56.default.createElement("div", {
     className: "mr-6"
-  }, "Page", " ", /* @__PURE__ */ import_react62.default.createElement("select", {
+  }, "Page", " ", /* @__PURE__ */ import_react56.default.createElement("select", {
     value: page,
     onChange: onChangePage
-  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react62.default.createElement("div", null, /* @__PURE__ */ import_react62.default.createElement("select", {
+  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react56.default.createElement("div", null, /* @__PURE__ */ import_react56.default.createElement("select", {
     value: perPage,
     onChange: onChangePerPage
-  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react62.default.createElement("div", {
+  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react56.default.createElement("div", {
     className: `flex flex-row items-center mr-0 md:mb-0 ${shouldRenderViewAs ? "mb-4 md:mr-6" : ""}`
-  }, "Sort by", /* @__PURE__ */ import_react62.default.createElement("select", {
+  }, "Sort by", /* @__PURE__ */ import_react56.default.createElement("select", {
     className: "ml-1",
     value: sortBy,
     onChange: onChangeSortBy
-  }, /* @__PURE__ */ import_react62.default.createElement("option", {
+  }, /* @__PURE__ */ import_react56.default.createElement("option", {
     value: "RecentlyTagged" /* RecentlyTagged */
-  }, "Recently tagged"), /* @__PURE__ */ import_react62.default.createElement("option", {
+  }, "Recently tagged"), /* @__PURE__ */ import_react56.default.createElement("option", {
     value: "RecentlyAdded" /* RecentlyAdded */
-  }, "Newest"))), shouldRenderViewAs && /* @__PURE__ */ import_react62.default.createElement("div", {
+  }, "Newest"))), shouldRenderViewAs && /* @__PURE__ */ import_react56.default.createElement("div", {
     className: "flex flex-row items-center mr-0 md:mb-0"
-  }, "View as", /* @__PURE__ */ import_react62.default.createElement("select", {
+  }, "View as", /* @__PURE__ */ import_react56.default.createElement("select", {
     className: "ml-1",
     value: viewAs,
     onChange: onChangeViewAs
-  }, /* @__PURE__ */ import_react62.default.createElement("option", {
+  }, /* @__PURE__ */ import_react56.default.createElement("option", {
     value: "Cards" /* Cards */
-  }, "Cards"), /* @__PURE__ */ import_react62.default.createElement("option", {
+  }, "Cards"), /* @__PURE__ */ import_react56.default.createElement("option", {
     value: "Compact" /* Compact */
-  }, "Compact"), /* @__PURE__ */ import_react62.default.createElement("option", {
+  }, "Compact"), /* @__PURE__ */ import_react56.default.createElement("option", {
     value: "List" /* List */
   }, "List"))));
 }, Filters_default = Filters;
@@ -3197,14 +2766,14 @@ var useFilters = ({
   defaultSortBy = "RecentlyTagged" /* RecentlyTagged */,
   defaultViewAs = "Cards" /* Cards */
 } = {}) => {
-  let navigate = (0, import_react64.useNavigate)(), { pathname, search } = (0, import_react64.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react63.useCallback)((paramsToUpdate = {}) => {
+  let navigate = (0, import_react58.useNavigate)(), { pathname, search } = (0, import_react58.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react57.useCallback)((paramsToUpdate = {}) => {
     let queryParams2 = new URLSearchParams(search);
     return Object.keys(paramsToUpdate).forEach((paramName) => {
       let value = paramsToUpdate[paramName];
       value ? queryParams2.set(paramName, value) : queryParams2.delete(paramName);
     }), navigate(`${pathname}?${queryParams2.toString()}`);
-  }, [navigate, pathname, search]), onChangePage = (0, import_react63.useCallback)((event) => updateQueryParams({ page: event.target.value }), [updateQueryParams]), onChangePerPage = (0, import_react63.useCallback)((event) => updateQueryParams({ perPage: event.target.value, page: "1" }), [updateQueryParams]), onChangeSortBy = (0, import_react63.useCallback)((event) => updateQueryParams({ sortBy: event.target.value }), [updateQueryParams]), onChangeViewAs = (0, import_react63.useCallback)((event) => updateQueryParams({ viewAs: event.target.value }), [updateQueryParams]);
-  return (0, import_react63.useMemo)(() => ({
+  }, [navigate, pathname, search]), onChangePage = (0, import_react57.useCallback)((event) => updateQueryParams({ page: event.target.value }), [updateQueryParams]), onChangePerPage = (0, import_react57.useCallback)((event) => updateQueryParams({ perPage: event.target.value, page: "1" }), [updateQueryParams]), onChangeSortBy = (0, import_react57.useCallback)((event) => updateQueryParams({ sortBy: event.target.value }), [updateQueryParams]), onChangeViewAs = (0, import_react57.useCallback)((event) => updateQueryParams({ viewAs: event.target.value }), [updateQueryParams]);
+  return (0, import_react57.useMemo)(() => ({
     Filters: Filters_default,
     filtersProps: {
       totalItems,
@@ -3243,9 +2812,9 @@ var ViewEntityAndAudioItems = ({
 }) => {
   let { name } = entity ?? {}, { ref: metadataRef, inView: metadataInView } = (0, import_react_intersection_observer.useInView)({
     initialInView: !0
-  }), { search } = (0, import_react66.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
+  }), { search } = (0, import_react60.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalAudioItems
-  }), filtersRef = (0, import_react65.useRef)(null);
+  }), filtersRef = (0, import_react59.useRef)(null);
   return /* @__PURE__ */ React.createElement("div", {
     className: `flex flex-1 flex-col mb-8 ${className ?? ""}`
   }, /* @__PURE__ */ React.createElement("div", {
@@ -3264,10 +2833,10 @@ var ViewEntityAndAudioItems = ({
     className: "flex flex-row mb-6"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, totalAudioItems ?? "", " Audio Item", totalAudioItems === 1 ? "" : "s"), /* @__PURE__ */ React.createElement(import_react66.Link, {
+  }, totalAudioItems ?? "", " Audio Item", totalAudioItems === 1 ? "" : "s"), /* @__PURE__ */ React.createElement(import_react60.Link, {
     to: Entity_default.makeHrefForAbout(entity),
     className: "ml-4"
-  }, "About"), /* @__PURE__ */ React.createElement(import_react66.Link, {
+  }, "About"), /* @__PURE__ */ React.createElement(import_react60.Link, {
     to: Entity_default.makeHrefForTags(entity),
     className: "ml-4"
   }, "Tags")), totalAudioItems > 0 && /* @__PURE__ */ React.createElement("div", {
@@ -3348,7 +2917,7 @@ async function loader4({
   };
 }
 var ViewCollectionBySlug = () => {
-  let { collection, audioItems, totalAudioItems } = (0, import_react67.useLoaderData)();
+  let { collection, audioItems, totalAudioItems } = (0, import_react61.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: collection,
     audioItems,
@@ -3361,9 +2930,9 @@ var about_exports2 = {};
 __export(about_exports2, {
   default: () => about_default2
 });
-var import_react68 = require("@remix-run/react"), import_react69 = require("@remix-run/react");
+var import_react62 = require("@remix-run/react"), import_react63 = require("@remix-run/react");
 var CollectionAbout = () => {
-  let navigate = (0, import_react69.useNavigate)(), { slug } = navigate.query, { name, description, aliases, itmaAtomSlug } = (data == null ? void 0 : data.collection) ?? {};
+  let navigate = (0, import_react63.useNavigate)(), { slug } = navigate.query, { name, description, aliases, itmaAtomSlug } = (data == null ? void 0 : data.collection) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -3391,7 +2960,7 @@ var CollectionAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react68.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react62.Link, {
     to: `/entities/collections/${slug}/edit`
   }, "Edit")));
 }, about_default2 = CollectionAbout;
@@ -3401,11 +2970,11 @@ var edit_exports2 = {};
 __export(edit_exports2, {
   default: () => edit_default2
 });
-var import_react72 = require("@remix-run/react"), import_client24 = require("@apollo/client");
+var import_react66 = require("@remix-run/react"), import_client20 = require("@apollo/client");
 
 // app/components/EditCollectionForm.tsx
-var import_react70 = require("react"), import_client23 = require("@apollo/client"), import_react71 = require("@remix-run/react");
-var UPDATE_COLLECTION_MUTATION = import_client23.gql`
+var import_react64 = require("react"), import_client19 = require("@apollo/client"), import_react65 = require("@remix-run/react");
+var UPDATE_COLLECTION_MUTATION = import_client19.gql`
 	mutation UpdateCollection($slug: String!, $input: UpdateCollectionInput!) {
 		updateCollection(slug: $slug, input: $input) {
 			...Collection
@@ -3413,9 +2982,9 @@ var UPDATE_COLLECTION_MUTATION = import_client23.gql`
 	}
 	${EntityFragments.collection}
 `, EditCollectionForm = ({ collection, onSuccess }) => {
-  let navigate = (0, import_react71.useNavigate)(), [updateCollection, { loading, error: error2, data: data2 }] = (0, import_client23.useMutation)(UPDATE_COLLECTION_MUTATION, {
+  let navigate = (0, import_react65.useNavigate)(), [updateCollection, { loading, error: error2, data: data2 }] = (0, import_client19.useMutation)(UPDATE_COLLECTION_MUTATION, {
     errorPolicy: "all"
-  }), [name, setName] = (0, import_react70.useState)(collection.name), [aliases, setAliases] = (0, import_react70.useState)(collection.aliases), [description, setDescription] = (0, import_react70.useState)(collection.description), onUpdateCollection = (event) => {
+  }), [name, setName] = (0, import_react64.useState)(collection.name), [aliases, setAliases] = (0, import_react64.useState)(collection.aliases), [description, setDescription] = (0, import_react64.useState)(collection.description), onUpdateCollection = (event) => {
     event.preventDefault();
     let input = {
       name,
@@ -3424,7 +2993,7 @@ var UPDATE_COLLECTION_MUTATION = import_client23.gql`
     };
     updateCollection({ variables: { slug: collection.slug, input } });
   };
-  return (0, import_react70.useEffect)(() => {
+  return (0, import_react64.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updateCollection) {
       if (onSuccess)
         return onSuccess(data2.updateCollection);
@@ -3463,7 +3032,7 @@ var UPDATE_COLLECTION_MUTATION = import_client23.gql`
 }, EditCollectionForm_default = EditCollectionForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/$slug/edit.tsx
-var COLLECTION_QUERY = import_client24.gql`
+var COLLECTION_QUERY = import_client20.gql`
 	query Collection($slug: String!) {
 		collection(slug: $slug) {
 			...Collection
@@ -3471,7 +3040,7 @@ var COLLECTION_QUERY = import_client24.gql`
 	}
 	${EntityFragments.collection}
 `, CollectionEdit = () => {
-  let navigate = (0, import_react72.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client24.useQuery)(COLLECTION_QUERY, {
+  let navigate = (0, import_react66.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client20.useQuery)(COLLECTION_QUERY, {
     variables: { slug },
     skip: !slug
   }), onEditSuccess = (collection2) => {
@@ -3495,10 +3064,10 @@ var tags_exports2 = {};
 __export(tags_exports2, {
   default: () => tags_default2
 });
-var import_react74 = require("@remix-run/react");
+var import_react68 = require("@remix-run/react");
 
 // app/components/TagWithRelationshipToObject.tsx
-var import_react73 = require("@remix-run/react");
+var import_react67 = require("@remix-run/react");
 var TagWithRelationshipToObject = ({ tag, className }) => {
   let { relationship, objectEntity, subjectTimeMarkerSeconds } = tag;
   if (!objectEntity)
@@ -3508,14 +3077,14 @@ var TagWithRelationshipToObject = ({ tag, className }) => {
     className: `text-gray-500 ${className ?? ""}`
   }, /* @__PURE__ */ React.createElement("em", null, relationship.name), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "uppercase text-sm"
-  }, objectEntity.entityType), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react73.Link, {
+  }, objectEntity.entityType), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react67.Link, {
     to: Entity_default.makeHrefForView(objectEntity)
   }, objectEntity.name), /* @__PURE__ */ React.createElement("br", null), typeof subjectTimeMarkerSeconds == "number" && /* @__PURE__ */ React.createElement("em", null, `at ${DateTime_default.formatSecondsAsDuration(subjectTimeMarkerSeconds)}`));
 }, TagWithRelationshipToObject_default = TagWithRelationshipToObject;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/$slug/tags.tsx
 var CollectionTags = () => {
-  let navigate = (0, import_react74.useNavigate)(), { slug } = navigate.query, { collection } = data ?? {}, { name, tags } = collection ?? {}, sortedTags = Tag_default.sort(tags);
+  let navigate = (0, import_react68.useNavigate)(), { slug } = navigate.query, { collection } = data ?? {}, { name, tags } = collection ?? {}, sortedTags = Tag_default.sort(tags);
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - Tags`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -3547,7 +3116,7 @@ __export(collections_exports, {
   loader: () => loader5,
   meta: () => meta2
 });
-var import_react75 = require("@remix-run/react");
+var import_react69 = require("@remix-run/react");
 function meta2() {
   return {
     title: "Trad Archive - Collections"
@@ -3561,7 +3130,7 @@ function loader5() {
   });
 }
 var Collections = () => {
-  let collections = (0, import_react75.useLoaderData)();
+  let collections = (0, import_react69.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Collections"), collections.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -3569,7 +3138,7 @@ var Collections = () => {
   }, "No Collections found"), collections.length > 0 && /* @__PURE__ */ React.createElement("ul", null, collections.map((collection, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react75.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react69.Link, {
     to: Entity_default.makeHrefForView(collection)
   }, collection.name)))));
 }, collections_default = Collections;
@@ -3580,7 +3149,7 @@ __export(slug_exports3, {
   default: () => slug_default3,
   loader: () => loader6
 });
-var import_react76 = require("@remix-run/react");
+var import_react70 = require("@remix-run/react");
 async function loader6({
   params,
   request
@@ -3646,7 +3215,7 @@ async function loader6({
   };
 }
 var ViewInstrumentBySlug = () => {
-  let { instrument, audioItems, totalAudioItems } = (0, import_react76.useLoaderData)();
+  let { instrument, audioItems, totalAudioItems } = (0, import_react70.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: instrument,
     audioItems,
@@ -3659,9 +3228,9 @@ var about_exports3 = {};
 __export(about_exports3, {
   default: () => about_default3
 });
-var import_react77 = require("@remix-run/react"), import_react78 = require("@remix-run/react");
+var import_react71 = require("@remix-run/react"), import_react72 = require("@remix-run/react");
 var InstrumentAbout = () => {
-  let navigate = (0, import_react78.useNavigate)(), { slug } = navigate.query, { name, description, aliases } = (data == null ? void 0 : data.instrument) ?? {};
+  let navigate = (0, import_react72.useNavigate)(), { slug } = navigate.query, { name, description, aliases } = (data == null ? void 0 : data.instrument) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -3679,7 +3248,7 @@ var InstrumentAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react77.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react71.Link, {
     to: `/entities/instruments/${slug}/edit`
   }, "Edit")));
 }, about_default3 = InstrumentAbout;
@@ -3689,11 +3258,11 @@ var edit_exports3 = {};
 __export(edit_exports3, {
   default: () => edit_default3
 });
-var import_react81 = require("@remix-run/react"), import_client26 = require("@apollo/client");
+var import_react75 = require("@remix-run/react"), import_client22 = require("@apollo/client");
 
 // app/components/EditInstrumentForm.tsx
-var import_react79 = require("react"), import_client25 = require("@apollo/client"), import_react80 = require("@remix-run/react");
-var UPDATE_INSTRUMENT_MUTATION = import_client25.gql`
+var import_react73 = require("react"), import_client21 = require("@apollo/client"), import_react74 = require("@remix-run/react");
+var UPDATE_INSTRUMENT_MUTATION = import_client21.gql`
 	mutation UpdateInstrument($slug: String!, $input: UpdateInstrumentInput!) {
 		updateInstrument(slug: $slug, input: $input) {
 			...Instrument
@@ -3701,9 +3270,9 @@ var UPDATE_INSTRUMENT_MUTATION = import_client25.gql`
 	}
 	${EntityFragments.instrument}
 `, EditInstrumentForm = ({ instrument, onSuccess }) => {
-  let navigate = (0, import_react80.useNavigate)(), [updateInstrument, { loading, error: error2, data: data2 }] = (0, import_client25.useMutation)(UPDATE_INSTRUMENT_MUTATION, {
+  let navigate = (0, import_react74.useNavigate)(), [updateInstrument, { loading, error: error2, data: data2 }] = (0, import_client21.useMutation)(UPDATE_INSTRUMENT_MUTATION, {
     errorPolicy: "all"
-  }), [name, setName] = (0, import_react79.useState)(instrument.name), [aliases, setAliases] = (0, import_react79.useState)(instrument.aliases), [description, setDescription] = (0, import_react79.useState)(instrument.description), onUpdateInstrument = (event) => {
+  }), [name, setName] = (0, import_react73.useState)(instrument.name), [aliases, setAliases] = (0, import_react73.useState)(instrument.aliases), [description, setDescription] = (0, import_react73.useState)(instrument.description), onUpdateInstrument = (event) => {
     event.preventDefault();
     let input = {
       name,
@@ -3712,7 +3281,7 @@ var UPDATE_INSTRUMENT_MUTATION = import_client25.gql`
     };
     updateInstrument({ variables: { slug: instrument.slug, input } });
   };
-  return (0, import_react79.useEffect)(() => {
+  return (0, import_react73.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updateInstrument) {
       if (onSuccess)
         return onSuccess(data2.updateInstrument);
@@ -3752,7 +3321,7 @@ var UPDATE_INSTRUMENT_MUTATION = import_client25.gql`
 }, EditInstrumentForm_default = EditInstrumentForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/instruments/$slug/edit.tsx
-var INSTRUMENT_QUERY = import_client26.gql`
+var INSTRUMENT_QUERY = import_client22.gql`
 	query Instrument($slug: String!) {
 		instrument(slug: $slug) {
 			...Instrument
@@ -3760,7 +3329,7 @@ var INSTRUMENT_QUERY = import_client26.gql`
 	}
 	${EntityFragments.instrument}
 `, EditInstrument = () => {
-  let navigate = (0, import_react81.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client26.useQuery)(INSTRUMENT_QUERY, {
+  let navigate = (0, import_react75.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client22.useQuery)(INSTRUMENT_QUERY, {
     variables: { slug },
     skip: !slug
   }), onEditSuccess = (instrument2) => {
@@ -3784,9 +3353,9 @@ var tags_exports3 = {};
 __export(tags_exports3, {
   default: () => tags_default3
 });
-var import_react82 = require("@remix-run/react");
+var import_react76 = require("@remix-run/react");
 var InstrumentTags = () => {
-  let navigate = (0, import_react82.useNavigate)(), { slug } = navigate.query, { instrument } = data ?? {}, { name, tags } = instrument ?? {}, sortedTags = Tag_default.sort(tags);
+  let navigate = (0, import_react76.useNavigate)(), { slug } = navigate.query, { instrument } = data ?? {}, { name, tags } = instrument ?? {}, sortedTags = Tag_default.sort(tags);
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - Tags`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -3818,7 +3387,7 @@ __export(instruments_exports, {
   loader: () => loader7,
   meta: () => meta3
 });
-var import_react83 = require("@remix-run/react");
+var import_react77 = require("@remix-run/react");
 function meta3() {
   return {
     title: "Trad Archive - Instruments"
@@ -3832,7 +3401,7 @@ function loader7() {
   });
 }
 var Instruments = () => {
-  let instruments = (0, import_react83.useLoaderData)();
+  let instruments = (0, import_react77.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Instruments"), instruments.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -3840,7 +3409,7 @@ var Instruments = () => {
   }, "No Instruments found"), instruments.length > 0 && /* @__PURE__ */ React.createElement("ul", null, instruments.map((instrument, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react83.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react77.Link, {
     to: Entity_default.makeHrefForView(instrument)
   }, instrument.name)))));
 }, instruments_default = Instruments;
@@ -3850,8 +3419,8 @@ var submissions_exports = {};
 __export(submissions_exports, {
   default: () => submissions_default
 });
-var import_react84 = require("@remix-run/react"), import_client27 = require("@apollo/client");
-var SUBMISSIONS_FOR_CURRENT_USER = import_client27.gql`
+var import_react78 = require("@remix-run/react"), import_client23 = require("@apollo/client");
+var SUBMISSIONS_FOR_CURRENT_USER = import_client23.gql`
 	query SubmissionsForCurrentUser {
 		submissionsForCurrentUser {
 			...Submission
@@ -3859,7 +3428,7 @@ var SUBMISSIONS_FOR_CURRENT_USER = import_client27.gql`
 	}
 	${SubmissionFragments.submission}
 `, Submissions = () => {
-  let { data: data2, loading } = (0, import_client27.useQuery)(SUBMISSIONS_FOR_CURRENT_USER, { fetchPolicy: "cache-and-network" });
+  let { data: data2, loading } = (0, import_client23.useQuery)(SUBMISSIONS_FOR_CURRENT_USER, { fetchPolicy: "cache-and-network" });
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
     items: [
       {
@@ -3869,7 +3438,7 @@ var SUBMISSIONS_FOR_CURRENT_USER = import_client27.gql`
       { label: "Submissions" }
     ],
     className: "mb-6"
-  }), /* @__PURE__ */ React.createElement(import_react84.Link, {
+  }), /* @__PURE__ */ React.createElement(import_react78.Link, {
     to: "/account/submissions/new"
   }, /* @__PURE__ */ React.createElement("a", {
     className: "btn"
@@ -3882,7 +3451,7 @@ var SUBMISSIONS_FOR_CURRENT_USER = import_client27.gql`
     key: index
   }, DateTime_default.formatDateYearTime(s.createdAt, !0), " (", s.materialTypes.join(", "), ") - Status: ", s.status, /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, `${s.description.substring(0, 200)}${s.description.length > 200 ? "..." : ""}`), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react84.Link, {
+  }, `${s.description.substring(0, 200)}${s.description.length > 200 ? "..." : ""}`), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react78.Link, {
     to: `/account/submissions/${s.id}/upload`
   }, "Upload More Files to This Submission"))))));
 }, submissions_default = Submissions;
@@ -3892,11 +3461,11 @@ var new_exports = {};
 __export(new_exports, {
   default: () => new_default
 });
-var import_react87 = require("@remix-run/react");
+var import_react81 = require("@remix-run/react");
 
 // app/hooks/useAudioItems.ts
-var import_react85 = require("react"), import_client28 = require("@apollo/client");
-var AUDIO_ITEMS_QUERY = import_client28.gql`
+var import_react79 = require("react"), import_client24 = require("@apollo/client");
+var AUDIO_ITEMS_QUERY = import_client24.gql`
 	query AudioItems($input: AudioItemsInput!) {
 		audioItems(input: $input) {
 			...AudioItem
@@ -3908,16 +3477,16 @@ var AUDIO_ITEMS_QUERY = import_client28.gql`
   resultsPerPage = 10,
   queryOptions = {}
 } = {}) => {
-  let [skip, setSkip] = (0, import_react85.useState)(0), [audioItems, setAudioItems] = (0, import_react85.useState)();
-  (0, import_react85.useEffect)(() => {
+  let [skip, setSkip] = (0, import_react79.useState)(0), [audioItems, setAudioItems] = (0, import_react79.useState)();
+  (0, import_react79.useEffect)(() => {
     setAudioItems(void 0), setSkip(0);
   }, [sortBy]);
-  let [getAudioItems, audioItemsQuery] = (0, import_client28.useLazyQuery)(AUDIO_ITEMS_QUERY, __spreadValues({
+  let [getAudioItems, audioItemsQuery] = (0, import_client24.useLazyQuery)(AUDIO_ITEMS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: !0
   }, queryOptions)), { data: data2, fetchMore } = audioItemsQuery;
-  (0, import_react85.useEffect)(() => {
+  (0, import_react79.useEffect)(() => {
     (data2 == null ? void 0 : data2.audioItems) && setAudioItems(data2.audioItems);
-  }, [data2]), (0, import_react85.useEffect)(() => {
+  }, [data2]), (0, import_react79.useEffect)(() => {
     getAudioItems({
       variables: {
         input: {
@@ -3929,7 +3498,7 @@ var AUDIO_ITEMS_QUERY = import_client28.gql`
       }
     });
   }, [getAudioItems, resultsPerPage, sortBy, skip]);
-  let fetchNextPage = (0, import_react85.useCallback)(async () => {
+  let fetchNextPage = (0, import_react79.useCallback)(async () => {
     let numToSkip = (audioItems == null ? void 0 : audioItems.length) ?? 0;
     await fetchMore({
       variables: {
@@ -3946,8 +3515,8 @@ var AUDIO_ITEMS_QUERY = import_client28.gql`
 }, useAudioItems_default = useAudioItems;
 
 // app/components/CreateAudioItemForm.tsx
-var import_react86 = require("react"), import_client29 = require("@apollo/client");
-var CREATE_AUDIO_ITEM_MUTATION = import_client29.gql`
+var import_react80 = require("react"), import_client25 = require("@apollo/client");
+var CREATE_AUDIO_ITEM_MUTATION = import_client25.gql`
 	mutation CreateAudioItem($input: CreateAudioItemInput!) {
 		createAudioItem(input: $input) {
 			...AudioItem
@@ -3955,8 +3524,8 @@ var CREATE_AUDIO_ITEM_MUTATION = import_client29.gql`
 	}
 	${EntityFragments.audioItem}
 `, CreateAudioItemForm = ({ onSuccess }) => {
-  let [createAudioItem, { loading, error: error2, data: data2 }] = (0, import_client29.useMutation)(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react86.useState)(""), [urlSource, setUrlSource] = (0, import_react86.useState)(""), [slug, setSlug] = (0, import_react86.useState)(""), [aliases, setAliases] = (0, import_react86.useState)(""), [description, setDescription] = (0, import_react86.useState)("");
-  (0, import_react86.useEffect)(() => {
+  let [createAudioItem, { loading, error: error2, data: data2 }] = (0, import_client25.useMutation)(CREATE_AUDIO_ITEM_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react80.useState)(""), [urlSource, setUrlSource] = (0, import_react80.useState)(""), [slug, setSlug] = (0, import_react80.useState)(""), [aliases, setAliases] = (0, import_react80.useState)(""), [description, setDescription] = (0, import_react80.useState)("");
+  (0, import_react80.useEffect)(() => {
     let proposedSlug = Entity_default.cleanSlug(name ?? "");
     setSlug(proposedSlug);
   }, [name]);
@@ -3965,7 +3534,7 @@ var CREATE_AUDIO_ITEM_MUTATION = import_client29.gql`
       variables: { input: { name, urlSource, slug, aliases, description } }
     });
   };
-  return (0, import_react86.useEffect)(() => {
+  return (0, import_react80.useEffect)(() => {
     if (data2 == null ? void 0 : data2.createAudioItem) {
       if (onSuccess)
         return onSuccess(data2.createAudioItem);
@@ -4018,7 +3587,7 @@ var CREATE_AUDIO_ITEM_MUTATION = import_client29.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/audio-items/new.tsx
 var NewAudioItem = () => {
-  let navigate = (0, import_react87.useNavigate)(), [_, { refetch: refetch2 }] = useAudioItems_default();
+  let navigate = (0, import_react81.useNavigate)(), [_, { refetch: refetch2 }] = useAudioItems_default();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "max-w-md"
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -4035,9 +3604,87 @@ var new_exports2 = {};
 __export(new_exports2, {
   default: () => new_default2
 });
-var import_react88 = require("@remix-run/react");
+var import_react83 = require("@remix-run/react");
+
+// app/components/CreateCollectionForm.tsx
+var import_react82 = require("react"), import_client26 = require("@apollo/client");
+var CREATE_COLLECTION_MUTATION = import_client26.gql`
+	mutation CreateCollection($input: CreateCollectionInput!) {
+		createCollection(input: $input) {
+			...Collection
+		}
+	}
+	${EntityFragments.collection}
+`, CreateCollectionForm = ({ onSuccess }) => {
+  let [createCollection, { loading, error: error2, data: data2 }] = (0, import_client26.useMutation)(CREATE_COLLECTION_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react82.useState)(""), [slug, setSlug] = (0, import_react82.useState)(""), [aliases, setAliases] = (0, import_react82.useState)(""), [description, setDescription] = (0, import_react82.useState)("");
+  (0, import_react82.useEffect)(() => {
+    let proposedSlug = Entity_default.cleanSlug(name ?? "");
+    setSlug(proposedSlug);
+  }, [name]);
+  let onCreateCollection = async (event) => {
+    event.preventDefault();
+    let input = {
+      name,
+      slug,
+      aliases,
+      description
+    };
+    try {
+      await createCollection({ variables: { input } });
+    } catch {
+    }
+  };
+  return (0, import_react82.useEffect)(() => {
+    if (data2 == null ? void 0 : data2.createCollection) {
+      if (onSuccess)
+        return onSuccess(data2.createCollection);
+      window.alert("Collection created successfully!"), setName(""), setSlug(""), setAliases(""), setDescription("");
+    }
+  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col align-start"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "text-gray-500 mb-8"
+  }, `A Collection is a logical grouping of other entities. For example, "O'Neill's Music of Ireland" would be a Collection of Tunes. Or the "Alen MacWeeney Collection" would be a Collection of AudioItems.`), /* @__PURE__ */ React.createElement("form", {
+    onSubmit: onCreateCollection
+  }, /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Name",
+    autoFocus: !0,
+    className: "mb-2",
+    value: name,
+    onChange: (event) => setName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "URL slug (ie. alan-macweeney-collection)",
+    className: "mb-2",
+    value: slug,
+    onChange: (event) => setSlug(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "This will be used for the URL of this Collection, for example", " ", `https://trad-archive.com/entities/collections/${slug || "alan-macweeney-collection"}`), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Aliases",
+    className: "mb-2",
+    value: aliases,
+    onChange: (event) => setAliases(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "A list of comma-separated aliases for this Collection. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "O'Neill's, 1000 Fiddle Tunes")), /* @__PURE__ */ React.createElement("textarea", {
+    placeholder: "Description",
+    className: "mb-2",
+    value: description,
+    rows: 5,
+    onChange: (event) => setDescription(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "submit",
+    className: "btn mb-4 w-auto",
+    disabled: loading,
+    value: "Create"
+  }))), error2 && /* @__PURE__ */ React.createElement("div", {
+    className: "text-red-600"
+  }, error2.message));
+}, CreateCollectionForm_default = CreateCollectionForm;
+
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/collections/new.tsx
 var NewCollection = () => {
-  let navigate = (0, import_react88.useNavigate)();
+  let navigate = (0, import_react83.useNavigate)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "max-w-md"
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -4054,9 +3701,82 @@ var new_exports3 = {};
 __export(new_exports3, {
   default: () => new_default3
 });
-var import_react89 = require("@remix-run/react");
+var import_react85 = require("@remix-run/react");
+
+// app/components/CreateInstrumentForm.tsx
+var import_react84 = require("react"), import_client27 = require("@apollo/client");
+var CREATE_INSTRUMENT_MUTATION = import_client27.gql`
+	mutation CreateInstrument($input: CreateInstrumentInput!) {
+		createInstrument(input: $input) {
+			...Instrument
+		}
+	}
+	${EntityFragments.instrument}
+`, CreateInstrumentForm = ({ onSuccess }) => {
+  let [createInstrument, { loading, error: error2, data: data2 }] = (0, import_client27.useMutation)(CREATE_INSTRUMENT_MUTATION, {
+    errorPolicy: "all"
+  }), [name, setName] = (0, import_react84.useState)(""), [slug, setSlug] = (0, import_react84.useState)(""), [aliases, setAliases] = (0, import_react84.useState)(""), [description, setDescription] = (0, import_react84.useState)("");
+  (0, import_react84.useEffect)(() => {
+    let proposedSlug = Entity_default.cleanSlug(name ?? "");
+    setSlug(proposedSlug);
+  }, [name]);
+  let onCreateInstrument = (event) => {
+    event.preventDefault(), createInstrument({ variables: { input: {
+      name,
+      slug,
+      aliases,
+      description
+    } } });
+  };
+  return (0, import_react84.useEffect)(() => {
+    if (data2 == null ? void 0 : data2.createInstrument) {
+      if (onSuccess)
+        return onSuccess(data2.createInstrument);
+      window.alert("Instrument created successfully!"), setName(""), setSlug(""), setAliases(""), setDescription("");
+    }
+  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col align-start"
+  }, /* @__PURE__ */ React.createElement("form", {
+    onSubmit: onCreateInstrument
+  }, /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Name",
+    autoFocus: !0,
+    className: "mb-2",
+    value: name,
+    onChange: (event) => setName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "URL slug (ie. button-accordion)",
+    className: "mb-2",
+    value: slug,
+    onChange: (event) => setSlug(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "This will be used for the URL of this Instrument, for example", " ", `https://trad-archive.com/entities/instruments/${slug || "button-accordion"}`), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Aliases",
+    className: "mb-2",
+    value: aliases,
+    onChange: (event) => setAliases(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "A list of comma-separated aliases for this Instrument. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Stomach Steinway, Squeezebox, Belly Organ")), /* @__PURE__ */ React.createElement("textarea", {
+    placeholder: "Description",
+    className: "mb-2",
+    value: description,
+    rows: 5,
+    onChange: (event) => setDescription(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "submit",
+    className: "btn mb-4 w-auto",
+    disabled: loading,
+    value: "Create"
+  }))), error2 && /* @__PURE__ */ React.createElement("div", {
+    className: "text-red-600"
+  }, error2.message));
+}, CreateInstrumentForm_default = CreateInstrumentForm;
+
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/instruments/new.tsx
 var NewInstrument = () => {
-  let navigate = (0, import_react89.useNavigate)();
+  let navigate = (0, import_react85.useNavigate)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "max-w-md"
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -4073,10 +3793,10 @@ var new_exports4 = {};
 __export(new_exports4, {
   default: () => new_default4
 });
-var import_react91 = require("@remix-run/react");
+var import_react87 = require("@remix-run/react");
 
 // app/components/CreateSubmissionForm.tsx
-var import_react90 = require("react"), import_client30 = require("@apollo/client");
+var import_react86 = require("react"), import_client28 = require("@apollo/client");
 
 // app/components/Checkbox.tsx
 var Checkbox = ({ checked, label, id, onChange, className }) => {
@@ -4095,7 +3815,7 @@ var Checkbox = ({ checked, label, id, onChange, className }) => {
 }, Checkbox_default = Checkbox;
 
 // app/components/CreateSubmissionForm.tsx
-var CREATE_SUBMISSION = import_client30.gql`
+var CREATE_SUBMISSION = import_client28.gql`
 	mutation CreateSubmission($input: CreateSubmissionInput!) {
 		createSubmission(input: $input) {
 			...Submission
@@ -4103,7 +3823,7 @@ var CREATE_SUBMISSION = import_client30.gql`
 	}
 	${SubmissionFragments.submission}
 `, CreateSubmissionForm = ({ onSuccess }) => {
-  let [currentUser] = useCurrentUser_default(), [materialTypes, setMaterialTypes] = (0, import_react90.useState)([]), [userControlsCopyright, setUserControlsCopyright] = (0, import_react90.useState)(!0), [copyrightDetails, setCopyrightDetails] = (0, import_react90.useState)(""), [description, setDescription] = (0, import_react90.useState)(""), [userGrantsPermissionToITMA, setUserGrantsPermissionToITMA] = (0, import_react90.useState)(!1), [validationError, setValidationError] = (0, import_react90.useState)(""), [createSubmission, { loading, data: data2, error: error2 }] = (0, import_client30.useMutation)(CREATE_SUBMISSION, { errorPolicy: "all" }), onMaterialTypeChecked = (materialType, isChecked) => {
+  let [currentUser] = useCurrentUser_default(), [materialTypes, setMaterialTypes] = (0, import_react86.useState)([]), [userControlsCopyright, setUserControlsCopyright] = (0, import_react86.useState)(!0), [copyrightDetails, setCopyrightDetails] = (0, import_react86.useState)(""), [description, setDescription] = (0, import_react86.useState)(""), [userGrantsPermissionToITMA, setUserGrantsPermissionToITMA] = (0, import_react86.useState)(!1), [validationError, setValidationError] = (0, import_react86.useState)(""), [createSubmission, { loading, data: data2, error: error2 }] = (0, import_client28.useMutation)(CREATE_SUBMISSION, { errorPolicy: "all" }), onMaterialTypeChecked = (materialType, isChecked) => {
     setMaterialTypes(isChecked ? materialTypes.concat(materialType) : materialTypes.filter((mt) => mt !== materialType));
   }, materialTypeIsChecked = (materialType) => materialTypes.includes(materialType), onSubmitForm = (event) => {
     if (event.preventDefault(), setValidationError(""), !userControlsCopyright && !copyrightDetails) {
@@ -4129,7 +3849,7 @@ var CREATE_SUBMISSION = import_client30.gql`
     } catch {
     }
   };
-  return (0, import_react90.useEffect)(() => {
+  return (0, import_react86.useEffect)(() => {
     var _a;
     ((_a = data2 == null ? void 0 : data2.createSubmission) == null ? void 0 : _a.id) && onSuccess && onSuccess(data2.createSubmission);
   }, [data2, onSuccess]), /* @__PURE__ */ React.createElement("form", {
@@ -4211,7 +3931,7 @@ var CREATE_SUBMISSION = import_client30.gql`
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/account/submissions/new.tsx
 var SubmissionsNew = () => {
-  let navigate = (0, import_react91.useNavigate)();
+  let navigate = (0, import_react87.useNavigate)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
     items: [
       {
@@ -4241,8 +3961,8 @@ var submissions_exports2 = {};
 __export(submissions_exports2, {
   default: () => submissions_default2
 });
-var import_react92 = require("@remix-run/react"), import_client31 = require("@apollo/client");
-var SUBMISSIONS = import_client31.gql`
+var import_react88 = require("@remix-run/react"), import_client29 = require("@apollo/client");
+var SUBMISSIONS = import_client29.gql`
 	query Submissions($input: SubmissionsInput!) {
 		submissions(input: $input) {
 			...Submission
@@ -4250,7 +3970,7 @@ var SUBMISSIONS = import_client31.gql`
 	}
 	${SubmissionFragments.submission}
 `, AdminSubmissions = () => {
-  let { data: data2, loading } = (0, import_client31.useQuery)(SUBMISSIONS, {
+  let { data: data2, loading } = (0, import_client29.useQuery)(SUBMISSIONS, {
     variables: { input: { take: 100, skip: 0 } },
     fetchPolicy: "cache-and-network"
   });
@@ -4268,7 +3988,7 @@ var SUBMISSIONS = import_client31.gql`
     key: index
   }, DateTime_default.formatDateYearTime(s.createdAt, !0), " (", s.materialTypes.join(", "), ") - Status: ", s.status, /* @__PURE__ */ React.createElement("br", null), "From ", s.createdByUser.username, " / ", s.createdByUser.email, /* @__PURE__ */ React.createElement("br", null), "Owns copyright? ", s.userControlsCopyright ? "Yes" : "No", s.copyrightDetails ? ` - ${s.copyrightDetails}` : "", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, s.description), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react92.Link, {
+  }, s.description), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react88.Link, {
     to: `/admin/submissions/${s.id}`
   }, "View Files"))))));
 }, submissions_default2 = AdminSubmissions;
@@ -4278,15 +3998,15 @@ var takedown_requests_exports = {};
 __export(takedown_requests_exports, {
   default: () => takedown_requests_default
 });
-var import_react93 = require("react"), import_client32 = require("@apollo/client"), import_compareDesc3 = __toESM(require("date-fns/compareDesc"));
-var TAKEDOWN_REQUESTS = import_client32.gql`
+var import_react89 = require("react"), import_client30 = require("@apollo/client"), import_compareDesc3 = __toESM(require("date-fns/compareDesc"));
+var TAKEDOWN_REQUESTS = import_client30.gql`
 	query TakedownRequests($input: TakedownRequestsInput!) {
 		takedownRequests(input: $input) {
 			...TakedownRequest
 		}
 	}
 	${TakedownRequestFragments.takedownRequest}
-`, UPDATE_TAKEDOWN_REQUEST_STATUS = import_client32.gql`
+`, UPDATE_TAKEDOWN_REQUEST_STATUS = import_client30.gql`
 	mutation UpdateTakedownRequestStatus(
 		$input: UpdateTakedownRequestStatusInput!
 	) {
@@ -4300,10 +4020,10 @@ var TAKEDOWN_REQUESTS = import_client32.gql`
     loading: takedownRequestsLoading,
     data: takedownRequestsData,
     error: takedownRequestsError
-  } = (0, import_client32.useQuery)(TAKEDOWN_REQUESTS, {
+  } = (0, import_client30.useQuery)(TAKEDOWN_REQUESTS, {
     variables: { input: { take: 200, skip: 0 } },
     fetchPolicy: "network-only"
-  }), takedownRequests = (0, import_react93.useMemo)(() => {
+  }), takedownRequests = (0, import_react89.useMemo)(() => {
     if (!(takedownRequestsData == null ? void 0 : takedownRequestsData.takedownRequests))
       return [];
     let sortedTakedownRequests = [...takedownRequestsData.takedownRequests];
@@ -4314,7 +4034,7 @@ var TAKEDOWN_REQUESTS = import_client32.gql`
       loading: updateTakedownRequestStatusLoading,
       error: updateTakedownRequestStatusError
     }
-  ] = (0, import_client32.useMutation)(UPDATE_TAKEDOWN_REQUEST_STATUS, { errorPolicy: "all" }), onApproveClicked = (id) => {
+  ] = (0, import_client30.useMutation)(UPDATE_TAKEDOWN_REQUEST_STATUS, { errorPolicy: "all" }), onApproveClicked = (id) => {
     updateTakedownRequestStatus({
       variables: { input: { id, status: "Approved" /* Approved */ } }
     });
@@ -4323,7 +4043,7 @@ var TAKEDOWN_REQUESTS = import_client32.gql`
       variables: { input: { id, status: "Denied" /* Denied */ } }
     });
   };
-  return (0, import_react93.useEffect)(() => {
+  return (0, import_react89.useEffect)(() => {
     updateTakedownRequestStatusError && window.alert("Error updating Takedown Request status. Please reload the page and try again.");
   }, [updateTakedownRequestStatusError]), /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
     items: [
@@ -4377,8 +4097,8 @@ var id_exports = {};
 __export(id_exports, {
   default: () => id_default
 });
-var import_react94 = require("@remix-run/react"), import_react95 = require("@remix-run/react"), import_client33 = require("@apollo/client");
-var SUBMISSION_WITH_FILES = import_client33.gql`
+var import_react90 = require("@remix-run/react"), import_react91 = require("@remix-run/react"), import_client31 = require("@apollo/client");
+var SUBMISSION_WITH_FILES = import_client31.gql`
 	query SubmissionWithFiles($id: String!) {
 		submissionWithFiles(id: $id) {
 			submission {
@@ -4392,7 +4112,7 @@ var SUBMISSION_WITH_FILES = import_client33.gql`
 	}
 	${SubmissionFragments.submission}
 `, AdminViewSubmissionById = () => {
-  let navigate = (0, import_react95.useNavigate)(), { id } = navigate.query, submissionId = typeof id == "string" ? id : void 0, { data: data2, loading } = (0, import_client33.useQuery)(SUBMISSION_WITH_FILES, {
+  let navigate = (0, import_react91.useNavigate)(), { id } = navigate.query, submissionId = typeof id == "string" ? id : void 0, { data: data2, loading } = (0, import_client31.useQuery)(SUBMISSION_WITH_FILES, {
     variables: { id: submissionId },
     skip: !submissionId,
     fetchPolicy: "cache-and-network"
@@ -4414,7 +4134,7 @@ var SUBMISSION_WITH_FILES = import_client33.gql`
     key: index
   }, /* @__PURE__ */ React.createElement("div", {
     className: "pr-2"
-  }, f.filename), /* @__PURE__ */ React.createElement(import_react94.Link, {
+  }, f.filename), /* @__PURE__ */ React.createElement(import_react90.Link, {
     to: f.presignedDownloadUrl
   }, /* @__PURE__ */ React.createElement("a", {
     target: "_blank"
@@ -4431,7 +4151,7 @@ __export(slug_exports4, {
   default: () => slug_default4,
   loader: () => loader8
 });
-var import_react96 = require("@remix-run/react");
+var import_react92 = require("@remix-run/react");
 async function loader8({
   params,
   request
@@ -4497,7 +4217,7 @@ async function loader8({
   };
 }
 var ViewPersonBySlug = () => {
-  let { person: person2, audioItems, totalAudioItems } = (0, import_react96.useLoaderData)();
+  let { person: person2, audioItems, totalAudioItems } = (0, import_react92.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: person2,
     audioItems,
@@ -4510,9 +4230,9 @@ var about_exports4 = {};
 __export(about_exports4, {
   default: () => about_default4
 });
-var import_react97 = require("@remix-run/react"), import_react98 = require("@remix-run/react");
+var import_react93 = require("@remix-run/react"), import_react94 = require("@remix-run/react");
 var PersonAbout = () => {
-  let navigate = (0, import_react98.useNavigate)(), { slug } = navigate.query, { name, description, aliases } = (data == null ? void 0 : data.person) ?? {};
+  let navigate = (0, import_react94.useNavigate)(), { slug } = navigate.query, { name, description, aliases } = (data == null ? void 0 : data.person) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, isLoading && /* @__PURE__ */ React.createElement(LoadingBlock_default, null), error && /* @__PURE__ */ React.createElement("div", {
@@ -4532,7 +4252,7 @@ var PersonAbout = () => {
     className: "mb-4"
   }, "Aliases:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, aliases)), /* @__PURE__ */ React.createElement(import_react97.Link, {
+  }, aliases)), /* @__PURE__ */ React.createElement(import_react93.Link, {
     to: `/entities/people/${slug}/edit`
   }, "Edit")));
 }, about_default4 = PersonAbout;
@@ -4542,11 +4262,11 @@ var edit_exports4 = {};
 __export(edit_exports4, {
   default: () => edit_default4
 });
-var import_react101 = require("@remix-run/react"), import_client35 = require("@apollo/client");
+var import_react97 = require("@remix-run/react"), import_client33 = require("@apollo/client");
 
 // app/components/EditPersonForm.tsx
-var import_react99 = require("react"), import_client34 = require("@apollo/client"), import_react100 = require("@remix-run/react");
-var UPDATE_PERSON_MUTATION = import_client34.gql`
+var import_react95 = require("react"), import_client32 = require("@apollo/client"), import_react96 = require("@remix-run/react");
+var UPDATE_PERSON_MUTATION = import_client32.gql`
 	mutation UpdatePerson($slug: String!, $input: UpdatePersonInput!) {
 		updatePerson(slug: $slug, input: $input) {
 			...Person
@@ -4554,9 +4274,9 @@ var UPDATE_PERSON_MUTATION = import_client34.gql`
 	}
 	${EntityFragments.person}
 `, EditPersonForm = ({ person: person2, onSuccess }) => {
-  let navigate = (0, import_react100.useNavigate)(), [updatePerson, { loading, error: error2, data: data2 }] = (0, import_client34.useMutation)(UPDATE_PERSON_MUTATION, {
+  let navigate = (0, import_react96.useNavigate)(), [updatePerson, { loading, error: error2, data: data2 }] = (0, import_client32.useMutation)(UPDATE_PERSON_MUTATION, {
     errorPolicy: "all"
-  }), [firstName, setFirstName] = (0, import_react99.useState)(person2.firstName), [middleName, setMiddleName] = (0, import_react99.useState)(person2.middleName), [lastName, setLastName] = (0, import_react99.useState)(person2.lastName), [aliases, setAliases] = (0, import_react99.useState)(person2.aliases), [description, setDescription] = (0, import_react99.useState)(person2.description), onUpdatePerson = (event) => {
+  }), [firstName, setFirstName] = (0, import_react95.useState)(person2.firstName), [middleName, setMiddleName] = (0, import_react95.useState)(person2.middleName), [lastName, setLastName] = (0, import_react95.useState)(person2.lastName), [aliases, setAliases] = (0, import_react95.useState)(person2.aliases), [description, setDescription] = (0, import_react95.useState)(person2.description), onUpdatePerson = (event) => {
     event.preventDefault();
     let input = {
       firstName,
@@ -4567,7 +4287,7 @@ var UPDATE_PERSON_MUTATION = import_client34.gql`
     };
     updatePerson({ variables: { slug: person2.slug, input } });
   };
-  return (0, import_react99.useEffect)(() => {
+  return (0, import_react95.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updatePerson) {
       if (onSuccess)
         return onSuccess(data2.updatePerson);
@@ -4617,7 +4337,7 @@ var UPDATE_PERSON_MUTATION = import_client34.gql`
 }, EditPersonForm_default = EditPersonForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/people/$slug/edit.tsx
-var PERSON_QUERY = import_client35.gql`
+var PERSON_QUERY = import_client33.gql`
 	query Person($slug: String!) {
 		person(slug: $slug) {
 			...Person
@@ -4625,7 +4345,7 @@ var PERSON_QUERY = import_client35.gql`
 	}
 	${EntityFragments.person}
 `, EditPerson = () => {
-  let navigate = (0, import_react101.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client35.useQuery)(PERSON_QUERY, {
+  let navigate = (0, import_react97.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client33.useQuery)(PERSON_QUERY, {
     variables: { slug },
     skip: !slug
   }), onEditSuccess = (person3) => {
@@ -4649,9 +4369,9 @@ var tags_exports4 = {};
 __export(tags_exports4, {
   default: () => tags_default4
 });
-var import_react102 = require("@remix-run/react");
+var import_react98 = require("@remix-run/react");
 var PersonTags = () => {
-  let navigate = (0, import_react102.useNavigate)(), { slug } = navigate.query, { name, tags } = person ?? {}, sortedTags = Tag_default.sort(tags);
+  let navigate = (0, import_react98.useNavigate)(), { slug } = navigate.query, { name, tags } = person ?? {}, sortedTags = Tag_default.sort(tags);
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - Tags`
   }, isLoading && /* @__PURE__ */ React.createElement(LoadingBlock_default, null), error && /* @__PURE__ */ React.createElement("div", {
@@ -4685,7 +4405,7 @@ __export(people_exports, {
   loader: () => loader9,
   meta: () => meta4
 });
-var import_react103 = require("@remix-run/react");
+var import_react99 = require("@remix-run/react");
 function meta4() {
   return {
     title: "Trad Archive - People"
@@ -4699,7 +4419,7 @@ function loader9() {
   });
 }
 var People = () => {
-  let people = (0, import_react103.useLoaderData)();
+  let people = (0, import_react99.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "People"), people.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -4707,7 +4427,7 @@ var People = () => {
   }, "No People found"), people.length > 0 && /* @__PURE__ */ React.createElement("ul", null, people.map((person2, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react103.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react99.Link, {
     to: Entity_default.makeHrefForView(person2)
   }, person2.name)))));
 }, people_default = People;
@@ -4718,7 +4438,7 @@ __export(slug_exports5, {
   default: () => slug_default5,
   loader: () => loader10
 });
-var import_react104 = require("@remix-run/react");
+var import_react100 = require("@remix-run/react");
 async function loader10({
   params,
   request
@@ -4784,7 +4504,7 @@ async function loader10({
   };
 }
 var ViewPlaceBySlug = () => {
-  let { place, audioItems, totalAudioItems } = (0, import_react104.useLoaderData)();
+  let { place, audioItems, totalAudioItems } = (0, import_react100.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: place,
     audioItems,
@@ -4797,9 +4517,9 @@ var about_exports5 = {};
 __export(about_exports5, {
   default: () => about_default5
 });
-var import_react105 = require("@remix-run/react"), import_react106 = require("@remix-run/react");
+var import_react101 = require("@remix-run/react"), import_react102 = require("@remix-run/react");
 var PlaceAbout = () => {
-  let navigate = (0, import_react106.useNavigate)(), { slug } = navigate.query, { name, description, aliases, latitude, longitude } = (data == null ? void 0 : data.place) ?? {};
+  let navigate = (0, import_react102.useNavigate)(), { slug } = navigate.query, { name, description, aliases, latitude, longitude } = (data == null ? void 0 : data.place) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -4827,7 +4547,7 @@ var PlaceAbout = () => {
     rel: "noreferrer"
   }, "View on Map ", /* @__PURE__ */ React.createElement("i", {
     className: "material-icons text-base"
-  }, "launch"))), /* @__PURE__ */ React.createElement(import_react105.Link, {
+  }, "launch"))), /* @__PURE__ */ React.createElement(import_react101.Link, {
     to: `/entities/places/${slug}/edit`
   }, "Edit")));
 }, about_default5 = PlaceAbout;
@@ -4837,11 +4557,11 @@ var edit_exports5 = {};
 __export(edit_exports5, {
   default: () => edit_default5
 });
-var import_react109 = require("@remix-run/react"), import_client37 = require("@apollo/client");
+var import_react105 = require("@remix-run/react"), import_client35 = require("@apollo/client");
 
 // app/components/EditPlaceForm.tsx
-var import_react107 = require("react"), import_client36 = require("@apollo/client"), import_react108 = require("@remix-run/react");
-var UPDATE_PLACE_MUTATION = import_client36.gql`
+var import_react103 = require("react"), import_client34 = require("@apollo/client"), import_react104 = require("@remix-run/react");
+var UPDATE_PLACE_MUTATION = import_client34.gql`
 	mutation UpdatePlace($slug: String!, $input: UpdatePlaceInput!) {
 		updatePlace(slug: $slug, input: $input) {
 			...Place
@@ -4849,9 +4569,9 @@ var UPDATE_PLACE_MUTATION = import_client36.gql`
 	}
 	${EntityFragments.place}
 `, EditPlaceForm = ({ place, onSuccess }) => {
-  let navigate = (0, import_react108.useNavigate)(), [updatePlace, { loading, error: error2, data: data2 }] = (0, import_client36.useMutation)(UPDATE_PLACE_MUTATION, {
+  let navigate = (0, import_react104.useNavigate)(), [updatePlace, { loading, error: error2, data: data2 }] = (0, import_client34.useMutation)(UPDATE_PLACE_MUTATION, {
     errorPolicy: "all"
-  }), [name, setName] = (0, import_react107.useState)(place.name), [aliases, setAliases] = (0, import_react107.useState)(place.aliases), [latitude, setLatitude] = (0, import_react107.useState)(place.latitude.toString()), [longitude, setLongitude] = (0, import_react107.useState)(place.longitude.toString()), [description, setDescription] = (0, import_react107.useState)(place.description), onUpdatePlace = (event) => {
+  }), [name, setName] = (0, import_react103.useState)(place.name), [aliases, setAliases] = (0, import_react103.useState)(place.aliases), [latitude, setLatitude] = (0, import_react103.useState)(place.latitude.toString()), [longitude, setLongitude] = (0, import_react103.useState)(place.longitude.toString()), [description, setDescription] = (0, import_react103.useState)(place.description), onUpdatePlace = (event) => {
     event.preventDefault();
     let input = {
       name,
@@ -4862,7 +4582,7 @@ var UPDATE_PLACE_MUTATION = import_client36.gql`
     };
     updatePlace({ variables: { slug: place.slug, input } });
   };
-  return (0, import_react107.useEffect)(() => {
+  return (0, import_react103.useEffect)(() => {
     if (data2 == null ? void 0 : data2.updatePlace) {
       if (onSuccess)
         return onSuccess(data2.updatePlace);
@@ -4917,7 +4637,7 @@ var UPDATE_PLACE_MUTATION = import_client36.gql`
 }, EditPlaceForm_default = EditPlaceForm;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/places/$slug/edit.tsx
-var PLACE_QUERY = import_client37.gql`
+var PLACE_QUERY = import_client35.gql`
 	query Place($slug: String!) {
 		place(slug: $slug) {
 			...Place
@@ -4925,7 +4645,7 @@ var PLACE_QUERY = import_client37.gql`
 	}
 	${EntityFragments.place}
 `, EditPlace = () => {
-  let navigate = (0, import_react109.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client37.useQuery)(PLACE_QUERY, {
+  let navigate = (0, import_react105.useNavigate)(), { slug } = navigate.query, { data: data2, error: error2 } = (0, import_client35.useQuery)(PLACE_QUERY, {
     variables: { slug },
     skip: !slug
   }), onEditSuccess = (place2) => {
@@ -4949,9 +4669,9 @@ var tags_exports5 = {};
 __export(tags_exports5, {
   default: () => tags_default5
 });
-var import_react110 = require("@remix-run/react");
+var import_react106 = require("@remix-run/react");
 var PlaceTags = () => {
-  let navigate = (0, import_react110.useNavigate)(), { slug } = navigate.query, { place } = data ?? {}, { name, tags } = place ?? {}, sortedTags = Tag_default.sort(tags);
+  let navigate = (0, import_react106.useNavigate)(), { slug } = navigate.query, { place } = data ?? {}, { name, tags } = place ?? {}, sortedTags = Tag_default.sort(tags);
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - Tags`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -4983,7 +4703,7 @@ __export(places_exports, {
   loader: () => loader11,
   meta: () => meta5
 });
-var import_react111 = require("@remix-run/react");
+var import_react107 = require("@remix-run/react");
 function meta5() {
   return {
     title: "Trad Archive - Places"
@@ -4997,7 +4717,7 @@ function loader11() {
   });
 }
 var Places = () => {
-  let places = (0, import_react111.useLoaderData)();
+  let places = (0, import_react107.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Places"), places.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -5005,7 +4725,7 @@ var Places = () => {
   }, "No Places found"), places.length > 0 && /* @__PURE__ */ React.createElement("ul", null, places.map((place, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react111.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react107.Link, {
     to: Entity_default.makeHrefForView(place)
   }, place.name)))));
 }, places_default = Places;
@@ -5016,7 +4736,7 @@ __export(slug_exports6, {
   default: () => slug_default6,
   loader: () => loader12
 });
-var import_react112 = require("@remix-run/react");
+var import_react108 = require("@remix-run/react");
 async function loader12({
   params,
   request
@@ -5082,7 +4802,7 @@ async function loader12({
   };
 }
 var ViewTuneBySlug = () => {
-  let { tune, audioItems, totalAudioItems } = (0, import_react112.useLoaderData)();
+  let { tune, audioItems, totalAudioItems } = (0, import_react108.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: tune,
     audioItems,
@@ -5095,9 +4815,9 @@ var about_exports6 = {};
 __export(about_exports6, {
   default: () => about_default6
 });
-var import_react113 = require("@remix-run/react"), import_react114 = require("@remix-run/react");
+var import_react109 = require("@remix-run/react"), import_react110 = require("@remix-run/react");
 var TuneAbout = () => {
-  let navigate = (0, import_react114.useNavigate)(), { slug } = navigate.query, { name, aliases, theSessionTuneId, type, meter, mode, abc } = (data == null ? void 0 : data.tune) ?? {};
+  let navigate = (0, import_react110.useNavigate)(), { slug } = navigate.query, { name, aliases, theSessionTuneId, type, meter, mode, abc } = (data == null ? void 0 : data.tune) ?? {};
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - About`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -5137,7 +4857,7 @@ var TuneAbout = () => {
     className: "mb-4"
   }, "ABC:", /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
-  }, abc)), /* @__PURE__ */ React.createElement(import_react113.Link, {
+  }, abc)), /* @__PURE__ */ React.createElement(import_react109.Link, {
     to: `/entities/tunes/${slug}/edit`
   }, "Edit")));
 }, about_default6 = TuneAbout;
@@ -5147,9 +4867,9 @@ var tags_exports6 = {};
 __export(tags_exports6, {
   default: () => tags_default6
 });
-var import_react115 = require("@remix-run/react");
+var import_react111 = require("@remix-run/react");
 var TuneTags = () => {
-  let navigate = (0, import_react115.useNavigate)(), { slug } = navigate.query, { tune } = data ?? {}, { name, tags } = tune ?? {}, sortedTags = Tag_default.sort(tags);
+  let navigate = (0, import_react111.useNavigate)(), { slug } = navigate.query, { tune } = data ?? {}, { name, tags } = tune ?? {}, sortedTags = Tag_default.sort(tags);
   return /* @__PURE__ */ React.createElement(Layout_default, {
     pageTitle: `Trad Archive - ${name} - Tags`
   }, data && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -5181,7 +4901,7 @@ __export(tunes_exports, {
   loader: () => loader13,
   meta: () => meta6
 });
-var import_react116 = require("@remix-run/react");
+var import_react112 = require("@remix-run/react");
 function meta6() {
   return {
     title: "Trad Archive - Tunes"
@@ -5207,7 +4927,7 @@ async function loader13({
   };
 }
 var Tunes = () => {
-  let { tunes, totalTunes } = (0, import_react116.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { tunes, totalTunes } = (0, import_react112.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalTunes,
     defaultPerPage: PER_PAGE
   });
@@ -5220,7 +4940,7 @@ var Tunes = () => {
   }, "No Tunes found"), tunes.length > 0 && /* @__PURE__ */ React.createElement("ul", null, tunes.map((tune, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react116.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react112.Link, {
     to: Entity_default.makeHrefForView(tune)
   }, tune.name)))));
 }, tunes_default = Tunes;
@@ -5232,7 +4952,7 @@ __export(choose_new_password_exports, {
   default: () => ChooseNewPassword,
   loader: () => loader14
 });
-var import_node4 = require("@remix-run/node"), import_react117 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
+var import_node4 = require("@remix-run/node"), import_react113 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
 var loader14 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), validationError = session.get("validationError") || null, error2 = null, params = new URL(request.url).searchParams, userEmail = params.get("userEmail") ?? "", tokenUnhashed = params.get("tokenUnhashed") ?? "", user = await db.user.findUnique({ where: { email: userEmail } });
   if (!user || !user.autoLoginTokenHashed || !user.autoLoginTokenExpiry)
@@ -5269,12 +4989,12 @@ var loader14 = async ({ request }) => {
   });
 };
 function ChooseNewPassword() {
-  let transition = (0, import_react117.useTransition)(), { error: error2, validationError } = (0, import_react117.useLoaderData)(), [searchParams] = (0, import_react117.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
+  let transition = (0, import_react113.useTransition)(), { error: error2, validationError } = (0, import_react113.useLoaderData)(), [searchParams] = (0, import_react113.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Choose a new password"), error2 ? /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", {
     className: "text-red-600 mb-6"
-  }, error2), /* @__PURE__ */ React.createElement(import_react117.Link, {
+  }, error2), /* @__PURE__ */ React.createElement(import_react113.Link, {
     to: "/reset-password"
   }, "Reset Password")) : /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col align-start max-w-xs"
@@ -5311,9 +5031,94 @@ var new_exports5 = {};
 __export(new_exports5, {
   default: () => new_default5
 });
-var import_react118 = require("@remix-run/react");
+var import_react115 = require("@remix-run/react");
+
+// app/components/CreatePersonForm.tsx
+var import_react114 = require("react"), import_client36 = require("@apollo/client");
+var CREATE_PERSON_MUTATION = import_client36.gql`
+	mutation CreatePerson($input: CreatePersonInput!) {
+		createPerson(input: $input) {
+			...Person
+		}
+	}
+	${EntityFragments.person}
+`, CreatePersonForm = ({ onSuccess }) => {
+  let [createPerson, { loading, error: error2, data: data2 }] = (0, import_client36.useMutation)(CREATE_PERSON_MUTATION, {
+    errorPolicy: "all"
+  }), [firstName, setFirstName] = (0, import_react114.useState)(""), [middleName, setMiddleName] = (0, import_react114.useState)(""), [lastName, setLastName] = (0, import_react114.useState)(""), [slug, setSlug] = (0, import_react114.useState)(""), [aliases, setAliases] = (0, import_react114.useState)(""), [description, setDescription] = (0, import_react114.useState)("");
+  (0, import_react114.useEffect)(() => {
+    let proposedSlug = "";
+    firstName && (proposedSlug = firstName), middleName && (proposedSlug = `${proposedSlug}-${middleName}`), lastName && (proposedSlug = `${proposedSlug}-${lastName}`), setSlug(Entity_default.cleanSlug(proposedSlug));
+  }, [firstName, middleName, lastName]);
+  let onCreatePerson = (event) => {
+    event.preventDefault(), createPerson({ variables: { input: {
+      firstName,
+      middleName,
+      lastName,
+      slug,
+      aliases,
+      description
+    } } });
+  };
+  return (0, import_react114.useEffect)(() => {
+    if (data2 == null ? void 0 : data2.createPerson) {
+      if (onSuccess)
+        return onSuccess(data2.createPerson);
+      window.alert("Person created successfully!"), setFirstName(""), setMiddleName(""), setLastName(""), setSlug(""), setAliases(""), setDescription("");
+    }
+  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col align-start"
+  }, /* @__PURE__ */ React.createElement("form", {
+    onSubmit: onCreatePerson
+  }, /* @__PURE__ */ React.createElement("input", {
+    placeholder: "First name",
+    autoFocus: !0,
+    className: "mb-2",
+    value: firstName,
+    onChange: (event) => setFirstName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Middle name (optional)",
+    className: "mb-2",
+    value: middleName,
+    onChange: (event) => setMiddleName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Last name",
+    className: "mb-2",
+    value: lastName,
+    onChange: (event) => setLastName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "URL slug (ie. kitty-hayes)",
+    className: "mb-2",
+    value: slug,
+    onChange: (event) => setSlug(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "This will be used for the URL of this Person, for example", " ", `https://trad-archive.com/entities/people/${slug || "kitty-hayes"}`), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Aliases",
+    className: "mb-2",
+    value: aliases,
+    onChange: (event) => setAliases(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "A list of comma-separated aliases for this Person. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Tony D, The Tradfather, Tony from the County Calamari")), /* @__PURE__ */ React.createElement("textarea", {
+    placeholder: "Description",
+    className: "mb-2",
+    value: description,
+    rows: 5,
+    onChange: (event) => setDescription(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "submit",
+    className: "btn mb-4 w-auto",
+    disabled: loading,
+    value: "Create"
+  }))), error2 && /* @__PURE__ */ React.createElement("div", {
+    className: "text-red-600"
+  }, error2.message));
+}, CreatePersonForm_default = CreatePersonForm;
+
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/people/new.tsx
 var NewPerson = () => {
-  let navigate = (0, import_react118.useNavigate)();
+  let navigate = (0, import_react115.useNavigate)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "max-w-md"
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -5330,9 +5135,103 @@ var new_exports6 = {};
 __export(new_exports6, {
   default: () => new_default6
 });
-var import_react119 = require("@remix-run/react");
+var import_react117 = require("@remix-run/react");
+
+// app/components/CreatePlaceForm.tsx
+var import_react116 = require("react"), import_client37 = require("@apollo/client");
+var CREATE_PLACE_MUTATION = import_client37.gql`
+	mutation CreatePlace($input: CreatePlaceInput!) {
+		createPlace(input: $input) {
+			...Place
+		}
+	}
+	${EntityFragments.place}
+`, CreatePlaceForm = ({ onSuccess }) => {
+  let [createPlace, { loading, error: error2, data: data2 }] = (0, import_client37.useMutation)(CREATE_PLACE_MUTATION, { errorPolicy: "all" }), [name, setName] = (0, import_react116.useState)(""), [slug, setSlug] = (0, import_react116.useState)(""), [aliases, setAliases] = (0, import_react116.useState)(""), [latitude, setLatitude] = (0, import_react116.useState)(""), [longitude, setLongitude] = (0, import_react116.useState)(""), [description, setDescription] = (0, import_react116.useState)("");
+  (0, import_react116.useEffect)(() => {
+    let proposedSlug = Entity_default.cleanSlug(name ?? "");
+    setSlug(proposedSlug);
+  }, [name]);
+  let onCreatePlace = async (event) => {
+    event.preventDefault();
+    let input = {
+      name,
+      slug,
+      aliases,
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      description
+    };
+    try {
+      await createPlace({ variables: { input } });
+    } catch {
+    }
+  };
+  return (0, import_react116.useEffect)(() => {
+    if (data2 == null ? void 0 : data2.createPlace) {
+      if (onSuccess)
+        return onSuccess(data2.createPlace);
+      window.alert("Place created successfully!"), setName(""), setSlug(""), setAliases(""), setLatitude(""), setLongitude(""), setDescription("");
+    }
+  }, [data2]), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "flex flex-col align-start"
+  }, /* @__PURE__ */ React.createElement("form", {
+    onSubmit: onCreatePlace
+  }, /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Name",
+    autoFocus: !0,
+    className: "mb-2",
+    value: name,
+    onChange: (event) => setName(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "URL slug (ie. galway-city)",
+    className: "mb-2",
+    value: slug,
+    onChange: (event) => setSlug(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "This will be used for the URL of this Place, for example", " ", `https://trad-archive.com/entities/places/${slug || "galway-city"}`), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Aliases",
+    className: "mb-2",
+    value: aliases,
+    onChange: (event) => setAliases(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "A list of comma-separated aliases for this Place. For example:", " ", /* @__PURE__ */ React.createElement("em", null, "Gaillimh, The City of Tribes")), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Latitude",
+    className: "mb-2",
+    value: latitude,
+    onChange: (event) => setLatitude(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    placeholder: "Longitude",
+    className: "mb-2",
+    value: longitude,
+    onChange: (event) => setLongitude(event.target.value)
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "text-sm text-gray-400 mb-2 ml-2"
+  }, "To find the latitude and longitude, visit", " ", /* @__PURE__ */ React.createElement("a", {
+    href: `https://www.google.com/maps/place/${name}`,
+    target: "_blank",
+    rel: "noreferrer"
+  }, name ? `${name} on ` : "", "Google Maps (will open in new tab)"), " ", `and right-click on the exact location you'd like. You'll see numbers like "53.2838294,-9.1888286". Click to copy them to your clipboard. The first one is latitude, and the second is longitude.`), /* @__PURE__ */ React.createElement("textarea", {
+    placeholder: "Description",
+    className: "mb-2",
+    value: description,
+    rows: 5,
+    onChange: (event) => setDescription(event.target.value)
+  }), /* @__PURE__ */ React.createElement("input", {
+    type: "submit",
+    className: "btn mb-4 w-auto",
+    disabled: loading,
+    value: "Create"
+  }))), error2 && /* @__PURE__ */ React.createElement("div", {
+    className: "text-red-600"
+  }, error2.message));
+}, CreatePlaceForm_default = CreatePlaceForm;
+
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/places/new.tsx
 var NewPlace = () => {
-  let navigate = (0, import_react119.useNavigate)();
+  let navigate = (0, import_react117.useNavigate)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireUser_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "max-w-md"
   }, /* @__PURE__ */ React.createElement("h1", {
@@ -5349,10 +5248,10 @@ var verify_exports = {};
 __export(verify_exports, {
   default: () => verify_default
 });
-var import_react121 = require("react"), import_client39 = require("@apollo/client"), import_react122 = require("@remix-run/react");
+var import_react119 = require("react"), import_client39 = require("@apollo/client"), import_react120 = require("@remix-run/react");
 
 // app/hooks/useVerificationRequestsForCurrentUser.ts
-var import_react120 = require("react"), import_client38 = require("@apollo/client");
+var import_react118 = require("react"), import_client38 = require("@apollo/client");
 var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client38.gql`
 	query VerificationRequestsForCurrentUser {
 		verificationRequestsForCurrentUser {
@@ -5363,7 +5262,7 @@ var VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY = import_client38.gql`
 `, useVerificationRequestsForCurrentUser = () => {
   var _a;
   let [makeQuery, query] = (0, import_client38.useLazyQuery)(VERIFICATION_REQUESTS_FOR_CURRENT_USER_QUERY);
-  return (0, import_react120.useEffect)(() => {
+  return (0, import_react118.useEffect)(() => {
     makeQuery();
   }, [makeQuery]), [(_a = query == null ? void 0 : query.data) == null ? void 0 : _a.verificationRequestsForCurrentUser, query];
 }, useVerificationRequestsForCurrentUser_default = useVerificationRequestsForCurrentUser;
@@ -5384,13 +5283,13 @@ var CREATE_PRESIGNED_UPLOAD_URL_MUTATION = import_client39.gql`
 	}
 	${VerificationRequestFragments.verificationRequest}
 `, AccountVerify = () => {
-  let navigate = (0, import_react122.useNavigate)(), [
+  let navigate = (0, import_react120.useNavigate)(), [
     _,
     {
       refetch: refetchVerificationRequestsForCurrentUser,
       loading: refetchVerificationRequestsIsLoading
     }
-  ] = useVerificationRequestsForCurrentUser_default(), [personEntity, setPersonEntity] = (0, import_react121.useState)(), [imageFile, setImageFile] = (0, import_react121.useState)(), [imageFileObjectUrl, setImageFileObjectUrl] = (0, import_react121.useState)(), [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] = (0, import_react121.useState)(!1), [formIsSubmitting, setFormIsSubmitting] = (0, import_react121.useState)(!1), [createPresignedUploadUrl] = (0, import_client39.useMutation)(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" }), [createVerificationRequest] = (0, import_client39.useMutation)(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" }), onSelectEntity = (entity) => {
+  ] = useVerificationRequestsForCurrentUser_default(), [personEntity, setPersonEntity] = (0, import_react119.useState)(), [imageFile, setImageFile] = (0, import_react119.useState)(), [imageFileObjectUrl, setImageFileObjectUrl] = (0, import_react119.useState)(), [copyrightPermissionIsGranted, setCopyrightPermissionIsGranted] = (0, import_react119.useState)(!1), [formIsSubmitting, setFormIsSubmitting] = (0, import_react119.useState)(!1), [createPresignedUploadUrl] = (0, import_client39.useMutation)(CREATE_PRESIGNED_UPLOAD_URL_MUTATION, { errorPolicy: "all" }), [createVerificationRequest] = (0, import_client39.useMutation)(CREATE_VERIFICATION_REQUEST_MUTATION, { errorPolicy: "all" }), onSelectEntity = (entity) => {
     isPerson(entity) && setPersonEntity(entity);
   }, onImageFileChanged = (event) => {
     var _a;
@@ -5401,7 +5300,7 @@ var CREATE_PRESIGNED_UPLOAD_URL_MUTATION = import_client39.gql`
     let objectUrl = URL.createObjectURL(selectedFile);
     setImageFileObjectUrl(objectUrl);
   };
-  (0, import_react121.useEffect)(() => () => {
+  (0, import_react119.useEffect)(() => () => {
     imageFileObjectUrl && URL.revokeObjectURL(imageFileObjectUrl);
   }, [imageFileObjectUrl]);
   let requiredFieldsAreSet = personEntity && imageFile && copyrightPermissionIsGranted, onSubmitClicked = async () => {
@@ -5497,7 +5396,7 @@ __export(reset_password_exports, {
   default: () => ResetPassword,
   loader: () => loader15
 });
-var import_node5 = require("@remix-run/node"), import_react123 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
+var import_node5 = require("@remix-run/node"), import_react121 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
 var loader15 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), error2 = session.get("error") || null, confirmation = session.get("confirmation") || null;
   return (0, import_node5.json)({ error: error2, confirmation }, {
@@ -5547,7 +5446,7 @@ var loader15 = async ({ request }) => {
   });
 };
 function ResetPassword() {
-  let transition = (0, import_react123.useTransition)(), { error: error2, confirmation } = (0, import_react123.useLoaderData)();
+  let transition = (0, import_react121.useTransition)(), { error: error2, confirmation } = (0, import_react121.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-4"
   }, "Reset your password"), confirmation ? /* @__PURE__ */ React.createElement("div", {
@@ -5574,7 +5473,7 @@ function ResetPassword() {
     value: "Send Email"
   })), error2 && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-6"
-  }, error2), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react123.Link, {
+  }, error2), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react121.Link, {
     to: "/login"
   }, "Go Back")))));
 }
@@ -5585,7 +5484,7 @@ __export(account_exports, {
   default: () => AccountHome,
   loader: () => loader16
 });
-var import_react124 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_react122 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
 var loader16 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
     where: { id: currentUserId }
@@ -5601,9 +5500,9 @@ function AccountHome() {
     className: "mb-6"
   }, "Account"), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col space-y-2"
-  }, /* @__PURE__ */ React.createElement(import_react124.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react122.Link, {
     to: "/reset-password"
-  }, "Change Password"), /* @__PURE__ */ React.createElement(import_react124.Link, {
+  }, "Change Password"), /* @__PURE__ */ React.createElement(import_react122.Link, {
     to: "/logout"
   }, "Log Out ")));
 }
@@ -5613,38 +5512,38 @@ var admin_exports = {};
 __export(admin_exports, {
   default: () => admin_default
 });
-var import_react125 = require("@remix-run/react");
+var import_react123 = require("@remix-run/react");
 var AdminHome = () => /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(RequireAdmin_default, null, /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("h1", {
   className: "mb-4"
-}, "Admin"), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Admin"), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/admin/verification-requests"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Manage Verification Requests")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/admin/takedown-requests"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Manage Takedown Requests")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/admin/submissions"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-6"
-}, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Manage Submissions")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/entities/audio-items/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Create Audio Item")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/entities/people/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Person")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Create Person")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/entities/instruments/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Create Instrument")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/entities/places/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
-}, "Create Place")), /* @__PURE__ */ React.createElement(import_react125.Link, {
+}, "Create Place")), /* @__PURE__ */ React.createElement(import_react123.Link, {
   to: "/entities/collections/new"
 }, /* @__PURE__ */ React.createElement("a", {
   className: "block mb-2"
@@ -5657,7 +5556,7 @@ __export(saved_items_exports, {
   default: () => SavedItems,
   loader: () => loader17
 });
-var import_react126 = require("@remix-run/react"), import_node7 = require("@remix-run/node");
+var import_react124 = require("@remix-run/react"), import_node7 = require("@remix-run/node");
 var loader17 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { pathname, searchParams } = new URL(request.url), redirectParams = new URLSearchParams({
     redirectTo: pathname
@@ -5721,7 +5620,7 @@ var loader17 = async ({ request }) => {
   return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node7.json)({ ok: !0 }, { status: 200 });
 };
 function SavedItems() {
-  let { audioItems } = (0, import_react126.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
+  let { audioItems } = (0, import_react124.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     defaultViewAs: "List" /* List */
   });
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
@@ -5732,7 +5631,7 @@ function SavedItems() {
     className: "mb-6"
   })), audioItems.length === 0 && /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500"
-  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react126.Link, {
+  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react124.Link, {
     to: "/"
   }, "Audio Items"), "!"), audioItems.map((audioItem, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
     viewAs,
@@ -5748,7 +5647,7 @@ __export(id_exports2, {
   default: () => id_default2,
   loader: () => loader18
 });
-var import_react127 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
+var import_react125 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
 var loader18 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -5758,7 +5657,7 @@ var loader18 = async ({ params }) => {
     });
   return (0, import_node8.json)({ user });
 }, ViewUserById = () => {
-  let { user } = (0, import_react127.useLoaderData)(), { username, createdAt } = user;
+  let { user } = (0, import_react125.useLoaderData)(), { username, createdAt } = user;
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col-reverse md:flex-row"
   }, /* @__PURE__ */ React.createElement("div", {
@@ -5811,21 +5710,164 @@ var loader19 = async ({ request }) => {
   });
 };
 
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/search.tsx
+var search_exports = {};
+__export(search_exports, {
+  loader: () => loader20
+});
+var import_client40 = require("@prisma/client"), import_node11 = require("@remix-run/node");
+var loader20 = async ({ request }) => {
+  let url = new URL(request.url), searchTerm = url.searchParams.get("searchTerm") || "", entityTypes = url.searchParams.getAll("entityTypes");
+  entityTypes.length === 0 && (entityTypes = [
+    import_client40.EntityType.Person,
+    import_client40.EntityType.Instrument,
+    import_client40.EntityType.Place,
+    import_client40.EntityType.Tune,
+    import_client40.EntityType.Collection,
+    import_client40.EntityType.AudioItem
+  ]);
+  let take = Number(url.searchParams.get("take") ?? 24);
+  if (searchTerm.length < 3)
+    return (0, import_node11.json)({ error: "Must include a search term of at least 3 letters" }, { status: 400 });
+  let cleanedSearchTerm = searchTerm.toLowerCase(), takeFromEach = Math.round(take / entityTypes.length), personQuery = db.person.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { description: { contains: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), instrumentQuery = db.instrument.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { description: { contains: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), placeQuery = db.place.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { description: { contains: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), tuneQuery = db.tune.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { theSessionTuneId: { equals: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), collectionQuery = db.collection.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { description: { contains: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), audioItemQuery = db.audioItem.findMany({
+    include: {
+      createdByUser: !0
+    },
+    where: {
+      OR: [
+        {
+          name: {
+            contains: cleanedSearchTerm
+          }
+        },
+        { aliases: { contains: cleanedSearchTerm } },
+        { description: { contains: cleanedSearchTerm } }
+      ]
+    },
+    take: takeFromEach
+  }), queryPromises = [];
+  for (let entityType of entityTypes)
+    switch (entityType) {
+      case import_client40.EntityType.Person:
+        queryPromises.push(personQuery);
+        break;
+      case import_client40.EntityType.Tune:
+        queryPromises.push(tuneQuery);
+        break;
+      case import_client40.EntityType.Instrument:
+        queryPromises.push(instrumentQuery);
+        break;
+      case import_client40.EntityType.Place:
+        queryPromises.push(placeQuery);
+        break;
+      case import_client40.EntityType.Collection:
+        queryPromises.push(collectionQuery);
+        break;
+      case import_client40.EntityType.AudioItem:
+        queryPromises.push(audioItemQuery);
+        break;
+      default:
+        break;
+    }
+  let results = (await Promise.all(queryPromises)).reduce((prevVal, curVal) => [...prevVal, ...curVal], []);
+  return (0, import_node11.json)({ results }, { status: 200 });
+};
+
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/signup.tsx
 var signup_exports = {};
 __export(signup_exports, {
   action: () => action5,
   default: () => SignUp,
-  loader: () => loader20
+  loader: () => loader21
 });
-var import_react128 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
-var import_node11 = require("@remix-run/node");
-var loader20 = async ({ request }) => {
+var import_react126 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
+var import_node12 = require("@remix-run/node");
+var loader21 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node11.redirect)(redirectTo || "/");
+    return (0, import_node12.redirect)(redirectTo || "/");
   let data2 = { error: session.get("error") };
-  return (0, import_node11.json)(data2, {
+  return (0, import_node12.json)(data2, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -5833,31 +5875,31 @@ var loader20 = async ({ request }) => {
 }, action5 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo"), formData = await request.formData(), email = String(formData.get("email") ?? ""), fullName = String(formData.get("full_name") ?? ""), password = String(formData.get("password") ?? ""), passwordConfirm = String(formData.get("password_confirm") ?? "");
   if (await db.user.findUnique({ where: { email } }))
-    return session.flash("error", "There is already a user with this email address. Try logging in?"), (0, import_node11.redirect)("/signup", {
+    return session.flash("error", "There is already a user with this email address. Try logging in?"), (0, import_node12.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!new RegExp(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i).test(email))
-    return session.flash("error", "Email is not valid"), (0, import_node11.redirect)("/signup", {
+    return session.flash("error", "Email is not valid"), (0, import_node12.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(fullName.split(" ").length >= 2))
-    return session.flash("error", "Please enter your full name"), (0, import_node11.redirect)("/signup", {
+    return session.flash("error", "Please enter your full name"), (0, import_node12.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password === passwordConfirm))
-    return session.flash("error", "Passwords don't match"), (0, import_node11.redirect)("/signup", {
+    return session.flash("error", "Passwords don't match"), (0, import_node12.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password.length >= 8))
-    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node11.redirect)("/signup", {
+    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node12.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
@@ -5869,14 +5911,14 @@ var loader20 = async ({ request }) => {
       passwordHashed
     }
   });
-  return session.set("userId", newUser.id), (0, import_node11.redirect)(redirectTo || "/", {
+  return session.set("userId", newUser.id), (0, import_node12.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
 };
 function SignUp() {
-  let { error: error2 } = (0, import_react128.useLoaderData)(), { state } = (0, import_react128.useTransition)(), { search } = (0, import_react128.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error: error2 } = (0, import_react126.useLoaderData)(), { state } = (0, import_react126.useTransition)(), { search } = (0, import_react126.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, redirectTo ? "Create an account to continue" : "Create your account"), /* @__PURE__ */ React.createElement("div", {
@@ -5912,7 +5954,7 @@ function SignUp() {
     value: "Sign Up"
   })), error2 && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-6"
-  }, error2), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react128.Link, {
+  }, error2), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react126.Link, {
     to: `/login?${logInLinkQueryParams.toString()}`
   }, "Log in"))));
 }
@@ -5921,9 +5963,9 @@ function SignUp() {
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Home,
-  loader: () => loader21
+  loader: () => loader22
 });
-var import_react129 = require("react"), import_react130 = require("@remix-run/react");
+var import_react127 = require("react"), import_react128 = require("@remix-run/react");
 
 // app/services/LocalStorage.ts
 var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
@@ -5952,7 +5994,7 @@ var ProjectIntro = ({ className, onClose }) => /* @__PURE__ */ React.createEleme
 }, "close"))), ProjectIntro_default = ProjectIntro;
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/index.tsx
-async function loader21({
+async function loader22({
   request
 }) {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { searchParams } = new URL(request.url), page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), [
@@ -6040,13 +6082,13 @@ function Home() {
     numAudioItemsAllTime,
     numTagsAllTime,
     numCommentsAllTime
-  } = (0, import_react130.useLoaderData)(), { search } = (0, import_react130.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
+  } = (0, import_react128.useLoaderData)(), { search } = (0, import_react128.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: numAudioItemsAllTime
-  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react129.useState)(!1);
-  (0, import_react129.useEffect)(() => {
+  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react127.useState)(!1);
+  (0, import_react127.useEffect)(() => {
     LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
   }, []);
-  let onCloseIntro = (0, import_react129.useCallback)(() => {
+  let onCloseIntro = (0, import_react127.useCallback)(() => {
     LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
   }, []);
   return /* @__PURE__ */ React.createElement(Layout_default, null, shouldShowIntro && /* @__PURE__ */ React.createElement(ProjectIntro_default, {
@@ -6069,19 +6111,19 @@ function Home() {
     className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300"
   }, /* @__PURE__ */ React.createElement("h3", {
     className: "mb-4"
-  }, "Browse"), /* @__PURE__ */ React.createElement(import_react130.Link, {
+  }, "Browse"), /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/entities/people",
     className: "mb-2"
-  }, "People"), /* @__PURE__ */ React.createElement(import_react130.Link, {
+  }, "People"), /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/entities/instruments",
     className: "mb-2"
-  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react130.Link, {
+  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/entities/places",
     className: "mb-2"
-  }, "Places"), /* @__PURE__ */ React.createElement(import_react130.Link, {
+  }, "Places"), /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/entities/tunes",
     className: "mb-2"
-  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react130.Link, {
+  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react128.Link, {
     to: "/entities/collections",
     className: "mb-2"
   }, "Collections"), /* @__PURE__ */ React.createElement("h3", {
@@ -6099,7 +6141,7 @@ function Home() {
     return name ? /* @__PURE__ */ React.createElement("div", {
       className: "mb-2 text-gray-500",
       key: index
-    }, /* @__PURE__ */ React.createElement(import_react130.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react128.Link, {
       to: Entity_default.makeHrefForView(collection)
     }, collection.name)) : null;
   }), /* @__PURE__ */ React.createElement("h3", {
@@ -6122,9 +6164,9 @@ function Home() {
       key: index
     }, /* @__PURE__ */ React.createElement("div", {
       className: " mb-1"
-    }, /* @__PURE__ */ React.createElement(import_react130.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react128.Link, {
       to: `/users/${createdByUser.id}`
-    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react130.Link, {
+    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react128.Link, {
       to: Entity_default.makeHrefForView(parentAudioItem)
     }, parentAudioItem.name), ":"), /* @__PURE__ */ React.createElement("div", {
       className: "whitespace-pre-line text-sm"
@@ -6137,41 +6179,41 @@ var login_exports = {};
 __export(login_exports, {
   action: () => action6,
   default: () => Login,
-  loader: () => loader22
+  loader: () => loader23
 });
-var import_react131 = require("@remix-run/react"), import_node12 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
-var loader22 = async ({ request }) => {
+var import_react129 = require("@remix-run/react"), import_node13 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
+var loader23 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node12.redirect)(redirectTo || "/");
+    return (0, import_node13.redirect)(redirectTo || "/");
   let data2 = { error: session.get("error") };
-  return (0, import_node12.json)(data2, {
+  return (0, import_node13.json)(data2, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
 }, action6 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo"), formData = await request.formData(), email = String(formData.get("email") ?? ""), password = String(formData.get("password") ?? ""), user = await db.user.findUnique({ where: { email } });
-  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node12.redirect)(redirectTo || "/", {
+  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node13.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Incorrect password"), (0, import_node12.redirect)("/login", {
+  })) : (session.flash("error", "Incorrect password"), (0, import_node13.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "This user does not have a password. TODO: Redirect to /reset-password page"), (0, import_node12.redirect)("/login", {
+  })) : (session.flash("error", "This user does not have a password. TODO: Redirect to /reset-password page"), (0, import_node13.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node12.redirect)("/login", {
+  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node13.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   }));
 };
 function Login() {
-  let { error: error2 } = (0, import_react131.useLoaderData)(), transition = (0, import_react131.useTransition)(), { search } = (0, import_react131.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error: error2 } = (0, import_react129.useLoaderData)(), transition = (0, import_react129.useTransition)(), { search } = (0, import_react129.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Log in to ", redirectTo ? "continue" : "Trad Archive"), /* @__PURE__ */ React.createElement("div", {
@@ -6199,15 +6241,15 @@ function Login() {
     className: "text-red-600 mb-6"
   }, error2), /* @__PURE__ */ React.createElement("p", {
     className: "mb-2"
-  }, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react131.Link, {
+  }, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react129.Link, {
     to: `/signup?${signUpLinkQueryParams.toString()}`
-  }, "Sign Up")), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react131.Link, {
+  }, "Sign Up")), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react129.Link, {
     to: "/reset-password"
   }, "Reset Password"))));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "9fbf201f", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-FWBSESBH.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-PQJWRTRS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-5BQXLM4I.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/[id]/upload": { id: "routes/account/submissions/[id]/upload", parentId: "root", path: "account/submissions/id/upload", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/[id]/upload-NNC6UZJH.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/index": { id: "routes/account/submissions/index", parentId: "root", path: "account/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/account/submissions/index-O4YMFIZJ.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/new": { id: "routes/account/submissions/new", parentId: "root", path: "account/submissions/new", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/new-LSZ3SH53.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/verify": { id: "routes/account/verify", parentId: "root", path: "account/verify", index: void 0, caseSensitive: void 0, module: "/build/routes/account/verify-FFVMNHC6.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-HLMX7G4H.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/[id]": { id: "routes/admin/submissions/[id]", parentId: "root", path: "admin/submissions/id", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/submissions/[id]-3DLGL2ZK.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/index": { id: "routes/admin/submissions/index", parentId: "root", path: "admin/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/admin/submissions/index-KADR2DXQ.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/takedown-requests": { id: "routes/admin/takedown-requests", parentId: "root", path: "admin/takedown-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/takedown-requests-XFC7PYOU.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/verification-requests": { id: "routes/admin/verification-requests", parentId: "root", path: "admin/verification-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/verification-requests-7WJME7QS.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-DRVQWS7G.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-HFNBUAMT.js", imports: ["/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/about": { id: "routes/entities/audio-items/$slug/about", parentId: "routes/entities/audio-items/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/about-Q3HPH7KW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/edit": { id: "routes/entities/audio-items/$slug/edit", parentId: "routes/entities/audio-items/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/edit-44OCY5IS.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/tags": { id: "routes/entities/audio-items/$slug/tags", parentId: "routes/entities/audio-items/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/tags-AGNIMGTX.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/new": { id: "routes/entities/audio-items/new", parentId: "root", path: "entities/audio-items/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/new-5ENJLP5X.js", imports: ["/build/_shared/chunk-KF4KFTG7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-HFBODBRE.js", imports: ["/build/_shared/chunk-VB3DWVNO.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/about": { id: "routes/entities/collections/$slug/about", parentId: "routes/entities/collections/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/about-TTYF4YNB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/edit": { id: "routes/entities/collections/$slug/edit", parentId: "routes/entities/collections/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/edit-4Q6P7DVB.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/tags": { id: "routes/entities/collections/$slug/tags", parentId: "routes/entities/collections/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/tags-PD6FTNRO.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-QLKFCJWD.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/new": { id: "routes/entities/collections/new", parentId: "root", path: "entities/collections/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/new-EQ6J44JH.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-KCGDQCLB.js", imports: ["/build/_shared/chunk-VB3DWVNO.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/about": { id: "routes/entities/instruments/$slug/about", parentId: "routes/entities/instruments/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/about-X6B2HCQD.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/edit": { id: "routes/entities/instruments/$slug/edit", parentId: "routes/entities/instruments/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/edit-AOYINIV7.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/tags": { id: "routes/entities/instruments/$slug/tags", parentId: "routes/entities/instruments/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/tags-UW5HRNK3.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-4N5QZTKV.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/new": { id: "routes/entities/instruments/new", parentId: "root", path: "entities/instruments/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/new-BGRYSEHD.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-VXM4WI26.js", imports: ["/build/_shared/chunk-VB3DWVNO.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/about": { id: "routes/entities/people/$slug/about", parentId: "routes/entities/people/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/about-G4NCZ6M6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/edit": { id: "routes/entities/people/$slug/edit", parentId: "routes/entities/people/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/edit-WZAMEA43.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/tags": { id: "routes/entities/people/$slug/tags", parentId: "routes/entities/people/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/tags-WHJNYAPB.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-NPPJOENE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/new": { id: "routes/entities/people/new", parentId: "root", path: "entities/people/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/new-TTL447XH.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-SOVP4F5W.js", imports: ["/build/_shared/chunk-VB3DWVNO.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/about": { id: "routes/entities/places/$slug/about", parentId: "routes/entities/places/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/about-LVSKERUP.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/edit": { id: "routes/entities/places/$slug/edit", parentId: "routes/entities/places/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/edit-FF5ACGOJ.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/tags": { id: "routes/entities/places/$slug/tags", parentId: "routes/entities/places/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/tags-3YUKMEXN.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-3JONDR7N.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/new": { id: "routes/entities/places/new", parentId: "root", path: "entities/places/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/new-HKNHVRTA.js", imports: ["/build/_shared/chunk-PS2F4ESJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-DCYDYIHI.js", imports: ["/build/_shared/chunk-VB3DWVNO.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/about": { id: "routes/entities/tunes/$slug/about", parentId: "routes/entities/tunes/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/about-Q2AE3PFK.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/tags": { id: "routes/entities/tunes/$slug/tags", parentId: "routes/entities/tunes/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/tags-4CVX5ZQI.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-CTKWVKRM.js", "/build/_shared/chunk-NU77PT47.js", "/build/_shared/chunk-IJKWYIRN.js", "/build/_shared/chunk-SUYZ22VD.js", "/build/_shared/chunk-DTCN5V7D.js", "/build/_shared/chunk-BB7ERBFN.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-C3OOQRN4.js", "/build/_shared/chunk-37OVOBH6.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-ULFT7ZWE.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-2LVZFOAM.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-3KB3C3GC.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-BSRKV2Z3.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-DUJJRYPJ.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-TF3UQF2D.js", "/build/_shared/chunk-YA6G7YED.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-SNT7Q2JV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-6SXM6J4M.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-9FBF201F.js" };
+var assets_manifest_default = { version: "8230dacd", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-NPBKJ7DT.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-PQJWRTRS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-5BQXLM4I.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/[id]/upload": { id: "routes/account/submissions/[id]/upload", parentId: "root", path: "account/submissions/id/upload", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/[id]/upload-CWBGDCXL.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/index": { id: "routes/account/submissions/index", parentId: "root", path: "account/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/account/submissions/index-PW436SOA.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/submissions/new": { id: "routes/account/submissions/new", parentId: "root", path: "account/submissions/new", index: void 0, caseSensitive: void 0, module: "/build/routes/account/submissions/new-G6S7SFMC.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account/verify": { id: "routes/account/verify", parentId: "root", path: "account/verify", index: void 0, caseSensitive: void 0, module: "/build/routes/account/verify-WYMKCQJV.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/index": { id: "routes/admin/index", parentId: "root", path: "admin", index: !0, caseSensitive: void 0, module: "/build/routes/admin/index-4AGCFTV5.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/[id]": { id: "routes/admin/submissions/[id]", parentId: "root", path: "admin/submissions/id", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/submissions/[id]-KNXDTQKN.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/submissions/index": { id: "routes/admin/submissions/index", parentId: "root", path: "admin/submissions", index: !0, caseSensitive: void 0, module: "/build/routes/admin/submissions/index-AS2U6B3T.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/takedown-requests": { id: "routes/admin/takedown-requests", parentId: "root", path: "admin/takedown-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/takedown-requests-TDN2W6QM.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/admin/verification-requests": { id: "routes/admin/verification-requests", parentId: "root", path: "admin/verification-requests", index: void 0, caseSensitive: void 0, module: "/build/routes/admin/verification-requests-4JXJBV66.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-DRVQWS7G.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-NEQ7PTJW.js", imports: ["/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/about": { id: "routes/entities/audio-items/$slug/about", parentId: "routes/entities/audio-items/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/about-Q3HPH7KW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/edit": { id: "routes/entities/audio-items/$slug/edit", parentId: "routes/entities/audio-items/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/edit-EQWUMYYR.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug/tags": { id: "routes/entities/audio-items/$slug/tags", parentId: "routes/entities/audio-items/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug/tags-AGNIMGTX.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/new": { id: "routes/entities/audio-items/new", parentId: "root", path: "entities/audio-items/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/new-4657NIOK.js", imports: ["/build/_shared/chunk-JYR7XRPO.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-XXEEHJUW.js", imports: ["/build/_shared/chunk-R4VNLDXL.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/about": { id: "routes/entities/collections/$slug/about", parentId: "routes/entities/collections/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/about-TTYF4YNB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/edit": { id: "routes/entities/collections/$slug/edit", parentId: "routes/entities/collections/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/edit-EMDQZ7DU.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug/tags": { id: "routes/entities/collections/$slug/tags", parentId: "routes/entities/collections/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug/tags-7H5EVY2L.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-QLKFCJWD.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/new": { id: "routes/entities/collections/new", parentId: "root", path: "entities/collections/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/new-JG3Q3TOA.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-VXCJWG6K.js", imports: ["/build/_shared/chunk-R4VNLDXL.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/about": { id: "routes/entities/instruments/$slug/about", parentId: "routes/entities/instruments/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/about-X6B2HCQD.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/edit": { id: "routes/entities/instruments/$slug/edit", parentId: "routes/entities/instruments/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/edit-SLNCS3IS.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug/tags": { id: "routes/entities/instruments/$slug/tags", parentId: "routes/entities/instruments/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug/tags-3YLBINWO.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-4N5QZTKV.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/new": { id: "routes/entities/instruments/new", parentId: "root", path: "entities/instruments/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/new-E632JVJN.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-WXXWHINI.js", imports: ["/build/_shared/chunk-R4VNLDXL.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/about": { id: "routes/entities/people/$slug/about", parentId: "routes/entities/people/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/about-G4NCZ6M6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/edit": { id: "routes/entities/people/$slug/edit", parentId: "routes/entities/people/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/edit-N5HQ3V56.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug/tags": { id: "routes/entities/people/$slug/tags", parentId: "routes/entities/people/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug/tags-XP5IQRUT.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-NPPJOENE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/new": { id: "routes/entities/people/new", parentId: "root", path: "entities/people/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/new-NJ3ZKKW2.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-BY3HIZBI.js", imports: ["/build/_shared/chunk-R4VNLDXL.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/about": { id: "routes/entities/places/$slug/about", parentId: "routes/entities/places/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/about-LVSKERUP.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/edit": { id: "routes/entities/places/$slug/edit", parentId: "routes/entities/places/$slug", path: "edit", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/edit-DGFEVL5P.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug/tags": { id: "routes/entities/places/$slug/tags", parentId: "routes/entities/places/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug/tags-I3O25NJN.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-3JONDR7N.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/new": { id: "routes/entities/places/new", parentId: "root", path: "entities/places/new", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/new-PRNMLMKD.js", imports: ["/build/_shared/chunk-5XYITOVT.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-VT66Y3ZC.js", imports: ["/build/_shared/chunk-R4VNLDXL.js", "/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/about": { id: "routes/entities/tunes/$slug/about", parentId: "routes/entities/tunes/$slug", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/about-Q2AE3PFK.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug/tags": { id: "routes/entities/tunes/$slug/tags", parentId: "routes/entities/tunes/$slug", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug/tags-VWEDOHZR.js", imports: ["/build/_shared/chunk-7OY7H2TI.js", "/build/_shared/chunk-26TF2A4X.js", "/build/_shared/chunk-FUBOPGSS.js", "/build/_shared/chunk-YQUMRRE2.js", "/build/_shared/chunk-J2Q2VMPQ.js", "/build/_shared/chunk-7WPGMELB.js", "/build/_shared/chunk-4LYIPK7T.js", "/build/_shared/chunk-PKPMHHR6.js", "/build/_shared/chunk-CTBV5AVJ.js", "/build/_shared/chunk-T62WAJT7.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-ULFT7ZWE.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-7L35VYVK.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-3KB3C3GC.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-BSRKV2Z3.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-XEERDKBF.js", imports: ["/build/_shared/chunk-ADLM5W3T.js", "/build/_shared/chunk-DNIJGJQK.js", "/build/_shared/chunk-G3YZ4PE6.js", "/build/_shared/chunk-7NJMRZQR.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-BTICP3C7.js", "/build/_shared/chunk-XGHGISHD.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-4SNRFG52.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-SNT7Q2JV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-6SXM6J4M.js", imports: ["/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-8230DACD.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports }, routes = {
@@ -6626,6 +6668,14 @@ var entry = { module: entry_server_exports }, routes = {
     index: void 0,
     caseSensitive: void 0,
     module: logout_exports
+  },
+  "routes/search": {
+    id: "routes/search",
+    parentId: "root",
+    path: "search",
+    index: void 0,
+    caseSensitive: void 0,
+    module: search_exports
   },
   "routes/signup": {
     id: "routes/signup",

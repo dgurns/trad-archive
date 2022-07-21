@@ -115,10 +115,7 @@ const Header = ({ currentUser }: Props) => {
 				isVisible={searchModalIsVisible}
 				onClose={closeSearchModal}
 			>
-				<SearchEntities
-					onSelect={onSelectSearchResult}
-					onNewEntityCreated={onNewEntityCreated}
-				/>
+				<SearchEntities onSelect={onSelectSearchResult} />
 			</Modal>
 		</>
 	);

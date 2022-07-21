@@ -54,7 +54,7 @@ const Modal = ({
 			/>
 
 			<div
-				className={`bg-white cursor-auto rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-9/10 overflow-y-auto overflow-x-hidden md:max-w-md ${
+				className={`bg-white cursor-auto rounded relative w-full px-4 pb-4 pt-3 m-2 max-h-[90vh] overflow-y-auto overflow-x-hidden md:max-w-xl ${
 					className ?? ""
 				}`}
 			>

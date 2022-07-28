@@ -106,8 +106,9 @@ const Filters = ({
 				<div className="flex flex-row items-center">
 					Sort by
 					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
-						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
-						<option value={SortBy.RecentlyAdded}>Newest</option>
+						<option value={SortBy.DateAddedOldToNew}>
+							Date Added (Old to New)
+						</option>
 					</select>
 				</div>
 			)}

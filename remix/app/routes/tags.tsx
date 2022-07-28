@@ -116,6 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
 				},
 			});
 		}
+
 		return json<PostActionData>({ tag, tagInverse }, { status: 201 });
 	}
 

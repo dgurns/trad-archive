@@ -32,10 +32,10 @@ export async function loader({
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
-	const sortBy = searchParams.get("sortBy") ?? SortBy.RecentlyTagged;
+	const sortBy = searchParams.get("sortBy") ?? SortBy.DateAddedOldToNew;
 	const audioItemsOrderBy: Prisma.Enumerable<Prisma.AudioItemOrderByWithRelationInput> =
-		sortBy === SortBy.RecentlyTagged
-			? { updatedAt: "desc" }
+		sortBy === SortBy.DateAddedOldToNew
+			? { createdAt: "asc" }
 			: { createdAt: "desc" };
 
 	const [audioItems, totalAudioItems] = await Promise.all([

@@ -36,6 +36,31 @@ export async function loader({
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
+
+	// Get the most recent tags so we can fetch those AudioItem IDs
+	const recentTags = await db.tag.findMany({
+		select: {
+			subjectAudioItemId: true,
+		},
+		where: {
+			subjectAudioItemId: {
+				not: null,
+			},
+		},
+		distinct: ["subjectAudioItemId"],
+		orderBy: {
+			createdAt: "desc",
+		},
+		skip: (page - 1) * perPage,
+		take: perPage,
+	});
+	const recentlyTaggedAudioItemIds: string[] = [];
+	for (const r of recentTags) {
+		if (r.subjectAudioItemId) {
+			recentlyTaggedAudioItemIds.push(r.subjectAudioItemId);
+		}
+	}
+
 	const [
 		audioItems,
 		collections,
@@ -45,8 +70,11 @@ export async function loader({
 		numCommentsAllTime,
 	] = await Promise.all([
 		db.audioItem.findMany({
-			skip: (page - 1) * perPage,
-			take: perPage,
+			where: {
+				id: {
+					in: recentlyTaggedAudioItemIds,
+				},
+			},
 			include: {
 				tagsAsSubject: {
 					include: {
@@ -75,9 +103,6 @@ export async function loader({
 					},
 				},
 			},
-			orderBy: {
-				updatedAt: "desc",
-			},
 		}),
 		db.collection.findMany({
 			take: 5,
@@ -105,8 +130,19 @@ export async function loader({
 		db.comment.count(),
 	]);
 
+	// the IN operator does not guarantee order so we need to manually order them
+	const orderedAudioItems: AudioItemWithRelations[] = [];
+	for (let id of recentlyTaggedAudioItemIds) {
+		for (let a of audioItems) {
+			if (a.id === id) {
+				orderedAudioItems.push(a);
+				break;
+			}
+		}
+	}
+
 	return {
-		audioItems,
+		audioItems: orderedAudioItems,
 		collections,
 		comments,
 		numAudioItemsAllTime,

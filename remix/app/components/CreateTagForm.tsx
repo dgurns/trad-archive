@@ -1,30 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { type Tag } from "@prisma/client";
 
-import type { Entity, Tag } from "~/types";
+import type { Entity } from "~/types";
 import { EntityType } from "~/types";
 import usePlayerContext from "~/hooks/usePlayerContext";
-import useTags from "~/hooks/useTags";
 
 import SearchEntities from "~/components/SearchEntities";
 import SelectRelationship from "~/components/SelectRelationship";
 import TimestampInput from "~/components/TimestampInput";
 
-const CREATE_TAG_MUTATION = gql`
-	mutation CreateTag($input: CreateTagInput!) {
-		createTag(input: $input) {
-			id
-		}
-	}
-`;
-interface CreateTagInput {
-	relationshipId: string;
-	subjectEntityType: EntityType;
-	subjectEntityId: string;
-	objectEntityType: EntityType;
-	objectEntityId: string;
-	subjectTimeMarkerSeconds?: number;
-}
 interface Props {
 	entity: Entity;
 	onSuccess: (tag: Tag) => void;
@@ -46,46 +30,29 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		defaultTimeMarkerValue
 	);
 
-	const [selectedEntity, setSelectedEntity] = useState<Entity>(null);
+	const [selectedEntity, setSelectedEntity] = useState<Entity>();
 	const [selectedRelationshipId, setSelectedRelationshipId] = useState("");
 	const [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] =
 		useState(true);
 	const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] =
 		useState("");
 
-	const [createTag, { data, error }] = useMutation<
-		{ createTag: Tag },
-		{ input: CreateTagInput }
-	>(CREATE_TAG_MUTATION, {
-		errorPolicy: "all",
-	});
-	const [tagsAreCreating, setTagsAreCreating] = useState(false);
 	const [primaryCreatedTag, setPrimaryCreatedTag] = useState<Tag | undefined>(
 		undefined
 	);
 	const [tagsAreCreated, setTagsAreCreated] = useState(false);
-
-	const {
-		tagsQuery: { refetch: refetchTopLevelTags },
-	} = useTags({
-		queryOptions: { fetchPolicy: "network-only" },
-	});
 
 	useEffect(() => {
 		if (!tagsAreCreated) {
 			return;
 		}
 		const onCreateSuccess = async (tag: Tag) => {
-			// Now that a new Tag has been created, refetch the top-level `tags` query
-			if (refetchTopLevelTags) {
-				await refetchTopLevelTags();
-			}
 			await onSuccess(tag);
 		};
 		if (primaryCreatedTag) {
 			onCreateSuccess(primaryCreatedTag);
 		}
-	}, [data, refetchTopLevelTags, onSuccess, tagsAreCreated, primaryCreatedTag]);
+	}, [onSuccess, tagsAreCreated, primaryCreatedTag]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {
@@ -104,7 +71,10 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	const onTimeMarkerValueChanged = useCallback(
 		(newTimeMarkerValueSeconds: number) => {
 			setShouldAddTimeMarker(true);
-			if (newTimeMarkerValueSeconds >= activeItemDurationSeconds) {
+			if (
+				typeof activeItemDurationSeconds !== "undefined" &&
+				newTimeMarkerValueSeconds >= activeItemDurationSeconds
+			) {
 				setTimeMarkerValue(activeItemDurationSeconds);
 			} else if (newTimeMarkerValueSeconds <= 0) {
 				setTimeMarkerValue(0);
@@ -130,10 +100,11 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	);
 
 	const onCreateTagClicked = useCallback(async () => {
-		setTagsAreCreating(true);
-
+		if (!selectedEntity) {
+			return;
+		}
 		let subjectTimeMarkerSeconds: number | undefined;
-		if (shouldAddTimeMarker && !isNaN(timeMarkerValue)) {
+		if (shouldAddTimeMarker && typeof timeMarkerValue === "number") {
 			subjectTimeMarkerSeconds = timeMarkerValue;
 		}
 		const tagInput = {
@@ -144,8 +115,8 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			objectEntityId: selectedEntity.id,
 			subjectTimeMarkerSeconds,
 		};
-		const primaryTagQuery = await createTag({ variables: { input: tagInput } });
-		setPrimaryCreatedTag(primaryTagQuery.data?.createTag);
+		// TODO: create primary tag
+		// setPrimaryCreatedTag(primaryTagQuery.data?.createTag);
 
 		if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
 			const inverseTagInput = {
@@ -156,10 +127,9 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				objectEntityId: entity.id,
 				subjectTimeMarkerSeconds,
 			};
-			await createTag({ variables: { input: inverseTagInput } });
+			// TODO: create inverse tag
 		}
 
-		setTagsAreCreating(false);
 		setTagsAreCreated(true);
 	}, [
 		selectedRelationshipId,
@@ -167,7 +137,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		selectedInverseRelationshipId,
 		entity,
 		selectedEntity,
-		createTag,
 		shouldAddTimeMarker,
 		timeMarkerValue,
 	]);
@@ -235,7 +204,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 						<div className="flex flex-col items-start">
 							<div className="mb-2">Mark this Tag at time:</div>
 							<TimestampInput
-								valueInSeconds={timeMarkerValue}
+								valueInSeconds={timeMarkerValue ?? 0}
 								onChange={onTimeMarkerValueChanged}
 							/>
 						</div>
@@ -246,7 +215,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			<button
 				className="btn mt-6"
 				onClick={onCreateTagClicked}
-				disabled={tagsAreCreating || !selectedRelationshipId}
+				disabled={!selectedRelationshipId}
 			>
 				Save
 			</button>

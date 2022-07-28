@@ -1,81 +1,41 @@
 import { useState, useCallback } from "react";
+import { type Person, type Instrument, EntityType } from "@prisma/client";
 
-import type { Entity, Person, Instrument, Place, Collection } from "~/types";
-import { EntityType } from "~/types";
-import useRequireLogin from "~/hooks/useRequireLogin";
+import type { Entity } from "~/types";
 
 import Modal from "~/components/Modal";
 import CreatePersonForm from "~/components/CreatePersonForm";
 import CreateInstrumentForm from "~/components/CreateInstrumentForm";
-import CreatePlaceForm from "~/components/CreatePlaceForm";
-import CreateCollectionForm from "~/components/CreateCollectionForm";
 
 interface Props {
 	entityTypes?: EntityType[];
-	onNewEntityCreated: (entity: Entity) => void;
+	onNewEntityCreated?: (entity: Entity) => void;
 }
 const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
-	const { currentUser, requireLogin } = useRequireLogin();
-
 	const [createPersonModalIsVisible, setCreatePersonModalIsVisible] =
 		useState(false);
 	const [createInstrumentModalIsVisible, setCreateInstrumentModalIsVisible] =
 		useState(false);
-	const [createPlaceModalIsVisible, setCreatePlaceModalIsVisible] =
-		useState(false);
-	const [createCollectionModalIsVisible, setCreateCollectionModalIsVisible] =
-		useState(false);
-
-	const onCreateNewPersonClicked = useCallback(async () => {
-		if (!currentUser) {
-			return await requireLogin();
-		}
-		setCreatePersonModalIsVisible(true);
-	}, [requireLogin, currentUser]);
-
-	const onCreateNewInstrumentClicked = useCallback(async () => {
-		if (!currentUser) {
-			return await requireLogin();
-		}
-		setCreateInstrumentModalIsVisible(true);
-	}, [requireLogin, currentUser]);
-
-	const onCreateNewPlaceClicked = useCallback(async () => {
-		if (!currentUser) {
-			return await requireLogin();
-		}
-		setCreatePlaceModalIsVisible(true);
-	}, [requireLogin, currentUser]);
-
-	const onCreateNewCollectionClicked = useCallback(async () => {
-		if (!currentUser) {
-			return await requireLogin();
-		}
-		setCreateCollectionModalIsVisible(true);
-	}, [requireLogin, currentUser]);
 
 	const onNewPersonCreated = useCallback(
 		(person: Person) => {
 			setCreatePersonModalIsVisible(false);
-			onNewEntityCreated(person);
+			if (onNewEntityCreated) {
+				onNewEntityCreated(person);
+			}
 		},
 		[onNewEntityCreated]
 	);
 
-	const onNewInstrumentCreated = useCallback((instrument: Instrument) => {
-		setCreateInstrumentModalIsVisible(false);
-		onNewEntityCreated(instrument);
-	}, []);
-
-	const onNewPlaceCreated = useCallback((place: Place) => {
-		setCreatePlaceModalIsVisible(false);
-		onNewEntityCreated(place);
-	}, []);
-
-	const onNewCollectionCreated = useCallback((collection: Collection) => {
-		setCreateCollectionModalIsVisible(false);
-		onNewEntityCreated(collection);
-	}, []);
+	const onNewInstrumentCreated = useCallback(
+		(instrument: Instrument) => {
+			setCreateInstrumentModalIsVisible(false);
+			if (onNewEntityCreated) {
+				onNewEntityCreated(instrument);
+			}
+		},
+		[onNewEntityCreated]
+	);
 
 	const shouldShowCreatePerson =
 		typeof entityTypes === "undefined" ||
@@ -83,22 +43,9 @@ const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
 	const shouldShowCreateInstrument =
 		typeof entityTypes === "undefined" ||
 		entityTypes.includes(EntityType.Instrument);
-	const shouldShowCreatePlace =
-		typeof entityTypes === "undefined" ||
-		entityTypes.includes(EntityType.Place);
-	const shouldShowCreateCollection =
-		typeof entityTypes === "undefined" ||
-		entityTypes.includes(EntityType.Collection);
 
 	const shouldShowCommaAfterCreatePerson =
-		!entityTypes ||
-		shouldShowCreateInstrument ||
-		shouldShowCreatePlace ||
-		shouldShowCreateCollection;
-	const shouldShowCommaAfterCreateInstrument =
-		!entityTypes || shouldShowCreatePlace || shouldShowCreateCollection;
-	const shouldShowCommaAfterCreatePlace =
-		!entityTypes || shouldShowCreateCollection;
+		!entityTypes || shouldShowCreateInstrument;
 
 	return (
 		<>
@@ -106,7 +53,10 @@ const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
 				Can't find it? Create new:{" "}
 				{shouldShowCreatePerson && (
 					<>
-						<button className="btn-text" onClick={onCreateNewPersonClicked}>
+						<button
+							className="btn-text"
+							onClick={() => setCreatePersonModalIsVisible(true)}
+						>
 							Person
 						</button>
 						{shouldShowCommaAfterCreatePerson && ", "}
@@ -114,24 +64,13 @@ const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
 				)}
 				{shouldShowCreateInstrument && (
 					<>
-						<button className="btn-text" onClick={onCreateNewInstrumentClicked}>
+						<button
+							className="btn-text"
+							onClick={() => setCreateInstrumentModalIsVisible(true)}
+						>
 							Instrument
 						</button>
-						{shouldShowCommaAfterCreateInstrument && ", "}
 					</>
-				)}
-				{shouldShowCreatePlace && (
-					<>
-						<button className="btn-text" onClick={onCreateNewPlaceClicked}>
-							Place
-						</button>
-						{shouldShowCommaAfterCreatePlace && ", "}
-					</>
-				)}
-				{shouldShowCreateCollection && (
-					<button className="btn-text" onClick={onCreateNewCollectionClicked}>
-						Collection
-					</button>
 				)}
 			</div>
 
@@ -149,22 +88,6 @@ const CreateNewEntities = ({ entityTypes, onNewEntityCreated }: Props) => {
 				onClose={() => setCreateInstrumentModalIsVisible(false)}
 			>
 				<CreateInstrumentForm onSuccess={onNewInstrumentCreated} />
-			</Modal>
-
-			<Modal
-				title="Create New Place"
-				isVisible={createPlaceModalIsVisible}
-				onClose={() => setCreatePlaceModalIsVisible(false)}
-			>
-				<CreatePlaceForm onSuccess={onNewPlaceCreated} />
-			</Modal>
-
-			<Modal
-				title="Create New Collection"
-				isVisible={createCollectionModalIsVisible}
-				onClose={() => setCreateCollectionModalIsVisible(false)}
-			>
-				<CreateCollectionForm onSuccess={onNewCollectionCreated} />
 			</Modal>
 		</>
 	);

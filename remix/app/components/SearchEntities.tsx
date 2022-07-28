@@ -7,14 +7,22 @@ import { type Entity } from "~/types";
 import EntityService from "~/services/Entity";
 
 import LoadingCircle from "~/components/LoadingCircle";
+import CreateNewEntities from "~/components/CreateNewEntities";
 
 interface Props {
 	entityTypes?: EntityType[];
 	take?: number;
 	onSelect: (entity: Entity) => void;
+	onNewEntityCreated?: (entity: Entity) => void;
 	className?: string;
 }
-const SearchEntities = ({ entityTypes, take, onSelect, className }: Props) => {
+const SearchEntities = ({
+	entityTypes,
+	take,
+	onSelect,
+	onNewEntityCreated,
+	className,
+}: Props) => {
 	const fetcher = useFetcher<{ results: Entity[]; error?: string }>();
 	const searchResults = fetcher.data?.results;
 
@@ -91,6 +99,13 @@ const SearchEntities = ({ entityTypes, take, onSelect, className }: Props) => {
 					{searchResults.length === 0 && (
 						<div className="p-2 block text-gray-500">No results</div>
 					)}
+
+					<div className="mt-2 ml-2">
+						<CreateNewEntities
+							entityTypes={[EntityType.Person, EntityType.Instrument]}
+							onNewEntityCreated={onNewEntityCreated}
+						/>
+					</div>
 				</div>
 			)}
 		</div>

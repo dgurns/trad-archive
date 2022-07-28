@@ -1,85 +1,51 @@
-import { useEffect, useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useEffect, useState, useRef } from "react";
+import { type Person } from "@prisma/client";
 
-import type { Instrument } from "~/types";
-import { EntityFragments } from "~/fragments";
 import EntityService from "~/services/Entity";
+import { useFetcher } from "@remix-run/react";
 
-const CREATE_INSTRUMENT_MUTATION = gql`
-	mutation CreateInstrument($input: CreateInstrumentInput!) {
-		createInstrument(input: $input) {
-			...Instrument
-		}
-	}
-	${EntityFragments.instrument}
-`;
-interface CreateInstrumentInput {
-	name: string;
-	slug: string;
-	aliases?: string;
-	description?: string;
-}
 interface Props {
-	onSuccess?: (instrument: Instrument) => void;
+	onSuccess?: (instrument: Person) => void;
 }
-const CreateInstrumentForm = ({ onSuccess }: Props) => {
-	const [createInstrument, { loading, error, data }] = useMutation<
-		{ createInstrument: Instrument },
-		{ input: CreateInstrumentInput }
-	>(CREATE_INSTRUMENT_MUTATION, {
-		errorPolicy: "all",
-	});
-
-	const [name, setName] = useState("");
-	const [slug, setSlug] = useState("");
-	const [aliases, setAliases] = useState("");
-	const [description, setDescription] = useState("");
+export default function CreateInstrumentForm({ onSuccess }: Props) {
+	const formRef = useRef<HTMLFormElement>(null);
+	const fetcher = useFetcher<{ error?: string; instrument?: Person }>();
 
 	useEffect(() => {
-		const proposedSlug = EntityService.cleanSlug(name ?? "");
-		setSlug(proposedSlug);
-	}, [name]);
-
-	const onCreateInstrument = (event) => {
-		event.preventDefault();
-		const input = {
-			name,
-			slug,
-			aliases,
-			description,
-		};
-		createInstrument({ variables: { input } });
-	};
-
-	useEffect(() => {
-		if (data?.createInstrument) {
-			if (onSuccess) {
-				return onSuccess(data.createInstrument);
-			}
-			window.alert("Instrument created successfully!");
-			setName("");
-			setSlug("");
-			setAliases("");
-			setDescription("");
+		if (onSuccess && fetcher.type === "done" && fetcher.data.instrument) {
+			onSuccess(fetcher.data.instrument);
 		}
-	}, [data]);
+	}, [fetcher, onSuccess]);
+
+	// Keep track of name and use it to suggest a slug
+	const [nameDraft, setNameDraft] = useState("");
+	const [slug, setSlug] = useState("");
+	useEffect(() => {
+		setSlug(EntityService.cleanSlug(nameDraft));
+	}, [nameDraft]);
 
 	return (
 		<>
 			<div className="flex flex-col align-start">
-				<form onSubmit={onCreateInstrument}>
+				<fetcher.Form
+					ref={formRef}
+					method="post"
+					action="/entities/instruments?index"
+				>
 					<input
 						placeholder="Name"
-						autoFocus
+						name="name"
+						onChange={(e) => setNameDraft(e.target.value)}
 						className="mb-2"
-						value={name}
-						onChange={(event) => setName(event.target.value)}
+						required
 					/>
 					<input
 						placeholder="URL slug (ie. button-accordion)"
-						className="mb-2"
+						name="slug"
 						value={slug}
-						onChange={(event) => setSlug(event.target.value)}
+						onChange={(e) => setSlug(e.target.value)}
+						className="mb-2"
+						required
 					/>
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						This will be used for the URL of this Instrument, for example{" "}
@@ -87,35 +53,30 @@ const CreateInstrumentForm = ({ onSuccess }: Props) => {
 							slug || "button-accordion"
 						}`}
 					</div>
-					<input
-						placeholder="Aliases"
-						className="mb-2"
-						value={aliases}
-						onChange={(event) => setAliases(event.target.value)}
-					/>
+					<input placeholder="Aliases" name="aliases" className="mb-2" />
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						A list of comma-separated aliases for this Instrument. For example:{" "}
-						<em>Stomach Steinway, Squeezebox, Belly Organ</em>
+						<em>Bosca Ceoil, Squeezebox, Stomach Steinway</em>
 					</div>
 					<textarea
 						placeholder="Description"
+						name="description"
 						className="mb-2"
-						value={description}
 						rows={5}
-						onChange={(event) => setDescription(event.target.value)}
 					/>
-					<input
+					<button
 						type="submit"
 						className="btn mb-4 w-auto"
-						disabled={loading}
-						value="Create"
-					/>
-				</form>
+						disabled={fetcher.state !== "idle"}
+					>
+						Create
+					</button>
+				</fetcher.Form>
 			</div>
 
-			{error && <div className="text-red-600">{error.message}</div>}
+			{fetcher.data?.error && (
+				<div className="text-red-600">{fetcher.data.error}</div>
+			)}
 		</>
 	);
-};
-
-export default CreateInstrumentForm;
+}

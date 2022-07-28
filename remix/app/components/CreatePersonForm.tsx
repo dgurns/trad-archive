@@ -7,7 +7,7 @@ import { useFetcher } from "@remix-run/react";
 interface Props {
 	onSuccess?: (person: Person) => void;
 }
-const CreatePersonForm = ({ onSuccess }: Props) => {
+export default function CreatePersonForm({ onSuccess }: Props) {
 	const formRef = useRef<HTMLFormElement>(null);
 	const fetcher = useFetcher<{ error?: string; person?: Person }>();
 
@@ -104,6 +104,4 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 			)}
 		</>
 	);
-};
-
-export default CreatePersonForm;
+}

@@ -94,11 +94,7 @@ const Filters = ({
 						{totalPages ? ` of ${totalPages}` : ""}
 					</div>
 					<div>
-						<select
-							value={perPage}
-							onChange={onChangePerPage}
-							className="text-sm"
-						>
+						<select value={perPage} onChange={onChangePerPage}>
 							{perPageOptions}
 						</select>{" "}
 						per page

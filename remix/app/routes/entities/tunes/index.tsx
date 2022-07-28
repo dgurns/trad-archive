@@ -57,20 +57,28 @@ const Tunes = () => {
 	return (
 		<Layout>
 			<h1>Tunes</h1>
+
+			<div className="text-gray-500 text-sm mt-2">
+				All tunes are sourced from{" "}
+				<a href="https://thesession.org" target="_blank" rel="noreferrer">
+					The Session ↗
+				</a>
+			</div>
+
 			<Filters
 				{...filtersProps}
 				sortBy={undefined}
 				viewAs={undefined}
-				className="sticky left-0 right-0 py-3 bg-gray-100 top-[48px] mb-2"
+				className="sticky left-0 right-0 py-3 bg-gray-100 top-[48px] mt-4 mb-6"
 			/>
 
 			{tunes.length === 0 && (
 				<div className="text-gray-500">No Tunes found</div>
 			)}
 			{tunes.length > 0 && (
-				<ul>
+				<ul className="space-y-2">
 					{tunes.map((tune, index) => (
-						<li className="mb-2" key={index}>
+						<li key={index}>
 							<Link to={EntityService.makeHrefForView(tune)}>{tune.name}</Link>
 						</li>
 					))}

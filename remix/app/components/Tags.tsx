@@ -97,7 +97,7 @@ const Tags = ({ audioItem }: TagsProps) => {
 			{tagsAsSubject && tagsAsSubject.length > 0 && (
 				<div className="flex ml-1 mb-2">
 					<span className="text-gray-500 mr-1">/</span>
-					<EditTagsButton entity={audioItem} />
+					<EditTagsButton tags={tagsAsSubject} />
 				</div>
 			)}
 		</div>

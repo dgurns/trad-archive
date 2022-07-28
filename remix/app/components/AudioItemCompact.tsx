@@ -90,7 +90,7 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 					{tagsAsSubject?.length > 0 && (
 						<div className="flex ml-1">
 							<span className="text-gray-500 mr-1">/</span>
-							<EditTagsButton entity={audioItem} />
+							<EditTagsButton tags={audioItem.tagsAsSubject} />
 						</div>
 					)}
 				</div>

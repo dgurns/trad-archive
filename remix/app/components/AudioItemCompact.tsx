@@ -13,7 +13,6 @@ import EditTagsButton from "~/components/EditTagsButton";
 import Menu from "~/components/Menu";
 import SaveItemButton from "~/components/SaveItemButton";
 import ViewCommentsButton from "~/components/ViewCommentsButton";
-import RequestTakedownButton from "~/components/RequestTakedownButton";
 
 interface Props {
 	audioItem: AudioItemWithRelations;
@@ -107,10 +106,6 @@ const AudioItemCompact = ({ audioItem, className }: Props) => {
 							<SaveItemButton audioItem={audioItem} />
 						</div>
 					</div>
-
-					<Menu>
-						{!isTakenDown && <RequestTakedownButton entity={audioItem} />}
-					</Menu>
 				</div>
 			</div>
 		</div>

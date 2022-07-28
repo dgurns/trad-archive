@@ -77,7 +77,7 @@ const Filters = ({
 
 	return (
 		<div
-			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 text-sm space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
+			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
 				className ?? ""
 			}`}
 			id="filters"
@@ -89,7 +89,7 @@ const Filters = ({
 					</div>
 					<div>
 						Page{" "}
-						<select value={page} onChange={onChangePage} className="text-sm">
+						<select value={page} onChange={onChangePage}>
 							{pageSelectOptions}
 						</select>
 						{totalPages ? ` of ${totalPages}` : ""}
@@ -110,11 +110,7 @@ const Filters = ({
 			{shouldRenderSortBy && (
 				<div className="flex flex-row items-center">
 					Sort by
-					<select
-						className="ml-1 text-sm"
-						value={sortBy}
-						onChange={onChangeSortBy}
-					>
+					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
 						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
 						<option value={SortBy.RecentlyAdded}>Newest</option>
 					</select>
@@ -124,11 +120,7 @@ const Filters = ({
 			{shouldRenderViewAs && (
 				<div className="hidden md:flex flex-row items-center">
 					View as
-					<select
-						className="ml-1 text-sm"
-						value={viewAs}
-						onChange={onChangeViewAs}
-					>
+					<select className="ml-1" value={viewAs} onChange={onChangeViewAs}>
 						<option value={ViewAs.Cards}>Cards</option>
 						<option value={ViewAs.Compact}>Compact</option>
 						<option value={ViewAs.List}>List</option>

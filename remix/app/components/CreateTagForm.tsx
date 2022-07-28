@@ -219,7 +219,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			>
 				Save
 			</button>
-			{error && <div className="text-red-600 mt-4">{error.message}</div>}
+			{/* {error && <div className="text-red-600 mt-4">{error.message}</div>} */}
 		</>
 	);
 };

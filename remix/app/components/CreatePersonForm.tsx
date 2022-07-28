@@ -39,12 +39,17 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 	return (
 		<>
 			<div className="flex flex-col align-start">
-				<fetcher.Form ref={formRef} method="post" action="/people">
+				<fetcher.Form
+					ref={formRef}
+					method="post"
+					action="/entities/people?index"
+				>
 					<input
 						placeholder="First name"
 						name="first_name"
 						onChange={(e) => setFirstNameDraft(e.target.value)}
 						className="mb-2"
+						required
 					/>
 					<input
 						placeholder="Middle name (optional)"
@@ -57,6 +62,7 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 						name="last_name"
 						onChange={(e) => setLastNameDraft(e.target.value)}
 						className="mb-2"
+						required
 					/>
 					<input
 						placeholder="URL slug (ie. kitty-hayes)"
@@ -64,6 +70,7 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 						value={slug}
 						onChange={(e) => setSlug(e.target.value)}
 						className="mb-2"
+						required
 					/>
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						This will be used for the URL of this Person, for example{" "}

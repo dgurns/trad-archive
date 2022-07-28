@@ -180,14 +180,11 @@ export default function Home() {
 					<Link to="/entities/people" className="mb-2">
 						People
 					</Link>
-					<Link to="/entities/instruments" className="mb-2">
-						Instruments
-					</Link>
-					<Link to="/entities/places" className="mb-2">
-						Places
-					</Link>
 					<Link to="/entities/tunes" className="mb-2">
 						Tunes
+					</Link>
+					<Link to="/entities/instruments" className="mb-2">
+						Instruments
 					</Link>
 					<Link to="/entities/collections" className="mb-2">
 						Collections
@@ -224,10 +221,7 @@ export default function Home() {
 						target="_blank"
 						rel="noreferrer"
 					>
-						View on GitHub{" "}
-						<i className="material-icons">
-							<span className="text-sm">launch</span>
-						</i>
+						View on GitHub ↗
 					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>

@@ -331,12 +331,13 @@ var import_react9 = require("@remix-run/react"), CreatePersonForm = ({ onSuccess
   }, /* @__PURE__ */ React.createElement(fetcher.Form, {
     ref: formRef,
     method: "post",
-    action: "/people"
+    action: "/entities/people?index"
   }, /* @__PURE__ */ React.createElement("input", {
     placeholder: "First name",
     name: "first_name",
     onChange: (e) => setFirstNameDraft(e.target.value),
-    className: "mb-2"
+    className: "mb-2",
+    required: !0
   }), /* @__PURE__ */ React.createElement("input", {
     placeholder: "Middle name (optional)",
     name: "middle_name",
@@ -346,13 +347,15 @@ var import_react9 = require("@remix-run/react"), CreatePersonForm = ({ onSuccess
     placeholder: "Last name",
     name: "last_name",
     onChange: (e) => setLastNameDraft(e.target.value),
-    className: "mb-2"
+    className: "mb-2",
+    required: !0
   }), /* @__PURE__ */ React.createElement("input", {
     placeholder: "URL slug (ie. kitty-hayes)",
     name: "slug",
     value: slug,
     onChange: (e) => setSlug(e.target.value),
-    className: "mb-2"
+    className: "mb-2",
+    required: !0
   }), /* @__PURE__ */ React.createElement("div", {
     className: "text-sm text-gray-400 mb-2 ml-2"
   }, "This will be used for the URL of this Person, for example", " ", `https://trad-archive.com/entities/people/${slug || "kitty-hayes"}`), /* @__PURE__ */ React.createElement("input", {
@@ -2783,11 +2786,12 @@ var ViewPersonBySlug = () => {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/entities/people/index.tsx
 var people_exports = {};
 __export(people_exports, {
+  action: () => action,
   default: () => people_default,
   loader: () => loader9,
   meta: () => meta4
 });
-var import_react55 = require("@remix-run/react");
+var import_react55 = require("@remix-run/react"), import_node4 = require("@remix-run/node");
 function meta4() {
   return {
     title: "Trad Archive - People"
@@ -2800,7 +2804,37 @@ function loader9() {
     }
   });
 }
-var People = () => {
+var action = async ({ request }) => {
+  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(referer ? new URL(referer).pathname : "/");
+  if (!userId)
+    return (0, import_node4.redirect)(`/login?redirectTo=${redirectTo}`);
+  let formData = await request.formData(), firstName = String(formData.get("first_name") ?? ""), middleName = String(formData.get("middle_name") ?? ""), lastName = String(formData.get("last_name") ?? ""), slug = String(formData.get("slug") ?? ""), description = String(formData.get("description") ?? ""), aliases = String(formData.get("aliases") ?? ""), name = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`, cleanedSlug = Entity_default.cleanSlug(slug), error2;
+  if ((!firstName || !lastName || !slug) && (error2 = "Must enter first name, last name, and slug"), error2)
+    return (0, import_node4.json)({ error: error2 }, { status: 400 });
+  let existing = await db.person.findFirst({ where: { slug: cleanedSlug } });
+  if (existing)
+    return (0, import_node4.json)({
+      error: `This slug is already being used for an existing Person: ${existing.name}`
+    }, { status: 400 });
+  try {
+    let person = await db.person.create({
+      data: {
+        firstName,
+        middleName,
+        lastName,
+        name,
+        slug: cleanedSlug,
+        description,
+        aliases,
+        createdByUserId: userId,
+        updatedByUserId: userId
+      }
+    });
+    return (0, import_node4.json)({ person }, { status: 201 });
+  } catch {
+    return (0, import_node4.json)({ error: "Error creating Person" }, { status: 500 });
+  }
+}, People = () => {
   let people = (0, import_react55.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
@@ -3062,32 +3096,32 @@ var Tunes = () => {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/choose-new-password.tsx
 var choose_new_password_exports = {};
 __export(choose_new_password_exports, {
-  action: () => action,
+  action: () => action2,
   default: () => ChooseNewPassword,
   loader: () => loader14
 });
-var import_node4 = require("@remix-run/node"), import_react60 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
+var import_node5 = require("@remix-run/node"), import_react60 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
 var loader14 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), validationError = session.get("validationError") || null, error2 = null, params = new URL(request.url).searchParams, userEmail = params.get("userEmail") ?? "", tokenUnhashed = params.get("tokenUnhashed") ?? "", user = await db.user.findUnique({ where: { email: userEmail } });
   if (!user || !user.autoLoginTokenHashed || !user.autoLoginTokenExpiry)
-    return (0, import_node4.redirect)("/reset-password");
+    return (0, import_node5.redirect)("/reset-password");
   let tokenIsMatch = await import_bcryptjs.default.compare(tokenUnhashed, user.autoLoginTokenHashed), expiryIsValid = (0, import_isAfter.default)(new Date(user.autoLoginTokenExpiry), new Date());
-  return (!tokenIsMatch || !expiryIsValid) && (error2 = "Reset password link is invalid or expired. Please request another one."), (0, import_node4.json)({ validationError, error: error2 }, {
+  return (!tokenIsMatch || !expiryIsValid) && (error2 = "Reset password link is invalid or expired. Please request another one."), (0, import_node5.json)({ validationError, error: error2 }, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
-}, action = async ({ request }) => {
+}, action2 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), { searchParams } = new URL(request.url), formData = await request.formData(), email = String(formData.get("email") ?? ""), password = String(formData.get("password") ?? ""), passwordConfirm = String(formData.get("password_confirm") ?? "");
   if (password !== passwordConfirm)
-    return session.flash("validationError", "Passwords don't match"), (0, import_node4.redirect)(`/choose-new-password?${searchParams.toString()}`, {
+    return session.flash("validationError", "Passwords don't match"), (0, import_node5.redirect)(`/choose-new-password?${searchParams.toString()}`, {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   let user = await db.user.findUnique({ where: { email } });
   if (!user)
-    return (0, import_node4.redirect)("/reset-password");
+    return (0, import_node5.redirect)("/reset-password");
   let newPasswordHashed = import_bcryptjs.default.hashSync(password, 10);
   return await db.user.update({
     where: { email },
@@ -3096,7 +3130,7 @@ var loader14 = async ({ request }) => {
       autoLoginTokenHashed: null,
       autoLoginTokenExpiry: null
     }
-  }), session.set("userId", user.id), (0, import_node4.redirect)("/", {
+  }), session.set("userId", user.id), (0, import_node5.redirect)("/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -3143,22 +3177,22 @@ function ChooseNewPassword() {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/reset-password.tsx
 var reset_password_exports = {};
 __export(reset_password_exports, {
-  action: () => action2,
+  action: () => action3,
   default: () => ResetPassword,
   loader: () => loader15
 });
-var import_node5 = require("@remix-run/node"), import_react61 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
+var import_node6 = require("@remix-run/node"), import_react61 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
 var loader15 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), error2 = session.get("error") || null, confirmation = session.get("confirmation") || null;
-  return (0, import_node5.json)({ error: error2, confirmation }, {
+  return (0, import_node6.json)({ error: error2, confirmation }, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
-}, action2 = async ({ request }) => {
+}, action3 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), formData = await request.formData(), email = String(formData.get("email") ?? ""), user = await db.user.findUnique({ where: { email } });
   if (!user)
-    return session.flash("error", "Could not find a user with that email"), (0, import_node5.redirect)("/reset-password", {
+    return session.flash("error", "Could not find a user with that email"), (0, import_node6.redirect)("/reset-password", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
@@ -3190,7 +3224,7 @@ var loader15 = async ({ request }) => {
 			<em>${url}</em>
 		`
   };
-  return await import_mail.default.send(data2), session.flash("confirmation", "Check your email for a link to reset your password"), (0, import_node5.redirect)("/reset-password", {
+  return await import_mail.default.send(data2), session.flash("confirmation", "Check your email for a link to reset your password"), (0, import_node6.redirect)("/reset-password", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -3235,16 +3269,16 @@ __export(account_exports, {
   default: () => AccountHome,
   loader: () => loader16
 });
-var import_react62 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_react62 = require("@remix-run/react"), import_node7 = require("@remix-run/node");
 var loader16 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
     where: { id: currentUserId }
   });
   if (!currentUser) {
     let params = new URLSearchParams();
-    return params.set("redirectTo", "/account"), (0, import_node6.redirect)(`/login?${params.toString()}`);
+    return params.set("redirectTo", "/account"), (0, import_node7.redirect)(`/login?${params.toString()}`);
   }
-  return (0, import_node6.json)({ currentUser });
+  return (0, import_node7.json)({ currentUser });
 };
 function AccountHome() {
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
@@ -3261,17 +3295,17 @@ function AccountHome() {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/saved-items.tsx
 var saved_items_exports = {};
 __export(saved_items_exports, {
-  action: () => action3,
+  action: () => action4,
   default: () => SavedItems,
   loader: () => loader17
 });
-var import_react63 = require("@remix-run/react"), import_node7 = require("@remix-run/node");
+var import_react63 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
 var loader17 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { pathname, searchParams } = new URL(request.url), redirectParams = new URLSearchParams({
     redirectTo: pathname
   });
   if (!userId)
-    return (0, import_node7.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_node8.redirect)(`/login?${redirectParams.toString()}`);
   let page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), audioItems = await db.audioItem.findMany({
     where: {
       savedItems: {
@@ -3311,13 +3345,13 @@ var loader17 = async ({ request }) => {
     skip: (page - 1) * perPage,
     take: perPage
   });
-  return (0, import_node7.json)({ audioItems });
-}, action3 = async ({ request }) => {
+  return (0, import_node8.json)({ audioItems });
+}, action4 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectParams = new URLSearchParams({
     redirectTo: referer ? new URL(referer).pathname : "/"
   });
   if (!userId)
-    return (0, import_node7.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_node8.redirect)(`/login?${redirectParams.toString()}`);
   let formData = await request.formData(), audioItemId = String(formData.get("audioItemId") ?? ""), existing = await db.savedItem.findUnique({
     where: {
       userId_audioItemId: {
@@ -3326,7 +3360,7 @@ var loader17 = async ({ request }) => {
       }
     }
   });
-  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node7.json)({ ok: !0 }, { status: 200 });
+  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node8.json)({ ok: !0 }, { status: 200 });
 };
 function SavedItems() {
   let { audioItems } = (0, import_react63.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
@@ -3356,7 +3390,7 @@ __export(id_exports, {
   default: () => id_default,
   loader: () => loader18
 });
-var import_react64 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
+var import_react64 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
 var loader18 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -3364,7 +3398,7 @@ var loader18 = async ({ params }) => {
       status: 404,
       statusText: "Could not find a user with this ID"
     });
-  return (0, import_node8.json)({ user });
+  return (0, import_node9.json)({ user });
 }, ViewUserById = () => {
   let { user } = (0, import_react64.useLoaderData)(), { username, createdAt } = user;
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
@@ -3384,16 +3418,16 @@ var loader18 = async ({ params }) => {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/comments.tsx
 var comments_exports = {};
 __export(comments_exports, {
-  action: () => action4
+  action: () => action5
 });
-var import_node9 = require("@remix-run/node");
-var action4 = async ({ request }) => {
+var import_node10 = require("@remix-run/node");
+var action5 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(referer ? new URL(referer).pathname : "/");
   if (!userId)
-    return (0, import_node9.redirect)(`/login?redirectTo=${redirectTo}`);
+    return (0, import_node10.redirect)(`/login?redirectTo=${redirectTo}`);
   let formData = await request.formData(), text = String(formData.get("text") ?? ""), parentAudioItemId = String(formData.get("parentAudioItemId") ?? ""), error2;
   if (text ? parentAudioItemId || (error2 = "Parent audio item ID not defined") : error2 = "Comment cannot be empty", error2)
-    return (0, import_node9.json)({ error: error2 }, { status: 400 });
+    return (0, import_node10.json)({ error: error2 }, { status: 400 });
   let comment = await db.comment.create({
     data: {
       text,
@@ -3401,7 +3435,7 @@ var action4 = async ({ request }) => {
       createdByUserId: userId
     }
   });
-  return (0, import_node9.json)({ comment }, { status: 201 });
+  return (0, import_node10.json)({ comment }, { status: 201 });
 };
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/logout.tsx
@@ -3409,10 +3443,10 @@ var logout_exports = {};
 __export(logout_exports, {
   loader: () => loader19
 });
-var import_node10 = require("@remix-run/node");
+var import_node11 = require("@remix-run/node");
 var loader19 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie"));
-  return (0, import_node10.redirect)("/login", {
+  return (0, import_node11.redirect)("/login", {
     headers: {
       "Set-Cookie": await destroySession(session)
     }
@@ -3424,7 +3458,7 @@ var search_exports = {};
 __export(search_exports, {
   loader: () => loader20
 });
-var import_client15 = require("@prisma/client"), import_node11 = require("@remix-run/node");
+var import_client15 = require("@prisma/client"), import_node12 = require("@remix-run/node");
 var loader20 = async ({ request }) => {
   let url = new URL(request.url), searchTerm = url.searchParams.get("searchTerm") || "", entityTypes = url.searchParams.getAll("entityTypes");
   entityTypes.length === 0 && (entityTypes = [
@@ -3437,7 +3471,7 @@ var loader20 = async ({ request }) => {
   ]);
   let take = Number(url.searchParams.get("take") ?? 24);
   if (searchTerm.length < 3)
-    return (0, import_node11.json)({ error: "Must include a search term of at least 3 letters" }, { status: 400 });
+    return (0, import_node12.json)({ error: "Must include a search term of at least 3 letters" }, { status: 400 });
   let cleanedSearchTerm = searchTerm.toLowerCase(), takeFromEach = Math.round(take / entityTypes.length), personQuery = db.person.findMany({
     include: {
       createdByUser: !0
@@ -3559,56 +3593,56 @@ var loader20 = async ({ request }) => {
         break;
     }
   let results = (await Promise.all(queryPromises)).reduce((prevVal, curVal) => [...prevVal, ...curVal], []);
-  return (0, import_node11.json)({ results }, { status: 200 });
+  return (0, import_node12.json)({ results }, { status: 200 });
 };
 
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/signup.tsx
 var signup_exports = {};
 __export(signup_exports, {
-  action: () => action5,
+  action: () => action6,
   default: () => SignUp,
   loader: () => loader21
 });
 var import_react65 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
-var import_node12 = require("@remix-run/node");
+var import_node13 = require("@remix-run/node");
 var loader21 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node12.redirect)(redirectTo || "/");
+    return (0, import_node13.redirect)(redirectTo || "/");
   let data2 = { error: session.get("error") };
-  return (0, import_node12.json)(data2, {
+  return (0, import_node13.json)(data2, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
-}, action5 = async ({ request }) => {
+}, action6 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo"), formData = await request.formData(), email = String(formData.get("email") ?? ""), fullName = String(formData.get("full_name") ?? ""), password = String(formData.get("password") ?? ""), passwordConfirm = String(formData.get("password_confirm") ?? "");
   if (await db.user.findUnique({ where: { email } }))
-    return session.flash("error", "There is already a user with this email address. Try logging in?"), (0, import_node12.redirect)("/signup", {
+    return session.flash("error", "There is already a user with this email address. Try logging in?"), (0, import_node13.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!new RegExp(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i).test(email))
-    return session.flash("error", "Email is not valid"), (0, import_node12.redirect)("/signup", {
+    return session.flash("error", "Email is not valid"), (0, import_node13.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(fullName.split(" ").length >= 2))
-    return session.flash("error", "Please enter your full name"), (0, import_node12.redirect)("/signup", {
+    return session.flash("error", "Please enter your full name"), (0, import_node13.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password === passwordConfirm))
-    return session.flash("error", "Passwords don't match"), (0, import_node12.redirect)("/signup", {
+    return session.flash("error", "Passwords don't match"), (0, import_node13.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password.length >= 8))
-    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node12.redirect)("/signup", {
+    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node13.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
@@ -3620,7 +3654,7 @@ var loader21 = async ({ request }) => {
       passwordHashed
     }
   });
-  return session.set("userId", newUser.id), (0, import_node12.redirect)(redirectTo || "/", {
+  return session.set("userId", newUser.id), (0, import_node13.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -3825,15 +3859,12 @@ function Home() {
     to: "/entities/people",
     className: "mb-2"
   }, "People"), /* @__PURE__ */ React.createElement(import_react67.Link, {
-    to: "/entities/instruments",
-    className: "mb-2"
-  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react67.Link, {
-    to: "/entities/places",
-    className: "mb-2"
-  }, "Places"), /* @__PURE__ */ React.createElement(import_react67.Link, {
     to: "/entities/tunes",
     className: "mb-2"
   }, "Tunes"), /* @__PURE__ */ React.createElement(import_react67.Link, {
+    to: "/entities/instruments",
+    className: "mb-2"
+  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react67.Link, {
     to: "/entities/collections",
     className: "mb-2"
   }, "Collections"), /* @__PURE__ */ React.createElement("h3", {
@@ -3861,11 +3892,7 @@ function Home() {
     href: "https://github.com/dgurns/trad-archive/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc",
     target: "_blank",
     rel: "noreferrer"
-  }, "View on GitHub", " ", /* @__PURE__ */ React.createElement("i", {
-    className: "material-icons"
-  }, /* @__PURE__ */ React.createElement("span", {
-    className: "text-sm"
-  }, "launch"))), /* @__PURE__ */ React.createElement("h3", {
+  }, "View on GitHub \u2197"), /* @__PURE__ */ React.createElement("h3", {
     className: "mt-6 mb-4"
   }, "Latest Comments"), comments.map((comment, index) => {
     let { createdByUser, parentAudioItem, text } = comment;
@@ -3887,36 +3914,36 @@ function Home() {
 // route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/login.tsx
 var login_exports = {};
 __export(login_exports, {
-  action: () => action6,
+  action: () => action7,
   default: () => Login,
   loader: () => loader23
 });
-var import_react68 = require("@remix-run/react"), import_node13 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
+var import_react68 = require("@remix-run/react"), import_node14 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
 var loader23 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node13.redirect)(redirectTo || "/");
+    return (0, import_node14.redirect)(redirectTo || "/");
   let data2 = { error: session.get("error") };
-  return (0, import_node13.json)(data2, {
+  return (0, import_node14.json)(data2, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
-}, action6 = async ({ request }) => {
+}, action7 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo"), formData = await request.formData(), email = String(formData.get("email") ?? ""), password = String(formData.get("password") ?? ""), user = await db.user.findUnique({ where: { email } });
-  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node13.redirect)(redirectTo || "/", {
+  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node14.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Incorrect password"), (0, import_node13.redirect)("/login", {
+  })) : (session.flash("error", "Incorrect password"), (0, import_node14.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "This user does not have a password. TODO: Redirect to /reset-password page"), (0, import_node13.redirect)("/login", {
+  })) : (session.flash("error", "This user does not have a password. TODO: Redirect to /reset-password page"), (0, import_node14.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node13.redirect)("/login", {
+  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node14.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -3959,7 +3986,7 @@ function Login() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "4ab51bdf", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-YQ35YLQT.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-SH3TEWFO.js", "/build/_shared/chunk-QSZCPMIV.js", "/build/_shared/chunk-WO5ZZCZ6.js", "/build/_shared/chunk-PQJWRTRS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-2LI7FCI7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-ZWW7EULN.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-TGDCZVTM.js", imports: ["/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-XLWLUTQT.js", imports: ["/build/_shared/chunk-6ZHOF7A3.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-RXX7JP2X.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-PHVQ7M5N.js", imports: ["/build/_shared/chunk-6ZHOF7A3.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-5LYBQIEE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-Q4ZTMBRT.js", imports: ["/build/_shared/chunk-6ZHOF7A3.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-YKYWO7I6.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-TGOEXOCM.js", imports: ["/build/_shared/chunk-6ZHOF7A3.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-BZBNBSK5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-FZSSDX5R.js", imports: ["/build/_shared/chunk-6ZHOF7A3.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-3VXIRVYT.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-5RHEIPGQ.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-KBZKWI5M.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-NZFGXCTV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-LYSK3Z6E.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-H5MODCG2.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-4SNRFG52.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-QBGHHBL2.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-CD5AOPP7.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-4AB51BDF.js" };
+var assets_manifest_default = { version: "f44b0b19", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-HMKASYDO.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-TZYD4VGT.js", "/build/_shared/chunk-QSZCPMIV.js", "/build/_shared/chunk-WO5ZZCZ6.js", "/build/_shared/chunk-PQJWRTRS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-2LI7FCI7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-ZWW7EULN.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-54QB32L6.js", imports: ["/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-4ZYVVYO2.js", imports: ["/build/_shared/chunk-OU5E3TGH.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-RXX7JP2X.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-3RBA5QIY.js", imports: ["/build/_shared/chunk-OU5E3TGH.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-5LYBQIEE.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-ZHAR7MPM.js", imports: ["/build/_shared/chunk-OU5E3TGH.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-DCVIFE6Z.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-EDVH5XII.js", imports: ["/build/_shared/chunk-OU5E3TGH.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-BZBNBSK5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-NT7QXZZJ.js", imports: ["/build/_shared/chunk-OU5E3TGH.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-3VXIRVYT.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-TWCCKBSK.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-KBZKWI5M.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-NZFGXCTV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-DIESVN2R.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OVC4M5RF.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-4SNRFG52.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-QBGHHBL2.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-CD5AOPP7.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-F44B0B19.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports }, routes = {

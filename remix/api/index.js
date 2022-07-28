@@ -59,7 +59,7 @@ __export(root_exports, {
 var import_node2 = require("@remix-run/node"), import_react17 = require("@remix-run/react"), import_client6 = require("@apollo/client");
 
 // app/styles/globals-generated-do-not-edit.css
-var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-6O64FSRE.css";
+var globals_generated_do_not_edit_default = "/build/_assets/globals-generated-do-not-edit-AHNA25L6.css";
 
 // app/sessions.server.ts
 var import_node = require("@remix-run/node"), { getSession, commitSession, destroySession } = (0, import_node.createCookieSessionStorage)({
@@ -755,7 +755,7 @@ __export(slug_exports, {
   default: () => slug_default,
   loader: () => loader3
 });
-var import_react45 = require("@remix-run/react");
+var import_react46 = require("@remix-run/react");
 
 // app/components/Layout.tsx
 var Layout = ({ children }) => /* @__PURE__ */ React.createElement("div", {
@@ -765,7 +765,7 @@ var Layout = ({ children }) => /* @__PURE__ */ React.createElement("div", {
 }, children)), Layout_default = Layout;
 
 // app/components/AudioItemCard.tsx
-var import_react35 = require("react"), import_react36 = require("@remix-run/react");
+var import_react36 = require("react"), import_react37 = require("@remix-run/react");
 
 // app/services/DateTime.ts
 var import_format = __toESM(require("date-fns/format")), import_isToday = __toESM(require("date-fns/isToday")), import_isYesterday = __toESM(require("date-fns/isYesterday")), formatSecondsAsDuration = (inputSeconds) => {
@@ -788,7 +788,7 @@ var import_format = __toESM(require("date-fns/format")), import_isToday = __toES
 }, DateTime_default = DateTimeService;
 
 // app/components/Tags.tsx
-var import_react26 = require("react"), import_react27 = require("@remix-run/react");
+var import_react27 = require("react"), import_react28 = require("@remix-run/react");
 
 // app/services/Tag.ts
 var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareDesc = __toESM(require("date-fns/compareDesc")), TagSortStrategy = /* @__PURE__ */ ((TagSortStrategy2) => (TagSortStrategy2.CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER", TagSortStrategy2.CreatedAtDesc = "CREATED_AT_DESC", TagSortStrategy2))(TagSortStrategy || {}), sortByCreatedAtThenTimeMarker = (tags) => {
@@ -813,10 +813,10 @@ var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareD
 };
 
 // app/components/AddTagButton.tsx
-var import_react21 = require("react");
+var import_react22 = require("react");
 
 // app/components/CreateTagForm.tsx
-var import_react20 = require("react");
+var import_react20 = require("react"), import_client7 = require("@prisma/client"), import_react21 = require("@remix-run/react");
 
 // app/components/SelectRelationship.tsx
 var import_react18 = require("react"), import_react19 = require("@remix-run/react");
@@ -846,15 +846,14 @@ function SelectRelationship({
     className: "mb-2 text-gray-500"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-sm uppercase pr-2"
-  }, subjectEntity.entityType), subjectEntity.name), /* @__PURE__ */ React.createElement("select", {
-    className: "mb-2",
+  }, subjectEntity.entityType), subjectEntity.name), fetcher.state === "loading" ? /* @__PURE__ */ React.createElement(LoadingCircle_default, null) : /* @__PURE__ */ React.createElement("select", {
     value: selectedRelationshipId,
     onChange: (event) => setSelectedRelationshipId(event.target.value)
   }, relationshipOptions.map((relationship, index) => /* @__PURE__ */ React.createElement("option", {
     value: relationship.id,
     key: index
   }, relationship.name))), /* @__PURE__ */ React.createElement("div", {
-    className: "text-gray-500"
+    className: "text-gray-500 mt-2"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "text-sm uppercase pr-2"
   }, objectEntity.entityType), objectEntity.name), ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ React.createElement("div", {
@@ -911,18 +910,16 @@ var TimestampInput = ({ valueInSeconds, onChange, className }) => {
 
 // app/components/CreateTagForm.tsx
 var CreateTagForm = ({ entity, onSuccess }) => {
-  let {
+  var _a;
+  let fetcher = (0, import_react21.useFetcher)(), {
     activeAudioItem,
     playbackPositionSeconds,
     activeItemDurationSeconds
-  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react20.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react20.useState)(defaultTimeMarkerValue), [selectedEntity, setSelectedEntity] = (0, import_react20.useState)(), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react20.useState)(""), [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] = (0, import_react20.useState)(!0), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react20.useState)(""), [primaryCreatedTag, setPrimaryCreatedTag] = (0, import_react20.useState)(void 0), [tagsAreCreated, setTagsAreCreated] = (0, import_react20.useState)(!1);
+  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react20.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react20.useState)(defaultTimeMarkerValue), [selectedEntity, setSelectedEntity] = (0, import_react20.useState)(), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react20.useState)(""), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react20.useState)("");
   (0, import_react20.useEffect)(() => {
-    if (!tagsAreCreated)
-      return;
-    primaryCreatedTag && (async (tag) => {
-      await onSuccess(tag);
-    })(primaryCreatedTag);
-  }, [onSuccess, tagsAreCreated, primaryCreatedTag]);
+    var _a2;
+    ((_a2 = fetcher.data) == null ? void 0 : _a2.tag) && onSuccess(fetcher.data.tag);
+  }, [onSuccess, fetcher]);
   let onSelectEntity = (0, import_react20.useCallback)((selectedEntityFromResults) => {
     if (selectedEntityFromResults.id === entity.id)
       return window.alert("Cannot tag an entity with itself");
@@ -936,32 +933,21 @@ var CreateTagForm = ({ entity, onSuccess }) => {
   }, [setSelectedRelationshipId]), onSelectInverseRelationship = (0, import_react20.useCallback)((relationshipId) => {
     setSelectedInverseRelationshipId(relationshipId);
   }, [setSelectedInverseRelationshipId]), onCreateTagClicked = (0, import_react20.useCallback)(async () => {
-    if (!selectedEntity)
+    if (!(selectedEntity == null ? void 0 : selectedEntity.entityType) || !entity.entityType)
       return;
     let subjectTimeMarkerSeconds;
-    shouldAddTimeMarker && typeof timeMarkerValue == "number" && (subjectTimeMarkerSeconds = timeMarkerValue);
-    let tagInput = {
+    shouldAddTimeMarker && typeof timeMarkerValue == "number" && (subjectTimeMarkerSeconds = timeMarkerValue), await fetcher.submit({
       relationshipId: selectedRelationshipId,
+      inverseRelationshipId: selectedInverseRelationshipId,
       subjectEntityType: entity.entityType,
       subjectEntityId: entity.id,
       objectEntityType: selectedEntity.entityType,
       objectEntityId: selectedEntity.id,
-      subjectTimeMarkerSeconds
-    };
-    if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
-      let inverseTagInput = {
-        relationshipId: selectedInverseRelationshipId,
-        subjectEntityType: selectedEntity.entityType,
-        subjectEntityId: selectedEntity.id,
-        objectEntityType: entity.entityType,
-        objectEntityId: entity.id,
-        subjectTimeMarkerSeconds
-      };
-    }
-    setTagsAreCreated(!0);
+      subjectTimeMarkerSeconds: String(subjectTimeMarkerSeconds ?? "")
+    }, { method: "post", action: "/tags" });
   }, [
+    fetcher,
     selectedRelationshipId,
-    shouldCreateInverseRelationship,
     selectedInverseRelationshipId,
     entity,
     selectedEntity,
@@ -973,25 +959,17 @@ var CreateTagForm = ({ entity, onSuccess }) => {
       onSelect: onSelectEntity,
       onNewEntityCreated
     });
-  let shouldShowTimeMarkerCheckbox = entity.entityType === "AudioItem" /* AudioItem */ && typeof defaultTimeMarkerValue < "u";
+  let shouldShowTimeMarkerCheckbox = entity.entityType === import_client7.EntityType.AudioItem && typeof defaultTimeMarkerValue < "u";
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", null, "What is the relationship between these two entities?"), /* @__PURE__ */ React.createElement("div", {
-    className: "mt-2"
+    className: "mt-2 pl-4"
   }, /* @__PURE__ */ React.createElement(SelectRelationship, {
     subjectEntity: entity,
     objectEntity: selectedEntity,
     onSelect: onSelectRelationship
   })), /* @__PURE__ */ React.createElement("div", {
-    className: "mt-6 flex flex-row items-center justify-start"
-  }, /* @__PURE__ */ React.createElement("input", {
-    type: "checkbox",
-    id: "reverse-relationship",
-    checked: shouldCreateInverseRelationship,
-    onChange: (event) => setShouldCreateInverseRelationship(event.target.checked)
-  }), /* @__PURE__ */ React.createElement("label", {
-    htmlFor: "reverse-relationship",
-    className: "ml-2"
-  }, "Also create the inverse relationship")), shouldCreateInverseRelationship && /* @__PURE__ */ React.createElement("div", {
-    className: "mt-2"
+    className: "mt-6"
+  }, "...and what is the inverse relationship?"), /* @__PURE__ */ React.createElement("div", {
+    className: "mt-2 pl-4"
   }, /* @__PURE__ */ React.createElement(SelectRelationship, {
     subjectEntity: selectedEntity,
     objectEntity: entity,
@@ -1017,13 +995,15 @@ var CreateTagForm = ({ entity, onSuccess }) => {
   })))), /* @__PURE__ */ React.createElement("button", {
     className: "btn mt-6",
     onClick: onCreateTagClicked,
-    disabled: !selectedRelationshipId
-  }, "Save"));
+    disabled: !selectedRelationshipId || fetcher.state !== "idle"
+  }, "Save"), ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ React.createElement("div", {
+    className: "text-red-600 mt-4"
+  }, fetcher.data.error));
 }, CreateTagForm_default = CreateTagForm;
 
 // app/components/AddTagButton.tsx
 var AddTagButton = ({ entity, className, children }) => {
-  let [modalIsVisible, setModalIsVisible] = (0, import_react21.useState)(!1);
+  let [modalIsVisible, setModalIsVisible] = (0, import_react22.useState)(!1);
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("button", {
     className: `btn-text whitespace-pre ${className ?? ""}`,
     onClick: () => setModalIsVisible(!0)
@@ -1038,11 +1018,11 @@ var AddTagButton = ({ entity, className, children }) => {
 }, AddTagButton_default = AddTagButton;
 
 // app/components/EditTagsButton.tsx
-var import_react25 = require("react"), import_client10 = require("@apollo/client");
+var import_react26 = require("react"), import_client11 = require("@apollo/client");
 
 // app/fragments/index.ts
-var import_client7 = require("@apollo/client"), UserFragments = {
-  user: import_client7.gql`
+var import_client8 = require("@apollo/client"), UserFragments = {
+  user: import_client8.gql`
 		fragment User on User {
 			id
 			username
@@ -1056,7 +1036,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			createdAt
 		}
 	`,
-  currentUser: import_client7.gql`
+  currentUser: import_client8.gql`
 		fragment CurrentUser on User {
 			id
 			role
@@ -1066,7 +1046,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 	`
 }, RelationshipFragments = {
-  relationship: import_client7.gql`
+  relationship: import_client8.gql`
 		fragment Relationship on Relationship {
 			id
 			name
@@ -1075,7 +1055,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 	`
 }, TagEntityFragments = {
-  tagAudioItem: import_client7.gql`
+  tagAudioItem: import_client8.gql`
 		fragment TagAudioItem on AudioItem {
 			id
 			entityType
@@ -1083,7 +1063,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			slug
 		}
 	`,
-  tagInstrument: import_client7.gql`
+  tagInstrument: import_client8.gql`
 		fragment TagInstrument on Instrument {
 			id
 			entityType
@@ -1091,7 +1071,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			slug
 		}
 	`,
-  tagPerson: import_client7.gql`
+  tagPerson: import_client8.gql`
 		fragment TagPerson on Person {
 			id
 			entityType
@@ -1099,7 +1079,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			slug
 		}
 	`,
-  tagPlace: import_client7.gql`
+  tagPlace: import_client8.gql`
 		fragment TagPlace on Place {
 			id
 			entityType
@@ -1107,7 +1087,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			slug
 		}
 	`,
-  tagTune: import_client7.gql`
+  tagTune: import_client8.gql`
 		fragment TagTune on Tune {
 			id
 			entityType
@@ -1116,7 +1096,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 			type
 		}
 	`,
-  tagCollection: import_client7.gql`
+  tagCollection: import_client8.gql`
 		fragment TagCollection on Collection {
 			id
 			entityType
@@ -1125,7 +1105,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 	`
 }, TagFragments = {
-  tag: import_client7.gql`
+  tag: import_client8.gql`
 		fragment Tag on Tag {
 			id
 			relationship {
@@ -1162,7 +1142,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${TagEntityFragments.tagCollection}
 		${UserFragments.user}
 	`,
-  tagForEntity: import_client7.gql`
+  tagForEntity: import_client8.gql`
 		fragment TagForEntity on Tag {
 			id
 			relationship {
@@ -1192,7 +1172,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${UserFragments.user}
 	`
 }, EntityFragments = {
-  audioItem: import_client7.gql`
+  audioItem: import_client8.gql`
 		fragment AudioItem on AudioItem {
 			id
 			entityType
@@ -1222,7 +1202,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 		${TagFragments.tagForEntity}
 	`,
-  person: import_client7.gql`
+  person: import_client8.gql`
 		fragment Person on Person {
 			id
 			entityType
@@ -1249,7 +1229,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${TagFragments.tag}
 		${UserFragments.user}
 	`,
-  instrument: import_client7.gql`
+  instrument: import_client8.gql`
 		fragment Instrument on Instrument {
 			id
 			entityType
@@ -1267,7 +1247,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  place: import_client7.gql`
+  place: import_client8.gql`
 		fragment Place on Place {
 			id
 			entityType
@@ -1287,7 +1267,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  tune: import_client7.gql`
+  tune: import_client8.gql`
 		fragment Tune on Tune {
 			id
 			entityType
@@ -1306,7 +1286,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 		${TagFragments.tag}
 	`,
-  collection: import_client7.gql`
+  collection: import_client8.gql`
 		fragment Collection on Collection {
 			id
 			entityType
@@ -1329,7 +1309,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${UserFragments.user}
 	`
 }, CommentFragments = {
-  comment: import_client7.gql`
+  comment: import_client8.gql`
 		fragment Comment on Comment {
 			id
 			text
@@ -1345,7 +1325,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${EntityFragments.audioItem}
 		${UserFragments.user}
 	`,
-  commentWithoutParentEntity: import_client7.gql`
+  commentWithoutParentEntity: import_client8.gql`
 		fragment CommentWithoutParentEntity on Comment {
 			id
 			text
@@ -1358,7 +1338,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${UserFragments.user}
 	`
 }, SavedItemFragments = {
-  savedItem: import_client7.gql`
+  savedItem: import_client8.gql`
 		fragment SavedItem on SavedItem {
 			id
 			audioItem {
@@ -1369,7 +1349,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		${EntityFragments.audioItem}
 	`
 }, TakedownRequestFragments = {
-  takedownRequest: import_client7.gql`
+  takedownRequest: import_client8.gql`
 		fragment TakedownRequest on TakedownRequest {
 			id
 			entity {
@@ -1393,7 +1373,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 		${EntityFragments.audioItem}
 	`,
-  takedownRequestWithoutEntity: import_client7.gql`
+  takedownRequestWithoutEntity: import_client8.gql`
 		fragment TakedownRequestWithoutEntity on TakedownRequest {
 			id
 			type
@@ -1414,7 +1394,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 	`
 }, VerificationRequestFragments = {
-  verificationRequest: import_client7.gql`
+  verificationRequest: import_client8.gql`
 		fragment VerificationRequest on VerificationRequest {
 			id
 			person {
@@ -1441,7 +1421,7 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 		}
 	`
 }, SubmissionFragments = {
-  submission: import_client7.gql`
+  submission: import_client8.gql`
 		fragment Submission on Submission {
 			id
 			status
@@ -1467,11 +1447,11 @@ var import_client7 = require("@apollo/client"), UserFragments = {
 };
 
 // app/hooks/useRequireLogin.ts
-var import_react23 = require("@remix-run/react");
+var import_react24 = require("@remix-run/react");
 
 // app/hooks/useCurrentUser.ts
-var import_react22 = require("react"), import_client8 = require("@apollo/client");
-var CURRENT_USER_QUERY = import_client8.gql`
+var import_react23 = require("react"), import_client9 = require("@apollo/client");
+var CURRENT_USER_QUERY = import_client9.gql`
 	query CurrentUser {
 		currentUser {
 			...CurrentUser
@@ -1480,15 +1460,15 @@ var CURRENT_USER_QUERY = import_client8.gql`
 	${UserFragments.currentUser}
 `, useCurrentUser = () => {
   var _a;
-  let [getCurrentUser, currentUserQuery] = (0, import_client8.useLazyQuery)(CURRENT_USER_QUERY);
-  return (0, import_react22.useEffect)(() => {
+  let [getCurrentUser, currentUserQuery] = (0, import_client9.useLazyQuery)(CURRENT_USER_QUERY);
+  return (0, import_react23.useEffect)(() => {
     getCurrentUser();
   }, [getCurrentUser]), [(_a = currentUserQuery.data) == null ? void 0 : _a.currentUser, currentUserQuery];
 }, useCurrentUser_default = useCurrentUser;
 
 // app/hooks/useRequireLogin.ts
 var useRequireLogin = () => {
-  let navigate = (0, import_react23.useNavigate)(), { pathname } = (0, import_react23.useLocation)(), [currentUser] = useCurrentUser_default();
+  let navigate = (0, import_react24.useNavigate)(), { pathname } = (0, import_react24.useLocation)(), [currentUser] = useCurrentUser_default();
   return { requireLogin: ({ redirectTo } = {}) => {
     let params = new URLSearchParams({ redirectTo: redirectTo ?? pathname });
     navigate(`/login?${params.toString()}`);
@@ -1496,8 +1476,8 @@ var useRequireLogin = () => {
 }, useRequireLogin_default = useRequireLogin;
 
 // app/hooks/useTags.ts
-var import_react24 = require("react"), import_client9 = require("@apollo/client");
-var TAGS_QUERY = import_client9.gql`
+var import_react25 = require("react"), import_client10 = require("@apollo/client");
+var TAGS_QUERY = import_client10.gql`
 	query Tags($input: TagsInput!) {
 		tags(input: $input) {
 			...Tag
@@ -1509,10 +1489,10 @@ var TAGS_QUERY = import_client9.gql`
   queryOptions = {}
 } = {}) => {
   var _a;
-  let [getTags, tagsQuery] = (0, import_client9.useLazyQuery)(TAGS_QUERY, __spreadValues({
+  let [getTags, tagsQuery] = (0, import_client10.useLazyQuery)(TAGS_QUERY, __spreadValues({
     notifyOnNetworkStatusChange: !0
   }, queryOptions)), { data, fetchMore } = tagsQuery;
-  (0, import_react24.useEffect)(() => {
+  (0, import_react25.useEffect)(() => {
     getTags({
       variables: {
         input: {
@@ -1521,7 +1501,7 @@ var TAGS_QUERY = import_client9.gql`
       }
     });
   }, [getTags, resultsPerPage]);
-  let tags = data == null ? void 0 : data.tags, fetchNextPageOfTags = (0, import_react24.useCallback)(() => {
+  let tags = data == null ? void 0 : data.tags, fetchNextPageOfTags = (0, import_react25.useCallback)(() => {
     fetchMore({
       variables: {
         input: {
@@ -1551,7 +1531,7 @@ var LoadingBlock = ({ className }) => /* @__PURE__ */ React.createElement("div",
 })), LoadingBlock_default = LoadingBlock;
 
 // app/components/EditTagsButton.tsx
-var PARENT_ENTITY_QUERY = import_client10.gql`
+var PARENT_ENTITY_QUERY = import_client11.gql`
 	query Entity($id: String!) {
 		entity(id: $id) {
 			...AudioItem
@@ -1568,22 +1548,22 @@ var PARENT_ENTITY_QUERY = import_client10.gql`
 	${EntityFragments.person}
 	${EntityFragments.place}
 	${EntityFragments.tune}
-`, DELETE_TAG_MUTATION = import_client10.gql`
+`, DELETE_TAG_MUTATION = import_client11.gql`
 	mutation DeleteTag($id: String!) {
 		deleteTag(id: $id)
 	}
 `, EditTagsButton = ({ entity, className, children, onSuccess }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react25.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client10.useLazyQuery)(PARENT_ENTITY_QUERY, {
+  let { currentUser, requireLogin } = useRequireLogin_default(), [editTagsModalIsVisible, setEditTagsModalIsVisible] = (0, import_react26.useState)(!1), [getParentEntity, { loading: parentEntityLoading }] = (0, import_client11.useLazyQuery)(PARENT_ENTITY_QUERY, {
     variables: { id: entity.id },
     fetchPolicy: "network-only"
-  }), [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client10.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" }), {
+  }), [deleteTag, { loading: deleteTagLoading, data: deleteTagData }] = (0, import_client11.useMutation)(DELETE_TAG_MUTATION, { errorPolicy: "all" }), {
     tagsQuery: { refetch: refetchTopLevelTags }
-  } = useTags_default(), onDeleteTag = (0, import_react25.useCallback)(async (id) => {
+  } = useTags_default(), onDeleteTag = (0, import_react26.useCallback)(async (id) => {
     if (!currentUser)
       return await requireLogin();
     window.confirm("Are you sure you want to delete this Tag?") && deleteTag({ variables: { id } });
   }, [deleteTag, currentUser, requireLogin]);
-  (0, import_react25.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     let onDeleteSuccess = async () => {
       await Promise.all([refetchTopLevelTags(), getParentEntity()]), setEditTagsModalIsVisible(!1);
     };
@@ -1595,7 +1575,7 @@ var PARENT_ENTITY_QUERY = import_client10.gql`
     refetchTopLevelTags,
     onSuccess
   ]);
-  let { tags } = entity, sortedTags = (0, import_react25.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
+  let { tags } = entity, sortedTags = (0, import_react26.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
   if (!sortedTags || sortedTags.length === 0)
     return null;
   let isLoading = parentEntityLoading || deleteTagLoading;
@@ -1629,16 +1609,16 @@ var PARENT_ENTITY_QUERY = import_client10.gql`
 // app/components/Tags.tsx
 var TagLink = ({ tag }) => {
   var _a;
-  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react26.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react26.useState)(), onMouseEnter = (0, import_react26.useCallback)(() => {
+  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react27.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react27.useState)(), onMouseEnter = (0, import_react27.useCallback)(() => {
     setTimeoutFunc(setTimeout(() => setTooltipIsVisible(!0), 400));
-  }, []), onMouseLeave = (0, import_react26.useCallback)(() => {
+  }, []), onMouseLeave = (0, import_react27.useCallback)(() => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0)), setTooltipIsVisible(!1);
   }, [timeoutFunc]);
-  (0, import_react26.useEffect)(() => () => {
+  (0, import_react27.useEffect)(() => () => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0));
   }, [timeoutFunc]);
   let { relationship } = tag, objectEntity = Tag_default.getObjectEntity(tag), href = Entity_default.makeHrefForView(objectEntity);
-  return !objectEntity || !href ? null : /* @__PURE__ */ React.createElement(import_react27.Link, {
+  return !objectEntity || !href ? null : /* @__PURE__ */ React.createElement(import_react28.Link, {
     to: href,
     className: "block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800",
     onMouseEnter,
@@ -1647,7 +1627,7 @@ var TagLink = ({ tag }) => {
     className: `${tooltipIsVisible ? "hidden md:flex" : "hidden"} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`
   }, relationship.name, " ", (_a = objectEntity.entityType) == null ? void 0 : _a.toUpperCase()));
 }, Tags = ({ audioItem }) => {
-  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react26.useMemo)(() => {
+  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react27.useMemo)(() => {
     if (!Array.isArray(tagsAsSubject))
       return [];
     let tagsWithoutTimeMarkers = tagsAsSubject.filter((tag) => typeof tag.subjectTimeMarkerSeconds != "number");
@@ -1674,9 +1654,9 @@ var TagLink = ({ tag }) => {
 }, Tags_default = Tags;
 
 // app/components/SaveItemButton.tsx
-var import_react28 = require("@remix-run/react");
+var import_react29 = require("@remix-run/react");
 function SaveItemButton({ audioItem }) {
-  let fetcher = (0, import_react28.useFetcher)();
+  let fetcher = (0, import_react29.useFetcher)();
   function onButtonClicked() {
     fetcher.submit({ audioItemId: audioItem.id }, { method: "post", action: "/saved-items" });
   }
@@ -1694,13 +1674,13 @@ function SaveItemButton({ audioItem }) {
 }
 
 // app/components/ViewCommentsButton.tsx
-var import_react31 = require("react"), import_react32 = require("@remix-run/react");
+var import_react32 = require("react"), import_react33 = require("@remix-run/react");
 
 // app/components/CreateCommentForm.tsx
-var import_react29 = require("@remix-run/react"), import_react30 = require("react"), CreateCommentForm = ({ parentAudioItem }) => {
+var import_react30 = require("@remix-run/react"), import_react31 = require("react"), CreateCommentForm = ({ parentAudioItem }) => {
   var _a;
-  let formRef = (0, import_react30.useRef)(null), fetcher = (0, import_react29.useFetcher)();
-  return (0, import_react30.useEffect)(() => {
+  let formRef = (0, import_react31.useRef)(null), fetcher = (0, import_react30.useFetcher)();
+  return (0, import_react31.useEffect)(() => {
     var _a2;
     fetcher.type === "done" && fetcher.data.comment && ((_a2 = formRef.current) == null || _a2.reset());
   }, [fetcher]), /* @__PURE__ */ React.createElement(fetcher.Form, {
@@ -1730,10 +1710,10 @@ var import_react29 = require("@remix-run/react"), import_react30 = require("reac
 
 // app/components/ViewCommentsButton.tsx
 var ViewCommentsButton = ({ audioItem }) => {
-  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react31.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react31.useState)(!1), onViewCommentsButtonClicked = (0, import_react31.useCallback)(async () => {
+  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react32.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react32.useState)(!1), onViewCommentsButtonClicked = (0, import_react32.useCallback)(async () => {
     setModalIsVisible(!0);
-  }, []), onCloseModal = (0, import_react31.useCallback)(() => setModalIsVisible(!1), []);
-  (0, import_react31.useEffect)(() => {
+  }, []), onCloseModal = (0, import_react32.useCallback)(() => setModalIsVisible(!1), []);
+  (0, import_react32.useEffect)(() => {
     var _a;
     if (!commentsRef.current)
       return;
@@ -1767,7 +1747,7 @@ var ViewCommentsButton = ({ audioItem }) => {
     key: index
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500 text-sm mb-1 flex flex-row items-center"
-  }, /* @__PURE__ */ React.createElement(import_react32.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react33.Link, {
     to: `/users/${createdByUser == null ? void 0 : createdByUser.id}`,
     className: "mr-1 flex flex-row items-center"
   }, /* @__PURE__ */ React.createElement("span", null, createdByUser == null ? void 0 : createdByUser.username)), " ", DateTime_default.formatDateYearTime(createdAt)), /* @__PURE__ */ React.createElement("div", {
@@ -1780,14 +1760,14 @@ var ViewCommentsButton = ({ audioItem }) => {
 }, ViewCommentsButton_default = ViewCommentsButton;
 
 // app/components/TimeMarkers.tsx
-var import_react33 = require("react"), import_react34 = require("@remix-run/react");
+var import_react34 = require("react"), import_react35 = require("@remix-run/react");
 var TimeMarkers = ({ audioItem }) => {
   let { tagsAsSubject } = audioItem, {
     activeAudioItem,
     setActiveAudioItem,
     playbackPositionSeconds,
     setSeekPositionSeconds
-  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react33.useMemo)(() => {
+  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react34.useMemo)(() => {
     let output = {};
     if (!tagsAsSubject)
       return output;
@@ -1798,13 +1778,13 @@ var TimeMarkers = ({ audioItem }) => {
       let existingTagsAtTimeMarker = output[tag.subjectTimeMarkerSeconds] ?? [];
       output[tag.subjectTimeMarkerSeconds] = [...existingTagsAtTimeMarker, tag];
     }), output;
-  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react33.useCallback)((event, timeMarker) => {
+  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react34.useCallback)((event, timeMarker) => {
     if (event.target.id === "time-marker-tag-link") {
       event.stopPropagation();
       return;
     }
     (activeAudioItem == null ? void 0 : activeAudioItem.id) !== audioItem.id && setActiveAudioItem(audioItem), setSeekPositionSeconds(parseInt(timeMarker));
-  }, [audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react33.useMemo)(() => {
+  }, [audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react34.useMemo)(() => {
     if (!audioItemIsInPlayer)
       return;
     let result;
@@ -1831,7 +1811,7 @@ var TimeMarkers = ({ audioItem }) => {
     return objectEntity ? /* @__PURE__ */ React.createElement("span", {
       className: "flex flex-row items-center",
       key: index2
-    }, /* @__PURE__ */ React.createElement(import_react34.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react35.Link, {
       to: Entity_default.makeHrefForView(objectEntity),
       id: "time-marker-tag-link"
     }, objectEntity.name, objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""), index2 !== tagsAsSubjectAtTimeMarker.length - 1 && /* @__PURE__ */ React.createElement("span", {
@@ -1855,14 +1835,14 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
     setActiveAudioItem,
     activeItemDurationSeconds,
     playbackPositionSeconds
-  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react35.useMemo)(() => Array.isArray(tags) ? tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds == "number") : [], [tags]), onPlayPressed = (0, import_react35.useCallback)(() => {
+  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react36.useMemo)(() => Array.isArray(tags) ? tags.filter((tag) => typeof tag.subjectTimeMarkerSeconds == "number") : [], [tags]), onPlayPressed = (0, import_react36.useCallback)(() => {
     setActiveAudioItem(audioItem);
   }, [audioItem, setActiveAudioItem]), shouldShowPositionAndDuration = audioItemIsInPlayer && typeof playbackPositionSeconds == "number" && typeof activeItemDurationSeconds == "number", positionAndDuration = `${DateTime_default.formatSecondsAsDuration(playbackPositionSeconds ?? 0)} / ${DateTime_default.formatSecondsAsDuration(activeItemDurationSeconds ?? 0)}`, isTakenDown = status === "TAKEN_DOWN";
   return /* @__PURE__ */ React.createElement("div", {
     className: `flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 ${className ?? ""}`
   }, showTitle && /* @__PURE__ */ React.createElement("h2", {
     className: "mb-2"
-  }, /* @__PURE__ */ React.createElement(import_react36.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react37.Link, {
     to: `/entities/audio-items/${slug}`,
     className: "no-underline text-gray-700"
   }, name)), /* @__PURE__ */ React.createElement("div", {
@@ -1897,7 +1877,7 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
     className: "mt-4"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500 text-sm flex flex-col sm:flex-row"
-  }, "Added", createdByUser && /* @__PURE__ */ React.createElement(React.Fragment, null, " ", "by", " ", /* @__PURE__ */ React.createElement(import_react36.Link, {
+  }, "Added", createdByUser && /* @__PURE__ */ React.createElement(React.Fragment, null, " ", "by", " ", /* @__PURE__ */ React.createElement(import_react37.Link, {
     to: `/users/${createdByUser.id}`,
     className: "flex flex-row px-0 sm:px-1"
   }, createdByUser.username)), " ", DateTime_default.formatDateYearTime(createdAt)), /* @__PURE__ */ React.createElement("div", {
@@ -1916,49 +1896,49 @@ var AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
 }, AudioItemCard_default = AudioItemCard;
 
 // app/components/AudioItemCompact.tsx
-var import_react40 = require("react"), import_react41 = require("@remix-run/react");
+var import_react41 = require("react"), import_react42 = require("@remix-run/react");
 
 // app/components/Menu.tsx
-var import_react37 = __toESM(require("react")), Menu = ({ children }) => {
-  let containerRef = (0, import_react37.useRef)(), [shouldOpenLeft, setShouldOpenLeft] = (0, import_react37.useState)(!0), [isOpen, setIsOpen] = (0, import_react37.useState)(!1);
-  (0, import_react37.useEffect)(() => {
+var import_react38 = __toESM(require("react")), Menu = ({ children }) => {
+  let containerRef = (0, import_react38.useRef)(), [shouldOpenLeft, setShouldOpenLeft] = (0, import_react38.useState)(!0), [isOpen, setIsOpen] = (0, import_react38.useState)(!1);
+  (0, import_react38.useEffect)(() => {
     let container = containerRef.current;
     if (container) {
       let { x } = container.getBoundingClientRect();
       x < 200 && setShouldOpenLeft(!1);
     }
   }, []);
-  let onIconClicked = (0, import_react37.useCallback)((event) => {
+  let onIconClicked = (0, import_react38.useCallback)((event) => {
     event.stopPropagation(), setIsOpen(!0);
-  }, []), onBackgroundClicked = (0, import_react37.useCallback)((event) => {
+  }, []), onBackgroundClicked = (0, import_react38.useCallback)((event) => {
     event.stopPropagation(), setIsOpen(!1);
   }, []), childrenAsArray = Array.isArray(children) ? children : [children];
-  return children ? /* @__PURE__ */ import_react37.default.createElement("div", {
+  return children ? /* @__PURE__ */ import_react38.default.createElement("div", {
     className: "relative",
     ref: containerRef
-  }, /* @__PURE__ */ import_react37.default.createElement("button", {
+  }, /* @__PURE__ */ import_react38.default.createElement("button", {
     className: "btn-secondary",
     onClick: onIconClicked,
     "aria-label": isOpen ? "Close Menu" : "Show Menu"
-  }, /* @__PURE__ */ import_react37.default.createElement("i", {
+  }, /* @__PURE__ */ import_react38.default.createElement("i", {
     className: "material-icons"
-  }, "expand_more")), isOpen && /* @__PURE__ */ import_react37.default.createElement(import_react37.default.Fragment, null, /* @__PURE__ */ import_react37.default.createElement("div", {
+  }, "expand_more")), isOpen && /* @__PURE__ */ import_react38.default.createElement(import_react38.default.Fragment, null, /* @__PURE__ */ import_react38.default.createElement("div", {
     className: "fixed top-0 right-0 bottom-0 left-0",
     onClick: onBackgroundClicked
-  }), /* @__PURE__ */ import_react37.default.createElement("ul", {
+  }), /* @__PURE__ */ import_react38.default.createElement("ul", {
     className: `absolute top-9 ${shouldOpenLeft ? "right-0 text-right" : "left-0 text-left"} flex flex-col bg-white rounded shadow-xl`
-  }, childrenAsArray.map((child, index) => /* @__PURE__ */ import_react37.default.createElement("li", {
+  }, childrenAsArray.map((child, index) => /* @__PURE__ */ import_react38.default.createElement("li", {
     className: `cursor-pointer first:rounded-t last:rounded-b text-sm text-gray-500 font-bold whitespace-nowrap hover:bg-gray-200 ${index === 0 ? "hover:rounded-t" : ""} ${index === childrenAsArray.length - 1 ? "hover:rounded-b" : ""}`,
     key: index
   }, child))))) : null;
 }, Menu_default = Menu;
 
 // app/components/RequestTakedownButton.tsx
-var import_react39 = require("react"), import_client12 = require("@apollo/client");
+var import_react40 = require("react"), import_client13 = require("@apollo/client");
 
 // app/components/CreateTakedownRequestForm.tsx
-var import_react38 = require("react"), import_client11 = require("@apollo/client");
-var CREATE_TAKEDOWN_REQUEST = import_client11.gql`
+var import_react39 = require("react"), import_client12 = require("@apollo/client");
+var CREATE_TAKEDOWN_REQUEST = import_client12.gql`
 	mutation CreateTakedownRequest($input: CreateTakedownRequestInput!) {
 		createTakedownRequest(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -1966,7 +1946,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client11.gql`
 	}
 	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `, CreateTakedownRequestForm = ({ entity, onSuccess }) => {
-  let defaultType = Object.keys(TakedownRequestType)[0], [type, setType] = (0, import_react38.useState)(defaultType), [message, setMessage] = (0, import_react38.useState)(""), [validationError, setValidationError] = (0, import_react38.useState)(""), [createTakedownRequest, { loading, data, error }] = (0, import_client11.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" }), getLabelForType = (type2) => {
+  let defaultType = Object.keys(TakedownRequestType)[0], [type, setType] = (0, import_react39.useState)(defaultType), [message, setMessage] = (0, import_react39.useState)(""), [validationError, setValidationError] = (0, import_react39.useState)(""), [createTakedownRequest, { loading, data, error }] = (0, import_client12.useMutation)(CREATE_TAKEDOWN_REQUEST, { errorPolicy: "all" }), getLabelForType = (type2) => {
     switch (TakedownRequestType[type2]) {
       case "Performer" /* Performer */:
         return "I'm a performer in it";
@@ -1975,7 +1955,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client11.gql`
       default:
         return type2;
     }
-  }, onSubmitForm = (0, import_react38.useCallback)((event) => {
+  }, onSubmitForm = (0, import_react39.useCallback)((event) => {
     if (event.preventDefault(), setValidationError(""), !message)
       return setValidationError("Please include details about your request");
     let input = {
@@ -1993,7 +1973,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client11.gql`
     } catch {
     }
   }, [message, entity, type, createTakedownRequest]);
-  return (0, import_react38.useEffect)(() => {
+  return (0, import_react39.useEffect)(() => {
     var _a;
     ((_a = data == null ? void 0 : data.createTakedownRequest) == null ? void 0 : _a.id) && onSuccess && onSuccess(data.createTakedownRequest);
   }, [data, onSuccess]), /* @__PURE__ */ React.createElement("form", {
@@ -2028,7 +2008,7 @@ var CREATE_TAKEDOWN_REQUEST = import_client11.gql`
 }, CreateTakedownRequestForm_default = CreateTakedownRequestForm;
 
 // app/components/RequestTakedownButton.tsx
-var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client12.gql`
+var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client13.gql`
 	query TakedownRequestsForEntity($input: TakedownRequestsForEntityInput!) {
 		takedownRequestsForEntity(input: $input) {
 			...TakedownRequestWithoutEntity
@@ -2036,7 +2016,7 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client12.gql`
 	}
 	${TakedownRequestFragments.takedownRequestWithoutEntity}
 `, RequestTakedownButton = ({ entity, onTakedownRequestCreated }) => {
-  let { currentUser, requireLogin } = useRequireLogin_default(), [modalIsVisible, setModalIsVisible] = (0, import_react39.useState)(!1), closeModal = (0, import_react39.useCallback)(() => setModalIsVisible(!1), []), { loading, data, error, refetch } = (0, import_client12.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
+  let { currentUser, requireLogin } = useRequireLogin_default(), [modalIsVisible, setModalIsVisible] = (0, import_react40.useState)(!1), closeModal = (0, import_react40.useCallback)(() => setModalIsVisible(!1), []), { loading, data, error, refetch } = (0, import_client13.useQuery)(TAKEDOWN_REQUESTS_FOR_ENTITY, {
     variables: {
       input: {
         entityType: entity.entityType,
@@ -2044,19 +2024,19 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client12.gql`
       }
     },
     skip: !modalIsVisible
-  }), takedownRequests = (data == null ? void 0 : data.takedownRequestsForEntity) ?? [], onButtonClicked = (0, import_react39.useCallback)(async () => {
+  }), takedownRequests = (data == null ? void 0 : data.takedownRequestsForEntity) ?? [], onButtonClicked = (0, import_react40.useCallback)(async () => {
     if (currentUser)
       setModalIsVisible(!0);
     else {
       let redirectTo = Entity_default.makeHrefForView(entity);
       await requireLogin({ redirectTo });
     }
-  }, [currentUser, entity, requireLogin]), onSuccess = (0, import_react39.useCallback)(async (takedownRequest) => {
+  }, [currentUser, entity, requireLogin]), onSuccess = (0, import_react40.useCallback)(async (takedownRequest) => {
     try {
       await refetch(), onTakedownRequestCreated && await onTakedownRequestCreated(takedownRequest);
     } catch {
     }
-  }, [refetch, onTakedownRequestCreated]), modalContent = (0, import_react39.useMemo)(() => {
+  }, [refetch, onTakedownRequestCreated]), modalContent = (0, import_react40.useMemo)(() => {
     let pendingTakedown = takedownRequests.find(isPendingTakedownRequest), approvedTakedown = takedownRequests.find(isApprovedTakedownRequest);
     return loading ? /* @__PURE__ */ React.createElement(LoadingBlock_default, null) : error ? /* @__PURE__ */ React.createElement("div", {
       className: "text-red-600"
@@ -2085,9 +2065,9 @@ var TAKEDOWN_REQUESTS_FOR_ENTITY = import_client12.gql`
 
 // app/components/AudioItemCompact.tsx
 var AudioItemCompact = ({ audioItem, className }) => {
-  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react40.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react40.useCallback)(() => {
+  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react41.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react41.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react40.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react41.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     return isTakenDown ? /* @__PURE__ */ React.createElement("div", {
       className: "text-gray-500"
@@ -2109,7 +2089,7 @@ var AudioItemCompact = ({ audioItem, className }) => {
     className: "flex justify-center items-center w-14 mr-3"
   }, playButtonMarkup), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-1 flex-col overflow-hidden"
-  }, /* @__PURE__ */ React.createElement(import_react41.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react42.Link, {
     to: `/entities/audio-items/${slug}`
   }, name), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
@@ -2118,7 +2098,7 @@ var AudioItemCompact = ({ audioItem, className }) => {
     return objectEntity ? /* @__PURE__ */ React.createElement("div", {
       key: index,
       className: "ml-1 whitespace-pre"
-    }, /* @__PURE__ */ React.createElement(import_react41.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react42.Link, {
       to: Entity_default.makeHrefForView(objectEntity)
     }, objectEntity.name, objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""), index !== sortedTags.length - 1 && ", ") : null;
   }), /* @__PURE__ */ React.createElement(AddTagButton_default, {
@@ -2148,11 +2128,11 @@ var AudioItemCompact = ({ audioItem, className }) => {
 }, AudioItemCompact_default = AudioItemCompact;
 
 // app/components/AudioItemTextOnly.tsx
-var import_react42 = require("react"), import_react43 = require("@remix-run/react");
+var import_react43 = require("react"), import_react44 = require("@remix-run/react");
 var AudioItemTextOnly = ({ audioItem, className }) => {
-  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react42.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react42.useCallback)(() => {
+  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react43.useMemo)(() => Tag_default.sort(tagsAsSubject), [tagsAsSubject]), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react43.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react42.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react43.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
     return isTakenDown ? /* @__PURE__ */ React.createElement("div", {
       className: "text-gray-500"
@@ -2174,7 +2154,7 @@ var AudioItemTextOnly = ({ audioItem, className }) => {
     className: "flex justify-center items-center w-14 mr-3"
   }, playButtonMarkup), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-1 flex-col overflow-hidden"
-  }, /* @__PURE__ */ React.createElement(import_react43.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react44.Link, {
     to: `/entities/audio-items/${slug}`
   }, name), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-row flex-wrap text-sm mt-1 mb-1"
@@ -2185,7 +2165,7 @@ var AudioItemTextOnly = ({ audioItem, className }) => {
     return /* @__PURE__ */ React.createElement("div", {
       key: index,
       className: "ml-1 whitespace-pre"
-    }, /* @__PURE__ */ React.createElement(import_react43.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react44.Link, {
       to: Entity_default.makeHrefForView(objectEntity)
     }, objectEntity == null ? void 0 : objectEntity.name), index !== sortedTags.length - 1 && ", ");
   }))));
@@ -2210,7 +2190,7 @@ var AudioItemComponent = ({
 }) : null, AudioItem_default = AudioItemComponent;
 
 // app/components/Breadcrumb.tsx
-var import_react44 = require("@remix-run/react"), Breadcrumb = ({ items = [], className }) => {
+var import_react45 = require("@remix-run/react"), Breadcrumb = ({ items = [], className }) => {
   if (items.length === 0)
     return null;
   if (items.length === 1)
@@ -2225,7 +2205,7 @@ var import_react44 = require("@remix-run/react"), Breadcrumb = ({ items = [], cl
   }, subItems.map(({ label, href }, index) => /* @__PURE__ */ React.createElement("div", {
     className: "flex",
     key: index
-  }, href ? /* @__PURE__ */ React.createElement(import_react44.Link, {
+  }, href ? /* @__PURE__ */ React.createElement(import_react45.Link, {
     to: href
   }, label) : /* @__PURE__ */ React.createElement("span", {
     className: "text-gray-500"
@@ -2277,7 +2257,7 @@ async function loader3({
   };
 }
 var ViewAudioItemBySlug = () => {
-  let { audioItem } = (0, import_react45.useLoaderData)();
+  let { audioItem } = (0, import_react46.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "mb-6"
   }, /* @__PURE__ */ React.createElement(Breadcrumb_default, {
@@ -2301,9 +2281,9 @@ var audio_items_exports = {};
 __export(audio_items_exports, {
   default: () => audio_items_default
 });
-var import_react46 = require("react"), import_react47 = require("@remix-run/react"), ViewAudioItems = () => {
-  let navigate = (0, import_react47.useNavigate)();
-  return (0, import_react46.useEffect)(() => {
+var import_react47 = require("react"), import_react48 = require("@remix-run/react"), ViewAudioItems = () => {
+  let navigate = (0, import_react48.useNavigate)();
+  return (0, import_react47.useEffect)(() => {
     navigate("/");
   }, [navigate]), null;
 }, audio_items_default = ViewAudioItems;
@@ -2314,16 +2294,16 @@ __export(slug_exports2, {
   default: () => slug_default2,
   loader: () => loader4
 });
-var import_react52 = require("@remix-run/react");
+var import_react53 = require("@remix-run/react");
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_react51 = require("@remix-run/react");
+var import_react52 = require("@remix-run/react");
 
 // app/hooks/useFilters.ts
-var import_react49 = require("react"), import_react50 = require("@remix-run/react");
+var import_react50 = require("react"), import_react51 = require("@remix-run/react");
 
 // app/components/Filters.tsx
-var import_react48 = __toESM(require("react"));
+var import_react49 = __toESM(require("react"));
 var Filters = ({
   totalItems,
   page,
@@ -2336,55 +2316,55 @@ var Filters = ({
   onChangeViewAs,
   className
 }) => {
-  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react48.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react48.useMemo)(() => {
+  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react49.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react49.useMemo)(() => {
     let output = [], i = 1;
     for (; i <= totalPages; )
-      output.push(/* @__PURE__ */ import_react48.default.createElement("option", {
+      output.push(/* @__PURE__ */ import_react49.default.createElement("option", {
         value: i,
         key: i
       }, i)), i++;
     return output;
-  }, [totalPages]), perPageOptions = (0, import_react48.useMemo)(() => {
+  }, [totalPages]), perPageOptions = (0, import_react49.useMemo)(() => {
     let output = [];
     for (let value in PerPage)
-      isNaN(Number(value)) || output.push(/* @__PURE__ */ import_react48.default.createElement("option", {
+      isNaN(Number(value)) || output.push(/* @__PURE__ */ import_react49.default.createElement("option", {
         value,
         key: value
       }, value));
     return output;
   }, []);
-  return /* @__PURE__ */ import_react48.default.createElement("div", {
+  return /* @__PURE__ */ import_react49.default.createElement("div", {
     className: `flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${className ?? ""}`
-  }, shouldRenderPagination && /* @__PURE__ */ import_react48.default.createElement("div", {
+  }, shouldRenderPagination && /* @__PURE__ */ import_react49.default.createElement("div", {
     className: "flex flex-row items-center space-x-5"
-  }, /* @__PURE__ */ import_react48.default.createElement("div", null, totalItems.toLocaleString(), " Item", totalItems === 1 ? "" : "s"), /* @__PURE__ */ import_react48.default.createElement("div", null, "Page", " ", /* @__PURE__ */ import_react48.default.createElement("select", {
+  }, /* @__PURE__ */ import_react49.default.createElement("div", null, totalItems.toLocaleString(), " Item", totalItems === 1 ? "" : "s"), /* @__PURE__ */ import_react49.default.createElement("div", null, "Page", " ", /* @__PURE__ */ import_react49.default.createElement("select", {
     value: page,
     onChange: onChangePage
-  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react48.default.createElement("div", null, /* @__PURE__ */ import_react48.default.createElement("select", {
+  }, pageSelectOptions), totalPages ? ` of ${totalPages}` : ""), /* @__PURE__ */ import_react49.default.createElement("div", null, /* @__PURE__ */ import_react49.default.createElement("select", {
     value: perPage,
     onChange: onChangePerPage,
     className: "text-sm"
-  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react48.default.createElement("div", {
+  }, perPageOptions), " ", "per page")), shouldRenderSortBy && /* @__PURE__ */ import_react49.default.createElement("div", {
     className: "flex flex-row items-center"
-  }, "Sort by", /* @__PURE__ */ import_react48.default.createElement("select", {
+  }, "Sort by", /* @__PURE__ */ import_react49.default.createElement("select", {
     className: "ml-1",
     value: sortBy,
     onChange: onChangeSortBy
-  }, /* @__PURE__ */ import_react48.default.createElement("option", {
+  }, /* @__PURE__ */ import_react49.default.createElement("option", {
     value: "RecentlyTagged" /* RecentlyTagged */
-  }, "Recently tagged"), /* @__PURE__ */ import_react48.default.createElement("option", {
+  }, "Recently tagged"), /* @__PURE__ */ import_react49.default.createElement("option", {
     value: "RecentlyAdded" /* RecentlyAdded */
-  }, "Newest"))), shouldRenderViewAs && /* @__PURE__ */ import_react48.default.createElement("div", {
+  }, "Newest"))), shouldRenderViewAs && /* @__PURE__ */ import_react49.default.createElement("div", {
     className: "hidden md:flex flex-row items-center"
-  }, "View as", /* @__PURE__ */ import_react48.default.createElement("select", {
+  }, "View as", /* @__PURE__ */ import_react49.default.createElement("select", {
     className: "ml-1",
     value: viewAs,
     onChange: onChangeViewAs
-  }, /* @__PURE__ */ import_react48.default.createElement("option", {
+  }, /* @__PURE__ */ import_react49.default.createElement("option", {
     value: "Cards" /* Cards */
-  }, "Cards"), /* @__PURE__ */ import_react48.default.createElement("option", {
+  }, "Cards"), /* @__PURE__ */ import_react49.default.createElement("option", {
     value: "Compact" /* Compact */
-  }, "Compact"), /* @__PURE__ */ import_react48.default.createElement("option", {
+  }, "Compact"), /* @__PURE__ */ import_react49.default.createElement("option", {
     value: "List" /* List */
   }, "List"))));
 }, Filters_default = Filters;
@@ -2397,14 +2377,14 @@ var useFilters = ({
   defaultSortBy = "RecentlyTagged" /* RecentlyTagged */,
   defaultViewAs = "Cards" /* Cards */
 } = {}) => {
-  let navigate = (0, import_react50.useNavigate)(), { pathname, search } = (0, import_react50.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react49.useCallback)((paramsToUpdate = {}) => {
+  let navigate = (0, import_react51.useNavigate)(), { pathname, search } = (0, import_react51.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react50.useCallback)((paramsToUpdate = {}) => {
     let queryParams2 = new URLSearchParams(search);
     return Object.keys(paramsToUpdate).forEach((paramName) => {
       let value = paramsToUpdate[paramName];
       value ? queryParams2.set(paramName, value) : queryParams2.delete(paramName);
     }), navigate(`${pathname}?${queryParams2.toString()}`);
-  }, [navigate, pathname, search]), onChangePage = (0, import_react49.useCallback)((event) => updateQueryParams({ page: event.target.value }), [updateQueryParams]), onChangePerPage = (0, import_react49.useCallback)((event) => updateQueryParams({ perPage: event.target.value, page: "1" }), [updateQueryParams]), onChangeSortBy = (0, import_react49.useCallback)((event) => updateQueryParams({ sortBy: event.target.value }), [updateQueryParams]), onChangeViewAs = (0, import_react49.useCallback)((event) => updateQueryParams({ viewAs: event.target.value }), [updateQueryParams]);
-  return (0, import_react49.useMemo)(() => ({
+  }, [navigate, pathname, search]), onChangePage = (0, import_react50.useCallback)((event) => updateQueryParams({ page: event.target.value }), [updateQueryParams]), onChangePerPage = (0, import_react50.useCallback)((event) => updateQueryParams({ perPage: event.target.value, page: "1" }), [updateQueryParams]), onChangeSortBy = (0, import_react50.useCallback)((event) => updateQueryParams({ sortBy: event.target.value }), [updateQueryParams]), onChangeViewAs = (0, import_react50.useCallback)((event) => updateQueryParams({ viewAs: event.target.value }), [updateQueryParams]);
+  return (0, import_react50.useMemo)(() => ({
     Filters: Filters_default,
     filtersProps: {
       totalItems,
@@ -2435,13 +2415,13 @@ var useFilters = ({
 }, useFilters_default = useFilters;
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_client13 = require("@prisma/client"), ViewEntityAndAudioItems = ({
+var import_client14 = require("@prisma/client"), ViewEntityAndAudioItems = ({
   entity,
   audioItems,
   totalAudioItems,
   className
 }) => {
-  let { name } = entity ?? {}, { search } = (0, import_react51.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { name } = entity ?? {}, { search } = (0, import_react52.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalAudioItems
   });
   return /* @__PURE__ */ React.createElement("div", {
@@ -2457,7 +2437,7 @@ var import_client13 = require("@prisma/client"), ViewEntityAndAudioItems = ({
     className: "mb-2"
   }), /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500 text-sm flex-col space-y-2"
-  }, entity.description && /* @__PURE__ */ React.createElement("p", null, entity.description), entity.aliases && /* @__PURE__ */ React.createElement("p", null, "Also known as: ", entity.aliases), entity.entityType === import_client13.EntityType.Tune && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("p", null, "Type: ", entity.type), /* @__PURE__ */ React.createElement("p", null, "Meter: ", entity.meter), /* @__PURE__ */ React.createElement("p", null, "Mode: ", entity.mode), /* @__PURE__ */ React.createElement("p", null, "ABC: ", entity.abc), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("a", {
+  }, entity.description && /* @__PURE__ */ React.createElement("p", null, entity.description), entity.aliases && /* @__PURE__ */ React.createElement("p", null, "Also known as: ", entity.aliases), entity.entityType === import_client14.EntityType.Tune && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("p", null, "Type: ", entity.type), /* @__PURE__ */ React.createElement("p", null, "Meter: ", entity.meter), /* @__PURE__ */ React.createElement("p", null, "Mode: ", entity.mode), /* @__PURE__ */ React.createElement("p", null, "ABC: ", entity.abc), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("a", {
     href: `https://thesession.org/tunes/${entity.theSessionTuneId}`,
     target: "_blank",
     rel: "noreferrer"
@@ -2537,7 +2517,7 @@ async function loader4({
   };
 }
 var ViewCollectionBySlug = () => {
-  let { collection, audioItems, totalAudioItems } = (0, import_react52.useLoaderData)();
+  let { collection, audioItems, totalAudioItems } = (0, import_react53.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: collection,
     audioItems,
@@ -2552,7 +2532,7 @@ __export(collections_exports, {
   loader: () => loader5,
   meta: () => meta2
 });
-var import_react53 = require("@remix-run/react");
+var import_react54 = require("@remix-run/react");
 function meta2() {
   return {
     title: "Trad Archive - Collections"
@@ -2566,7 +2546,7 @@ function loader5() {
   });
 }
 var Collections = () => {
-  let collections = (0, import_react53.useLoaderData)();
+  let collections = (0, import_react54.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Collections"), collections.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -2574,7 +2554,7 @@ var Collections = () => {
   }, "No Collections found"), collections.length > 0 && /* @__PURE__ */ React.createElement("ul", null, collections.map((collection, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react53.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react54.Link, {
     to: Entity_default.makeHrefForView(collection)
   }, collection.name)))));
 }, collections_default = Collections;
@@ -2585,7 +2565,7 @@ __export(slug_exports3, {
   default: () => slug_default3,
   loader: () => loader6
 });
-var import_react54 = require("@remix-run/react");
+var import_react55 = require("@remix-run/react");
 async function loader6({
   params,
   request
@@ -2651,7 +2631,7 @@ async function loader6({
   };
 }
 var ViewInstrumentBySlug = () => {
-  let { instrument, audioItems, totalAudioItems } = (0, import_react54.useLoaderData)();
+  let { instrument, audioItems, totalAudioItems } = (0, import_react55.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: instrument,
     audioItems,
@@ -2667,7 +2647,7 @@ __export(instruments_exports, {
   loader: () => loader7,
   meta: () => meta3
 });
-var import_react55 = require("@remix-run/react"), import_node4 = require("@remix-run/node");
+var import_react56 = require("@remix-run/react"), import_node4 = require("@remix-run/node");
 function meta3() {
   return {
     title: "Trad Archive - Instruments"
@@ -2710,7 +2690,7 @@ var action = async ({ request }) => {
     return (0, import_node4.json)({ error: "Error creating Instrument" }, { status: 500 });
   }
 }, Instruments = () => {
-  let instruments = (0, import_react55.useLoaderData)();
+  let instruments = (0, import_react56.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Instruments"), instruments.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -2718,7 +2698,7 @@ var action = async ({ request }) => {
   }, "No Instruments found"), instruments.length > 0 && /* @__PURE__ */ React.createElement("ul", null, instruments.map((instrument, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react55.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react56.Link, {
     to: Entity_default.makeHrefForView(instrument)
   }, instrument.name)))));
 }, instruments_default = Instruments;
@@ -2729,7 +2709,7 @@ __export(slug_exports4, {
   default: () => slug_default4,
   loader: () => loader8
 });
-var import_react56 = require("@remix-run/react");
+var import_react57 = require("@remix-run/react");
 async function loader8({
   params,
   request
@@ -2795,7 +2775,7 @@ async function loader8({
   };
 }
 var ViewPersonBySlug = () => {
-  let { person, audioItems, totalAudioItems } = (0, import_react56.useLoaderData)();
+  let { person, audioItems, totalAudioItems } = (0, import_react57.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: person,
     audioItems,
@@ -2811,7 +2791,7 @@ __export(people_exports, {
   loader: () => loader9,
   meta: () => meta4
 });
-var import_react57 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
+var import_react58 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
 function meta4() {
   return {
     title: "Trad Archive - People"
@@ -2855,7 +2835,7 @@ var action2 = async ({ request }) => {
     return (0, import_node5.json)({ error: "Error creating Person" }, { status: 500 });
   }
 }, People = () => {
-  let people = (0, import_react57.useLoaderData)();
+  let people = (0, import_react58.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "People"), people.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -2863,7 +2843,7 @@ var action2 = async ({ request }) => {
   }, "No People found"), people.length > 0 && /* @__PURE__ */ React.createElement("ul", null, people.map((person, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react57.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react58.Link, {
     to: Entity_default.makeHrefForView(person)
   }, person.name)))));
 }, people_default = People;
@@ -2874,7 +2854,7 @@ __export(slug_exports5, {
   default: () => slug_default5,
   loader: () => loader10
 });
-var import_react58 = require("@remix-run/react");
+var import_react59 = require("@remix-run/react");
 async function loader10({
   params,
   request
@@ -2940,7 +2920,7 @@ async function loader10({
   };
 }
 var ViewPlaceBySlug = () => {
-  let { place, audioItems, totalAudioItems } = (0, import_react58.useLoaderData)();
+  let { place, audioItems, totalAudioItems } = (0, import_react59.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: place,
     audioItems,
@@ -2955,7 +2935,7 @@ __export(places_exports, {
   loader: () => loader11,
   meta: () => meta5
 });
-var import_react59 = require("@remix-run/react");
+var import_react60 = require("@remix-run/react");
 function meta5() {
   return {
     title: "Trad Archive - Places"
@@ -2969,7 +2949,7 @@ function loader11() {
   });
 }
 var Places = () => {
-  let places = (0, import_react59.useLoaderData)();
+  let places = (0, import_react60.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Places"), places.length === 0 && /* @__PURE__ */ React.createElement("div", {
@@ -2977,7 +2957,7 @@ var Places = () => {
   }, "No Places found"), places.length > 0 && /* @__PURE__ */ React.createElement("ul", null, places.map((place, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react59.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react60.Link, {
     to: Entity_default.makeHrefForView(place)
   }, place.name)))));
 }, places_default = Places;
@@ -2988,7 +2968,7 @@ __export(slug_exports6, {
   default: () => slug_default6,
   loader: () => loader12
 });
-var import_react60 = require("@remix-run/react");
+var import_react61 = require("@remix-run/react");
 async function loader12({
   params,
   request
@@ -3054,7 +3034,7 @@ async function loader12({
   };
 }
 var ViewTuneBySlug = () => {
-  let { tune, audioItems, totalAudioItems } = (0, import_react60.useLoaderData)();
+  let { tune, audioItems, totalAudioItems } = (0, import_react61.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement(ViewEntityAndAudioItems_default, {
     entity: tune,
     audioItems,
@@ -3069,7 +3049,7 @@ __export(tunes_exports, {
   loader: () => loader13,
   meta: () => meta6
 });
-var import_react61 = require("@remix-run/react");
+var import_react62 = require("@remix-run/react");
 function meta6() {
   return {
     title: "Trad Archive - Tunes"
@@ -3095,7 +3075,7 @@ async function loader13({
   };
 }
 var Tunes = () => {
-  let { tunes, totalTunes } = (0, import_react61.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { tunes, totalTunes } = (0, import_react62.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalTunes,
     defaultPerPage: PER_PAGE
   });
@@ -3108,7 +3088,7 @@ var Tunes = () => {
   }, "No Tunes found"), tunes.length > 0 && /* @__PURE__ */ React.createElement("ul", null, tunes.map((tune, index) => /* @__PURE__ */ React.createElement("li", {
     className: "mb-2",
     key: index
-  }, /* @__PURE__ */ React.createElement(import_react61.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react62.Link, {
     to: Entity_default.makeHrefForView(tune)
   }, tune.name)))));
 }, tunes_default = Tunes;
@@ -3120,7 +3100,7 @@ __export(choose_new_password_exports, {
   default: () => ChooseNewPassword,
   loader: () => loader14
 });
-var import_node6 = require("@remix-run/node"), import_react62 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
+var import_node6 = require("@remix-run/node"), import_react63 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
 var loader14 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), validationError = session.get("validationError") || null, error = null, params = new URL(request.url).searchParams, userEmail = params.get("userEmail") ?? "", tokenUnhashed = params.get("tokenUnhashed") ?? "", user = await db.user.findUnique({ where: { email: userEmail } });
   if (!user || !user.autoLoginTokenHashed || !user.autoLoginTokenExpiry)
@@ -3157,12 +3137,12 @@ var loader14 = async ({ request }) => {
   });
 };
 function ChooseNewPassword() {
-  let transition = (0, import_react62.useTransition)(), { error, validationError } = (0, import_react62.useLoaderData)(), [searchParams] = (0, import_react62.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
+  let transition = (0, import_react63.useTransition)(), { error, validationError } = (0, import_react63.useLoaderData)(), [searchParams] = (0, import_react63.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Choose a new password"), error ? /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("p", {
     className: "text-red-600 mb-6"
-  }, error), /* @__PURE__ */ React.createElement(import_react62.Link, {
+  }, error), /* @__PURE__ */ React.createElement(import_react63.Link, {
     to: "/reset-password"
   }, "Reset Password")) : /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col align-start max-w-xs"
@@ -3201,7 +3181,7 @@ __export(reset_password_exports, {
   default: () => ResetPassword,
   loader: () => loader15
 });
-var import_node7 = require("@remix-run/node"), import_react63 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
+var import_node7 = require("@remix-run/node"), import_react64 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
 var loader15 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), error = session.get("error") || null, confirmation = session.get("confirmation") || null;
   return (0, import_node7.json)({ error, confirmation }, {
@@ -3251,7 +3231,7 @@ var loader15 = async ({ request }) => {
   });
 };
 function ResetPassword() {
-  let transition = (0, import_react63.useTransition)(), { error, confirmation } = (0, import_react63.useLoaderData)();
+  let transition = (0, import_react64.useTransition)(), { error, confirmation } = (0, import_react64.useLoaderData)();
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-4"
   }, "Reset your password"), confirmation ? /* @__PURE__ */ React.createElement("div", {
@@ -3278,7 +3258,7 @@ function ResetPassword() {
     value: "Send Email"
   })), error && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-6"
-  }, error), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react63.Link, {
+  }, error), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react64.Link, {
     to: "/login"
   }, "Go Back")))));
 }
@@ -3289,7 +3269,7 @@ __export(account_exports, {
   default: () => AccountHome,
   loader: () => loader16
 });
-var import_react64 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
+var import_react65 = require("@remix-run/react"), import_node8 = require("@remix-run/node");
 var loader16 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
     where: { id: currentUserId }
@@ -3305,9 +3285,9 @@ function AccountHome() {
     className: "mb-6"
   }, "Account"), /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col space-y-2"
-  }, /* @__PURE__ */ React.createElement(import_react64.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react65.Link, {
     to: "/reset-password"
-  }, "Change Password"), /* @__PURE__ */ React.createElement(import_react64.Link, {
+  }, "Change Password"), /* @__PURE__ */ React.createElement(import_react65.Link, {
     to: "/logout"
   }, "Log Out ")));
 }
@@ -3338,7 +3318,7 @@ __export(saved_items_exports, {
   default: () => SavedItems,
   loader: () => loader18
 });
-var import_react65 = require("@remix-run/react"), import_node10 = require("@remix-run/node");
+var import_react66 = require("@remix-run/react"), import_node10 = require("@remix-run/node");
 var loader18 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { pathname, searchParams } = new URL(request.url), redirectParams = new URLSearchParams({
     redirectTo: pathname
@@ -3402,7 +3382,7 @@ var loader18 = async ({ request }) => {
   return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node10.json)({ ok: !0 }, { status: 200 });
 };
 function SavedItems() {
-  let { audioItems } = (0, import_react65.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
+  let { audioItems } = (0, import_react66.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     defaultViewAs: "List" /* List */
   });
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
@@ -3413,7 +3393,7 @@ function SavedItems() {
     className: "mb-6"
   })), audioItems.length === 0 && /* @__PURE__ */ React.createElement("div", {
     className: "text-gray-500"
-  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react65.Link, {
+  }, "Nothing saved yet - try browsing some", " ", /* @__PURE__ */ React.createElement(import_react66.Link, {
     to: "/"
   }, "Audio Items"), "!"), audioItems.map((audioItem, index) => /* @__PURE__ */ React.createElement(AudioItem_default, {
     viewAs,
@@ -3429,7 +3409,7 @@ __export(id_exports, {
   default: () => id_default,
   loader: () => loader19
 });
-var import_react66 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
+var import_react67 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
 var loader19 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -3439,7 +3419,7 @@ var loader19 = async ({ params }) => {
     });
   return (0, import_node11.json)({ user });
 }, ViewUserById = () => {
-  let { user } = (0, import_react66.useLoaderData)(), { username, createdAt } = user;
+  let { user } = (0, import_react67.useLoaderData)(), { username, createdAt } = user;
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("div", {
     className: "flex flex-col-reverse md:flex-row"
   }, /* @__PURE__ */ React.createElement("div", {
@@ -3497,16 +3477,16 @@ var search_exports = {};
 __export(search_exports, {
   loader: () => loader21
 });
-var import_client14 = require("@prisma/client"), import_node14 = require("@remix-run/node");
+var import_client15 = require("@prisma/client"), import_node14 = require("@remix-run/node");
 var loader21 = async ({ request }) => {
   let url = new URL(request.url), searchTerm = url.searchParams.get("searchTerm") || "", entityTypes = url.searchParams.getAll("entityTypes");
   entityTypes.length === 0 && (entityTypes = [
-    import_client14.EntityType.Person,
-    import_client14.EntityType.Instrument,
-    import_client14.EntityType.Place,
-    import_client14.EntityType.Tune,
-    import_client14.EntityType.Collection,
-    import_client14.EntityType.AudioItem
+    import_client15.EntityType.Person,
+    import_client15.EntityType.Instrument,
+    import_client15.EntityType.Place,
+    import_client15.EntityType.Tune,
+    import_client15.EntityType.Collection,
+    import_client15.EntityType.AudioItem
   ]);
   let take = Number(url.searchParams.get("take") ?? 24);
   if (searchTerm.length < 3)
@@ -3610,22 +3590,22 @@ var loader21 = async ({ request }) => {
   }), queryPromises = [];
   for (let entityType of entityTypes)
     switch (entityType) {
-      case import_client14.EntityType.Person:
+      case import_client15.EntityType.Person:
         queryPromises.push(personQuery);
         break;
-      case import_client14.EntityType.Tune:
+      case import_client15.EntityType.Tune:
         queryPromises.push(tuneQuery);
         break;
-      case import_client14.EntityType.Instrument:
+      case import_client15.EntityType.Instrument:
         queryPromises.push(instrumentQuery);
         break;
-      case import_client14.EntityType.Place:
+      case import_client15.EntityType.Place:
         queryPromises.push(placeQuery);
         break;
-      case import_client14.EntityType.Collection:
+      case import_client15.EntityType.Collection:
         queryPromises.push(collectionQuery);
         break;
-      case import_client14.EntityType.AudioItem:
+      case import_client15.EntityType.AudioItem:
         queryPromises.push(audioItemQuery);
         break;
       default:
@@ -3642,7 +3622,7 @@ __export(signup_exports, {
   default: () => SignUp,
   loader: () => loader22
 });
-var import_react67 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
+var import_react68 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
 var import_node15 = require("@remix-run/node");
 var loader22 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
@@ -3700,7 +3680,7 @@ var loader22 = async ({ request }) => {
   });
 };
 function SignUp() {
-  let { error } = (0, import_react67.useLoaderData)(), { state } = (0, import_react67.useTransition)(), { search } = (0, import_react67.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error } = (0, import_react68.useLoaderData)(), { state } = (0, import_react68.useTransition)(), { search } = (0, import_react68.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, redirectTo ? "Create an account to continue" : "Create your account"), /* @__PURE__ */ React.createElement("div", {
@@ -3736,7 +3716,7 @@ function SignUp() {
     value: "Sign Up"
   })), error && /* @__PURE__ */ React.createElement("div", {
     className: "text-red-600 mb-6"
-  }, error), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react67.Link, {
+  }, error), /* @__PURE__ */ React.createElement("div", null, "Already have an account?", " ", /* @__PURE__ */ React.createElement(import_react68.Link, {
     to: `/login?${logInLinkQueryParams.toString()}`
   }, "Log in"))));
 }
@@ -3747,7 +3727,7 @@ __export(routes_exports, {
   default: () => Home,
   loader: () => loader23
 });
-var import_react68 = require("react"), import_react69 = require("@remix-run/react");
+var import_react69 = require("react"), import_react70 = require("@remix-run/react");
 
 // app/services/LocalStorage.ts
 var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
@@ -3865,13 +3845,13 @@ function Home() {
     numAudioItemsAllTime,
     numTagsAllTime,
     numCommentsAllTime
-  } = (0, import_react69.useLoaderData)(), { search } = (0, import_react69.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
+  } = (0, import_react70.useLoaderData)(), { search } = (0, import_react70.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: numAudioItemsAllTime
-  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react68.useState)(!1);
-  (0, import_react68.useEffect)(() => {
+  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react69.useState)(!1);
+  (0, import_react69.useEffect)(() => {
     LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
   }, []);
-  let onCloseIntro = (0, import_react68.useCallback)(() => {
+  let onCloseIntro = (0, import_react69.useCallback)(() => {
     LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
   }, []);
   return /* @__PURE__ */ React.createElement(Layout_default, null, shouldShowIntro && /* @__PURE__ */ React.createElement(ProjectIntro_default, {
@@ -3894,16 +3874,16 @@ function Home() {
     className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300"
   }, /* @__PURE__ */ React.createElement("h3", {
     className: "mb-4"
-  }, "Browse"), /* @__PURE__ */ React.createElement(import_react69.Link, {
+  }, "Browse"), /* @__PURE__ */ React.createElement(import_react70.Link, {
     to: "/entities/people",
     className: "mb-2"
-  }, "People"), /* @__PURE__ */ React.createElement(import_react69.Link, {
+  }, "People"), /* @__PURE__ */ React.createElement(import_react70.Link, {
     to: "/entities/tunes",
     className: "mb-2"
-  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react69.Link, {
+  }, "Tunes"), /* @__PURE__ */ React.createElement(import_react70.Link, {
     to: "/entities/instruments",
     className: "mb-2"
-  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react69.Link, {
+  }, "Instruments"), /* @__PURE__ */ React.createElement(import_react70.Link, {
     to: "/entities/collections",
     className: "mb-2"
   }, "Collections"), /* @__PURE__ */ React.createElement("h3", {
@@ -3921,7 +3901,7 @@ function Home() {
     return name ? /* @__PURE__ */ React.createElement("div", {
       className: "mb-2 text-gray-500",
       key: index
-    }, /* @__PURE__ */ React.createElement(import_react69.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react70.Link, {
       to: Entity_default.makeHrefForView(collection)
     }, collection.name)) : null;
   }), /* @__PURE__ */ React.createElement("h3", {
@@ -3940,9 +3920,9 @@ function Home() {
       key: index
     }, /* @__PURE__ */ React.createElement("div", {
       className: " mb-1"
-    }, /* @__PURE__ */ React.createElement(import_react69.Link, {
+    }, /* @__PURE__ */ React.createElement(import_react70.Link, {
       to: `/users/${createdByUser.id}`
-    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react69.Link, {
+    }, createdByUser.username), " commented on ", /* @__PURE__ */ React.createElement(import_react70.Link, {
       to: Entity_default.makeHrefForView(parentAudioItem)
     }, parentAudioItem.name), ":"), /* @__PURE__ */ React.createElement("div", {
       className: "whitespace-pre-line text-sm"
@@ -3957,7 +3937,7 @@ __export(login_exports, {
   default: () => Login,
   loader: () => loader24
 });
-var import_react70 = require("@remix-run/react"), import_node16 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
+var import_react71 = require("@remix-run/react"), import_node16 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
 var loader24 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
@@ -3989,7 +3969,7 @@ var loader24 = async ({ request }) => {
   }));
 };
 function Login() {
-  let { error } = (0, import_react70.useLoaderData)(), transition = (0, import_react70.useTransition)(), { search } = (0, import_react70.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
+  let { error } = (0, import_react71.useLoaderData)(), transition = (0, import_react71.useTransition)(), { search } = (0, import_react71.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(redirectTo ? { redirectTo } : void 0);
   return /* @__PURE__ */ React.createElement(Layout_default, null, /* @__PURE__ */ React.createElement("h1", {
     className: "mb-6"
   }, "Log in to ", redirectTo ? "continue" : "Trad Archive"), /* @__PURE__ */ React.createElement("div", {
@@ -4017,15 +3997,68 @@ function Login() {
     className: "text-red-600 mb-6"
   }, error), /* @__PURE__ */ React.createElement("p", {
     className: "mb-2"
-  }, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react70.Link, {
+  }, "Don't have an account yet?", " ", /* @__PURE__ */ React.createElement(import_react71.Link, {
     to: `/signup?${signUpLinkQueryParams.toString()}`
-  }, "Sign Up")), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react70.Link, {
+  }, "Sign Up")), /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement(import_react71.Link, {
     to: "/reset-password"
   }, "Reset Password"))));
 }
 
+// route:/Users/dangurney/Desktop/Dev/trad-archive/remix/app/routes/tags.tsx
+var tags_exports = {};
+__export(tags_exports, {
+  action: () => action9
+});
+var import_client16 = require("@prisma/client"), import_node17 = require("@remix-run/node");
+var action9 = async ({ request }) => {
+  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(referer ? new URL(referer).pathname : "/");
+  if (!userId)
+    return (0, import_node17.redirect)(`/login?redirectTo=${redirectTo}`);
+  let formData = await request.formData(), relationshipId = String(formData.get("relationshipId") ?? ""), inverseRelationshipId = String(formData.get("inverseRelationshipId") ?? ""), subjectEntityType = String(formData.get("subjectEntityType") ?? ""), subjectEntityId = String(formData.get("subjectEntityId") ?? ""), objectEntityType = String(formData.get("objectEntityType") ?? ""), objectEntityId = String(formData.get("objectEntityId") ?? ""), rawSubjectTimeMarkerSeconds = String(formData.get("subjectTimeMarkerSeconds") ?? ""), subjectTimeMarkerSeconds = rawSubjectTimeMarkerSeconds === "" ? void 0 : Number(rawSubjectTimeMarkerSeconds);
+  if (!relationshipId || !inverseRelationshipId || !subjectEntityType || !subjectEntityId || !objectEntityType || !objectEntityId)
+    return (0, import_node17.json)({ error: "Missing required fields for creating Tag" }, { status: 400 });
+  let [existing, existingInverse] = await Promise.all([
+    db.tag.findFirst({
+      where: {
+        [`subject${subjectEntityType}Id`]: subjectEntityId,
+        [`object${objectEntityType}Id`]: objectEntityId,
+        relationshipId,
+        subjectTimeMarkerSeconds: subjectEntityType === import_client16.EntityType.AudioItem ? subjectTimeMarkerSeconds : void 0
+      }
+    }),
+    db.tag.findFirst({
+      where: {
+        [`subject${objectEntityType}Id`]: objectEntityId,
+        [`object${subjectEntityType}Id`]: subjectEntityId,
+        relationshipId: inverseRelationshipId,
+        subjectTimeMarkerSeconds: objectEntityType === import_client16.EntityType.AudioItem ? subjectTimeMarkerSeconds : void 0
+      }
+    })
+  ]);
+  if (existing && existingInverse)
+    return (0, import_node17.json)({ error: "This Tag has already been created" }, { status: 400 });
+  let tag;
+  existing || (tag = await db.tag.create({
+    data: {
+      [`subject${subjectEntityType}Id`]: subjectEntityId,
+      [`object${objectEntityType}Id`]: objectEntityId,
+      relationshipId,
+      subjectTimeMarkerSeconds: subjectEntityType === import_client16.EntityType.AudioItem ? subjectTimeMarkerSeconds : void 0
+    }
+  }));
+  let tagInverse;
+  return existingInverse || (tagInverse = await db.tag.create({
+    data: {
+      [`subject${objectEntityType}Id`]: objectEntityId,
+      [`object${subjectEntityType}Id`]: subjectEntityId,
+      relationshipId: inverseRelationshipId,
+      subjectTimeMarkerSeconds: objectEntityType === import_client16.EntityType.AudioItem ? subjectTimeMarkerSeconds : void 0
+    }
+  })), (0, import_node17.json)({ tag, tagInverse }, { status: 201 });
+};
+
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "ef31dbf4", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-4TRPTOF3.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-THZTFZH5.js", "/build/_shared/chunk-QSZCPMIV.js", "/build/_shared/chunk-WO5ZZCZ6.js", "/build/_shared/chunk-PQJWRTRS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-2LI7FCI7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-ZWW7EULN.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-3RYYUHXE.js", imports: ["/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-I7QPWUXJ.js", imports: ["/build/_shared/chunk-H5O3JSHI.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-RXX7JP2X.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-6QOYESBW.js", imports: ["/build/_shared/chunk-H5O3JSHI.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-2Z3QNAPZ.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-TEUTBWFW.js", imports: ["/build/_shared/chunk-H5O3JSHI.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-DCVIFE6Z.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-3R7OLKJP.js", imports: ["/build/_shared/chunk-H5O3JSHI.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-BZBNBSK5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-CQQGQE3Z.js", imports: ["/build/_shared/chunk-H5O3JSHI.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-3VXIRVYT.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-CBM4WE4Y.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-KBZKWI5M.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-EANS43YW.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-NZFGXCTV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-ZSOOMNYV.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-OWMB7JDN.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-4SNRFG52.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-QBGHHBL2.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-CD5AOPP7.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-EF31DBF4.js" };
+var assets_manifest_default = { version: "a27e481c", entry: { module: "/build/entry.client-4RBPKCCT.js", imports: ["/build/_shared/chunk-LNAVFCVS.js", "/build/_shared/chunk-SDLOU3B7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-LWACVU37.js", imports: ["/build/_shared/chunk-ZLRWE4NK.js", "/build/_shared/chunk-VYEI3UUW.js", "/build/_shared/chunk-QSZCPMIV.js", "/build/_shared/chunk-WO5ZZCZ6.js", "/build/_shared/chunk-PQJWRTRS.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-2LI7FCI7.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-ZWW7EULN.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-5P3ESY7C.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-UOMLFFQS.js", imports: ["/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-IWNJVVXR.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-5WJTYHAU.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-QE6MZYXC.js", imports: ["/build/_shared/chunk-MJ5KQKNC.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-RXX7JP2X.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-NWDJPONR.js", imports: ["/build/_shared/chunk-MJ5KQKNC.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-2Z3QNAPZ.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-H2K6AFUL.js", imports: ["/build/_shared/chunk-MJ5KQKNC.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-DCVIFE6Z.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-RRUN5RIW.js", imports: ["/build/_shared/chunk-MJ5KQKNC.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-BZBNBSK5.js", imports: ["/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-C67EECY7.js", imports: ["/build/_shared/chunk-MJ5KQKNC.js", "/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-3VXIRVYT.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-VBF3FU7K.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-KBZKWI5M.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-HAGAUS4Y.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-EANS43YW.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-NZFGXCTV.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-3NIDCXE5.js", imports: ["/build/_shared/chunk-FUKF6ZE7.js", "/build/_shared/chunk-W6EAHP4I.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-4SNRFG52.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-QBGHHBL2.js", imports: ["/build/_shared/chunk-K64X6GTJ.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-SQZRGNIB.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-CD5AOPP7.js", imports: ["/build/_shared/chunk-WPQ6M4VW.js", "/build/_shared/chunk-IAJZOXUY.js", "/build/_shared/chunk-5PUKH5YP.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-A27E481C.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var entry = { module: entry_server_exports }, routes = {
@@ -4236,6 +4269,14 @@ var entry = { module: entry_server_exports }, routes = {
     index: void 0,
     caseSensitive: void 0,
     module: login_exports
+  },
+  "routes/tags": {
+    id: "routes/tags",
+    parentId: "root",
+    path: "tags",
+    index: void 0,
+    caseSensitive: void 0,
+    module: tags_exports
   }
 };
 module.exports = __toCommonJS(stdin_exports);

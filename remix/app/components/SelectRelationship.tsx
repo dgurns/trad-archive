@@ -1,8 +1,9 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { type Relationship } from "@prisma/client";
 import { useFetcher } from "@remix-run/react";
 
 import type { Entity } from "~/types";
+import LoadingCircle from "./LoadingCircle";
 
 interface Props {
 	subjectEntity: Entity;
@@ -53,19 +54,22 @@ export default function SelectRelationship({
 				{subjectEntity.name}
 			</div>
 
-			<select
-				className="mb-2"
-				value={selectedRelationshipId}
-				onChange={(event) => setSelectedRelationshipId(event.target.value)}
-			>
-				{relationshipOptions.map((relationship, index) => (
-					<option value={relationship.id} key={index}>
-						{relationship.name}
-					</option>
-				))}
-			</select>
+			{fetcher.state === "loading" ? (
+				<LoadingCircle />
+			) : (
+				<select
+					value={selectedRelationshipId}
+					onChange={(event) => setSelectedRelationshipId(event.target.value)}
+				>
+					{relationshipOptions.map((relationship, index) => (
+						<option value={relationship.id} key={index}>
+							{relationship.name}
+						</option>
+					))}
+				</select>
+			)}
 
-			<div className="text-gray-500">
+			<div className="text-gray-500 mt-2">
 				<span className="text-sm uppercase pr-2">
 					{objectEntity.entityType}
 				</span>

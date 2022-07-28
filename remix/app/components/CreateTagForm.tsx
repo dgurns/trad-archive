@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import { type Tag } from "@prisma/client";
+import { type Tag, EntityType } from "@prisma/client";
+import { useFetcher } from "@remix-run/react";
 
 import type { Entity } from "~/types";
-import { EntityType } from "~/types";
 import usePlayerContext from "~/hooks/usePlayerContext";
 
 import SearchEntities from "~/components/SearchEntities";
@@ -14,6 +14,12 @@ interface Props {
 	onSuccess: (tag: Tag) => void;
 }
 const CreateTagForm = ({ entity, onSuccess }: Props) => {
+	const fetcher = useFetcher<{
+		error?: string;
+		tag?: Tag;
+		tagInverse?: Tag;
+	}>();
+
 	const {
 		activeAudioItem,
 		playbackPositionSeconds,
@@ -32,27 +38,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 
 	const [selectedEntity, setSelectedEntity] = useState<Entity>();
 	const [selectedRelationshipId, setSelectedRelationshipId] = useState("");
-	const [shouldCreateInverseRelationship, setShouldCreateInverseRelationship] =
-		useState(true);
 	const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] =
 		useState("");
 
-	const [primaryCreatedTag, setPrimaryCreatedTag] = useState<Tag | undefined>(
-		undefined
-	);
-	const [tagsAreCreated, setTagsAreCreated] = useState(false);
-
 	useEffect(() => {
-		if (!tagsAreCreated) {
-			return;
+		if (fetcher.data?.tag) {
+			onSuccess(fetcher.data.tag);
 		}
-		const onCreateSuccess = async (tag: Tag) => {
-			await onSuccess(tag);
-		};
-		if (primaryCreatedTag) {
-			onCreateSuccess(primaryCreatedTag);
-		}
-	}, [onSuccess, tagsAreCreated, primaryCreatedTag]);
+	}, [onSuccess, fetcher]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {
@@ -100,40 +93,28 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	);
 
 	const onCreateTagClicked = useCallback(async () => {
-		if (!selectedEntity) {
+		if (!selectedEntity?.entityType || !entity.entityType) {
 			return;
 		}
 		let subjectTimeMarkerSeconds: number | undefined;
 		if (shouldAddTimeMarker && typeof timeMarkerValue === "number") {
 			subjectTimeMarkerSeconds = timeMarkerValue;
 		}
-		const tagInput = {
-			relationshipId: selectedRelationshipId,
-			subjectEntityType: entity.entityType,
-			subjectEntityId: entity.id,
-			objectEntityType: selectedEntity.entityType,
-			objectEntityId: selectedEntity.id,
-			subjectTimeMarkerSeconds,
-		};
-		// TODO: create primary tag
-		// setPrimaryCreatedTag(primaryTagQuery.data?.createTag);
-
-		if (shouldCreateInverseRelationship && selectedInverseRelationshipId) {
-			const inverseTagInput = {
-				relationshipId: selectedInverseRelationshipId,
-				subjectEntityType: selectedEntity.entityType,
-				subjectEntityId: selectedEntity.id,
-				objectEntityType: entity.entityType,
-				objectEntityId: entity.id,
-				subjectTimeMarkerSeconds,
-			};
-			// TODO: create inverse tag
-		}
-
-		setTagsAreCreated(true);
+		await fetcher.submit(
+			{
+				relationshipId: selectedRelationshipId,
+				inverseRelationshipId: selectedInverseRelationshipId,
+				subjectEntityType: entity.entityType,
+				subjectEntityId: entity.id,
+				objectEntityType: selectedEntity.entityType,
+				objectEntityId: selectedEntity.id,
+				subjectTimeMarkerSeconds: String(subjectTimeMarkerSeconds ?? ""),
+			},
+			{ method: "post", action: "/tags" }
+		);
 	}, [
+		fetcher,
 		selectedRelationshipId,
-		shouldCreateInverseRelationship,
 		selectedInverseRelationshipId,
 		entity,
 		selectedEntity,
@@ -159,7 +140,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		<>
 			<div>What is the relationship between these two entities?</div>
 
-			<div className="mt-2">
+			<div className="mt-2 pl-4">
 				<SelectRelationship
 					subjectEntity={entity}
 					objectEntity={selectedEntity}
@@ -167,29 +148,15 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				/>
 			</div>
 
-			<div className="mt-6 flex flex-row items-center justify-start">
-				<input
-					type="checkbox"
-					id="reverse-relationship"
-					checked={shouldCreateInverseRelationship}
-					onChange={(event) =>
-						setShouldCreateInverseRelationship(event.target.checked)
-					}
-				/>
-				<label htmlFor="reverse-relationship" className="ml-2">
-					Also create the inverse relationship
-				</label>
-			</div>
+			<div className="mt-6">...and what is the inverse relationship?</div>
 
-			{shouldCreateInverseRelationship && (
-				<div className="mt-2">
-					<SelectRelationship
-						subjectEntity={selectedEntity}
-						objectEntity={entity}
-						onSelect={onSelectInverseRelationship}
-					/>
-				</div>
-			)}
+			<div className="mt-2 pl-4">
+				<SelectRelationship
+					subjectEntity={selectedEntity}
+					objectEntity={entity}
+					onSelect={onSelectInverseRelationship}
+				/>
+			</div>
 
 			{shouldShowTimeMarkerCheckbox && (
 				<div className="mt-6 flex flex-row items-start justify-start">
@@ -215,11 +182,14 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			<button
 				className="btn mt-6"
 				onClick={onCreateTagClicked}
-				disabled={!selectedRelationshipId}
+				disabled={!selectedRelationshipId || fetcher.state !== "idle"}
 			>
 				Save
 			</button>
-			{/* {error && <div className="text-red-600 mt-4">{error.message}</div>} */}
+
+			{fetcher.data?.error && (
+				<div className="text-red-600 mt-4">{fetcher.data.error}</div>
+			)}
 		</>
 	);
 };

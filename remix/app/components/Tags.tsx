@@ -46,14 +46,14 @@ const TagLink = ({ tag }: TagProps) => {
 	return (
 		<Link
 			to={href}
-			className="relative block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800"
+			className="block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800"
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 		>
 			{objectEntity.name}
 			<div
 				className={`${
-					tooltipIsVisible ? "flex" : "hidden"
+					tooltipIsVisible ? "hidden md:flex" : "hidden" // always hide on mobile
 				} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`}
 			>
 				{relationship.name} {objectEntity.entityType?.toUpperCase()}

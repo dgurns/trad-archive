@@ -80,7 +80,6 @@ const Filters = ({
 			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
 				className ?? ""
 			}`}
-			id="filters"
 		>
 			{shouldRenderPagination && (
 				<div className="flex flex-row items-center space-x-5">

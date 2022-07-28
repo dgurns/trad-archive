@@ -1,114 +1,69 @@
-import { useEffect, useState } from "react";
-import { useMutation, gql } from "@apollo/client";
+import { useEffect, useState, useRef } from "react";
+import { type Person } from "@prisma/client";
 
-import type { Person } from "~/types";
-import { EntityFragments } from "~/fragments";
 import EntityService from "~/services/Entity";
+import { useFetcher } from "@remix-run/react";
 
-const CREATE_PERSON_MUTATION = gql`
-	mutation CreatePerson($input: CreatePersonInput!) {
-		createPerson(input: $input) {
-			...Person
-		}
-	}
-	${EntityFragments.person}
-`;
-interface CreatePersonInput {
-	slug: string;
-	aliases?: string;
-	description?: string;
-	firstName: string;
-	middleName?: string;
-	lastName: string;
-}
 interface Props {
 	onSuccess?: (person: Person) => void;
 }
 const CreatePersonForm = ({ onSuccess }: Props) => {
-	const [createPerson, { loading, error, data }] = useMutation<
-		{ createPerson: Person },
-		{ input: CreatePersonInput }
-	>(CREATE_PERSON_MUTATION, {
-		errorPolicy: "all",
-	});
+	const formRef = useRef<HTMLFormElement>(null);
+	const fetcher = useFetcher<{ error?: string; person?: Person }>();
 
-	const [firstName, setFirstName] = useState("");
-	const [middleName, setMiddleName] = useState("");
-	const [lastName, setLastName] = useState("");
+	useEffect(() => {
+		if (onSuccess && fetcher.type === "done" && fetcher.data.person) {
+			onSuccess(fetcher.data.person);
+		}
+	}, [fetcher, onSuccess]);
+
+	// Keep track of first/middle/last name and use them to suggest a slug
+	const [firstNameDraft, setFirstNameDraft] = useState("");
+	const [middleNameDraft, setMiddleNameDraft] = useState("");
+	const [lastNameDraft, setLastNameDraft] = useState("");
 	const [slug, setSlug] = useState("");
-	const [aliases, setAliases] = useState("");
-	const [description, setDescription] = useState("");
-
 	useEffect(() => {
 		let proposedSlug = "";
-		if (firstName) {
-			proposedSlug = firstName;
+		if (firstNameDraft) {
+			proposedSlug = firstNameDraft;
 		}
-		if (middleName) {
-			proposedSlug = `${proposedSlug}-${middleName}`;
+		if (middleNameDraft) {
+			proposedSlug = `${proposedSlug}-${middleNameDraft}`;
 		}
-		if (lastName) {
-			proposedSlug = `${proposedSlug}-${lastName}`;
+		if (lastNameDraft) {
+			proposedSlug = `${proposedSlug}-${lastNameDraft}`;
 		}
 		setSlug(EntityService.cleanSlug(proposedSlug));
-	}, [firstName, middleName, lastName]);
-
-	const onCreatePerson = (event) => {
-		event.preventDefault();
-		const input = {
-			firstName,
-			middleName,
-			lastName,
-			slug,
-			aliases,
-			description,
-		};
-		createPerson({ variables: { input } });
-	};
-
-	useEffect(() => {
-		if (data?.createPerson) {
-			if (onSuccess) {
-				return onSuccess(data.createPerson);
-			}
-			window.alert("Person created successfully!");
-			setFirstName("");
-			setMiddleName("");
-			setLastName("");
-			setSlug("");
-			setAliases("");
-			setDescription("");
-		}
-	}, [data]);
+	}, [firstNameDraft, middleNameDraft, lastNameDraft]);
 
 	return (
 		<>
 			<div className="flex flex-col align-start">
-				<form onSubmit={onCreatePerson}>
+				<fetcher.Form ref={formRef} method="post" action="/people">
 					<input
 						placeholder="First name"
-						autoFocus
+						name="first_name"
+						onChange={(e) => setFirstNameDraft(e.target.value)}
 						className="mb-2"
-						value={firstName}
-						onChange={(event) => setFirstName(event.target.value)}
 					/>
 					<input
 						placeholder="Middle name (optional)"
+						name="middle_name"
+						onChange={(e) => setMiddleNameDraft(e.target.value)}
 						className="mb-2"
-						value={middleName}
-						onChange={(event) => setMiddleName(event.target.value)}
 					/>
 					<input
 						placeholder="Last name"
+						name="last_name"
+						onChange={(e) => setLastNameDraft(e.target.value)}
 						className="mb-2"
-						value={lastName}
-						onChange={(event) => setLastName(event.target.value)}
 					/>
 					<input
 						placeholder="URL slug (ie. kitty-hayes)"
-						className="mb-2"
+						name="slug"
 						value={slug}
-						onChange={(event) => setSlug(event.target.value)}
+						onChange={(e) => setSlug(e.target.value)}
+						className="mb-2"
 					/>
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						This will be used for the URL of this Person, for example{" "}
@@ -116,33 +71,30 @@ const CreatePersonForm = ({ onSuccess }: Props) => {
 							slug || "kitty-hayes"
 						}`}
 					</div>
-					<input
-						placeholder="Aliases"
-						className="mb-2"
-						value={aliases}
-						onChange={(event) => setAliases(event.target.value)}
-					/>
+					<input placeholder="Aliases" name="aliases" className="mb-2" />
 					<div className="text-sm text-gray-400 mb-2 ml-2">
 						A list of comma-separated aliases for this Person. For example:{" "}
 						<em>Tony D, The Tradfather, Tony from the County Calamari</em>
 					</div>
 					<textarea
 						placeholder="Description"
+						name="description"
 						className="mb-2"
-						value={description}
 						rows={5}
-						onChange={(event) => setDescription(event.target.value)}
 					/>
-					<input
+					<button
 						type="submit"
 						className="btn mb-4 w-auto"
-						disabled={loading}
-						value="Create"
-					/>
-				</form>
+						disabled={fetcher.state !== "idle"}
+					>
+						Create
+					</button>
+				</fetcher.Form>
 			</div>
 
-			{error && <div className="text-red-600">{error.message}</div>}
+			{fetcher.data?.error && (
+				<div className="text-red-600">{fetcher.data.error}</div>
+			)}
 		</>
 	);
 };

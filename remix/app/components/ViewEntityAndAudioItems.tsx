@@ -71,7 +71,7 @@ const ViewEntityAndAudioItems = ({
 
 			{totalAudioItems > 0 && (
 				<>
-					<div className="sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px] z-10">
+					<div className="sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px]">
 						<Filters {...filtersProps} />
 					</div>
 					{audioItems.map((audioItem, index) => (

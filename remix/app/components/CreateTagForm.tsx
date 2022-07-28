@@ -20,6 +20,16 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		tagInverse?: Tag;
 	}>();
 
+	// Call onSuccess once the tag has been created and data revalidated
+	const createdTag = fetcher.data?.tag;
+	const isSubmittingOrLoading =
+		fetcher.state === "submitting" || fetcher.state === "loading";
+	useEffect(() => {
+		if (createdTag && !isSubmittingOrLoading) {
+			onSuccess(createdTag);
+		}
+	}, [createdTag, onSuccess, isSubmittingOrLoading]);
+
 	const {
 		activeAudioItem,
 		playbackPositionSeconds,
@@ -40,12 +50,6 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 	const [selectedRelationshipId, setSelectedRelationshipId] = useState("");
 	const [selectedInverseRelationshipId, setSelectedInverseRelationshipId] =
 		useState("");
-
-	useEffect(() => {
-		if (fetcher.data?.tag) {
-			onSuccess(fetcher.data.tag);
-		}
-	}, [onSuccess, fetcher]);
 
 	const onSelectEntity = useCallback(
 		(selectedEntityFromResults: Entity) => {
@@ -92,7 +96,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 		[setSelectedInverseRelationshipId]
 	);
 
-	const onCreateTagClicked = useCallback(async () => {
+	const onCreateTagClicked = async () => {
 		if (!selectedEntity?.entityType || !entity.entityType) {
 			return;
 		}
@@ -112,15 +116,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 			},
 			{ method: "post", action: "/tags" }
 		);
-	}, [
-		fetcher,
-		selectedRelationshipId,
-		selectedInverseRelationshipId,
-		entity,
-		selectedEntity,
-		shouldAddTimeMarker,
-		timeMarkerValue,
-	]);
+	};
 
 	if (!selectedEntity) {
 		return (

@@ -73,11 +73,22 @@ const ViewAudioItemBySlug = () => {
 					className="mb-2"
 				/>
 			</div>
+
 			<AudioItemComponent
 				audioItem={audioItem}
 				viewAs={ViewAs.Cards}
 				showTitle={false}
 			/>
+
+			<div className="mt-8 text-sm">
+				<a
+					href={`https://itma-atom.arkivum.net/index.php/${audioItem.itmaAtomSlug}`}
+					target="_blank"
+					rel="noreferrer"
+				>
+					View in ITMA AtoM catalog ↗
+				</a>
+			</div>
 		</Layout>
 	);
 };

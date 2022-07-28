@@ -1,7 +1,7 @@
 export default function Footer() {
 	return (
-		<div className="flex flex-col items-start w-full p-4 pt-7 pb-24 bg-gray-900 text-gray-100">
-			<div className="mb-4">
+		<div className="flex flex-col items-start w-full p-4 pt-7 pb-24 bg-gray-900 text-gray-100 space-y-4">
+			<div>
 				This project is a collaboration between the{" "}
 				<a href="https://www.itma.ie/" target="_blank" rel="noreferrer">
 					Irish Traditional Music Archive ↗
@@ -12,7 +12,7 @@ export default function Footer() {
 				</a>
 			</div>
 
-			<div className="mb-4">
+			<div>
 				Special thanks to{" "}
 				<a href="https://thesession.org/" target="_blank" rel="noreferrer">
 					The Session ↗
@@ -20,7 +20,7 @@ export default function Footer() {
 				for providing tune data.
 			</div>
 
-			<div className="mb-4">
+			<div>
 				All of the code is open source on{" "}
 				<a
 					href="https://github.com/dgurns/trad-archive"
@@ -33,12 +33,8 @@ export default function Footer() {
 			</div>
 
 			<div>
-				<a
-					href="https://github.com/dgurns/trad-archive/discussions"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Share feedback or report a bug ↗
+				<a href="mailto:dan@dangurney.net" target="_blank" rel="noreferrer">
+					Share feedback or request a takedown ↗
 				</a>
 			</div>
 		</div>

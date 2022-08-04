@@ -1,6 +1,0 @@
-node_modules
-.build
-.webpack
-yarn-error.log
-.env
-.express-server-dist

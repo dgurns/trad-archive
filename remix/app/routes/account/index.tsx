@@ -1,7 +1,8 @@
-import { Link } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import type { User } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 import Layout from "~/components/Layout";
 import { getSession } from "~/sessions.server";
@@ -26,6 +27,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function AccountHome() {
+	const { currentUser } = useLoaderData();
+
 	return (
 		<Layout>
 			<h1 className="mb-6">Account</h1>
@@ -33,6 +36,15 @@ export default function AccountHome() {
 				<Link to="/reset-password">Change Password</Link>
 				<Link to="/logout">Log Out </Link>
 			</div>
+
+			{currentUser.role === UserRole.Admin && (
+				<div className="flex flex-col space-y-2 mt-8">
+					<p className="italic">Admin</p>
+					<Link to="/scripts/export-to-atom-csv">
+						Export AtoM CSV (experimental)
+					</Link>
+				</div>
+			)}
 		</Layout>
 	);
 }

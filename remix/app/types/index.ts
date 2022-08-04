@@ -18,6 +18,7 @@ export enum PerPage {
 
 export enum SortBy {
 	DateAddedOldToNew = "DateAddedOldToNew",
+	DateSavedOldToNew = "DateSavedOldToNew",
 	RecentlyTagged = "RecentlyTagged",
 }
 

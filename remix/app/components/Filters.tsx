@@ -117,6 +117,11 @@ const Filters = ({
 								Date Added (Old to New)
 							</option>
 						)}
+						{sortByOptions.includes(SortBy.DateSavedOldToNew) && (
+							<option value={SortBy.DateSavedOldToNew}>
+								Date Saved (Old to New)
+							</option>
+						)}
 					</select>
 				</div>
 			)}

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: api
+        working-directory: remix
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -37,7 +37,7 @@ jobs:
             const commentBody = `\
             PlanetScale deploy request created for this DB branch! View it at https://app.planetscale.com/tradarchive/trad_archive/deploy-requests. 
 
-            **The deploy request must be MANUALLY DEPLOYED before merging this PR.**
+            ⚠️ **The deploy request must be MANUALLY DEPLOYED _before_ merging this PR.**
 
             Try the preview app at https://trad-archive-git-${{ github.head_ref }}-dangurney.vercel.app
             `;

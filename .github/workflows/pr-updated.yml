@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: api
+        working-directory: remix
     steps:
       - name: Check out this branch's code
         uses: actions/checkout@v2
@@ -20,10 +20,10 @@ jobs:
       - name: Fetch master branch so we can diff against it
         run: git fetch origin master
 
-      - name: Check if models directory has changed relative to master branch
-        id: diff-models
+      - name: Check if schema.prisma file has changed relative to master branch
+        id: diff-schema
         run: |
-          echo "::set-output name=diff::$(git diff origin/master src/models)"
+          echo "::set-output name=diff::$(git diff origin/master prisma/schema.prisma)"
 
       - name: Add "db schema" label if so; remove if not
         uses: actions/github-script@v5
@@ -32,7 +32,7 @@ jobs:
             const { repo: { owner, repo }, payload } = context;
             const { pull_request } = payload;
 
-            const diff = "${{ steps.diff-models.outputs.diff }}"
+            const diff = "${{ steps.diff-schema.outputs.diff }}"
 
             if (diff) {
               await github.rest.issues.addLabels({

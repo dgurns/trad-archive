@@ -26,8 +26,8 @@ const ProjectIntro = ({ className, onClose }: Props) => {
 			<ul className="list-disc list-inside">
 				<li>Listen to previously unreleased archival recordings</li>
 				<li>
-					Help by tagging each recording with People, Places, Tunes,
-					Instruments, and Collections
+					Help by tagging each recording with People, Tunes, Instruments, and
+					Collections
 				</li>
 				<li>Save favorites to listen later</li>
 			</ul>

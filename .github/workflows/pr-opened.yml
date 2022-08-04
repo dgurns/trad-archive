@@ -39,7 +39,7 @@ jobs:
 
             ⚠️ **The deploy request must be MANUALLY DEPLOYED _before_ merging this PR.**
 
-            Try the preview app at https://trad-archive-git-${{ github.head_ref }}-dangurney.vercel.app
+            Try the preview app at https://trad-archive-remix-git-${{ github.head_ref }}-dangurney.vercel.app
             `;
 
             await github.rest.issues.createComment({

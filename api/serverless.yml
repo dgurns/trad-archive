@@ -72,16 +72,16 @@ custom:
     prod: https://www.tradarchive.com
   shouldRunImportItmaAtomCollections:
     dev: false
-    preview: true
-    prod: true
+    preview: false
+    prod: false
   shouldRunImportTunes:
     dev: false
-    preview: true
-    prod: true
+    preview: false
+    prod: false
   shouldRunKeepWarm:
     dev: false
-    preview: true
-    prod: true
+    preview: false
+    prod: false
   webpack:
     webpackConfig: "webpack.config.js"
     includeModules:

@@ -36,7 +36,7 @@ export const loader: ActionFunction = async ({ request }) => {
 			createdAt: "desc",
 		},
 		skip: 0,
-		take: 10,
+		take: 20,
 	});
 	const recentlyTaggedAudioItemIds: string[] = [];
 	for (const r of recentTags) {
@@ -45,7 +45,7 @@ export const loader: ActionFunction = async ({ request }) => {
 		}
 	}
 
-	const audioItems = await db.audioItem.findMany({
+	const recentlyTaggedAudioItems = await db.audioItem.findMany({
 		where: {
 			id: {
 				in: recentlyTaggedAudioItemIds,
@@ -84,33 +84,35 @@ export const loader: ActionFunction = async ({ request }) => {
 			"crowdsourcedScopeAndContent",
 		],
 	];
-	for (const a of audioItems) {
+	// This is extremely messy for now - just creating a POC
+	for (const a of recentlyTaggedAudioItems) {
 		const tagsWithoutTimestamps = a.tagsAsSubject.filter(
 			(t) => typeof t.subjectTimeMarkerSeconds !== "number"
 		);
-		const tagsWithTimestamps = a.tagsAsSubject.filter(
-			(t) => typeof t.subjectTimeMarkerSeconds === "number"
-		);
-		const crowdsourcedInfo = `
-${
-	tagsWithoutTimestamps.length > 0
-		? `Tags: 
+		const tagsWithTimestamps = a.tagsAsSubject
+			.filter((t) => typeof t.subjectTimeMarkerSeconds === "number")
+			.sort(
+				(a, b) =>
+					(a.subjectTimeMarkerSeconds ?? 0) - (b.subjectTimeMarkerSeconds ?? 0)
+			);
+		const crowdsourcedInfo = `${
+			tagsWithoutTimestamps.length > 0
+				? `Tags: 
 ${tagsWithoutTimestamps
 	.map(
 		(t) =>
 			`${Tag.getObjectEntity(t)?.name} (${Tag.getObjectEntity(t)?.entityType})`
 	)
 	.join(", ")}`
-		: ""
-}
-
+				: ""
+		}
 ${
 	a.comments.length > 0
-		? `Comments: 
+		? `
+Comments: 
 ${a.comments.map((c) => c.text).join("\n")}`
 		: ""
 }
-
 ${
 	tagsWithTimestamps.length > 0
 		? tagsWithTimestamps
@@ -144,19 +146,26 @@ ${
 export default function ExportToAtomCsv() {
 	const { csvContent, error } = useLoaderData();
 
-	if (csvContent && typeof document !== "undefined") {
+	const downloadCsv = () => {
+		if (!csvContent) {
+			return;
+		}
 		const encodedUri = encodeURI(csvContent);
 		const link = document.createElement("a");
 		link.setAttribute("href", encodedUri);
 		link.setAttribute("download", "export_to_atom.csv");
 		document.body.appendChild(link); // Required for FF
 		link.click();
-	}
+	};
 
 	return (
 		<Layout>
 			{error && <p className="text-red-500">Error: {error}</p>}
-			{csvContent && "CSV downloading automatically..."}
+			{csvContent && (
+				<button className="link" onClick={downloadCsv}>
+					Download Sample CSV
+				</button>
+			)}
 		</Layout>
 	);
 }

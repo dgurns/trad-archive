@@ -8,7 +8,7 @@ import type {
 	Place,
 	Tune,
 } from "@prisma/client";
-import type { TagWithRelations } from "~/types";
+import type { Entity, TagWithRelations } from "~/types";
 
 enum TagSortStrategy {
 	CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER",
@@ -67,9 +67,7 @@ const sort = (
 	}
 };
 
-const getObjectEntity = (
-	tag: TagWithRelations
-): AudioItem | Collection | Instrument | Person | Place | Tune | null => {
+const getObjectEntity = (tag: TagWithRelations): Entity | null => {
 	return (
 		tag.objectAudioItem ??
 		tag.objectCollection ??

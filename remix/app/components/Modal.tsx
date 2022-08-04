@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 interface Props {
@@ -25,18 +25,6 @@ const Modal = ({
 		},
 		[onClose]
 	);
-
-	// 🚨 Nasty ugly hack. There is something about how DOM elements are rendered
-	// where the Filters component, even though it has a lower z-index than this,
-	// appears above the Modal. So when the Modal is open we manually hide the
-	// Filters.
-	useEffect(() => {
-		if (isVisible) {
-			document.querySelector("#filters")?.classList.add("invisible");
-		} else {
-			document.querySelector("#filters")?.classList.remove("invisible");
-		}
-	}, [isVisible]);
 
 	if (!isVisible) {
 		return null;

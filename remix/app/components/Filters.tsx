@@ -7,6 +7,7 @@ export interface Props {
 	onChangePage?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	perPage?: PerPage;
 	onChangePerPage?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+	sortByOptions?: SortBy[];
 	sortBy?: SortBy;
 	onChangeSortBy?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	viewAs?: ViewAs;
@@ -20,6 +21,7 @@ const Filters = ({
 	onChangePage,
 	perPage,
 	onChangePerPage,
+	sortByOptions = [],
 	sortBy,
 	onChangeSortBy,
 	viewAs,
@@ -32,7 +34,8 @@ const Filters = ({
 		onChangePage &&
 		perPage &&
 		onChangePerPage;
-	const shouldRenderSortBy = sortBy && onChangeSortBy;
+	const shouldRenderSortBy =
+		sortByOptions.length > 0 && sortBy && onChangeSortBy;
 	const shouldRenderViewAs = viewAs && onChangeViewAs;
 
 	const totalPages = useMemo<number>(() => {
@@ -77,10 +80,9 @@ const Filters = ({
 
 	return (
 		<div
-			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 text-sm space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
+			className={`flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${
 				className ?? ""
 			}`}
-			id="filters"
 		>
 			{shouldRenderPagination && (
 				<div className="flex flex-row items-center space-x-5">
@@ -89,17 +91,13 @@ const Filters = ({
 					</div>
 					<div>
 						Page{" "}
-						<select value={page} onChange={onChangePage} className="text-sm">
+						<select value={page} onChange={onChangePage}>
 							{pageSelectOptions}
 						</select>
 						{totalPages ? ` of ${totalPages}` : ""}
 					</div>
 					<div>
-						<select
-							value={perPage}
-							onChange={onChangePerPage}
-							className="text-sm"
-						>
+						<select value={perPage} onChange={onChangePerPage}>
 							{perPageOptions}
 						</select>{" "}
 						per page
@@ -110,13 +108,20 @@ const Filters = ({
 			{shouldRenderSortBy && (
 				<div className="flex flex-row items-center">
 					Sort by
-					<select
-						className="ml-1 text-sm"
-						value={sortBy}
-						onChange={onChangeSortBy}
-					>
-						<option value={SortBy.RecentlyTagged}>Recently tagged</option>
-						<option value={SortBy.RecentlyAdded}>Newest</option>
+					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
+						{sortByOptions.includes(SortBy.RecentlyTagged) && (
+							<option value={SortBy.RecentlyTagged}>Recently Tagged</option>
+						)}
+						{sortByOptions.includes(SortBy.DateAddedOldToNew) && (
+							<option value={SortBy.DateAddedOldToNew}>
+								Date Added (Old to New)
+							</option>
+						)}
+						{sortByOptions.includes(SortBy.DateSavedOldToNew) && (
+							<option value={SortBy.DateSavedOldToNew}>
+								Date Saved (Old to New)
+							</option>
+						)}
 					</select>
 				</div>
 			)}
@@ -124,11 +129,7 @@ const Filters = ({
 			{shouldRenderViewAs && (
 				<div className="hidden md:flex flex-row items-center">
 					View as
-					<select
-						className="ml-1 text-sm"
-						value={viewAs}
-						onChange={onChangeViewAs}
-					>
+					<select className="ml-1" value={viewAs} onChange={onChangeViewAs}>
 						<option value={ViewAs.Cards}>Cards</option>
 						<option value={ViewAs.Compact}>Compact</option>
 						<option value={ViewAs.List}>List</option>

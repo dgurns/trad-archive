@@ -9,6 +9,25 @@ import type {
 } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
+export enum PerPage {
+	Ten = 10,
+	Twenty = 20,
+	Fifty = 50,
+	Hundred = 100,
+}
+
+export enum SortBy {
+	DateAddedOldToNew = "DateAddedOldToNew",
+	DateSavedOldToNew = "DateSavedOldToNew",
+	RecentlyTagged = "RecentlyTagged",
+}
+
+export enum ViewAs {
+	Cards = "Cards",
+	Compact = "Compact",
+	List = "List",
+}
+
 export type Entity =
 	| AudioItem
 	| AudioItemWithRelations
@@ -82,25 +101,6 @@ export enum EntityType {
 	Place = "Place",
 	Tune = "Tune",
 	Collection = "Collection",
-}
-
-export enum PerPage {
-	Ten = 10,
-	Twenty = 20,
-	Fifty = 50,
-	Hundred = 100,
-}
-
-export enum SortBy {
-	RecentlyTagged = "RecentlyTagged",
-	RecentlyAdded = "RecentlyAdded",
-	AToZ = "AToZ",
-}
-
-export enum ViewAs {
-	Cards = "Cards",
-	Compact = "Compact",
-	List = "List",
 }
 
 export enum UserRole {

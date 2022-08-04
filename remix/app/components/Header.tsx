@@ -39,13 +39,6 @@ const Header = ({ currentUser }: Props) => {
 		[navigate]
 	);
 
-	const onNewEntityCreated = useCallback(
-		(entity: Entity) => {
-			navigate(EntityService.makeHrefForView(entity));
-		},
-		[navigate]
-	);
-
 	return (
 		<>
 			<div className="flex flex-row py-3 px-4 justify-between text-white items-center bg-teal-700">

@@ -32,7 +32,7 @@ const useFilters = ({
 	totalItems,
 	defaultPage = 1,
 	defaultPerPage = 20,
-	defaultSortBy = SortBy.RecentlyTagged,
+	defaultSortBy = SortBy.DateAddedOldToNew,
 	defaultViewAs = ViewAs.Cards,
 }: Args = {}): ReturnValue => {
 	const navigate = useNavigate();

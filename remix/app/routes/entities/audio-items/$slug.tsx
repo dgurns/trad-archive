@@ -1,9 +1,11 @@
-import { useLoaderData, Link } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs } from "@remix-run/node";
 
 import { db } from "~/utils/db.server";
 import { ViewAs, type AudioItemWithRelations } from "~/types";
 import EntityService from "~/services/Entity";
+import { getSession } from "~/sessions.server";
+
 import Layout from "~/components/Layout";
 import AudioItemComponent from "~/components/AudioItem";
 import Breadcrumb from "~/components/Breadcrumb";
@@ -13,8 +15,12 @@ interface LoaderData {
 }
 
 export async function loader({
+	request,
 	params,
 }: DataFunctionArgs): Promise<LoaderData> {
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+
 	const { slug } = params;
 	const audioItem = await db.audioItem.findUnique({
 		where: {
@@ -42,7 +48,11 @@ export async function loader({
 					createdAt: "asc",
 				},
 			},
-			savedItems: true,
+			savedItems: {
+				where: {
+					userId,
+				},
+			},
 		},
 	});
 	if (!audioItem) {
@@ -73,11 +83,22 @@ const ViewAudioItemBySlug = () => {
 					className="mb-2"
 				/>
 			</div>
+
 			<AudioItemComponent
 				audioItem={audioItem}
 				viewAs={ViewAs.Cards}
 				showTitle={false}
 			/>
+
+			<div className="mt-8 text-sm">
+				<a
+					href={`https://itma-atom.arkivum.net/index.php/${audioItem.itmaAtomSlug}`}
+					target="_blank"
+					rel="noreferrer"
+				>
+					View in ITMA AtoM catalog ↗
+				</a>
+			</div>
 		</Layout>
 	);
 };

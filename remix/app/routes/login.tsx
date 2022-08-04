@@ -123,11 +123,11 @@ export default function Login() {
 				<p className="mb-2">
 					Don't have an account yet?{" "}
 					<Link to={`/signup?${signUpLinkQueryParams.toString()}`}>
-						Sign Up
+						Sign up
 					</Link>
 				</p>
 				<p>
-					<Link to="/reset-password">Reset Password</Link>
+					<Link to="/reset-password">Forgot password?</Link>
 				</p>
 			</div>
 		</Layout>

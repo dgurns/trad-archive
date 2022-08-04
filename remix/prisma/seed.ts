@@ -19,7 +19,7 @@ const user1: Pick<
 	username: "dgurney",
 	role: "Admin",
 	passwordHashed:
-		"$2a$10$K81HlhTOwa.vmZ0zwhNiFOFgNta1e3RX8bBpT1KApP97inzkJ0Fk.", // raw is `password`
+		"$2a$10$K81HlhTOwa.vmZ0zwhNiFOFgNta1e3RX8bBpT1KApP97inzkJ0Fk.",
 };
 const audioItem1: Pick<
 	AudioItem,
@@ -55,9 +55,9 @@ const person1: Pick<
 > = {
 	id: "person_1",
 	slug: "seamus-ennis",
-	name: "Seamus Ennis",
+	name: "Séamus Ennis",
 	description: "Uilleann piper and collector",
-	firstName: "Seamus",
+	firstName: "Séamus",
 	lastName: "Ennis",
 	createdByUserId: user1.id,
 };

@@ -1,0 +1,43 @@
+name: Branch - Created
+
+on: create
+
+jobs:
+  create-planetscale-db-branch-and-vercel-branch-env:
+    name: Create PlanetScale DB branch and set DATABASE_URL env for Vercel branch
+    runs-on: ubuntu-latest
+    env:
+      PLANETSCALE_SERVICE_TOKEN_NAME: ${{ secrets.PLANETSCALE_SERVICE_TOKEN_NAME }}
+      PLANETSCALE_SERVICE_TOKEN: ${{ secrets.PLANETSCALE_SERVICE_TOKEN }}
+    defaults:
+      run:
+        working-directory: remix
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set branch name as env variable
+        uses: nelonoel/branch-name@v1.0.1
+
+      - name: Set up pscale CLI
+        run: |
+          wget https://github.com/planetscale/cli/releases/download/v0.91.0/pscale_0.91.0_linux_amd64.deb
+          sudo dpkg -i pscale_0.91.0_linux_amd64.deb
+
+      - name: Create pscale DB branch
+        run: |
+          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east --from master
+
+      - name: Create connection info for this DB branch
+        id: create-password
+        run: |
+          JSON=$(pscale password create trad_archive ${BRANCH_NAME} ${{ github.sha }} --org tradarchive -f json)
+          echo "::set-output name=dbHost::$(echo "${JSON}" | jq '.database_branch.access_host_url')"
+          echo "::set-output name=dbUsername::$(echo "${JSON}" | jq '.id')"
+          echo "::set-output name=dbPassword::$(echo "${JSON}" | jq '.plain_text')"
+
+      - name: Set DB branch password as env variable on Vercel for this branch
+        run: |
+          touch .env.preview
+          echo "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict" > .env.preview
+          vercel env add DATABASE_URL preview ${BRANCH_NAME} < .env.preview --token ${{ secrets.VERCEL_SERVICE_TOKEN }}

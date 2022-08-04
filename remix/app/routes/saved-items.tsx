@@ -7,7 +7,7 @@ import {
 } from "@remix-run/node";
 
 import useFilters from "~/hooks/useFilters";
-import { type AudioItemWithRelations, ViewAs } from "~/types";
+import { type AudioItemWithRelations, ViewAs, SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 
@@ -15,7 +15,8 @@ import Layout from "~/components/Layout";
 import AudioItem from "~/components/AudioItem";
 
 interface LoaderData {
-	audioItems: AudioItemWithRelations[];
+	savedItems: AudioItemWithRelations[];
+	totalSavedItems: number;
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -32,12 +33,27 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
+
+	// Get saved items from old to new. Also fetch total for use in the UI.
+	const [savedItems, totalSavedItems] = await Promise.all([
+		db.savedItem.findMany({
+			where: {
+				userId,
+			},
+			skip: (page - 1) * perPage,
+			take: perPage,
+			orderBy: {
+				createdAt: "asc",
+			},
+		}),
+		db.savedItem.count({ where: { userId } }),
+	]);
+	const savedAudioItemIds = savedItems.map((s) => s.audioItemId);
+
 	const audioItems = await db.audioItem.findMany({
 		where: {
-			savedItems: {
-				some: {
-					userId,
-				},
+			id: {
+				in: savedAudioItemIds,
 			},
 		},
 		include: {
@@ -68,11 +84,20 @@ export const loader: LoaderFunction = async ({ request }) => {
 				},
 			},
 		},
-		skip: (page - 1) * perPage,
-		take: perPage,
 	});
 
-	return json<LoaderData>({ audioItems });
+	// the IN operator does not guarantee order so we need to manually order them
+	const orderedAudioItems: AudioItemWithRelations[] = [];
+	for (let id of savedAudioItemIds) {
+		for (let a of audioItems) {
+			if (a.id === id) {
+				orderedAudioItems.push(a);
+				break;
+			}
+		}
+	}
+
+	return json<LoaderData>({ savedItems: orderedAudioItems, totalSavedItems });
 };
 
 interface ActionData {
@@ -110,10 +135,11 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function SavedItems() {
-	const { audioItems } = useLoaderData<LoaderData>();
+	const { savedItems, totalSavedItems } = useLoaderData<LoaderData>();
 
 	const { Filters, filtersProps, viewAs } = useFilters({
-		defaultViewAs: ViewAs.List,
+		totalItems: totalSavedItems,
+		defaultViewAs: ViewAs.Compact,
 	});
 
 	return (
@@ -121,21 +147,26 @@ export default function SavedItems() {
 			<div className="flex flex-col">
 				<h1 className="mb-6">Saved Items</h1>
 
-				{audioItems.length > 0 && (
-					<Filters {...filtersProps} className="mb-6" />
+				{savedItems.length > 0 && (
+					<Filters
+						{...filtersProps}
+						sortByOptions={[SortBy.DateSavedOldToNew]}
+						sortBy={SortBy.DateSavedOldToNew}
+						className="mb-6"
+					/>
 				)}
 
-				{audioItems.length === 0 && (
+				{savedItems.length === 0 && (
 					<div className="text-gray-500">
 						Nothing saved yet - try browsing some{" "}
 						<Link to="/">Audio Items</Link>!
 					</div>
 				)}
 
-				{audioItems.map((audioItem, index) => (
+				{savedItems.map((s, index) => (
 					<AudioItem
 						viewAs={viewAs}
-						audioItem={audioItem}
+						audioItem={s}
 						key={index}
 						className={viewAs === ViewAs.List ? "mb-4" : "mb-6"}
 					/>

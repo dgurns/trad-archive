@@ -1,12 +1,12 @@
 import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
-import { type SavedItem } from "@prisma/client";
 
-import type {
-	CollectionWithRelations,
-	CommentWithRelations,
-	AudioItemWithRelations,
+import {
+	type CollectionWithRelations,
+	type CommentWithRelations,
+	type AudioItemWithRelations,
+	SortBy,
 } from "~/types";
 import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
@@ -37,6 +37,31 @@ export async function loader({
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
+
+	// Get the most recent tags so we can fetch those AudioItem IDs
+	const recentTags = await db.tag.findMany({
+		select: {
+			subjectAudioItemId: true,
+		},
+		where: {
+			subjectAudioItemId: {
+				not: null,
+			},
+		},
+		distinct: ["subjectAudioItemId"],
+		orderBy: {
+			createdAt: "desc",
+		},
+		skip: (page - 1) * perPage,
+		take: perPage,
+	});
+	const recentlyTaggedAudioItemIds: string[] = [];
+	for (const r of recentTags) {
+		if (r.subjectAudioItemId) {
+			recentlyTaggedAudioItemIds.push(r.subjectAudioItemId);
+		}
+	}
+
 	const [
 		audioItems,
 		collections,
@@ -46,8 +71,11 @@ export async function loader({
 		numCommentsAllTime,
 	] = await Promise.all([
 		db.audioItem.findMany({
-			skip: (page - 1) * perPage,
-			take: perPage,
+			where: {
+				id: {
+					in: recentlyTaggedAudioItemIds,
+				},
+			},
 			include: {
 				tagsAsSubject: {
 					include: {
@@ -76,9 +104,6 @@ export async function loader({
 					},
 				},
 			},
-			orderBy: {
-				updatedAt: "desc",
-			},
 		}),
 		db.collection.findMany({
 			take: 5,
@@ -106,8 +131,19 @@ export async function loader({
 		db.comment.count(),
 	]);
 
+	// the IN operator does not guarantee order so we need to manually order them
+	const orderedAudioItems: AudioItemWithRelations[] = [];
+	for (let id of recentlyTaggedAudioItemIds) {
+		for (let a of audioItems) {
+			if (a.id === id) {
+				orderedAudioItems.push(a);
+				break;
+			}
+		}
+	}
+
 	return {
-		audioItems,
+		audioItems: orderedAudioItems,
 		collections,
 		comments,
 		numAudioItemsAllTime,
@@ -126,8 +162,8 @@ export default function Home() {
 		numCommentsAllTime,
 	} = useLoaderData<LoaderData>();
 	const { search } = useLocation();
-	const viewAs =
-		(new URLSearchParams(search).get("viewAs") as ViewAs) ?? ViewAs.Cards;
+	const params = new URLSearchParams(search);
+	const viewAs = (params.get("viewAs") as ViewAs) ?? ViewAs.Cards;
 
 	const { Filters, filtersProps } = useFilters({
 		totalItems: numAudioItemsAllTime,
@@ -162,8 +198,9 @@ export default function Home() {
 					<Filters
 						{...filtersProps}
 						viewAs={undefined}
-						sortBy={undefined}
-						className="sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px] z-10"
+						sortBy={SortBy.RecentlyTagged}
+						sortByOptions={[SortBy.RecentlyTagged]}
+						className="sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px]"
 					/>
 
 					{audioItems.map((audioItem, index) => (
@@ -181,14 +218,11 @@ export default function Home() {
 					<Link to="/entities/people" className="mb-2">
 						People
 					</Link>
-					<Link to="/entities/instruments" className="mb-2">
-						Instruments
-					</Link>
-					<Link to="/entities/places" className="mb-2">
-						Places
-					</Link>
 					<Link to="/entities/tunes" className="mb-2">
 						Tunes
+					</Link>
+					<Link to="/entities/instruments" className="mb-2">
+						Instruments
 					</Link>
 					<Link to="/entities/collections" className="mb-2">
 						Collections
@@ -225,10 +259,7 @@ export default function Home() {
 						target="_blank"
 						rel="noreferrer"
 					>
-						View on GitHub{" "}
-						<i className="material-icons">
-							<span className="text-sm">launch</span>
-						</i>
+						View on GitHub ↗
 					</a>
 
 					<h3 className="mt-6 mb-4">Latest Comments</h3>

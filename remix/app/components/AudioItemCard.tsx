@@ -123,7 +123,7 @@ const AudioItemCard = ({ audioItem, showTitle = true, className }: Props) => {
 			</div>
 
 			<div className="mt-4">
-				<div className="text-gray-500 text-sm flex flex-col sm:flex-row">
+				<div className="text-gray-500 text-sm flex flex-row">
 					Added
 					{createdByUser && (
 						<>

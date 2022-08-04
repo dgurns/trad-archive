@@ -4,6 +4,8 @@ import type { Prisma, Instrument } from "@prisma/client";
 
 import { type AudioItemWithRelations, SortBy } from "~/types";
 import { db } from "~/utils/db.server";
+import { getSession } from "~/sessions.server";
+
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
@@ -29,13 +31,17 @@ export async function loader({
 			statusText: "Could not find this Instrument",
 		});
 	}
+
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
-	const sortBy = searchParams.get("sortBy") ?? SortBy.RecentlyTagged;
+	const sortBy = searchParams.get("sortBy") ?? SortBy.DateAddedOldToNew;
 	const audioItemsOrderBy: Prisma.Enumerable<Prisma.AudioItemOrderByWithRelationInput> =
-		sortBy === SortBy.RecentlyTagged
-			? { updatedAt: "desc" }
+		sortBy === SortBy.DateAddedOldToNew
+			? { createdAt: "asc" }
 			: { createdAt: "desc" };
 
 	const [audioItems, totalAudioItems] = await Promise.all([
@@ -60,8 +66,15 @@ export async function loader({
 					include: {
 						createdByUser: true,
 					},
+					orderBy: {
+						createdAt: "asc",
+					},
 				},
-				savedItems: true,
+				savedItems: {
+					where: {
+						userId,
+					},
+				},
 			},
 			where: {
 				tagsAsObject: {

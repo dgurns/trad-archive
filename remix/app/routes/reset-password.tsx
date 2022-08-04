@@ -139,7 +139,7 @@ export default function ResetPassword() {
 						{error && <div className="text-red-600 mb-6">{error}</div>}
 
 						<p>
-							<Link to="/login">Go Back</Link>
+							<Link to="/login">Go back</Link>
 						</p>
 					</div>
 				</>

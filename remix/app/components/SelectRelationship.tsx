@@ -1,59 +1,49 @@
-import { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import { useEffect, useState, useMemo } from "react";
+import { type Relationship } from "@prisma/client";
+import { useFetcher } from "@remix-run/react";
 
-import type { Entity, Relationship } from "~/types";
-import { RelationshipFragments } from "~/fragments";
-
+import type { Entity } from "~/types";
 import LoadingCircle from "./LoadingCircle";
-
-const SEARCH_RELATIONSHIPS_QUERY = gql`
-	query SearchRelationships(
-		$subjectEntityType: String!
-		$objectEntityType: String!
-	) {
-		searchRelationships(
-			subjectEntityType: $subjectEntityType
-			objectEntityType: $objectEntityType
-		) {
-			...Relationship
-		}
-	}
-	${RelationshipFragments.relationship}
-`;
 
 interface Props {
 	subjectEntity: Entity;
 	objectEntity: Entity;
 	onSelect: (relationshipId: string) => void;
 }
-const SelectRelationship = ({
+export default function SelectRelationship({
 	subjectEntity,
 	objectEntity,
 	onSelect,
-}: Props) => {
+}: Props) {
+	const fetcher = useFetcher<{
+		error?: string;
+		relationships?: Relationship[];
+	}>();
+	useEffect(() => {
+		const params = new URLSearchParams({
+			subjectEntityType: String(subjectEntity.entityType),
+			objectEntityType: String(objectEntity.entityType),
+		});
+		fetcher.load(`/relationships?${params.toString()}`);
+	}, [subjectEntity, objectEntity]); // fetcher object changes on every render, so intentionally leave it out
+
+	const relationshipOptions = useMemo(
+		() => fetcher.data?.relationships ?? [],
+		[fetcher.data]
+	);
+
 	const [selectedRelationshipId, setSelectedRelationshipId] = useState("");
-
-	const { loading, data, error } = useQuery<{
-		searchRelationships: Relationship[];
-	}>(SEARCH_RELATIONSHIPS_QUERY, {
-		variables: {
-			subjectEntityType: subjectEntity.entityType,
-			objectEntityType: objectEntity.entityType,
-		},
-		fetchPolicy: "no-cache",
-	});
-	const relationshipOptions = data?.searchRelationships ?? [];
-
 	useEffect(() => {
 		if (relationshipOptions.length > 0) {
-			onSelectRelationshipId(relationshipOptions[0].id);
+			setSelectedRelationshipId(relationshipOptions[0].id);
 		}
 	}, [relationshipOptions]);
 
-	const onSelectRelationshipId = (relationshipId: string) => {
-		setSelectedRelationshipId(relationshipId);
-		onSelect(relationshipId);
-	};
+	useEffect(() => {
+		if (onSelect && selectedRelationshipId) {
+			onSelect(selectedRelationshipId);
+		}
+	}, [onSelect, selectedRelationshipId]);
 
 	return (
 		<>
@@ -64,13 +54,12 @@ const SelectRelationship = ({
 				{subjectEntity.name}
 			</div>
 
-			{loading ? (
+			{fetcher.state === "loading" ? (
 				<LoadingCircle />
 			) : (
 				<select
-					className="mb-2"
 					value={selectedRelationshipId}
-					onChange={(event) => onSelectRelationshipId(event.target.value)}
+					onChange={(event) => setSelectedRelationshipId(event.target.value)}
 				>
 					{relationshipOptions.map((relationship, index) => (
 						<option value={relationship.id} key={index}>
@@ -80,16 +69,16 @@ const SelectRelationship = ({
 				</select>
 			)}
 
-			<div className="text-gray-500">
+			<div className="text-gray-500 mt-2">
 				<span className="text-sm uppercase pr-2">
 					{objectEntity.entityType}
 				</span>
 				{objectEntity.name}
 			</div>
 
-			{error && <div className="text-red-600 mt-4">{error}</div>}
+			{fetcher.data?.error && (
+				<div className="text-red-600 mt-4">{fetcher.data.error}</div>
+			)}
 		</>
 	);
-};
-
-export default SelectRelationship;
+}

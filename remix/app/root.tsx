@@ -10,7 +10,6 @@ import {
 	useCatch,
 	useLoaderData,
 } from "@remix-run/react";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import styles from "~/styles/globals-generated-do-not-edit.css";
 
 import { getSession } from "~/sessions.server";
@@ -20,9 +19,6 @@ import PlayerContextProvider from "~/components/PlayerContextProvider";
 import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import type { User } from "@prisma/client";
-
-// TODO: Remove this
-const apolloClient = new ApolloClient({ cache: new InMemoryCache() });
 
 export const meta: MetaFunction = () => ({
 	charset: "utf-8",
@@ -94,29 +90,27 @@ export default function App() {
 				<Meta />
 				<Links />
 			</head>
-			<ApolloProvider client={apolloClient}>
-				<PlayerContextProvider>
-					<body className="bg-gray-100">
-						<div className="flex flex-col w-full relative pt-12">
-							<div className="flex flex-col justify-start items-center">
-								<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44">
-									<Outlet />
-								</div>
-								<Footer />
+			<PlayerContextProvider>
+				<body className="bg-gray-100">
+					<div className="flex flex-col w-full relative pt-12">
+						<div className="flex flex-col justify-start items-center">
+							<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44">
+								<Outlet />
 							</div>
-
-							{/* Add header to the DOM after child content so its modals overlay */}
-							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header currentUser={currentUser} />
-							</div>
+							<Footer />
 						</div>
 
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</PlayerContextProvider>
-			</ApolloProvider>
+						{/* Add header to the DOM after child content so its modals overlay */}
+						<div className="fixed top-0 right-0 left-0" id="header">
+							<Header currentUser={currentUser} />
+						</div>
+					</div>
+
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+				</body>
+			</PlayerContextProvider>
 		</html>
 	);
 }
@@ -131,30 +125,28 @@ export function ErrorBoundary({ error }: ErrorBoundaryArgs) {
 				<Meta />
 				<Links />
 			</head>
-			<ApolloProvider client={apolloClient}>
-				<PlayerContextProvider>
-					<body className="bg-gray-100">
-						<div className="flex flex-col w-full relative pt-12">
-							<div className="flex flex-col justify-start items-center">
-								<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
-									<h1>Oops! There was an error.</h1>
-									<p className="text-red-500 mt-2">{error.message}</p>
-								</div>
-								<Footer />
+			<PlayerContextProvider>
+				<body className="bg-gray-100">
+					<div className="flex flex-col w-full relative pt-12">
+						<div className="flex flex-col justify-start items-center">
+							<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
+								<h1>Oops! There was an error.</h1>
+								<p className="text-red-500 mt-2">{error.message}</p>
 							</div>
-
-							{/* Add header to the DOM after child content so its modals overlay */}
-							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header />
-							</div>
+							<Footer />
 						</div>
 
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</PlayerContextProvider>
-			</ApolloProvider>
+						{/* Add header to the DOM after child content so its modals overlay */}
+						<div className="fixed top-0 right-0 left-0" id="header">
+							<Header />
+						</div>
+					</div>
+
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+				</body>
+			</PlayerContextProvider>
 		</html>
 	);
 }
@@ -169,32 +161,30 @@ export function CatchBoundary() {
 				<Meta />
 				<Links />
 			</head>
-			<ApolloProvider client={apolloClient}>
-				<PlayerContextProvider>
-					<body className="bg-gray-100">
-						<div className="flex flex-col w-full relative pt-12">
-							<div className="flex flex-col justify-start items-center">
-								<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
-									<h1>Oops! There was an error.</h1>
-									<p className="text-red-500 mt-2">
-										{caught.status} - {caught.statusText}
-									</p>
-								</div>
-								<Footer />
+			<PlayerContextProvider>
+				<body className="bg-gray-100">
+					<div className="flex flex-col w-full relative pt-12">
+						<div className="flex flex-col justify-start items-center">
+							<div className="w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center">
+								<h1>Oops! There was an error.</h1>
+								<p className="text-red-500 mt-2">
+									{caught.status} - {caught.statusText}
+								</p>
 							</div>
-
-							{/* Add header to the DOM after child content so its modals overlay */}
-							<div className="fixed top-0 right-0 left-0" id="header">
-								<Header currentUser={currentUser} />
-							</div>
+							<Footer />
 						</div>
 
-						<ScrollRestoration />
-						<Scripts />
-						<LiveReload />
-					</body>
-				</PlayerContextProvider>
-			</ApolloProvider>
+						{/* Add header to the DOM after child content so its modals overlay */}
+						<div className="fixed top-0 right-0 left-0" id="header">
+							<Header currentUser={currentUser} />
+						</div>
+					</div>
+
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+				</body>
+			</PlayerContextProvider>
 		</html>
 	);
 }

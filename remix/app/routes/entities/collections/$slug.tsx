@@ -4,6 +4,7 @@ import type { Prisma, Collection } from "@prisma/client";
 
 import { type AudioItemWithRelations, SortBy } from "~/types";
 import { db } from "~/utils/db.server";
+import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
@@ -29,6 +30,10 @@ export async function loader({
 			statusText: "Could not find this Collection",
 		});
 	}
+
+	const session = await getSession(request.headers.get("Cookie"));
+	const userId = String(session.get("userId") ?? "");
+
 	const { searchParams } = new URL(request.url);
 	const page = Number(searchParams.get("page") ?? 1);
 	const perPage = Number(searchParams.get("perPage") ?? 20);
@@ -64,7 +69,11 @@ export async function loader({
 						createdAt: "asc",
 					},
 				},
-				savedItems: true,
+				savedItems: {
+					where: {
+						userId,
+					},
+				},
 			},
 			where: {
 				tagsAsObject: {

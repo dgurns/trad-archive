@@ -60,6 +60,9 @@ export async function loader({
 					include: {
 						createdByUser: true,
 					},
+					orderBy: {
+						createdAt: "asc",
+					},
 				},
 				savedItems: true,
 			},

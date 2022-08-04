@@ -24,7 +24,6 @@ const CreateCommentForm = ({ parentAudioItem }: Props) => {
 		>
 			<textarea
 				placeholder="Add a comment..."
-				autoFocus
 				rows={3}
 				required
 				minLength={1}

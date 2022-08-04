@@ -18,6 +18,7 @@ export enum PerPage {
 
 export enum SortBy {
 	DateAddedOldToNew = "DateAddedOldToNew",
+	RecentlyTagged = "RecentlyTagged",
 }
 
 export enum ViewAs {

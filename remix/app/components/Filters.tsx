@@ -7,6 +7,7 @@ export interface Props {
 	onChangePage?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	perPage?: PerPage;
 	onChangePerPage?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+	sortByOptions?: SortBy[];
 	sortBy?: SortBy;
 	onChangeSortBy?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 	viewAs?: ViewAs;
@@ -20,6 +21,7 @@ const Filters = ({
 	onChangePage,
 	perPage,
 	onChangePerPage,
+	sortByOptions = [],
 	sortBy,
 	onChangeSortBy,
 	viewAs,
@@ -32,7 +34,8 @@ const Filters = ({
 		onChangePage &&
 		perPage &&
 		onChangePerPage;
-	const shouldRenderSortBy = sortBy && onChangeSortBy;
+	const shouldRenderSortBy =
+		sortByOptions.length > 0 && sortBy && onChangeSortBy;
 	const shouldRenderViewAs = viewAs && onChangeViewAs;
 
 	const totalPages = useMemo<number>(() => {
@@ -106,9 +109,14 @@ const Filters = ({
 				<div className="flex flex-row items-center">
 					Sort by
 					<select className="ml-1" value={sortBy} onChange={onChangeSortBy}>
-						<option value={SortBy.DateAddedOldToNew}>
-							Date Added (Old to New)
-						</option>
+						{sortByOptions.includes(SortBy.RecentlyTagged) && (
+							<option value={SortBy.RecentlyTagged}>Recently Tagged</option>
+						)}
+						{sortByOptions.includes(SortBy.DateAddedOldToNew) && (
+							<option value={SortBy.DateAddedOldToNew}>
+								Date Added (Old to New)
+							</option>
+						)}
 					</select>
 				</div>
 			)}

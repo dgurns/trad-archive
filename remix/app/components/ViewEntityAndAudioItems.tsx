@@ -1,6 +1,7 @@
 import { useLocation } from "@remix-run/react";
 
 import type { AudioItemWithRelations, Entity } from "~/types";
+import { SortBy } from "~/types";
 import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
@@ -72,7 +73,11 @@ const ViewEntityAndAudioItems = ({
 			{totalAudioItems > 0 && (
 				<>
 					<div className="sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px]">
-						<Filters {...filtersProps} />
+						<Filters
+							{...filtersProps}
+							sortByOptions={[SortBy.DateAddedOldToNew]}
+							sortBy={SortBy.DateAddedOldToNew}
+						/>
 					</div>
 					{audioItems.map((audioItem, index) => (
 						<AudioItem

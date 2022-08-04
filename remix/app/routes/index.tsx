@@ -2,10 +2,11 @@ import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
 
-import type {
-	CollectionWithRelations,
-	CommentWithRelations,
-	AudioItemWithRelations,
+import {
+	type CollectionWithRelations,
+	type CommentWithRelations,
+	type AudioItemWithRelations,
+	SortBy,
 } from "~/types";
 import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
@@ -161,8 +162,8 @@ export default function Home() {
 		numCommentsAllTime,
 	} = useLoaderData<LoaderData>();
 	const { search } = useLocation();
-	const viewAs =
-		(new URLSearchParams(search).get("viewAs") as ViewAs) ?? ViewAs.Cards;
+	const params = new URLSearchParams(search);
+	const viewAs = (params.get("viewAs") as ViewAs) ?? ViewAs.Cards;
 
 	const { Filters, filtersProps } = useFilters({
 		totalItems: numAudioItemsAllTime,
@@ -197,7 +198,8 @@ export default function Home() {
 					<Filters
 						{...filtersProps}
 						viewAs={undefined}
-						sortBy={undefined}
+						sortBy={SortBy.RecentlyTagged}
+						sortByOptions={[SortBy.RecentlyTagged]}
 						className="sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px]"
 					/>
 

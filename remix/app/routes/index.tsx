@@ -19,18 +19,6 @@ import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
 
-export function headers() {
-	// When a request is made, cache the page and use that to serve the next
-	// request for up to 7 days. On the next request though, fetch the updated
-	// page in the background and update the cache with it. Essentially this
-	// ensures that users always get a cached page, and it can only ever be "out
-	// of date" for a single request.
-	const swrDuration = 60 * 60 * 24 * 7;
-	return {
-		"Cache-Control": `max-age=1, s-maxage=1, stale-while-revalidate=${swrDuration}`,
-	};
-}
-
 interface LoaderData {
 	audioItems: AudioItemWithRelations[];
 	collections: CollectionWithRelations[];

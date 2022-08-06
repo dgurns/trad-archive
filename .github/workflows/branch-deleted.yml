@@ -33,4 +33,5 @@ jobs:
 
       - name: Delete Vercel preview env variable
         run: |
+          vercel link -p trad-archive --confirm --token ${{ secrets.VERCEL_SERVICE_TOKEN }}
           vercel env rm DATABASE_URL preview ${{ env.BRANCH_NAME }} --token ${{ secrets.VERCEL_SERVICE_TOKEN }} -y

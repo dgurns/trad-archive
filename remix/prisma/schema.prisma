@@ -10,26 +10,25 @@ generator client {
 }
 
 model AudioItem {
-  id               String            @id @default(uuid()) @db.Char(36)
-  name             String            @db.VarChar(255)
-  slug             String            @unique(map: "IDX_d5eca2db8a788b6481cf843c31") @db.VarChar(255)
-  aliases          String?           @db.Text
-  description      String?           @db.Text
-  status           EntityStatus      @default(PUBLISHED)
-  createdByUserId  String?           @db.Char(36)
-  updatedByUserId  String?           @db.Char(36)
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt()
-  entityType       EntityType        @default(AudioItem)
-  itmaAtomSlug     String?           @db.VarChar(255)
-  urlSource        String?           @db.VarChar(255)
-  createdByUser    User?             @relation("audioItemCreatedByUser", fields: [createdByUserId], references: [id])
-  updatedByUser    User?             @relation("audioItemUpdatedByUser", fields: [updatedByUserId], references: [id])
-  tagsAsObject     Tag[]             @relation("tagObjectAudioItem")
-  tagsAsSubject    Tag[]             @relation("tagSubjectAudioItem")
-  comments         Comment[]         @relation("audioItemComments")
-  savedItems       SavedItem[]
-  takedownRequests TakedownRequest[]
+  id              String       @id @default(uuid()) @db.Char(36)
+  name            String       @db.VarChar(255)
+  slug            String       @unique(map: "IDX_d5eca2db8a788b6481cf843c31") @db.VarChar(255)
+  aliases         String?      @db.Text
+  description     String?      @db.Text
+  status          EntityStatus @default(PUBLISHED)
+  createdByUserId String?      @db.Char(36)
+  updatedByUserId String?      @db.Char(36)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt()
+  entityType      EntityType   @default(AudioItem)
+  itmaAtomSlug    String?      @db.VarChar(255)
+  urlSource       String?      @db.VarChar(255)
+  createdByUser   User?        @relation("audioItemCreatedByUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?        @relation("audioItemUpdatedByUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject    Tag[]        @relation("tagObjectAudioItem")
+  tagsAsSubject   Tag[]        @relation("tagSubjectAudioItem")
+  comments        Comment[]    @relation("audioItemComments")
+  savedItems      SavedItem[]
 
   @@index([name], map: "IDX_17c0f6ea1cd539cbd513a02926")
   @@index([createdAt], map: "idx_createdAt")
@@ -101,25 +100,24 @@ model Instrument {
 }
 
 model Person {
-  id                   String                @id @default(uuid()) @db.Char(36)
-  name                 String                @db.VarChar(255)
-  slug                 String                @unique(map: "IDX_48e444390904f250a3b20e4d57") @db.VarChar(255)
-  aliases              String?               @db.Text
-  description          String?               @db.Text
-  status               EntityStatus          @default(PUBLISHED)
-  createdByUserId      String?               @db.Char(36)
-  updatedByUserId      String?               @db.Char(36)
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  entityType           EntityType            @default(Person)
-  firstName            String                @db.VarChar(255)
-  middleName           String?               @db.VarChar(255)
-  lastName             String                @db.VarChar(255)
-  createdByUser        User?                 @relation("person_createdByUserIdToUser", fields: [createdByUserId], references: [id])
-  updatedByUser        User?                 @relation("person_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
-  tagsAsObject         Tag[]                 @relation("personTotag_objectPersonId")
-  tagsAsSubject        Tag[]                 @relation("personTotag_subjectPersonId")
-  verificationRequests VerificationRequest[]
+  id              String       @id @default(uuid()) @db.Char(36)
+  name            String       @db.VarChar(255)
+  slug            String       @unique(map: "IDX_48e444390904f250a3b20e4d57") @db.VarChar(255)
+  aliases         String?      @db.Text
+  description     String?      @db.Text
+  status          EntityStatus @default(PUBLISHED)
+  createdByUserId String?      @db.Char(36)
+  updatedByUserId String?      @db.Char(36)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  entityType      EntityType   @default(Person)
+  firstName       String       @db.VarChar(255)
+  middleName      String?      @db.VarChar(255)
+  lastName        String       @db.VarChar(255)
+  createdByUser   User?        @relation("person_createdByUserIdToUser", fields: [createdByUserId], references: [id])
+  updatedByUser   User?        @relation("person_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
+  tagsAsObject    Tag[]        @relation("personTotag_objectPersonId")
+  tagsAsSubject   Tag[]        @relation("personTotag_subjectPersonId")
 
   @@index([name], map: "IDX_27c811883af9f3fefe79892f02")
   @@index([createdAt], map: "idx_createdAt")
@@ -180,23 +178,6 @@ model SavedItem {
   @@map("saved_item")
 }
 
-model Submission {
-  id                    String            @id @default(uuid()) @db.Char(36)
-  status                SubmissionStatus? @default(Pending)
-  materialTypes         String            @db.Text
-  userControlsCopyright Boolean
-  copyrightDetails      String?           @db.Text
-  description           String?           @db.Text
-  s3DirectoryKey        String?           @db.VarChar(255)
-  createdByUserId       String?           @db.Char(36)
-  createdByUser         User?             @relation(fields: [createdByUserId], references: [id])
-  createdAt             DateTime          @default(now())
-  updatedByUserId       String?           @db.Char(36)
-  updatedAt             DateTime          @updatedAt
-
-  @@map("submission")
-}
-
 model Tag {
   id                       String       @id @default(uuid()) @db.Char(36)
   relationshipId           String       @db.Char(36)
@@ -234,24 +215,6 @@ model Tag {
   @@map("tag")
 }
 
-model TakedownRequest {
-  id              String                 @id @default(uuid()) @db.Char(36)
-  type            TakedownRequestType
-  message         String                 @db.Text
-  status          TakedownRequestStatus? @default(PENDING)
-  createdByUserId String?                @db.Char(36)
-  createdAt       DateTime               @default(now())
-  updatedByUserId String?                @db.Char(36)
-  updatedAt       DateTime               @updatedAt
-  audioItemId     String?                @db.Char(36)
-  audioItem       AudioItem?             @relation(fields: [audioItemId], references: [id])
-  createdByUser   User?                  @relation("takedown_request_createdByUserIdToUser", fields: [createdByUserId], references: [id])
-  updatedByUser   User?                  @relation("takedown_request_updatedByUserIdToUser", fields: [updatedByUserId], references: [id])
-
-  @@index([audioItemId], map: "IDX_4b57e3d008abb21714be3c7b22")
-  @@map("takedown_request")
-}
-
 model Tune {
   id               String       @id @default(uuid()) @db.Char(36)
   name             String       @db.VarChar(255)
@@ -283,58 +246,34 @@ model Tune {
 }
 
 model User {
-  id                          String                     @id @default(uuid()) @db.Char(36)
-  role                        UserRole                   @default(User)
-  email                       String                     @unique(map: "IDX_e12875dfb3b1d92d7d7c5377e2") @db.VarChar(255)
-  username                    String                     @unique(map: "IDX_78a916df40e02a9deb1c4b75ed") @db.VarChar(255)
-  passwordHashed              String?                    @db.VarChar(255)
-  autoLoginTokenHashed        String?                    @db.VarChar(255)
-  autoLoginTokenExpiry        DateTime?
-  copyrightPermissionStatus   CopyrightPermissionStatus?
-  createdAt                   DateTime                   @default(now())
-  updatedAt                   DateTime                   @updatedAt
-  audioItemsCreated           AudioItem[]                @relation("audioItemCreatedByUser")
-  audioItemsUpdated           AudioItem[]                @relation("audioItemUpdatedByUser")
-  collectionsCreated          Collection[]               @relation("collection_createdByUserIdToUser")
-  collectionsUpdated          Collection[]               @relation("collection_updatedByUserIdToUser")
-  comments                    Comment[]                  @relation("userComments")
-  instrumentsCreated          Instrument[]               @relation("instrument_createdByUserIdToUser")
-  instrumentsUpdated          Instrument[]               @relation("instrument_updatedByUserIdToUser")
-  peopleCreated               Person[]                   @relation("person_createdByUserIdToUser")
-  peopleUpdated               Person[]                   @relation("person_updatedByUserIdToUser")
-  placesCreated               Place[]                    @relation("place_createdByUserIdToUser")
-  placesUpdated               Place[]                    @relation("place_updatedByUserIdToUser")
-  relationships               Relationship[]
-  savedItems                  SavedItem[]
-  tagsCreated                 Tag[]
-  takedownRequestsCreated     TakedownRequest[]          @relation("takedown_request_createdByUserIdToUser")
-  takedownRequestsUpdated     TakedownRequest[]          @relation("takedown_request_updatedByUserIdToUser")
-  tunesCreated                Tune[]                     @relation("tune_createdByUserIdToUser")
-  tunesUpdated                Tune[]                     @relation("tune_updatedByUserIdToUser")
-  verificationRequestsCreated VerificationRequest[]      @relation("UserToverification_request_createdByUserId")
-  verificationRequestsUpdated VerificationRequest[]      @relation("UserToverification_request_updatedByUserId")
-
-  Submission Submission[]
+  id                        String                     @id @default(uuid()) @db.Char(36)
+  role                      UserRole                   @default(User)
+  email                     String                     @unique(map: "IDX_e12875dfb3b1d92d7d7c5377e2") @db.VarChar(255)
+  username                  String                     @unique(map: "IDX_78a916df40e02a9deb1c4b75ed") @db.VarChar(255)
+  passwordHashed            String?                    @db.VarChar(255)
+  autoLoginTokenHashed      String?                    @db.VarChar(255)
+  autoLoginTokenExpiry      DateTime?
+  copyrightPermissionStatus CopyrightPermissionStatus?
+  createdAt                 DateTime                   @default(now())
+  updatedAt                 DateTime                   @updatedAt
+  audioItemsCreated         AudioItem[]                @relation("audioItemCreatedByUser")
+  audioItemsUpdated         AudioItem[]                @relation("audioItemUpdatedByUser")
+  collectionsCreated        Collection[]               @relation("collection_createdByUserIdToUser")
+  collectionsUpdated        Collection[]               @relation("collection_updatedByUserIdToUser")
+  comments                  Comment[]                  @relation("userComments")
+  instrumentsCreated        Instrument[]               @relation("instrument_createdByUserIdToUser")
+  instrumentsUpdated        Instrument[]               @relation("instrument_updatedByUserIdToUser")
+  peopleCreated             Person[]                   @relation("person_createdByUserIdToUser")
+  peopleUpdated             Person[]                   @relation("person_updatedByUserIdToUser")
+  placesCreated             Place[]                    @relation("place_createdByUserIdToUser")
+  placesUpdated             Place[]                    @relation("place_updatedByUserIdToUser")
+  relationships             Relationship[]
+  savedItems                SavedItem[]
+  tagsCreated               Tag[]
+  tunesCreated              Tune[]                     @relation("tune_createdByUserIdToUser")
+  tunesUpdated              Tune[]                     @relation("tune_updatedByUserIdToUser")
 
   @@map("user")
-}
-
-model VerificationRequest {
-  id                        String                     @id @default(uuid()) @db.Char(36)
-  personId                  String                     @db.Char(36)
-  status                    VerificationRequestStatus? @default(Pending)
-  copyrightPermissionStatus CopyrightPermissionStatus?
-  imageS3Key                String?                    @db.VarChar(255)
-  createdByUserId           String                     @db.Char(36)
-  createdAt                 DateTime                   @default(now())
-  updatedByUserId           String?                    @db.Char(36)
-  updatedAt                 DateTime                   @updatedAt
-  createdByUser             User                       @relation("UserToverification_request_createdByUserId", fields: [createdByUserId], references: [id])
-  person                    Person                     @relation(fields: [personId], references: [id])
-  updatedByUser             User?                      @relation("UserToverification_request_updatedByUserId", fields: [updatedByUserId], references: [id])
-
-  @@index([personId], map: "IDX_763df5ddfc5de533461d83add6")
-  @@map("verification_request")
 }
 
 enum EntityStatus {
@@ -351,23 +290,6 @@ enum EntityType {
   Collection
 }
 
-enum SubmissionStatus {
-  Pending
-  Approved
-  Denied
-}
-
-enum TakedownRequestType {
-  COPYRIGHT
-  PERFORMER
-}
-
-enum TakedownRequestStatus {
-  PENDING
-  APPROVED
-  DENIED
-}
-
 enum UserRole {
   User
   Admin
@@ -375,10 +297,4 @@ enum UserRole {
 
 enum CopyrightPermissionStatus {
   FullNonCommercialGranted
-}
-
-enum VerificationRequestStatus {
-  Pending
-  Approved
-  Denied
 }

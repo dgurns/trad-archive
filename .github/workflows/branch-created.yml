@@ -26,7 +26,7 @@ jobs:
 
       - name: Create pscale DB branch
         run: |
-          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east --from master
+          pscale branch create trad_archive ${BRANCH_NAME} --org tradarchive --region us-east --from master --wait
 
       - name: Create connection info for this DB branch
         id: create-password
@@ -42,10 +42,6 @@ jobs:
           echo "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict" > .env.preview
           vercel link -p trad-archive --confirm --token ${{ secrets.VERCEL_SERVICE_TOKEN }}
           vercel env add DATABASE_URL preview ${BRANCH_NAME} < .env.preview --token ${{ secrets.VERCEL_SERVICE_TOKEN }}
-
-      - name: Sleep for 60 seconds while DB branch is being created
-        run: sleep 60s
-        shell: bash
 
       - name: Seed DB branch
         env:

@@ -90,6 +90,7 @@ async function exportToAtomCsv() {
 			"crowdsourcedScopeAndContent",
 		],
 	];
+
 	// This is extremely messy for now - just creating a POC
 	for (const a of orderedAudioItems) {
 		const tagsWithoutTimestamps = a.tagsAsSubject.filter(
@@ -149,7 +150,7 @@ ${
 }
 `;
 
-		// Within each cell, we need to replace " with "" so they're escaped
+		// Within a cell, we need to replace each " with "" so they're escaped
 		function clean(input: string | null) {
 			if (!input) {
 				return "";

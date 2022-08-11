@@ -42,3 +42,10 @@ jobs:
           echo "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict" > .env.preview
           vercel link -p trad-archive --confirm --token ${{ secrets.VERCEL_SERVICE_TOKEN }}
           vercel env add DATABASE_URL preview ${BRANCH_NAME} < .env.preview --token ${{ secrets.VERCEL_SERVICE_TOKEN }}
+
+      - name: Seed DB branch
+        env:
+          DATABASE_URL: "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict"
+        run: |
+          yarn install --frozen-lockfile
+          npx prisma db seed

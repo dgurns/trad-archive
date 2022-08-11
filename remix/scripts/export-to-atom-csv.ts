@@ -1,5 +1,6 @@
 import fs from "fs";
 import os from "os";
+import minimist from "minimist";
 import { type Tune } from "@prisma/client";
 import { type AudioItemWithRelations } from "../app/types";
 import DateTimeService from "../app/services/DateTime";
@@ -13,6 +14,14 @@ import { EntityType } from "@prisma/client";
 // as a staging area for importing crowdsourced data to AtoM.
 
 async function exportToAtomCsv() {
+	const args = minimist(process.argv.slice(2), { alias: { path: "p" } });
+	const outputPath = args.path || `${os.homedir()}/Downloads/export.csv`;
+	const pathIsDir =
+		fs.existsSync(outputPath) && fs.lstatSync(outputPath).isDirectory();
+	if (pathIsDir) {
+		throw new Error("Output filepath cannot be a directory");
+	}
+
 	console.log("Fetching data...");
 	const recentTags = await db.tag.findMany({
 		select: {
@@ -170,9 +179,9 @@ ${
 
 	const csvContent = csvRows.map((e) => e.join(",")).join("\n");
 
-	fs.writeFileSync(`${os.homedir()}/Downloads/export.csv`, csvContent);
+	fs.writeFileSync(outputPath, csvContent);
 	console.log(
-		`✅ Successfully exported ${orderedAudioItems.length} AudioItems to CSV file at ~/Downloads/export.csv`
+		`✅ Successfully exported ${orderedAudioItems.length} AudioItems to CSV file at ${outputPath}`
 	);
 	process.exit(0);
 }

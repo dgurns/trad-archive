@@ -21,8 +21,8 @@ jobs:
 
       - name: Set up pscale CLI
         run: |
-          wget https://github.com/planetscale/cli/releases/download/v0.91.0/pscale_0.91.0_linux_amd64.deb
-          sudo dpkg -i pscale_0.91.0_linux_amd64.deb
+          wget https://github.com/planetscale/cli/releases/download/v0.112.0/pscale_0.112.0_linux_amd64.deb
+          sudo dpkg -i pscale_0.112.0_linux_amd64.deb
 
       - name: Create pscale DB branch
         run: |

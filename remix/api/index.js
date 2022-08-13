@@ -34,13 +34,13 @@ var entry_server_exports = {};
 __export(entry_server_exports, {
   default: () => handleRequest
 });
-var import_react = require("@remix-run/react"), import_server = require("react-dom/server");
+var import_react = require("@remix-run/react"), import_server = require("react-dom/server"), import_etag = __toESM(require("etag"));
 function handleRequest(request, responseStatusCode, responseHeaders, remixContext) {
   let markup = (0, import_server.renderToString)(/* @__PURE__ */ React.createElement(import_react.RemixServer, {
     context: remixContext,
     url: request.url
-  }));
-  return responseHeaders.set("Content-Type", "text/html"), new Response("<!DOCTYPE html>" + markup, {
+  })), generatedEtag = (0, import_etag.default)(markup);
+  return responseHeaders.set("Content-Type", "text/html"), responseHeaders.set("ETag", generatedEtag), request.headers.get("If-None-Match") === responseHeaders.get("ETag") ? new Response("", { status: 304, headers: responseHeaders }) : new Response("<!DOCTYPE html>" + markup, {
     status: responseStatusCode,
     headers: responseHeaders
   });

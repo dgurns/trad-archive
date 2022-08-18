@@ -21,9 +21,9 @@ import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
 
 export function headers() {
-	// allow using locally cached page for 7 days and revalidate in background
+	// check if there is a new version of the page; if not, use the cached version
 	return {
-		"Cache-Control": "private, max-age=1, stale-while-revalidate=604800",
+		"Cache-Control": "no-cache",
 	};
 }
 

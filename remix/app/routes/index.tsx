@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
+import subMinutes from "date-fns/subMinutes";
 
 import {
 	type CollectionWithRelations,
@@ -18,6 +19,13 @@ import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
+
+export function headers() {
+	// check if there is a new version of the page; if not, use the cached version
+	return {
+		"Cache-Control": "private, max-age=0, must-revalidate",
+	};
+}
 
 interface LoaderData {
 	audioItems: AudioItemWithRelations[];
@@ -42,10 +50,16 @@ export async function loader({
 	const recentTags = await db.tag.findMany({
 		select: {
 			subjectAudioItemId: true,
+			createdAt: true,
 		},
 		where: {
 			subjectAudioItemId: {
 				not: null,
+			},
+			// exclude Tags created in the last 5 minutes, so that as you're tagging
+			// the list of AudioItems won't unexpectedly refresh
+			createdAt: {
+				lt: subMinutes(new Date(), 5),
 			},
 		},
 		distinct: ["subjectAudioItemId"],

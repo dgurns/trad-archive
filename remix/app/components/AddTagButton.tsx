@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Entity } from "~/types";
+import { type Entity } from "~/types";
 import Modal from "~/components/Modal";
 import CreateTagForm from "~/components/CreateTagForm";
 

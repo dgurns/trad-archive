@@ -65,6 +65,13 @@ export function links() {
 	];
 }
 
+export function headers() {
+	// check if there is a new version of the page; if not, use the cached version
+	return {
+		"Cache-Control": "private, max-age=0, must-revalidate",
+	};
+}
+
 interface LoaderData {
 	currentUser: User | null;
 }

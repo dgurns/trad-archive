@@ -47,5 +47,6 @@ jobs:
         env:
           DATABASE_URL: "mysql://${{ steps.create-password.outputs.dbUsername }}:${{ steps.create-password.outputs.dbPassword }}@${{ steps.create-password.outputs.dbHost }}/trad_archive?sslaccept=strict"
         run: |
+          sleep 30
           yarn install --frozen-lockfile
           npx prisma db seed

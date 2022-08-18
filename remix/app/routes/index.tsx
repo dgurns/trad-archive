@@ -20,13 +20,6 @@ import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
 
-export function headers() {
-	// check if there is a new version of the page; if not, use the cached version
-	return {
-		"Cache-Control": "private, max-age=0, must-revalidate",
-	};
-}
-
 interface LoaderData {
 	audioItems: AudioItemWithRelations[];
 	collections: CollectionWithRelations[];

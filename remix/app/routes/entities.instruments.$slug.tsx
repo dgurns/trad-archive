@@ -1,33 +1,25 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Collection } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
+
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	collection: Collection;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
-	const collection = await db.collection.findUnique({
+	const instrument = await db.instrument.findUnique({
 		where: {
 			slug,
 		},
 	});
-	if (!collection) {
+	if (!instrument) {
 		throw new Response("Not Found", {
 			status: 404,
-			statusText: "Could not find this Collection",
+			statusText: "Could not find this Instrument",
 		});
 	}
 
@@ -78,7 +70,7 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectCollectionId: collection.id,
+						subjectInstrumentId: instrument.id,
 					},
 				},
 			},
@@ -88,27 +80,27 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectCollectionId: collection.id,
+						subjectInstrumentId: instrument.id,
 					},
 				},
 			},
 		}),
 	]);
-	return {
-		collection,
+	return typedjson({
+		instrument,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
-const ViewCollectionBySlug = () => {
-	const { collection, audioItems, totalAudioItems } =
-		useLoaderData<LoaderData>();
+const ViewInstrumentBySlug = () => {
+	const { instrument, audioItems, totalAudioItems } =
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>
 			<ViewEntityAndAudioItems
-				entity={collection}
+				entity={instrument}
 				audioItems={audioItems}
 				totalAudioItems={totalAudioItems}
 			/>
@@ -116,4 +108,4 @@ const ViewCollectionBySlug = () => {
 	);
 };
 
-export default ViewCollectionBySlug;
+export default ViewInstrumentBySlug;

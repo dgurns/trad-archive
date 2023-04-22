@@ -1,34 +1,24 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Instrument } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
-
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	instrument: Instrument;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
-	const instrument = await db.instrument.findUnique({
+	const tune = await db.tune.findUnique({
 		where: {
 			slug,
 		},
 	});
-	if (!instrument) {
+	if (!tune) {
 		throw new Response("Not Found", {
 			status: 404,
-			statusText: "Could not find this Instrument",
+			statusText: "Could not find this Tune",
 		});
 	}
 
@@ -79,7 +69,7 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectInstrumentId: instrument.id,
+						subjectTuneId: tune.id,
 					},
 				},
 			},
@@ -89,27 +79,27 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectInstrumentId: instrument.id,
+						subjectTuneId: tune.id,
 					},
 				},
 			},
 		}),
 	]);
-	return {
-		instrument,
+	return typedjson({
+		tune,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
-const ViewInstrumentBySlug = () => {
-	const { instrument, audioItems, totalAudioItems } =
-		useLoaderData<LoaderData>();
+const ViewTuneBySlug = () => {
+	const { tune, audioItems, totalAudioItems } =
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>
 			<ViewEntityAndAudioItems
-				entity={instrument}
+				entity={tune}
 				audioItems={audioItems}
 				totalAudioItems={totalAudioItems}
 			/>
@@ -117,4 +107,4 @@ const ViewInstrumentBySlug = () => {
 	);
 };
 
-export default ViewInstrumentBySlug;
+export default ViewTuneBySlug;

@@ -1,8 +1,8 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 import { db } from "~/utils/db.server";
-import { ViewAs, type AudioItemWithRelations } from "~/types";
+import { ViewAs } from "~/types";
 import EntityService from "~/services/Entity";
 import { getSession } from "~/sessions.server";
 
@@ -10,14 +10,7 @@ import Layout from "~/components/Layout";
 import AudioItemComponent from "~/components/AudioItem";
 import Breadcrumb from "~/components/Breadcrumb";
 
-interface LoaderData {
-	audioItem: AudioItemWithRelations;
-}
-
-export async function loader({
-	request,
-	params,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ request, params }: LoaderArgs) {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = String(session.get("userId") ?? "");
 
@@ -61,13 +54,13 @@ export async function loader({
 			statusText: "Could not find this AudioItem",
 		});
 	}
-	return {
+	return typedjson({
 		audioItem,
-	};
+	});
 }
 
 const ViewAudioItemBySlug = () => {
-	const { audioItem } = useLoaderData<LoaderData>();
+	const { audioItem } = useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>

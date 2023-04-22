@@ -119,7 +119,7 @@ export default function ResetPassword() {
 						We'll send you an email with a link to reset your password.
 					</p>
 					<div className="flex flex-col align-start max-w-xs">
-						<form method="post" className="space-y-4 mb-6">
+						<form method="POST" className="space-y-4 mb-6">
 							<input
 								type="text"
 								placeholder="Email"

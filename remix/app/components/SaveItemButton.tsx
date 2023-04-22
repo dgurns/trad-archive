@@ -10,7 +10,7 @@ export default function SaveItemButton({ audioItem }: Props) {
 	function onButtonClicked() {
 		fetcher.submit(
 			{ audioItemId: audioItem.id },
-			{ method: "post", action: "/saved-items" }
+			{ method: "POST", action: "/saved-items" }
 		);
 	}
 

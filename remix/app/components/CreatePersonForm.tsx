@@ -41,7 +41,7 @@ export default function CreatePersonForm({ onSuccess }: Props) {
 			<div className="flex flex-col align-start">
 				<fetcher.Form
 					ref={formRef}
-					method="post"
+					method="POST"
 					action="/entities/people?index"
 				>
 					<input

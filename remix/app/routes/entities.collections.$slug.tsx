@@ -1,33 +1,24 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Place } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	place: Place;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
-	const place = await db.place.findUnique({
+	const collection = await db.collection.findUnique({
 		where: {
 			slug,
 		},
 	});
-	if (!place) {
+	if (!collection) {
 		throw new Response("Not Found", {
 			status: 404,
-			statusText: "Could not find this Place",
+			statusText: "Could not find this Collection",
 		});
 	}
 
@@ -78,7 +69,7 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectPlaceId: place.id,
+						subjectCollectionId: collection.id,
 					},
 				},
 			},
@@ -88,26 +79,27 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectPlaceId: place.id,
+						subjectCollectionId: collection.id,
 					},
 				},
 			},
 		}),
 	]);
-	return {
-		place,
+	return typedjson({
+		collection,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
-const ViewPlaceBySlug = () => {
-	const { place, audioItems, totalAudioItems } = useLoaderData<LoaderData>();
+const ViewCollectionBySlug = () => {
+	const { collection, audioItems, totalAudioItems } =
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>
 			<ViewEntityAndAudioItems
-				entity={place}
+				entity={collection}
 				audioItems={audioItems}
 				totalAudioItems={totalAudioItems}
 			/>
@@ -115,4 +107,4 @@ const ViewPlaceBySlug = () => {
 	);
 };
 
-export default ViewPlaceBySlug;
+export default ViewCollectionBySlug;

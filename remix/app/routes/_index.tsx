@@ -2,13 +2,9 @@ import { useEffect, useCallback, useState } from "react";
 import { Link, useLoaderData, useLocation } from "@remix-run/react";
 import { type DataFunctionArgs } from "@remix-run/node";
 import subMinutes from "date-fns/subMinutes";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import {
-	type CollectionWithRelations,
-	type CommentWithRelations,
-	type AudioItemWithRelations,
-	SortBy,
-} from "~/types";
+import { type AudioItemWithRelations, SortBy } from "~/types";
 import { ViewAs } from "~/types";
 import useFilters from "~/hooks/useFilters";
 import EntityService from "~/services/Entity";
@@ -20,18 +16,7 @@ import Layout from "~/components/Layout";
 import ProjectIntro from "~/components/ProjectIntro";
 import AudioItemComponent from "~/components/AudioItem";
 
-interface LoaderData {
-	audioItems: AudioItemWithRelations[];
-	collections: CollectionWithRelations[];
-	comments: CommentWithRelations[];
-	numAudioItemsAllTime: number;
-	numTagsAllTime: number;
-	numCommentsAllTime: number;
-}
-
-export async function loader({
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ request }: DataFunctionArgs) {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = String(session.get("userId") ?? "");
 
@@ -149,14 +134,14 @@ export async function loader({
 		}
 	}
 
-	return {
+	return typedjson({
 		audioItems: orderedAudioItems,
 		collections,
 		comments,
 		numAudioItemsAllTime,
 		numTagsAllTime,
 		numCommentsAllTime,
-	};
+	});
 }
 
 export default function Home() {
@@ -167,7 +152,7 @@ export default function Home() {
 		numAudioItemsAllTime,
 		numTagsAllTime,
 		numCommentsAllTime,
-	} = useLoaderData<LoaderData>();
+	} = useTypedLoaderData<typeof loader>();
 	const { search } = useLocation();
 	const params = new URLSearchParams(search);
 	const viewAs = (params.get("viewAs") as ViewAs) ?? ViewAs.Cards;

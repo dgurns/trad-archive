@@ -129,7 +129,7 @@ export default function SignUp() {
 				{redirectTo ? "Create an account to continue" : "Create your account"}
 			</h1>
 			<div className="flex flex-col align-start max-w-xs">
-				<form method="post" className="space-y-4 mb-6">
+				<form method="POST" className="space-y-4 mb-6">
 					<input
 						type="text"
 						name="email"

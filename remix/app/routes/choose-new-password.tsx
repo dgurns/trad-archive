@@ -118,7 +118,7 @@ export default function ChooseNewPassword() {
 				</div>
 			) : (
 				<div className="flex flex-col align-start max-w-xs">
-					<form method="post" className="space-y-4 mb-6">
+					<form method="POST" className="space-y-4 mb-6">
 						<input
 							type="password"
 							placeholder="New password"

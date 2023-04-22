@@ -7,9 +7,11 @@ import Layout from "~/components/Layout";
 import { db } from "~/utils/db.server";
 
 export function meta() {
-	return {
-		title: "Trad Archive - Collections",
-	};
+	return [
+		{
+			title: "Trad Archive - Collections",
+		},
+	];
 }
 
 export function loader(): Promise<Collection[]> {

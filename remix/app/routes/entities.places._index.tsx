@@ -7,9 +7,11 @@ import Layout from "~/components/Layout";
 import { db } from "~/utils/db.server";
 
 export function meta() {
-	return {
-		title: "Trad Archive - Places",
-	};
+	return [
+		{
+			title: "Trad Archive - Places",
+		},
+	];
 }
 
 export function loader(): Promise<Place[]> {

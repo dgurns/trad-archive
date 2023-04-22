@@ -29,7 +29,7 @@ export default function CreateInstrumentForm({ onSuccess }: Props) {
 			<div className="flex flex-col align-start">
 				<fetcher.Form
 					ref={formRef}
-					method="post"
+					method="POST"
 					action="/entities/instruments?index"
 				>
 					<input

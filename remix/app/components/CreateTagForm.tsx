@@ -114,7 +114,7 @@ const CreateTagForm = ({ entity, onSuccess }: Props) => {
 				objectEntityId: selectedEntity.id,
 				subjectTimeMarkerSeconds: String(subjectTimeMarkerSeconds ?? ""),
 			},
-			{ method: "post", action: "/tags" }
+			{ method: "POST", action: "/tags" }
 		);
 	};
 

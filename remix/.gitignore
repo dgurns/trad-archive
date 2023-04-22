@@ -3,6 +3,11 @@ node_modules
 /.cache
 /functions/\[\[path\]\].js
 /functions/\[\[path\]\].js.map
-/public/build
 .env
 .vercel
+yarn-error.log
+
+build/
+/public/build
+/api/index.js
+/api/index.js.map

@@ -1,33 +1,24 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Tune } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	tune: Tune;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
-	const tune = await db.tune.findUnique({
+	const place = await db.place.findUnique({
 		where: {
 			slug,
 		},
 	});
-	if (!tune) {
+	if (!place) {
 		throw new Response("Not Found", {
 			status: 404,
-			statusText: "Could not find this Tune",
+			statusText: "Could not find this Place",
 		});
 	}
 
@@ -78,7 +69,7 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectTuneId: tune.id,
+						subjectPlaceId: place.id,
 					},
 				},
 			},
@@ -88,26 +79,27 @@ export async function loader({
 			where: {
 				tagsAsObject: {
 					some: {
-						subjectTuneId: tune.id,
+						subjectPlaceId: place.id,
 					},
 				},
 			},
 		}),
 	]);
-	return {
-		tune,
+	return typedjson({
+		place,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
-const ViewTuneBySlug = () => {
-	const { tune, audioItems, totalAudioItems } = useLoaderData<LoaderData>();
+const ViewPlaceBySlug = () => {
+	const { place, audioItems, totalAudioItems } =
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>
 			<ViewEntityAndAudioItems
-				entity={tune}
+				entity={place}
 				audioItems={audioItems}
 				totalAudioItems={totalAudioItems}
 			/>
@@ -115,4 +107,4 @@ const ViewTuneBySlug = () => {
 	);
 };
 
-export default ViewTuneBySlug;
+export default ViewPlaceBySlug;

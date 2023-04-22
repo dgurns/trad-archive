@@ -4,5 +4,8 @@
 	"editor.detectIndentation": false,
 	"editor.tabSize": 2,
 	"prettier.useTabs": true,
-	"editor.insertSpaces": false
+	"editor.insertSpaces": false,
+	"editor.codeActionsOnSave": {
+		"source.removeUnusedImports": true
+	}
 }

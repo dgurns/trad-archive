@@ -7305,6 +7305,11 @@ remark-rehype@^9.0.0:
     mdast-util-to-hast "^11.0.0"
     unified "^10.0.0"
 
+remix-typedjson@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/remix-typedjson/-/remix-typedjson-0.1.7.tgz#215afa7da56effe86630b24ced79ff8ff1694ff1"
+  integrity sha512-h7WoKbKBGsVdZZp3s79U5SDrMvQ3We7BjGaSIPxchnJOTS3GUDat0kBoy/gh9TVKRf5KYCee+K1UlFAYQmLQsA==
+
 require-from-string@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"

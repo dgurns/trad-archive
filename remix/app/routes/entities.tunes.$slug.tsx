@@ -1,23 +1,14 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Tune } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	tune: Tune;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
 	const tune = await db.tune.findUnique({
 		where: {
@@ -94,15 +85,16 @@ export async function loader({
 			},
 		}),
 	]);
-	return {
+	return typedjson({
 		tune,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
 const ViewTuneBySlug = () => {
-	const { tune, audioItems, totalAudioItems } = useLoaderData<LoaderData>();
+	const { tune, audioItems, totalAudioItems } =
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>

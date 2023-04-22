@@ -1,6 +1,6 @@
-import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs, LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import type { Prisma } from "@prisma/client";
+import { typedjson, useTypedLoaderData } from "remix-typedjson";
 
 import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
@@ -85,16 +85,16 @@ export async function loader({ params, request }: LoaderArgs) {
 			},
 		}),
 	]);
-	return {
+	return typedjson({
 		collection,
 		audioItems,
 		totalAudioItems,
-	};
+	});
 }
 
 const ViewCollectionBySlug = () => {
 	const { collection, audioItems, totalAudioItems } =
-		useLoaderData<typeof loader>();
+		useTypedLoaderData<typeof loader>();
 
 	return (
 		<Layout>

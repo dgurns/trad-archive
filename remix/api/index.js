@@ -1715,9 +1715,21 @@ function ErrorBoundary() {
   }, this);
 }
 
-// app/routes/entities/audio-items/random.tsx
-var random_exports = {};
-__export(random_exports, {
+// app/routes/entities.audio-items._index.tsx
+var entities_audio_items_index_exports = {};
+__export(entities_audio_items_index_exports, {
+  default: () => entities_audio_items_index_default
+});
+var import_react17 = require("react"), import_react18 = require("@remix-run/react"), ViewAudioItems = () => {
+  let navigate = (0, import_react18.useNavigate)();
+  return (0, import_react17.useEffect)(() => {
+    navigate("/");
+  }, [navigate]), null;
+}, entities_audio_items_index_default = ViewAudioItems;
+
+// app/routes/entities.audio-items.random.tsx
+var entities_audio_items_random_exports = {};
+__export(entities_audio_items_random_exports, {
   loader: () => loader2
 });
 var import_node4 = require("@remix-run/node");
@@ -1729,13 +1741,14 @@ async function loader2() {
   return (0, import_node4.redirect)(`/entities/audio-items/${audioItem.slug}`);
 }
 
-// app/routes/entities/audio-items/$slug.tsx
-var slug_exports = {};
-__export(slug_exports, {
-  default: () => slug_default,
-  loader: () => loader3
+// app/routes/entities.collections._index.tsx
+var entities_collections_index_exports = {};
+__export(entities_collections_index_exports, {
+  default: () => entities_collections_index_default,
+  loader: () => loader3,
+  meta: () => meta2
 });
-var import_react40 = require("@remix-run/react");
+var import_react19 = require("@remix-run/react");
 
 // app/components/Layout.tsx
 var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime"), Layout = ({ children }) => /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "flex flex-col justify-start items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime14.jsxDEV)("div", { className: "w-full min-h-screen lg:max-w-5xl pb-44", children }, void 0, !1, {
@@ -1748,8 +1761,159 @@ var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime"), Layout = ({ chi
   columnNumber: 3
 }, this), Layout_default = Layout;
 
+// app/routes/entities.collections._index.tsx
+var import_jsx_dev_runtime15 = require("react/jsx-dev-runtime");
+function meta2() {
+  return [
+    {
+      title: "Trad Archive - Collections"
+    }
+  ];
+}
+function loader3() {
+  return db.collection.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  });
+}
+var Collections = () => {
+  let collections = (0, import_react19.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("h1", { className: "mb-6", children: "Collections" }, void 0, !1, {
+      fileName: "app/routes/entities.collections._index.tsx",
+      lineNumber: 30,
+      columnNumber: 4
+    }, this),
+    collections.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("div", { className: "text-gray-500", children: "No Collections found" }, void 0, !1, {
+      fileName: "app/routes/entities.collections._index.tsx",
+      lineNumber: 32,
+      columnNumber: 5
+    }, this),
+    collections.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("ul", { children: collections.map((collection, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(import_react19.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
+      fileName: "app/routes/entities.collections._index.tsx",
+      lineNumber: 38,
+      columnNumber: 8
+    }, this) }, index, !1, {
+      fileName: "app/routes/entities.collections._index.tsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this)) }, void 0, !1, {
+      fileName: "app/routes/entities.collections._index.tsx",
+      lineNumber: 35,
+      columnNumber: 5
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/entities.collections._index.tsx",
+    lineNumber: 29,
+    columnNumber: 3
+  }, this);
+}, entities_collections_index_default = Collections;
+
+// app/routes/entities.instruments._index.tsx
+var entities_instruments_index_exports = {};
+__export(entities_instruments_index_exports, {
+  action: () => action,
+  default: () => entities_instruments_index_default,
+  loader: () => loader4,
+  meta: () => meta3
+});
+var import_react20 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
+var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime");
+function meta3() {
+  return [
+    {
+      title: "Trad Archive - Instruments"
+    }
+  ];
+}
+function loader4() {
+  return db.instrument.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  });
+}
+var action = async ({ request }) => {
+  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
+    referer ? new URL(referer).pathname : "/"
+  );
+  if (!userId)
+    return (0, import_node5.redirect)(`/login?redirectTo=${redirectTo}`);
+  let formData = await request.formData(), name = String(formData.get("name") ?? ""), slug = String(formData.get("slug") ?? ""), description = String(formData.get("description") ?? ""), aliases = String(formData.get("aliases") ?? ""), cleanedSlug = Entity_default.cleanSlug(slug), error;
+  if ((!name || !slug) && (error = "Must enter a name and slug"), error)
+    return (0, import_node5.json)({ error }, { status: 400 });
+  let existing = await db.instrument.findFirst({
+    where: { slug: cleanedSlug }
+  });
+  if (existing)
+    return (0, import_node5.json)(
+      {
+        error: `This slug is already being used for an existing Instrument: ${existing.name}`
+      },
+      { status: 400 }
+    );
+  try {
+    let instrument = await db.instrument.create({
+      data: {
+        name,
+        slug: cleanedSlug,
+        description,
+        aliases,
+        createdByUserId: userId,
+        updatedByUserId: userId
+      }
+    });
+    return (0, import_node5.json)({ instrument }, { status: 201 });
+  } catch {
+    return (0, import_node5.json)(
+      { error: "Error creating Instrument" },
+      { status: 500 }
+    );
+  }
+}, Instruments = () => {
+  let instruments = (0, import_react20.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("h1", { className: "mb-6", children: "Instruments" }, void 0, !1, {
+      fileName: "app/routes/entities.instruments._index.tsx",
+      lineNumber: 97,
+      columnNumber: 4
+    }, this),
+    instruments.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: "text-gray-500", children: "No Instruments found" }, void 0, !1, {
+      fileName: "app/routes/entities.instruments._index.tsx",
+      lineNumber: 99,
+      columnNumber: 5
+    }, this),
+    instruments.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("ul", { children: instruments.map((instrument, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(import_react20.Link, { to: Entity_default.makeHrefForView(instrument), children: instrument.name }, void 0, !1, {
+      fileName: "app/routes/entities.instruments._index.tsx",
+      lineNumber: 105,
+      columnNumber: 8
+    }, this) }, index, !1, {
+      fileName: "app/routes/entities.instruments._index.tsx",
+      lineNumber: 104,
+      columnNumber: 7
+    }, this)) }, void 0, !1, {
+      fileName: "app/routes/entities.instruments._index.tsx",
+      lineNumber: 102,
+      columnNumber: 5
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/entities.instruments._index.tsx",
+    lineNumber: 96,
+    columnNumber: 3
+  }, this);
+}, entities_instruments_index_default = Instruments;
+
+// app/routes/entities.audio-items.$slug.tsx
+var entities_audio_items_slug_exports = {};
+__export(entities_audio_items_slug_exports, {
+  default: () => entities_audio_items_slug_default,
+  loader: () => loader5
+});
+var import_react44 = require("@remix-run/react");
+
 // app/components/AudioItemCard.tsx
-var import_react33 = require("react"), import_react34 = require("@remix-run/react");
+var import_react37 = require("react"), import_react38 = require("@remix-run/react");
 
 // app/services/DateTime.ts
 var import_format = __toESM(require("date-fns/format")), import_isToday = __toESM(require("date-fns/isToday")), import_isYesterday = __toESM(require("date-fns/isYesterday")), formatSecondsAsDuration = (inputSeconds) => {
@@ -1778,7 +1942,7 @@ var import_format = __toESM(require("date-fns/format")), import_isToday = __toES
 }, DateTime_default = DateTimeService;
 
 // app/components/Tags.tsx
-var import_react24 = require("react"), import_react25 = require("@remix-run/react");
+var import_react28 = require("react"), import_react29 = require("@remix-run/react");
 
 // app/services/Tag.ts
 var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareDesc = __toESM(require("date-fns/compareDesc")), TagSortStrategy = /* @__PURE__ */ ((TagSortStrategy2) => (TagSortStrategy2.CreatedAtThenTimeMarker = "CREATED_AT_THEN_TIME_MARKER", TagSortStrategy2.CreatedAtDesc = "CREATED_AT_DESC", TagSortStrategy2))(TagSortStrategy || {}), sortByCreatedAtThenTimeMarker = (tags) => {
@@ -1803,42 +1967,42 @@ var import_compareAsc = __toESM(require("date-fns/compareAsc")), import_compareD
 };
 
 // app/components/AddTagButton.tsx
-var import_react21 = require("react");
+var import_react25 = require("react");
 
 // app/components/CreateTagForm.tsx
-var import_react19 = require("react"), import_client6 = require("@prisma/client"), import_react20 = require("@remix-run/react");
+var import_react23 = require("react"), import_client6 = require("@prisma/client"), import_react24 = require("@remix-run/react");
 
 // app/components/SelectRelationship.tsx
-var import_react17 = require("react"), import_react18 = require("@remix-run/react");
-var import_jsx_dev_runtime15 = require("react/jsx-dev-runtime");
+var import_react21 = require("react"), import_react22 = require("@remix-run/react");
+var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime");
 function SelectRelationship({
   subjectEntity,
   objectEntity,
   onSelect
 }) {
   var _a;
-  let fetcher = (0, import_react18.useFetcher)();
-  (0, import_react17.useEffect)(() => {
+  let fetcher = (0, import_react22.useFetcher)();
+  (0, import_react21.useEffect)(() => {
     let params = new URLSearchParams({
       subjectEntityType: String(subjectEntity.entityType),
       objectEntityType: String(objectEntity.entityType)
     });
     fetcher.load(`/relationships?${params.toString()}`);
   }, [subjectEntity, objectEntity]);
-  let relationshipOptions = (0, import_react17.useMemo)(
+  let relationshipOptions = (0, import_react21.useMemo)(
     () => {
       var _a2;
       return ((_a2 = fetcher.data) == null ? void 0 : _a2.relationships) ?? [];
     },
     [fetcher.data]
-  ), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react17.useState)("");
-  return (0, import_react17.useEffect)(() => {
+  ), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react21.useState)("");
+  return (0, import_react21.useEffect)(() => {
     relationshipOptions.length > 0 && setSelectedRelationshipId(relationshipOptions[0].id);
-  }, [relationshipOptions]), (0, import_react17.useEffect)(() => {
+  }, [relationshipOptions]), (0, import_react21.useEffect)(() => {
     onSelect && selectedRelationshipId && onSelect(selectedRelationshipId);
-  }, [onSelect, selectedRelationshipId]), /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(import_jsx_dev_runtime15.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("div", { className: "mb-2 text-gray-500", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("span", { className: "text-sm uppercase pr-2", children: subjectEntity.entityType }, void 0, !1, {
+  }, [onSelect, selectedRelationshipId]), /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(import_jsx_dev_runtime17.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mb-2 text-gray-500", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("span", { className: "text-sm uppercase pr-2", children: subjectEntity.entityType }, void 0, !1, {
         fileName: "app/components/SelectRelationship.tsx",
         lineNumber: 51,
         columnNumber: 5
@@ -1849,16 +2013,16 @@ function SelectRelationship({
       lineNumber: 50,
       columnNumber: 4
     }, this),
-    fetcher.state === "loading" ? /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(LoadingCircle_default, {}, void 0, !1, {
+    fetcher.state === "loading" ? /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(LoadingCircle_default, {}, void 0, !1, {
       fileName: "app/components/SelectRelationship.tsx",
       lineNumber: 58,
       columnNumber: 5
-    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)(
+    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
       "select",
       {
         value: selectedRelationshipId,
         onChange: (event) => setSelectedRelationshipId(event.target.value),
-        children: relationshipOptions.map((relationship, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("option", { value: relationship.id, children: relationship.name }, index, !1, {
+        children: relationshipOptions.map((relationship, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("option", { value: relationship.id, children: relationship.name }, index, !1, {
           fileName: "app/components/SelectRelationship.tsx",
           lineNumber: 65,
           columnNumber: 7
@@ -1873,8 +2037,8 @@ function SelectRelationship({
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("div", { className: "text-gray-500 mt-2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("span", { className: "text-sm uppercase pr-2", children: objectEntity.entityType }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "text-gray-500 mt-2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("span", { className: "text-sm uppercase pr-2", children: objectEntity.entityType }, void 0, !1, {
         fileName: "app/components/SelectRelationship.tsx",
         lineNumber: 73,
         columnNumber: 5
@@ -1885,7 +2049,7 @@ function SelectRelationship({
       lineNumber: 72,
       columnNumber: 4
     }, this),
-    ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime15.jsxDEV)("div", { className: "text-red-600 mt-4", children: fetcher.data.error }, void 0, !1, {
+    ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "text-red-600 mt-4", children: fetcher.data.error }, void 0, !1, {
       fileName: "app/components/SelectRelationship.tsx",
       lineNumber: 80,
       columnNumber: 5
@@ -1898,7 +2062,7 @@ function SelectRelationship({
 }
 
 // app/components/TimestampInput.tsx
-var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput = ({ valueInSeconds, onChange, className }) => {
+var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime"), TimestampInput = ({ valueInSeconds, onChange, className }) => {
   let hrs = Math.floor(valueInSeconds / 3600), mins = Math.floor((valueInSeconds - hrs * 3600) / 60), secs = valueInSeconds - hrs * 3600 - mins * 60, onChangeHrs = (event) => {
     let newValueInSeconds = (parseInt(event.target.value, 10) || 0) * 3600 + mins * 60 + secs;
     onChange(newValueInSeconds);
@@ -1909,8 +2073,8 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
     let newSecs = parseInt(event.target.value, 10) || 0, newValueInSeconds = hrs * 3600 + mins * 60 + newSecs;
     onChange(newValueInSeconds);
   };
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("div", { className: `flex flex-row items-center ${className ?? ""}`, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("div", { className: `flex flex-row items-center ${className ?? ""}`, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
       "input",
       {
         type: "number",
@@ -1929,7 +2093,7 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("label", { htmlFor: "hours", className: "px-2", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("label", { htmlFor: "hours", className: "px-2", children: [
       "hr",
       hrs !== 1 && "s"
     ] }, void 0, !0, {
@@ -1937,7 +2101,7 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
       lineNumber: 40,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
       "input",
       {
         type: "number",
@@ -1956,7 +2120,7 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("label", { htmlFor: "mins", className: "px-2", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("label", { htmlFor: "mins", className: "px-2", children: [
       "min",
       mins !== 1 ? "s" : ""
     ] }, void 0, !0, {
@@ -1964,7 +2128,7 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
       lineNumber: 51,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
       "input",
       {
         type: "number",
@@ -1983,7 +2147,7 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime16.jsxDEV)("label", { htmlFor: "secs", className: "px-2", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)("label", { htmlFor: "secs", className: "px-2", children: [
       "sec",
       secs !== 1 ? "s" : ""
     ] }, void 0, !0, {
@@ -1999,38 +2163,38 @@ var import_jsx_dev_runtime16 = require("react/jsx-dev-runtime"), TimestampInput 
 }, TimestampInput_default = TimestampInput;
 
 // app/components/CreateTagForm.tsx
-var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm = ({ entity, onSuccess }) => {
+var import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), CreateTagForm = ({ entity, onSuccess }) => {
   var _a, _b;
-  let fetcher = (0, import_react20.useFetcher)(), createdTag = (_a = fetcher.data) == null ? void 0 : _a.tag, isSubmittingOrLoading = fetcher.state === "submitting" || fetcher.state === "loading";
-  (0, import_react19.useEffect)(() => {
+  let fetcher = (0, import_react24.useFetcher)(), createdTag = (_a = fetcher.data) == null ? void 0 : _a.tag, isSubmittingOrLoading = fetcher.state === "submitting" || fetcher.state === "loading";
+  (0, import_react23.useEffect)(() => {
     createdTag && !isSubmittingOrLoading && onSuccess(createdTag);
   }, [createdTag, onSuccess, isSubmittingOrLoading]);
   let {
     activeAudioItem,
     playbackPositionSeconds,
     activeItemDurationSeconds
-  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react19.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react19.useState)(
+  } = usePlayerContext_default(), defaultTimeMarkerValue = (activeAudioItem == null ? void 0 : activeAudioItem.id) === entity.id ? playbackPositionSeconds : void 0, [shouldAddTimeMarker, setShouldAddTimeMarker] = (0, import_react23.useState)(!1), [timeMarkerValue, setTimeMarkerValue] = (0, import_react23.useState)(
     defaultTimeMarkerValue
-  ), [selectedEntity, setSelectedEntity] = (0, import_react19.useState)(), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react19.useState)(""), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react19.useState)(""), onSelectEntity = (0, import_react19.useCallback)(
+  ), [selectedEntity, setSelectedEntity] = (0, import_react23.useState)(), [selectedRelationshipId, setSelectedRelationshipId] = (0, import_react23.useState)(""), [selectedInverseRelationshipId, setSelectedInverseRelationshipId] = (0, import_react23.useState)(""), onSelectEntity = (0, import_react23.useCallback)(
     (selectedEntityFromResults) => {
       if (selectedEntityFromResults.id === entity.id)
         return window.alert("Cannot tag an entity with itself");
       setSelectedEntity(selectedEntityFromResults);
     },
     [entity]
-  ), onNewEntityCreated = (0, import_react19.useCallback)((entity2) => {
+  ), onNewEntityCreated = (0, import_react23.useCallback)((entity2) => {
     setSelectedEntity(entity2);
-  }, []), onTimeMarkerValueChanged = (0, import_react19.useCallback)(
+  }, []), onTimeMarkerValueChanged = (0, import_react23.useCallback)(
     (newTimeMarkerValueSeconds) => {
       setShouldAddTimeMarker(!0), typeof activeItemDurationSeconds < "u" && newTimeMarkerValueSeconds >= activeItemDurationSeconds ? setTimeMarkerValue(activeItemDurationSeconds) : newTimeMarkerValueSeconds <= 0 ? setTimeMarkerValue(0) : setTimeMarkerValue(newTimeMarkerValueSeconds);
     },
     [activeItemDurationSeconds]
-  ), onSelectRelationship = (0, import_react19.useCallback)(
+  ), onSelectRelationship = (0, import_react23.useCallback)(
     (relationshipId) => {
       setSelectedRelationshipId(relationshipId);
     },
     [setSelectedRelationshipId]
-  ), onSelectInverseRelationship = (0, import_react19.useCallback)(
+  ), onSelectInverseRelationship = (0, import_react23.useCallback)(
     (relationshipId) => {
       setSelectedInverseRelationshipId(relationshipId);
     },
@@ -2053,7 +2217,7 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
     );
   };
   if (!selectedEntity)
-    return /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+    return /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
       SearchEntities_default,
       {
         onSelect: onSelectEntity,
@@ -2069,13 +2233,13 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
       this
     );
   let shouldShowTimeMarkerCheckbox = entity.entityType === import_client6.EntityType.AudioItem && typeof defaultTimeMarkerValue < "u";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(import_jsx_dev_runtime17.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { children: "What is the relationship between these two entities?" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(import_jsx_dev_runtime19.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { children: "What is the relationship between these two entities?" }, void 0, !1, {
       fileName: "app/components/CreateTagForm.tsx",
       lineNumber: 137,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mt-2 pl-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "mt-2 pl-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
       SelectRelationship,
       {
         subjectEntity: entity,
@@ -2095,12 +2259,12 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
       lineNumber: 139,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mt-6", children: "...and what is the inverse relationship?" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "mt-6", children: "...and what is the inverse relationship?" }, void 0, !1, {
       fileName: "app/components/CreateTagForm.tsx",
       lineNumber: 147,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mt-2 pl-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "mt-2 pl-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
       SelectRelationship,
       {
         subjectEntity: selectedEntity,
@@ -2120,8 +2284,8 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
       lineNumber: 149,
       columnNumber: 4
     }, this),
-    shouldShowTimeMarkerCheckbox && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mt-6 flex flex-row items-start justify-start", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+    shouldShowTimeMarkerCheckbox && /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "mt-6 flex flex-row items-start justify-start", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
         "input",
         {
           type: "checkbox",
@@ -2139,13 +2303,13 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
         },
         this
       ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("label", { htmlFor: "time-marker", className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "flex flex-col items-start", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "mb-2", children: "Mark this Tag at time:" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("label", { htmlFor: "time-marker", className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "flex flex-col items-start", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "mb-2", children: "Mark this Tag at time:" }, void 0, !1, {
           fileName: "app/components/CreateTagForm.tsx",
           lineNumber: 168,
           columnNumber: 8
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
           TimestampInput_default,
           {
             valueInSeconds: timeMarkerValue ?? 0,
@@ -2174,7 +2338,7 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
       lineNumber: 158,
       columnNumber: 5
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
       "button",
       {
         className: "btn mt-6",
@@ -2191,7 +2355,7 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
       },
       this
     ),
-    ((_b = fetcher.data) == null ? void 0 : _b.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime17.jsxDEV)("div", { className: "text-red-600 mt-4", children: fetcher.data.error }, void 0, !1, {
+    ((_b = fetcher.data) == null ? void 0 : _b.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "text-red-600 mt-4", children: fetcher.data.error }, void 0, !1, {
       fileName: "app/components/CreateTagForm.tsx",
       lineNumber: 187,
       columnNumber: 5
@@ -2204,10 +2368,10 @@ var import_jsx_dev_runtime17 = require("react/jsx-dev-runtime"), CreateTagForm =
 }, CreateTagForm_default = CreateTagForm;
 
 // app/components/AddTagButton.tsx
-var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime"), AddTagButton = ({ entity, className, children }) => {
-  let [modalIsVisible, setModalIsVisible] = (0, import_react21.useState)(!1);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(import_jsx_dev_runtime18.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
+var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), AddTagButton = ({ entity, className, children }) => {
+  let [modalIsVisible, setModalIsVisible] = (0, import_react25.useState)(!1);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(import_jsx_dev_runtime20.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
       "button",
       {
         className: `btn-text whitespace-pre ${className ?? ""}`,
@@ -2223,13 +2387,13 @@ var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime"), AddTagButton = 
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
       Modal_default,
       {
         title: "Add Tag",
         isVisible: modalIsVisible,
         onClose: () => setModalIsVisible(!1),
-        children: /* @__PURE__ */ (0, import_jsx_dev_runtime18.jsxDEV)(
+        children: /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
           CreateTagForm_default,
           {
             entity,
@@ -2262,24 +2426,24 @@ var import_jsx_dev_runtime18 = require("react/jsx-dev-runtime"), AddTagButton = 
 }, AddTagButton_default = AddTagButton;
 
 // app/components/EditTagsButton.tsx
-var import_react22 = require("react");
-var import_react23 = require("@remix-run/react"), import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), EditTagsButton = ({ tags, className, children, onSuccess }) => {
-  let fetcher = (0, import_react23.useFetcher)(), isSubmittingOrLoading = fetcher.state === "submitting" || fetcher.state === "loading", data = fetcher.data;
-  (0, import_react22.useEffect)(() => {
+var import_react26 = require("react");
+var import_react27 = require("@remix-run/react"), import_jsx_dev_runtime21 = require("react/jsx-dev-runtime"), EditTagsButton = ({ tags, className, children, onSuccess }) => {
+  let fetcher = (0, import_react27.useFetcher)(), isSubmittingOrLoading = fetcher.state === "submitting" || fetcher.state === "loading", data = fetcher.data;
+  (0, import_react26.useEffect)(() => {
     onSuccess && data && !data.error && !isSubmittingOrLoading && onSuccess();
   }, [data, isSubmittingOrLoading, onSuccess]);
-  let [modalIsVisible, setModalIsVisible] = (0, import_react22.useState)(!1), onDeleteTag = (0, import_react22.useCallback)(async (id) => {
+  let [modalIsVisible, setModalIsVisible] = (0, import_react26.useState)(!1), onDeleteTag = (0, import_react26.useCallback)(async (id) => {
     window.confirm("Are you sure you want to delete this Tag?") && await fetcher.submit(
       { tagId: id },
       { method: "delete", action: "/tags" }
     );
   }, []);
-  (0, import_react22.useEffect)(() => {
+  (0, import_react26.useEffect)(() => {
     data != null && data.error && window.alert(`Error deleting Tag: ${data.error}`);
   }, [data]);
-  let sortedTags = (0, import_react22.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
-  return !sortedTags || sortedTags.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(import_jsx_dev_runtime19.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
+  let sortedTags = (0, import_react26.useMemo)(() => Array.isArray(tags) ? Tag_default.sort(tags) : [], [tags]);
+  return !sortedTags || sortedTags.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(import_jsx_dev_runtime21.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
       "button",
       {
         className: `btn-text whitespace-pre ${className ?? ""}`,
@@ -2295,7 +2459,7 @@ var import_react23 = require("@remix-run/react"), import_jsx_dev_runtime19 = req
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
       Modal_default,
       {
         title: "Edit Tags",
@@ -2303,24 +2467,24 @@ var import_react23 = require("@remix-run/react"), import_jsx_dev_runtime19 = req
         onClose: () => setModalIsVisible(!1),
         children: sortedTags.map((tag, index) => {
           let { id, relationship, subjectTimeMarkerSeconds } = tag, objectEntity = Tag_default.getObjectEntity(tag);
-          return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
+          return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
             "div",
             {
               className: "flex flex-row items-start justify-start",
               children: [
-                /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "flex flex-col flex-1 justify-start align-start mb-4 pr-4", children: [
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "italic text-gray-500", children: relationship.name }, void 0, !1, {
+                /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "flex flex-col flex-1 justify-start align-start mb-4 pr-4", children: [
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "italic text-gray-500", children: relationship.name }, void 0, !1, {
                     fileName: "app/components/EditTagsButton.tsx",
                     lineNumber: 81,
                     columnNumber: 9
                   }, this),
-                  /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("div", { className: "uppercase text-sm text-gray-500 pr-2", children: objectEntity.entityType }, void 0, !1, {
+                  /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("div", { className: "uppercase text-sm text-gray-500 pr-2", children: objectEntity.entityType }, void 0, !1, {
                     fileName: "app/components/EditTagsButton.tsx",
                     lineNumber: 82,
                     columnNumber: 9
                   }, this),
                   objectEntity.name,
-                  typeof subjectTimeMarkerSeconds == "number" && /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)("span", { className: "italic text-gray-500", children: `at ${DateTime_default.formatSecondsAsDuration(
+                  typeof subjectTimeMarkerSeconds == "number" && /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("span", { className: "italic text-gray-500", children: `at ${DateTime_default.formatSecondsAsDuration(
                     subjectTimeMarkerSeconds
                   )}` }, void 0, !1, {
                     fileName: "app/components/EditTagsButton.tsx",
@@ -2332,7 +2496,7 @@ var import_react23 = require("@remix-run/react"), import_jsx_dev_runtime19 = req
                   lineNumber: 80,
                   columnNumber: 8
                 }, this),
-                /* @__PURE__ */ (0, import_jsx_dev_runtime19.jsxDEV)(
+                /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
                   "button",
                   {
                     className: "btn-text",
@@ -2379,19 +2543,19 @@ var import_react23 = require("@remix-run/react"), import_jsx_dev_runtime19 = req
 }, EditTagsButton_default = EditTagsButton;
 
 // app/components/Tags.tsx
-var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ tag }) => {
+var import_jsx_dev_runtime22 = require("react/jsx-dev-runtime"), TagLink = ({ tag }) => {
   var _a;
-  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react24.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react24.useState)(), onMouseEnter = (0, import_react24.useCallback)(() => {
+  let [tooltipIsVisible, setTooltipIsVisible] = (0, import_react28.useState)(!1), [timeoutFunc, setTimeoutFunc] = (0, import_react28.useState)(), onMouseEnter = (0, import_react28.useCallback)(() => {
     setTimeoutFunc(setTimeout(() => setTooltipIsVisible(!0), 400));
-  }, []), onMouseLeave = (0, import_react24.useCallback)(() => {
+  }, []), onMouseLeave = (0, import_react28.useCallback)(() => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0)), setTooltipIsVisible(!1);
   }, [timeoutFunc]);
-  (0, import_react24.useEffect)(() => () => {
+  (0, import_react28.useEffect)(() => () => {
     timeoutFunc && (clearTimeout(timeoutFunc), setTimeoutFunc(void 0));
   }, [timeoutFunc]);
   let { relationship } = tag, objectEntity = Tag_default.getObjectEntity(tag), href = Entity_default.makeHrefForView(objectEntity);
-  return !objectEntity || !href ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
-    import_react25.Link,
+  return !objectEntity || !href ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
+    import_react29.Link,
     {
       to: href,
       className: "block p-1 px-2 mb-2 no-underline border border-teal-600 rounded hover:border-teal-800",
@@ -2399,7 +2563,7 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
       onMouseLeave,
       children: [
         objectEntity.name,
-        /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
           "div",
           {
             className: `${tooltipIsVisible ? "hidden md:flex" : "hidden"} absolute -top-8 left-0 text-center px-2 py-1 text-sm whitespace-nowrap bg-gray-700 rounded text-white`,
@@ -2430,7 +2594,7 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
     this
   );
 }, Tags = ({ audioItem }) => {
-  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react24.useMemo)(() => {
+  let { tagsAsSubject } = audioItem, sortedTags = (0, import_react28.useMemo)(() => {
     if (!Array.isArray(tagsAsSubject))
       return [];
     let tagsWithoutTimeMarkers = tagsAsSubject.filter(
@@ -2438,8 +2602,8 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
     );
     return Tag_default.sort(tagsWithoutTimeMarkers);
   }, [tagsAsSubject]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "flex flex-row items-center flex-wrap", children: [
-    sortedTags.map((tag, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "mr-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(TagLink, { tag }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("div", { className: "flex flex-row items-center flex-wrap", children: [
+    sortedTags.map((tag, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("div", { className: "mr-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(TagLink, { tag }, void 0, !1, {
       fileName: "app/components/Tags.tsx",
       lineNumber: 85,
       columnNumber: 6
@@ -2448,11 +2612,11 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
       lineNumber: 84,
       columnNumber: 5
     }, this)),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
       "div",
       {
         className: tagsAsSubject && tagsAsSubject.length > 0 ? "mb-2 ml-1" : void 0,
-        children: /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(AddTagButton_default, { entity: audioItem }, void 0, !1, {
+        children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(AddTagButton_default, { entity: audioItem }, void 0, !1, {
           fileName: "app/components/Tags.tsx",
           lineNumber: 94,
           columnNumber: 5
@@ -2467,13 +2631,13 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
       },
       this
     ),
-    tagsAsSubject && tagsAsSubject.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("div", { className: "flex ml-1 mb-2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)("span", { className: "text-gray-500 mr-1", children: "/" }, void 0, !1, {
+    tagsAsSubject && tagsAsSubject.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("div", { className: "flex ml-1 mb-2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("span", { className: "text-gray-500 mr-1", children: "/" }, void 0, !1, {
         fileName: "app/components/Tags.tsx",
         lineNumber: 99,
         columnNumber: 6
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime20.jsxDEV)(EditTagsButton_default, { tags: tagsAsSubject }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(EditTagsButton_default, { tags: tagsAsSubject }, void 0, !1, {
         fileName: "app/components/Tags.tsx",
         lineNumber: 100,
         columnNumber: 6
@@ -2491,9 +2655,9 @@ var import_jsx_dev_runtime20 = require("react/jsx-dev-runtime"), TagLink = ({ ta
 }, Tags_default = Tags;
 
 // app/components/SaveItemButton.tsx
-var import_react26 = require("@remix-run/react"), import_jsx_dev_runtime21 = require("react/jsx-dev-runtime");
+var import_react30 = require("@remix-run/react"), import_jsx_dev_runtime23 = require("react/jsx-dev-runtime");
 function SaveItemButton({ audioItem }) {
-  let fetcher = (0, import_react26.useFetcher)();
+  let fetcher = (0, import_react30.useFetcher)();
   function onButtonClicked() {
     fetcher.submit(
       { audioItemId: audioItem.id },
@@ -2501,15 +2665,15 @@ function SaveItemButton({ audioItem }) {
     );
   }
   let isSaved = audioItem.savedItems.length === 1;
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
     "button",
     {
       className: `btn-secondary ${isSaved ? "btn-secondary-active" : ""} pl-0.5`,
       onClick: onButtonClicked,
       disabled: fetcher.state !== "idle",
       "aria-label": isSaved ? "Unsave" : "Save",
-      children: isSaved ? /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(import_jsx_dev_runtime21.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("i", { className: "material-icons", children: "bookmark" }, void 0, !1, {
+      children: isSaved ? /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("i", { className: "material-icons", children: "bookmark" }, void 0, !1, {
           fileName: "app/components/SaveItemButton.tsx",
           lineNumber: 30,
           columnNumber: 6
@@ -2519,8 +2683,8 @@ function SaveItemButton({ audioItem }) {
         fileName: "app/components/SaveItemButton.tsx",
         lineNumber: 29,
         columnNumber: 5
-      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)(import_jsx_dev_runtime21.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime21.jsxDEV)("i", { className: "material-icons", children: "bookmark_border" }, void 0, !1, {
+      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("i", { className: "material-icons", children: "bookmark_border" }, void 0, !1, {
           fileName: "app/components/SaveItemButton.tsx",
           lineNumber: 35,
           columnNumber: 6
@@ -2544,16 +2708,16 @@ function SaveItemButton({ audioItem }) {
 }
 
 // app/components/ViewCommentsButton.tsx
-var import_react29 = require("react"), import_react30 = require("@remix-run/react");
+var import_react33 = require("react"), import_react34 = require("@remix-run/react");
 
 // app/components/CreateCommentForm.tsx
-var import_react27 = require("@remix-run/react"), import_react28 = require("react"), import_jsx_dev_runtime22 = require("react/jsx-dev-runtime"), CreateCommentForm = ({ parentAudioItem }) => {
+var import_react31 = require("@remix-run/react"), import_react32 = require("react"), import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), CreateCommentForm = ({ parentAudioItem }) => {
   var _a;
-  let formRef = (0, import_react28.useRef)(null), fetcher = (0, import_react27.useFetcher)();
-  return (0, import_react28.useEffect)(() => {
+  let formRef = (0, import_react32.useRef)(null), fetcher = (0, import_react31.useFetcher)();
+  return (0, import_react32.useEffect)(() => {
     var _a2;
     fetcher.type === "done" && fetcher.data.comment && ((_a2 = formRef.current) == null || _a2.reset());
-  }, [fetcher]), /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
+  }, [fetcher]), /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
     fetcher.Form,
     {
       ref: formRef,
@@ -2561,7 +2725,7 @@ var import_react27 = require("@remix-run/react"), import_react28 = require("reac
       action: "/comments",
       className: "w-full",
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
           "textarea",
           {
             placeholder: "Add a comment...",
@@ -2579,7 +2743,7 @@ var import_react27 = require("@remix-run/react"), import_react28 = require("reac
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
           "input",
           {
             type: "hidden",
@@ -2595,7 +2759,7 @@ var import_react27 = require("@remix-run/react"), import_react28 = require("reac
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
           "button",
           {
             className: "btn mt-3 w-auto",
@@ -2612,7 +2776,7 @@ var import_react27 = require("@remix-run/react"), import_react28 = require("reac
           },
           this
         ),
-        ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)("div", { className: "text-red-600 mt-3", children: fetcher.data.error }, void 0, !1, {
+        ((_a = fetcher.data) == null ? void 0 : _a.error) && /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("div", { className: "text-red-600 mt-3", children: fetcher.data.error }, void 0, !1, {
           fileName: "app/components/CreateCommentForm.tsx",
           lineNumber: 45,
           columnNumber: 5
@@ -2631,11 +2795,11 @@ var import_react27 = require("@remix-run/react"), import_react28 = require("reac
 }, CreateCommentForm_default = CreateCommentForm;
 
 // app/components/ViewCommentsButton.tsx
-var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsButton = ({ audioItem }) => {
-  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react29.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react29.useState)(!1), onViewCommentsButtonClicked = (0, import_react29.useCallback)(async () => {
+var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), ViewCommentsButton = ({ audioItem }) => {
+  let { comments } = audioItem, commentsCount = comments.length, commentsRef = (0, import_react33.useRef)(), [modalIsVisible, setModalIsVisible] = (0, import_react33.useState)(!1), onViewCommentsButtonClicked = (0, import_react33.useCallback)(async () => {
     setModalIsVisible(!0);
-  }, []), onCloseModal = (0, import_react29.useCallback)(() => setModalIsVisible(!1), []);
-  (0, import_react29.useEffect)(() => {
+  }, []), onCloseModal = (0, import_react33.useCallback)(() => setModalIsVisible(!1), []);
+  (0, import_react33.useEffect)(() => {
     var _a;
     if (!commentsRef.current)
       return;
@@ -2646,22 +2810,22 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
     });
   }, [comments, modalIsVisible]);
   let modalTitle = commentsCount > 0 ? `${commentsCount} Comment${commentsCount === 1 ? "" : "s"}` : "No Comments";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(import_jsx_dev_runtime25.Fragment, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
       "button",
       {
         className: "btn-secondary",
         onClick: onViewCommentsButtonClicked,
         "aria-label": "View Comments",
         children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("i", { className: "material-icons mr-0.5", children: "chat_bubble_outline" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("i", { className: "material-icons mr-0.5", children: "chat_bubble_outline" }, void 0, !1, {
             fileName: "app/components/ViewCommentsButton.tsx",
             lineNumber: 51,
             columnNumber: 5
           }, this),
-          commentsCount > 0 ? /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
+          commentsCount > 0 ? /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(import_jsx_dev_runtime25.Fragment, { children: [
             commentsCount,
-            /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("span", { className: "hidden md:block md:pl-1", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("span", { className: "hidden md:block md:pl-1", children: [
               "Comment",
               commentsCount === 1 ? "" : "s"
             ] }, void 0, !0, {
@@ -2673,13 +2837,13 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
             fileName: "app/components/ViewCommentsButton.tsx",
             lineNumber: 53,
             columnNumber: 6
-          }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(import_jsx_dev_runtime23.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("span", { className: "md:hidden", children: "0" }, void 0, !1, {
+          }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(import_jsx_dev_runtime25.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("span", { className: "md:hidden", children: "0" }, void 0, !1, {
               fileName: "app/components/ViewCommentsButton.tsx",
               lineNumber: 61,
               columnNumber: 7
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("span", { className: "hidden md:block", children: "No Comments" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("span", { className: "hidden md:block", children: "No Comments" }, void 0, !1, {
               fileName: "app/components/ViewCommentsButton.tsx",
               lineNumber: 62,
               columnNumber: 7
@@ -2700,21 +2864,21 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
       Modal_default,
       {
         title: modalTitle,
         isVisible: modalIsVisible,
         onClose: onCloseModal,
         children: [
-          comments.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "max-h-1/2 overflow-auto", children: comments.map(({ createdByUser, createdAt, text }, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "mb-2", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "text-gray-500 text-sm mb-1 flex flex-row items-center", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(
-                import_react30.Link,
+          comments.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "max-h-1/2 overflow-auto", children: comments.map(({ createdByUser, createdAt, text }, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "mb-2", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "text-gray-500 text-sm mb-1 flex flex-row items-center", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
+                import_react34.Link,
                 {
                   to: `/users/${createdByUser == null ? void 0 : createdByUser.id}`,
                   className: "mr-1 flex flex-row items-center",
-                  children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("span", { children: createdByUser == null ? void 0 : createdByUser.username }, void 0, !1, {
+                  children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("span", { children: createdByUser == null ? void 0 : createdByUser.username }, void 0, !1, {
                     fileName: "app/components/ViewCommentsButton.tsx",
                     lineNumber: 81,
                     columnNumber: 11
@@ -2736,7 +2900,7 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
               lineNumber: 76,
               columnNumber: 9
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "text-sm whitespace-pre-line text-gray-900", children: text }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "text-sm whitespace-pre-line text-gray-900", children: text }, void 0, !1, {
               fileName: "app/components/ViewCommentsButton.tsx",
               lineNumber: 85,
               columnNumber: 9
@@ -2750,7 +2914,7 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
             lineNumber: 73,
             columnNumber: 6
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)("div", { className: "mt-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime23.jsxDEV)(CreateCommentForm_default, { parentAudioItem: audioItem }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "mt-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(CreateCommentForm_default, { parentAudioItem: audioItem }, void 0, !1, {
             fileName: "app/components/ViewCommentsButton.tsx",
             lineNumber: 94,
             columnNumber: 6
@@ -2778,14 +2942,14 @@ var import_jsx_dev_runtime23 = require("react/jsx-dev-runtime"), ViewCommentsBut
 }, ViewCommentsButton_default = ViewCommentsButton;
 
 // app/components/TimeMarkers.tsx
-var import_react31 = require("react"), import_react32 = require("@remix-run/react");
-var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = ({ audioItem }) => {
+var import_react35 = require("react"), import_react36 = require("@remix-run/react");
+var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), TimeMarkers = ({ audioItem }) => {
   let { tagsAsSubject } = audioItem, {
     activeAudioItem,
     setActiveAudioItem,
     playbackPositionSeconds,
     setSeekPositionSeconds
-  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react31.useMemo)(() => {
+  } = usePlayerContext_default(), timeMarkersWithTags = (0, import_react35.useMemo)(() => {
     let output = {};
     if (!tagsAsSubject)
       return output;
@@ -2800,7 +2964,7 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
       let existingTagsAtTimeMarker = output[tag.subjectTimeMarkerSeconds] ?? [];
       output[tag.subjectTimeMarkerSeconds] = [...existingTagsAtTimeMarker, tag];
     }), output;
-  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react31.useCallback)(
+  }, [tagsAsSubject]), onTimeMarkerClicked = (0, import_react35.useCallback)(
     (event, timeMarker) => {
       if (event.target.id === "time-marker-tag-link") {
         event.stopPropagation();
@@ -2809,7 +2973,7 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
       (activeAudioItem == null ? void 0 : activeAudioItem.id) !== audioItem.id && setActiveAudioItem(audioItem), setSeekPositionSeconds(parseInt(timeMarker));
     },
     [audioItem, activeAudioItem, setActiveAudioItem, setSeekPositionSeconds]
-  ), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react31.useMemo)(() => {
+  ), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, activeTimeMarker = (0, import_react35.useMemo)(() => {
     if (!audioItemIsInPlayer)
       return;
     let result;
@@ -2817,19 +2981,19 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
       parseInt(timeMarker) <= (playbackPositionSeconds ?? 0) && (result = timeMarker);
     }), result;
   }, [audioItemIsInPlayer, timeMarkersWithTags, playbackPositionSeconds]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("div", { className: "flex flex-col", children: Object.entries(timeMarkersWithTags).map(
-    ([timeMarker, tagsAsSubjectAtTimeMarker], index) => /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-col", children: Object.entries(timeMarkersWithTags).map(
+    ([timeMarker, tagsAsSubjectAtTimeMarker], index) => /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
       "div",
       {
         className: "flex flex-row items-start md:items-center justify-start mb-2 last:mb-1 text-sm",
         children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("div", { className: "flex flex-row w-16 flex-shrink-0", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("div", { className: "w-3 text-left", children: activeTimeMarker === timeMarker && ">" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-row w-16 flex-shrink-0", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "w-3 text-left", children: activeTimeMarker === timeMarker && ">" }, void 0, !1, {
               fileName: "app/components/TimeMarkers.tsx",
               lineNumber: 93,
               columnNumber: 9
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
               "button",
               {
                 className: "link",
@@ -2850,11 +3014,11 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
             lineNumber: 92,
             columnNumber: 8
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("div", { className: "flex flex-col md:flex-row", children: tagsAsSubjectAtTimeMarker.map((tag, index2) => {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-col md:flex-row", children: tagsAsSubjectAtTimeMarker.map((tag, index2) => {
             let objectEntity = Tag_default.getObjectEntity(tag);
-            return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("span", { className: "flex flex-row items-center", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)(
-                import_react32.Link,
+            return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("span", { className: "flex flex-row items-center", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+                import_react36.Link,
                 {
                   to: Entity_default.makeHrefForView(objectEntity),
                   id: "time-marker-tag-link",
@@ -2872,7 +3036,7 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
                 },
                 this
               ),
-              index2 !== tagsAsSubjectAtTimeMarker.length - 1 && /* @__PURE__ */ (0, import_jsx_dev_runtime24.jsxDEV)("span", { className: "hidden md:block mr-1", children: "," }, void 0, !1, {
+              index2 !== tagsAsSubjectAtTimeMarker.length - 1 && /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("span", { className: "hidden md:block mr-1", children: "," }, void 0, !1, {
                 fileName: "app/components/TimeMarkers.tsx",
                 lineNumber: 119,
                 columnNumber: 13
@@ -2906,7 +3070,7 @@ var import_jsx_dev_runtime24 = require("react/jsx-dev-runtime"), TimeMarkers = (
 }, TimeMarkers_default = TimeMarkers;
 
 // app/components/AudioItemCard.tsx
-var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
+var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), AudioItemCard = ({ audioItem, showTitle = !0, className }) => {
   let {
     name,
     slug,
@@ -2920,20 +3084,20 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
     setActiveAudioItem,
     activeItemDurationSeconds,
     playbackPositionSeconds
-  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react33.useMemo)(() => Array.isArray(tags) ? tags.filter(
+  } = usePlayerContext_default(), audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id, tagsWithTimeMarkers = (0, import_react37.useMemo)(() => Array.isArray(tags) ? tags.filter(
     (tag) => typeof tag.subjectTimeMarkerSeconds == "number"
-  ) : [], [tags]), onPlayPressed = (0, import_react33.useCallback)(() => {
+  ) : [], [tags]), onPlayPressed = (0, import_react37.useCallback)(() => {
     setActiveAudioItem(audioItem);
   }, [audioItem, setActiveAudioItem]), shouldShowPositionAndDuration = audioItemIsInPlayer && typeof playbackPositionSeconds == "number" && typeof activeItemDurationSeconds == "number", positionAndDuration = `${DateTime_default.formatSecondsAsDuration(
     playbackPositionSeconds ?? 0
   )} / ${DateTime_default.formatSecondsAsDuration(activeItemDurationSeconds ?? 0)}`, isTakenDown = status === "TAKEN_DOWN";
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
     "div",
     {
       className: `flex flex-col justify-start items-start bg-white shadow-md rounded p-4 pb-3 ${className ?? ""}`,
       children: [
-        showTitle && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("h2", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-          import_react34.Link,
+        showTitle && /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("h2", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
+          import_react38.Link,
           {
             to: `/entities/audio-items/${slug}`,
             className: "no-underline text-gray-700",
@@ -2952,7 +3116,7 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
           lineNumber: 68,
           columnNumber: 5
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "mb-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(Tags_default, { audioItem }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "mb-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(Tags_default, { audioItem }, void 0, !1, {
           fileName: "app/components/AudioItemCard.tsx",
           lineNumber: 79,
           columnNumber: 5
@@ -2961,23 +3125,23 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
           lineNumber: 78,
           columnNumber: 4
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "flex flex-col w-full border border-gray-200 rounded mb-2", children: [
-          isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "flex flex-row items-center px-4 py-6 text-gray-500", children: "This Audio Item has been removed via an approved Takedown Request" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-col w-full border border-gray-200 rounded mb-2", children: [
+          isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-row items-center px-4 py-6 text-gray-500", children: "This Audio Item has been removed via an approved Takedown Request" }, void 0, !1, {
             fileName: "app/components/AudioItemCard.tsx",
             lineNumber: 84,
             columnNumber: 6
-          }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(import_jsx_dev_runtime25.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "flex flex-row justify-start items-center pr-4 h-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "flex flex-1", children: [
-            audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "pl-4 text-gray-500", children: "Playing" }, void 0, !1, {
+          }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_jsx_dev_runtime27.Fragment, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-row justify-start items-center pr-4 h-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-1", children: [
+            audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "pl-4 text-gray-500", children: "Playing" }, void 0, !1, {
               fileName: "app/components/AudioItemCard.tsx",
               lineNumber: 92,
               columnNumber: 10
-            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
+            }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
               "button",
               {
                 style: { lineHeight: 0 },
                 onClick: onPlayPressed,
                 "aria-label": "Play",
-                children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("span", { className: "text-6xl", children: "play_arrow" }, void 0, !1, {
+                children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("span", { className: "text-6xl", children: "play_arrow" }, void 0, !1, {
                   fileName: "app/components/AudioItemCard.tsx",
                   lineNumber: 100,
                   columnNumber: 12
@@ -2996,7 +3160,7 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
               },
               this
             ),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
               "div",
               {
                 className: `ml-4 text-gray-500 opacity-0 ${shouldShowPositionAndDuration ? "opacity-100 transition-opacity delay-500 duration-400" : ""}`,
@@ -3024,7 +3188,7 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
             lineNumber: 88,
             columnNumber: 6
           }, this),
-          tagsWithTimeMarkers.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "mx-4 mb-2 pt-3 border-t border-gray-200", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(TimeMarkers_default, { audioItem }, void 0, !1, {
+          tagsWithTimeMarkers.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "mx-4 mb-2 pt-3 border-t border-gray-200", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(TimeMarkers_default, { audioItem }, void 0, !1, {
             fileName: "app/components/AudioItemCard.tsx",
             lineNumber: 120,
             columnNumber: 7
@@ -3038,15 +3202,15 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
           lineNumber: 82,
           columnNumber: 4
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "mt-4", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "text-gray-500 text-sm flex flex-row", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "mt-4", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "text-gray-500 text-sm flex flex-row", children: [
             "Added",
-            createdByUser && /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(import_jsx_dev_runtime25.Fragment, { children: [
+            createdByUser && /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_jsx_dev_runtime27.Fragment, { children: [
               " ",
               "by",
               " ",
-              /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-                import_react34.Link,
+              /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
+                import_react38.Link,
                 {
                   to: `/users/${createdByUser.id}`,
                   className: "flex flex-row px-0 sm:px-1",
@@ -3073,7 +3237,7 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
             lineNumber: 126,
             columnNumber: 5
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "text-sm mt-1 text-gray-900 whitespace-pre-wrap", children: description || "No description" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "text-sm mt-1 text-gray-900 whitespace-pre-wrap", children: description || "No description" }, void 0, !1, {
             fileName: "app/components/AudioItemCard.tsx",
             lineNumber: 142,
             columnNumber: 5
@@ -3083,13 +3247,13 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
           lineNumber: 125,
           columnNumber: 4
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "flex flex-row items-center", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(ViewCommentsButton_default, { audioItem }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "border-t border-gray-200 mt-4 pt-3 w-full flex flex-row justify-between items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-row items-center", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(ViewCommentsButton_default, { audioItem }, void 0, !1, {
             fileName: "app/components/AudioItemCard.tsx",
             lineNumber: 149,
             columnNumber: 6
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)("div", { className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(SaveItemButton, { audioItem }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(SaveItemButton, { audioItem }, void 0, !1, {
             fileName: "app/components/AudioItemCard.tsx",
             lineNumber: 152,
             columnNumber: 7
@@ -3121,30 +3285,30 @@ var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime"), AudioItemCard =
 }, AudioItemCard_default = AudioItemCard;
 
 // app/components/AudioItemCompact.tsx
-var import_react35 = require("react"), import_react36 = require("@remix-run/react");
-var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), AudioItemCompact = ({ audioItem, className }) => {
-  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react35.useMemo)(
+var import_react39 = require("react"), import_react40 = require("@remix-run/react");
+var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime"), AudioItemCompact = ({ audioItem, className }) => {
+  let { name, slug, description, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react39.useMemo)(
     () => Tag_default.sort(tagsAsSubject),
     [tagsAsSubject]
-  ), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react35.useCallback)(() => {
+  ), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react39.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react35.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react39.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
-    return isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "text-gray-500", children: "Taken Down" }, void 0, !1, {
+    return isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "text-gray-500", children: "Taken Down" }, void 0, !1, {
       fileName: "app/components/AudioItemCompact.tsx",
       lineNumber: 38,
       columnNumber: 11
-    }, this) : audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "text-gray-500", children: "Playing" }, void 0, !1, {
+    }, this) : audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "text-gray-500", children: "Playing" }, void 0, !1, {
       fileName: "app/components/AudioItemCompact.tsx",
       lineNumber: 41,
       columnNumber: 11
-    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
       "button",
       {
         style: { lineHeight: 0 },
         onClick: onPlayPressed,
         "aria-label": "Play",
-        children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("span", { className: "text-6xl", children: "play_arrow" }, void 0, !1, {
+        children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("span", { className: "text-6xl", children: "play_arrow" }, void 0, !1, {
           fileName: "app/components/AudioItemCompact.tsx",
           lineNumber: 50,
           columnNumber: 6
@@ -3164,28 +3328,28 @@ var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), AudioItemCompac
       this
     );
   }, [isTakenDown, activeAudioItem, audioItem, onPlayPressed]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
     "div",
     {
       className: `flex flex-row justify-start items-start bg-white shadow-md rounded pt-2 px-3 pb-1 ${className ?? ""}`,
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex justify-center items-center w-14 mr-3", children: playButtonMarkup }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex justify-center items-center w-14 mr-3", children: playButtonMarkup }, void 0, !1, {
           fileName: "app/components/AudioItemCompact.tsx",
           lineNumber: 62,
           columnNumber: 4
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-1 flex-col overflow-hidden", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(import_react36.Link, { to: `/entities/audio-items/${slug}`, children: name }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex flex-1 flex-col overflow-hidden", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(import_react40.Link, { to: `/entities/audio-items/${slug}`, children: name }, void 0, !1, {
             fileName: "app/components/AudioItemCompact.tsx",
             lineNumber: 67,
             columnNumber: 5
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-row flex-wrap text-sm mt-1 mb-1", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex flex-row flex-wrap text-sm mt-1 mb-1", children: [
             "Tags:",
             sortedTags.map((tag, index) => {
               let objectEntity = Tag_default.getObjectEntity(tag);
-              return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "ml-1 whitespace-pre", children: [
-                /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(import_react36.Link, { to: Entity_default.makeHrefForView(objectEntity), children: [
+              return objectEntity ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "ml-1 whitespace-pre", children: [
+                /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(import_react40.Link, { to: Entity_default.makeHrefForView(objectEntity), children: [
                   objectEntity.name,
                   objectEntity.entityType === "Tune" /* Tune */ ? ` (${objectEntity.type})` : ""
                 ] }, void 0, !0, {
@@ -3200,18 +3364,18 @@ var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), AudioItemCompac
                 columnNumber: 8
               }, this) : null;
             }),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(AddTagButton_default, { entity: audioItem, className: "ml-2" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(AddTagButton_default, { entity: audioItem, className: "ml-2" }, void 0, !1, {
               fileName: "app/components/AudioItemCompact.tsx",
               lineNumber: 88,
               columnNumber: 6
             }, this),
-            (tagsAsSubject == null ? void 0 : tagsAsSubject.length) > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex ml-1", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("span", { className: "text-gray-500 mr-1", children: "/" }, void 0, !1, {
+            (tagsAsSubject == null ? void 0 : tagsAsSubject.length) > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex ml-1", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("span", { className: "text-gray-500 mr-1", children: "/" }, void 0, !1, {
                 fileName: "app/components/AudioItemCompact.tsx",
                 lineNumber: 91,
                 columnNumber: 8
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(EditTagsButton_default, { tags: audioItem.tagsAsSubject }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(EditTagsButton_default, { tags: audioItem.tagsAsSubject }, void 0, !1, {
                 fileName: "app/components/AudioItemCompact.tsx",
                 lineNumber: 92,
                 columnNumber: 8
@@ -3226,18 +3390,18 @@ var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), AudioItemCompac
             lineNumber: 69,
             columnNumber: 5
           }, this),
-          description && /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "text-gray-500 text-sm", children: description }, void 0, !1, {
+          description && /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "text-gray-500 text-sm", children: description }, void 0, !1, {
             fileName: "app/components/AudioItemCompact.tsx",
             lineNumber: 98,
             columnNumber: 6
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "border-t border-gray-200 mt-2 pt-1 w-full flex flex-row justify-between items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "flex flex-row items-center", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(ViewCommentsButton_default, { audioItem }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "border-t border-gray-200 mt-2 pt-1 w-full flex flex-row justify-between items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "flex flex-row items-center", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(ViewCommentsButton_default, { audioItem }, void 0, !1, {
               fileName: "app/components/AudioItemCompact.tsx",
               lineNumber: 103,
               columnNumber: 7
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)("div", { className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime26.jsxDEV)(SaveItemButton, { audioItem }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("div", { className: "ml-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(SaveItemButton, { audioItem }, void 0, !1, {
               fileName: "app/components/AudioItemCompact.tsx",
               lineNumber: 106,
               columnNumber: 8
@@ -3274,30 +3438,30 @@ var import_jsx_dev_runtime26 = require("react/jsx-dev-runtime"), AudioItemCompac
 }, AudioItemCompact_default = AudioItemCompact;
 
 // app/components/AudioItemTextOnly.tsx
-var import_react37 = require("react"), import_react38 = require("@remix-run/react");
-var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), AudioItemTextOnly = ({ audioItem, className }) => {
-  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react37.useMemo)(
+var import_react41 = require("react"), import_react42 = require("@remix-run/react");
+var import_jsx_dev_runtime29 = require("react/jsx-dev-runtime"), AudioItemTextOnly = ({ audioItem, className }) => {
+  let { name, slug, tagsAsSubject, status } = audioItem, isTakenDown = status === "TAKEN_DOWN" /* TakenDown */, sortedTags = (0, import_react41.useMemo)(
     () => Tag_default.sort(tagsAsSubject),
     [tagsAsSubject]
-  ), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react37.useCallback)(() => {
+  ), { activeAudioItem, setActiveAudioItem } = usePlayerContext_default(), onPlayPressed = (0, import_react41.useCallback)(() => {
     setActiveAudioItem(audioItem);
-  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react37.useMemo)(() => {
+  }, [audioItem, setActiveAudioItem]), playButtonMarkup = (0, import_react41.useMemo)(() => {
     let audioItemIsInPlayer = (activeAudioItem == null ? void 0 : activeAudioItem.id) === audioItem.id;
-    return isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "text-gray-500", children: "Taken Down" }, void 0, !1, {
+    return isTakenDown ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "text-gray-500", children: "Taken Down" }, void 0, !1, {
       fileName: "app/components/AudioItemTextOnly.tsx",
       lineNumber: 31,
       columnNumber: 11
-    }, this) : audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "text-gray-500", children: "Playing" }, void 0, !1, {
+    }, this) : audioItemIsInPlayer ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "text-gray-500", children: "Playing" }, void 0, !1, {
       fileName: "app/components/AudioItemTextOnly.tsx",
       lineNumber: 34,
       columnNumber: 11
-    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
+    }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
       "button",
       {
         style: { lineHeight: 0 },
         onClick: onPlayPressed,
         "aria-label": "Play",
-        children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("span", { className: "text-3xl", children: "play_arrow" }, void 0, !1, {
+        children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("i", { className: "material-icons text-teal-600 hover:text-teal-800", children: /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { className: "text-3xl", children: "play_arrow" }, void 0, !1, {
           fileName: "app/components/AudioItemTextOnly.tsx",
           lineNumber: 43,
           columnNumber: 6
@@ -3317,32 +3481,32 @@ var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), AudioItemTextOn
       this
     );
   }, [isTakenDown, activeAudioItem, audioItem, onPlayPressed]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(
     "div",
     {
       className: `flex flex-row justify-start items-start ${className ?? ""}`,
       children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex justify-center items-center w-14 mr-3", children: playButtonMarkup }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex justify-center items-center w-14 mr-3", children: playButtonMarkup }, void 0, !1, {
           fileName: "app/components/AudioItemTextOnly.tsx",
           lineNumber: 53,
           columnNumber: 4
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-1 flex-col overflow-hidden", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_react38.Link, { to: `/entities/audio-items/${slug}`, children: name }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex flex-1 flex-col overflow-hidden", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react42.Link, { to: `/entities/audio-items/${slug}`, children: name }, void 0, !1, {
             fileName: "app/components/AudioItemTextOnly.tsx",
             lineNumber: 58,
             columnNumber: 5
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "flex flex-row flex-wrap text-sm mt-1 mb-1", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("span", { className: "text-gray-500", children: "Tags:" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex flex-row flex-wrap text-sm mt-1 mb-1", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { className: "text-gray-500", children: "Tags:" }, void 0, !1, {
               fileName: "app/components/AudioItemTextOnly.tsx",
               lineNumber: 61,
               columnNumber: 6
             }, this),
             sortedTags.map((tag, index) => {
               let objectEntity = Tag_default.getObjectEntity(tag);
-              return /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)("div", { className: "ml-1 whitespace-pre", children: [
-                /* @__PURE__ */ (0, import_jsx_dev_runtime27.jsxDEV)(import_react38.Link, { to: Entity_default.makeHrefForView(objectEntity), children: objectEntity == null ? void 0 : objectEntity.name }, void 0, !1, {
+              return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "ml-1 whitespace-pre", children: [
+                /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react42.Link, { to: Entity_default.makeHrefForView(objectEntity), children: objectEntity == null ? void 0 : objectEntity.name }, void 0, !1, {
                   fileName: "app/components/AudioItemTextOnly.tsx",
                   lineNumber: 66,
                   columnNumber: 9
@@ -3378,12 +3542,12 @@ var import_jsx_dev_runtime27 = require("react/jsx-dev-runtime"), AudioItemTextOn
 }, AudioItemTextOnly_default = AudioItemTextOnly;
 
 // app/components/AudioItem.tsx
-var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime"), AudioItemComponent = ({
+var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime"), AudioItemComponent = ({
   viewAs,
   audioItem,
   showTitle,
   className
-}) => viewAs === "Cards" /* Cards */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
+}) => viewAs === "Cards" /* Cards */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
   AudioItemCard_default,
   {
     audioItem,
@@ -3398,39 +3562,39 @@ var import_jsx_dev_runtime28 = require("react/jsx-dev-runtime"), AudioItemCompon
     columnNumber: 4
   },
   this
-) : viewAs === "Compact" /* Compact */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(AudioItemCompact_default, { audioItem, className }, void 0, !1, {
+) : viewAs === "Compact" /* Compact */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(AudioItemCompact_default, { audioItem, className }, void 0, !1, {
   fileName: "app/components/AudioItem.tsx",
   lineNumber: 32,
   columnNumber: 10
-}, this) : viewAs === "List" /* List */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(AudioItemTextOnly_default, { audioItem, className }, void 0, !1, {
+}, this) : viewAs === "List" /* List */ ? /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(AudioItemTextOnly_default, { audioItem, className }, void 0, !1, {
   fileName: "app/components/AudioItem.tsx",
   lineNumber: 34,
   columnNumber: 10
 }, this) : null, AudioItem_default = AudioItemComponent;
 
 // app/components/Breadcrumb.tsx
-var import_react39 = require("@remix-run/react"), import_jsx_dev_runtime29 = require("react/jsx-dev-runtime"), Breadcrumb = ({ items = [], className }) => {
+var import_react43 = require("@remix-run/react"), import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Breadcrumb = ({ items = [], className }) => {
   if (items.length === 0)
     return null;
   if (items.length === 1)
-    return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("h1", { className: className ?? "", children: items[0].label }, void 0, !1, {
+    return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("h1", { className: className ?? "", children: items[0].label }, void 0, !1, {
       fileName: "app/components/Breadcrumb.tsx",
       lineNumber: 18,
       columnNumber: 10
     }, this);
   let subItems = items.slice(0, items.length - 1), finalItem = items[items.length - 1];
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: `flex flex-col ${className ?? ""}`, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex flex-row items-center mb-1", children: subItems.map(({ label, href }, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("div", { className: "flex", children: [
-      href ? /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)(import_react39.Link, { to: href, children: label }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: `flex flex-col ${className ?? ""}`, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex flex-row items-center mb-1", children: subItems.map(({ label, href }, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex", children: [
+      href ? /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(import_react43.Link, { to: href, children: label }, void 0, !1, {
         fileName: "app/components/Breadcrumb.tsx",
         lineNumber: 30,
         columnNumber: 8
-      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("span", { className: "text-gray-500", children: label }, void 0, !1, {
+      }, this) : /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("span", { className: "text-gray-500", children: label }, void 0, !1, {
         fileName: "app/components/Breadcrumb.tsx",
         lineNumber: 32,
         columnNumber: 8
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("i", { className: "material-icons text-gray-500 text-base ml-1", children: "keyboard_arrow_right" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("i", { className: "material-icons text-gray-500 text-base ml-1", children: "keyboard_arrow_right" }, void 0, !1, {
         fileName: "app/components/Breadcrumb.tsx",
         lineNumber: 34,
         columnNumber: 7
@@ -3444,7 +3608,7 @@ var import_react39 = require("@remix-run/react"), import_jsx_dev_runtime29 = req
       lineNumber: 26,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime29.jsxDEV)("h1", { children: finalItem.label }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("h1", { children: finalItem.label }, void 0, !1, {
       fileName: "app/components/Breadcrumb.tsx",
       lineNumber: 41,
       columnNumber: 4
@@ -3456,12 +3620,9 @@ var import_react39 = require("@remix-run/react"), import_jsx_dev_runtime29 = req
   }, this);
 }, Breadcrumb_default = Breadcrumb;
 
-// app/routes/entities/audio-items/$slug.tsx
-var import_jsx_dev_runtime30 = require("react/jsx-dev-runtime");
-async function loader3({
-  request,
-  params
-}) {
+// app/routes/entities.audio-items.$slug.tsx
+var import_jsx_dev_runtime32 = require("react/jsx-dev-runtime");
+async function loader5({ request, params }) {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { slug } = params, audioItem = await db.audioItem.findUnique({
     where: {
       slug
@@ -3505,9 +3666,9 @@ async function loader3({
   };
 }
 var ViewAudioItemBySlug = () => {
-  let { audioItem } = (0, import_react40.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+  let { audioItem } = (0, import_react44.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
       Breadcrumb_default,
       {
         items: [
@@ -3522,17 +3683,17 @@ var ViewAudioItemBySlug = () => {
       void 0,
       !1,
       {
-        fileName: "app/routes/entities/audio-items/$slug.tsx",
-        lineNumber: 75,
+        fileName: "app/routes/entities.audio-items.$slug.tsx",
+        lineNumber: 68,
         columnNumber: 5
       },
       this
     ) }, void 0, !1, {
-      fileName: "app/routes/entities/audio-items/$slug.tsx",
-      lineNumber: 74,
+      fileName: "app/routes/entities.audio-items.$slug.tsx",
+      lineNumber: 67,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
       AudioItem_default,
       {
         audioItem,
@@ -3542,13 +3703,13 @@ var ViewAudioItemBySlug = () => {
       void 0,
       !1,
       {
-        fileName: "app/routes/entities/audio-items/$slug.tsx",
-        lineNumber: 87,
+        fileName: "app/routes/entities.audio-items.$slug.tsx",
+        lineNumber: 80,
         columnNumber: 4
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)("div", { className: "mt-8 text-sm", children: /* @__PURE__ */ (0, import_jsx_dev_runtime30.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "mt-8 text-sm", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
       "a",
       {
         href: `https://itma-atom.arkivum.net/index.php/${audioItem.itmaAtomSlug}`,
@@ -3559,52 +3720,40 @@ var ViewAudioItemBySlug = () => {
       void 0,
       !1,
       {
-        fileName: "app/routes/entities/audio-items/$slug.tsx",
-        lineNumber: 94,
+        fileName: "app/routes/entities.audio-items.$slug.tsx",
+        lineNumber: 87,
         columnNumber: 5
       },
       this
     ) }, void 0, !1, {
-      fileName: "app/routes/entities/audio-items/$slug.tsx",
-      lineNumber: 93,
+      fileName: "app/routes/entities.audio-items.$slug.tsx",
+      lineNumber: 86,
       columnNumber: 4
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/routes/entities/audio-items/$slug.tsx",
-    lineNumber: 73,
+    fileName: "app/routes/entities.audio-items.$slug.tsx",
+    lineNumber: 66,
     columnNumber: 3
   }, this);
-}, slug_default = ViewAudioItemBySlug;
+}, entities_audio_items_slug_default = ViewAudioItemBySlug;
 
-// app/routes/entities/audio-items/index.tsx
-var audio_items_exports = {};
-__export(audio_items_exports, {
-  default: () => audio_items_default
+// app/routes/entities.collections.$slug.tsx
+var entities_collections_slug_exports = {};
+__export(entities_collections_slug_exports, {
+  default: () => entities_collections_slug_default,
+  loader: () => loader6
 });
-var import_react41 = require("react"), import_react42 = require("@remix-run/react"), ViewAudioItems = () => {
-  let navigate = (0, import_react42.useNavigate)();
-  return (0, import_react41.useEffect)(() => {
-    navigate("/");
-  }, [navigate]), null;
-}, audio_items_default = ViewAudioItems;
-
-// app/routes/entities/collections/$slug.tsx
-var slug_exports2 = {};
-__export(slug_exports2, {
-  default: () => slug_default2,
-  loader: () => loader4
-});
-var import_react47 = require("@remix-run/react");
+var import_react49 = require("@remix-run/react");
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_react46 = require("@remix-run/react");
+var import_react48 = require("@remix-run/react");
 
 // app/hooks/useFilters.ts
-var import_react44 = require("react"), import_react45 = require("@remix-run/react");
+var import_react46 = require("react"), import_react47 = require("@remix-run/react");
 
 // app/components/Filters.tsx
-var import_react43 = require("react");
-var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
+var import_react45 = require("react");
+var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime"), Filters = ({
   totalItems,
   page,
   onChangePage,
@@ -3617,22 +3766,22 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
   onChangeViewAs,
   className
 }) => {
-  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortByOptions.length > 0 && sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react43.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react43.useMemo)(() => {
+  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortByOptions.length > 0 && sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react45.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react45.useMemo)(() => {
     let output = [], i = 1;
     for (; i <= totalPages; )
       output.push(
-        /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: i, children: i }, i, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: i, children: i }, i, !1, {
           fileName: "app/components/Filters.tsx",
           lineNumber: 57,
           columnNumber: 5
         }, this)
       ), i++;
     return output;
-  }, [totalPages]), perPageOptions = (0, import_react43.useMemo)(() => {
+  }, [totalPages]), perPageOptions = (0, import_react45.useMemo)(() => {
     let output = [];
     for (let value in PerPage)
       isNaN(Number(value)) || output.push(
-        /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value, children: value }, value, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value, children: value }, value, !1, {
           fileName: "app/components/Filters.tsx",
           lineNumber: 73,
           columnNumber: 5
@@ -3640,13 +3789,13 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
       );
     return output;
   }, []);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
     "div",
     {
       className: `flex flex-col md:flex-row flex-wrap justify-start items-start md:items-center text-gray-500 space-y-4 space-x-0 md:space-y-0 md:space-x-5 ${className ?? ""}`,
       children: [
-        shouldRenderPagination && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex flex-row items-center space-x-5", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { children: [
+        shouldRenderPagination && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { className: "flex flex-row items-center space-x-5", children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { children: [
             totalItems.toLocaleString(),
             " Item",
             totalItems === 1 ? "" : "s"
@@ -3655,10 +3804,10 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
             lineNumber: 89,
             columnNumber: 6
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { children: [
             "Page",
             " ",
-            /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("select", { value: page, onChange: onChangePage, children: pageSelectOptions }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("select", { value: page, onChange: onChangePage, children: pageSelectOptions }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 94,
               columnNumber: 7
@@ -3669,8 +3818,8 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
             lineNumber: 92,
             columnNumber: 6
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("select", { value: perPage, onChange: onChangePerPage, children: perPageOptions }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("select", { value: perPage, onChange: onChangePerPage, children: perPageOptions }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 100,
               columnNumber: 7
@@ -3687,20 +3836,20 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
           lineNumber: 88,
           columnNumber: 5
         }, this),
-        shouldRenderSortBy && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "flex flex-row items-center", children: [
+        shouldRenderSortBy && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { className: "flex flex-row items-center", children: [
           "Sort by",
-          /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("select", { className: "ml-1", value: sortBy, onChange: onChangeSortBy, children: [
-            sortByOptions.includes("RecentlyTagged" /* RecentlyTagged */) && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "RecentlyTagged" /* RecentlyTagged */, children: "Recently Tagged" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("select", { className: "ml-1", value: sortBy, onChange: onChangeSortBy, children: [
+            sortByOptions.includes("RecentlyTagged" /* RecentlyTagged */) && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "RecentlyTagged" /* RecentlyTagged */, children: "Recently Tagged" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 113,
               columnNumber: 8
             }, this),
-            sortByOptions.includes("DateAddedOldToNew" /* DateAddedOldToNew */) && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "DateAddedOldToNew" /* DateAddedOldToNew */, children: "Date Added (Old to New)" }, void 0, !1, {
+            sortByOptions.includes("DateAddedOldToNew" /* DateAddedOldToNew */) && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "DateAddedOldToNew" /* DateAddedOldToNew */, children: "Date Added (Old to New)" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 116,
               columnNumber: 8
             }, this),
-            sortByOptions.includes("DateSavedOldToNew" /* DateSavedOldToNew */) && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "DateSavedOldToNew" /* DateSavedOldToNew */, children: "Date Saved (Old to New)" }, void 0, !1, {
+            sortByOptions.includes("DateSavedOldToNew" /* DateSavedOldToNew */) && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "DateSavedOldToNew" /* DateSavedOldToNew */, children: "Date Saved (Old to New)" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 121,
               columnNumber: 8
@@ -3715,20 +3864,20 @@ var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime"), Filters = ({
           lineNumber: 109,
           columnNumber: 5
         }, this),
-        shouldRenderViewAs && /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("div", { className: "hidden md:flex flex-row items-center", children: [
+        shouldRenderViewAs && /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("div", { className: "hidden md:flex flex-row items-center", children: [
           "View as",
-          /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("select", { className: "ml-1", value: viewAs, onChange: onChangeViewAs, children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "Cards" /* Cards */, children: "Cards" }, void 0, !1, {
+          /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("select", { className: "ml-1", value: viewAs, onChange: onChangeViewAs, children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "Cards" /* Cards */, children: "Cards" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 133,
               columnNumber: 7
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "Compact" /* Compact */, children: "Compact" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "Compact" /* Compact */, children: "Compact" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 134,
               columnNumber: 7
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime31.jsxDEV)("option", { value: "List" /* List */, children: "List" }, void 0, !1, {
+            /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)("option", { value: "List" /* List */, children: "List" }, void 0, !1, {
               fileName: "app/components/Filters.tsx",
               lineNumber: 135,
               columnNumber: 7
@@ -3764,7 +3913,7 @@ var useFilters = ({
   defaultSortBy = "DateAddedOldToNew" /* DateAddedOldToNew */,
   defaultViewAs = "Cards" /* Cards */
 } = {}) => {
-  let navigate = (0, import_react45.useNavigate)(), { pathname, search } = (0, import_react45.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react44.useCallback)(
+  let navigate = (0, import_react47.useNavigate)(), { pathname, search } = (0, import_react47.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react46.useCallback)(
     (paramsToUpdate = {}) => {
       let queryParams2 = new URLSearchParams(search);
       return Object.keys(paramsToUpdate).forEach((paramName) => {
@@ -3773,20 +3922,20 @@ var useFilters = ({
       }), navigate(`${pathname}?${queryParams2.toString()}`);
     },
     [navigate, pathname, search]
-  ), onChangePage = (0, import_react44.useCallback)(
+  ), onChangePage = (0, import_react46.useCallback)(
     (event) => updateQueryParams({ page: event.target.value }),
     [updateQueryParams]
-  ), onChangePerPage = (0, import_react44.useCallback)(
+  ), onChangePerPage = (0, import_react46.useCallback)(
     (event) => updateQueryParams({ perPage: event.target.value, page: "1" }),
     [updateQueryParams]
-  ), onChangeSortBy = (0, import_react44.useCallback)(
+  ), onChangeSortBy = (0, import_react46.useCallback)(
     (event) => updateQueryParams({ sortBy: event.target.value }),
     [updateQueryParams]
-  ), onChangeViewAs = (0, import_react44.useCallback)(
+  ), onChangeViewAs = (0, import_react46.useCallback)(
     (event) => updateQueryParams({ viewAs: event.target.value }),
     [updateQueryParams]
   );
-  return (0, import_react44.useMemo)(
+  return (0, import_react46.useMemo)(
     () => ({
       Filters: Filters_default,
       filtersProps: {
@@ -3820,17 +3969,17 @@ var useFilters = ({
 }, useFilters_default = useFilters;
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = require("react/jsx-dev-runtime"), ViewEntityAndAudioItems = ({
+var import_client7 = require("@prisma/client"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime"), ViewEntityAndAudioItems = ({
   entity,
   audioItems,
   totalAudioItems,
   className
 }) => {
-  let { name } = entity ?? {}, { search } = (0, import_react46.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { name } = entity ?? {}, { search } = (0, import_react48.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalAudioItems
   });
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: `flex flex-1 flex-col ${className ?? ""}`, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: `flex flex-1 flex-col ${className ?? ""}`, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
       Breadcrumb_default,
       {
         items: [
@@ -3851,13 +4000,13 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "text-gray-500 text-sm flex-col space-y-2", children: [
-      entity.description && /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: entity.description }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: "text-gray-500 text-sm flex-col space-y-2", children: [
+      entity.description && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: entity.description }, void 0, !1, {
         fileName: "app/components/ViewEntityAndAudioItems.tsx",
         lineNumber: 50,
         columnNumber: 28
       }, this),
-      entity.aliases && /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
+      entity.aliases && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: [
         "Also known as: ",
         entity.aliases
       ] }, void 0, !0, {
@@ -3865,8 +4014,8 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
         lineNumber: 51,
         columnNumber: 24
       }, this),
-      entity.entityType === import_client7.EntityType.Tune && /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_jsx_dev_runtime32.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
+      entity.entityType === import_client7.EntityType.Tune && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: [
           "Type: ",
           entity.type
         ] }, void 0, !0, {
@@ -3874,7 +4023,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
           lineNumber: 54,
           columnNumber: 7
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: [
           "Meter: ",
           entity.meter
         ] }, void 0, !0, {
@@ -3882,7 +4031,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
           lineNumber: 55,
           columnNumber: 7
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: [
           "Mode: ",
           entity.mode
         ] }, void 0, !0, {
@@ -3890,7 +4039,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
           lineNumber: 56,
           columnNumber: 7
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: [
           "ABC: ",
           entity.abc
         ] }, void 0, !0, {
@@ -3898,7 +4047,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
           lineNumber: 57,
           columnNumber: 7
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
           "a",
           {
             href: `https://thesession.org/tunes/${entity.theSessionTuneId}`,
@@ -3929,8 +4078,8 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
       lineNumber: 49,
       columnNumber: 4
     }, this),
-    totalAudioItems > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(import_jsx_dev_runtime32.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px]", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+    totalAudioItems > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_jsx_dev_runtime34.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: "sticky py-3 px-2 mt-4 -ml-2 -mr-2 mb-2 bg-gray-100 top-[48px]", children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
         Filters2,
         {
           ...filtersProps,
@@ -3950,7 +4099,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
         lineNumber: 75,
         columnNumber: 6
       }, this),
-      audioItems.map((audioItem, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
+      audioItems.map((audioItem, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(
         AudioItem_default,
         {
           viewAs: viewAs ?? "Cards" /* Cards */,
@@ -3978,12 +4127,9 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime32 = requi
   }, this);
 }, ViewEntityAndAudioItems_default = ViewEntityAndAudioItems;
 
-// app/routes/entities/collections/$slug.tsx
-var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
-async function loader4({
-  params,
-  request
-}) {
+// app/routes/entities.collections.$slug.tsx
+var import_jsx_dev_runtime35 = require("react/jsx-dev-runtime");
+async function loader6({ params, request }) {
   let { slug } = params, collection = await db.collection.findUnique({
     where: {
       slug
@@ -4052,8 +4198,8 @@ async function loader4({
   };
 }
 var ViewCollectionBySlug = () => {
-  let { collection, audioItems, totalAudioItems } = (0, import_react47.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime33.jsxDEV)(
+  let { collection, audioItems, totalAudioItems } = (0, import_react49.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
       entity: collection,
@@ -4063,83 +4209,27 @@ var ViewCollectionBySlug = () => {
     void 0,
     !1,
     {
-      fileName: "app/routes/entities/collections/$slug.tsx",
-      lineNumber: 110,
+      fileName: "app/routes/entities.collections.$slug.tsx",
+      lineNumber: 101,
       columnNumber: 4
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/routes/entities/collections/$slug.tsx",
-    lineNumber: 109,
+    fileName: "app/routes/entities.collections.$slug.tsx",
+    lineNumber: 100,
     columnNumber: 3
   }, this);
-}, slug_default2 = ViewCollectionBySlug;
+}, entities_collections_slug_default = ViewCollectionBySlug;
 
-// app/routes/entities/collections/index.tsx
-var collections_exports = {};
-__export(collections_exports, {
-  default: () => collections_default,
-  loader: () => loader5,
-  meta: () => meta2
+// app/routes/entities.instruments.$slug.tsx
+var entities_instruments_slug_exports = {};
+__export(entities_instruments_slug_exports, {
+  default: () => entities_instruments_slug_default,
+  loader: () => loader7
 });
-var import_react48 = require("@remix-run/react");
-var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
-function meta2() {
-  return [
-    {
-      title: "Trad Archive - Collections"
-    }
-  ];
-}
-function loader5() {
-  return db.collection.findMany({
-    orderBy: {
-      name: "asc"
-    }
-  });
-}
-var Collections = () => {
-  let collections = (0, import_react48.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("h1", { className: "mb-6", children: "Collections" }, void 0, !1, {
-      fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 30,
-      columnNumber: 4
-    }, this),
-    collections.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: "text-gray-500", children: "No Collections found" }, void 0, !1, {
-      fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 32,
-      columnNumber: 5
-    }, this),
-    collections.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("ul", { children: collections.map((collection, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_react48.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
-      fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 38,
-      columnNumber: 8
-    }, this) }, index, !1, {
-      fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 37,
-      columnNumber: 7
-    }, this)) }, void 0, !1, {
-      fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 35,
-      columnNumber: 5
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/entities/collections/index.tsx",
-    lineNumber: 29,
-    columnNumber: 3
-  }, this);
-}, collections_default = Collections;
-
-// app/routes/entities/instruments/$slug.tsx
-var slug_exports3 = {};
-__export(slug_exports3, {
-  default: () => slug_default3,
-  loader: () => loader6
-});
-var import_react49 = require("@remix-run/react");
-var import_jsx_dev_runtime35 = require("react/jsx-dev-runtime");
-async function loader6({
+var import_react50 = require("@remix-run/react");
+var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
+async function loader7({
   params,
   request
 }) {
@@ -4211,8 +4301,8 @@ async function loader6({
   };
 }
 var ViewInstrumentBySlug = () => {
-  let { instrument, audioItems, totalAudioItems } = (0, import_react49.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
+  let { instrument, audioItems, totalAudioItems } = (0, import_react50.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
       entity: instrument,
@@ -4222,64 +4312,65 @@ var ViewInstrumentBySlug = () => {
     void 0,
     !1,
     {
-      fileName: "app/routes/entities/instruments/$slug.tsx",
+      fileName: "app/routes/entities.instruments.$slug.tsx",
       lineNumber: 111,
       columnNumber: 4
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/routes/entities/instruments/$slug.tsx",
+    fileName: "app/routes/entities.instruments.$slug.tsx",
     lineNumber: 110,
     columnNumber: 3
   }, this);
-}, slug_default3 = ViewInstrumentBySlug;
+}, entities_instruments_slug_default = ViewInstrumentBySlug;
 
-// app/routes/entities/instruments/index.tsx
-var instruments_exports = {};
-__export(instruments_exports, {
-  action: () => action,
-  default: () => instruments_default,
-  loader: () => loader7,
-  meta: () => meta3
+// app/routes/entities.people._index.tsx
+var entities_people_index_exports = {};
+__export(entities_people_index_exports, {
+  action: () => action2,
+  default: () => entities_people_index_default,
+  loader: () => loader8,
+  meta: () => meta4
 });
-var import_react50 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
-var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
-function meta3() {
+var import_react51 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime");
+function meta4() {
   return [
     {
-      title: "Trad Archive - Instruments"
+      title: "Trad Archive - People"
     }
   ];
 }
-function loader7() {
-  return db.instrument.findMany({
+function loader8() {
+  return db.person.findMany({
     orderBy: {
       name: "asc"
     }
   });
 }
-var action = async ({ request }) => {
+var action2 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
     referer ? new URL(referer).pathname : "/"
   );
   if (!userId)
-    return (0, import_node5.redirect)(`/login?redirectTo=${redirectTo}`);
-  let formData = await request.formData(), name = String(formData.get("name") ?? ""), slug = String(formData.get("slug") ?? ""), description = String(formData.get("description") ?? ""), aliases = String(formData.get("aliases") ?? ""), cleanedSlug = Entity_default.cleanSlug(slug), error;
-  if ((!name || !slug) && (error = "Must enter a name and slug"), error)
-    return (0, import_node5.json)({ error }, { status: 400 });
-  let existing = await db.instrument.findFirst({
-    where: { slug: cleanedSlug }
-  });
+    return (0, import_node6.redirect)(`/login?redirectTo=${redirectTo}`);
+  let formData = await request.formData(), firstName = String(formData.get("first_name") ?? ""), middleName = String(formData.get("middle_name") ?? ""), lastName = String(formData.get("last_name") ?? ""), slug = String(formData.get("slug") ?? ""), description = String(formData.get("description") ?? ""), aliases = String(formData.get("aliases") ?? ""), name = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`, cleanedSlug = Entity_default.cleanSlug(slug), error;
+  if ((!firstName || !lastName || !slug) && (error = "Must enter first name, last name, and slug"), error)
+    return (0, import_node6.json)({ error }, { status: 400 });
+  let existing = await db.person.findFirst({ where: { slug: cleanedSlug } });
   if (existing)
-    return (0, import_node5.json)(
+    return (0, import_node6.json)(
       {
-        error: `This slug is already being used for an existing Instrument: ${existing.name}`
+        error: `This slug is already being used for an existing Person: ${existing.name}`
       },
       { status: 400 }
     );
   try {
-    let instrument = await db.instrument.create({
+    let person = await db.person.create({
       data: {
+        firstName,
+        middleName,
+        lastName,
         name,
         slug: cleanedSlug,
         description,
@@ -4288,55 +4379,111 @@ var action = async ({ request }) => {
         updatedByUserId: userId
       }
     });
-    return (0, import_node5.json)({ instrument }, { status: 201 });
+    return (0, import_node6.json)({ person }, { status: 201 });
   } catch {
-    return (0, import_node5.json)(
-      { error: "Error creating Instrument" },
+    return (0, import_node6.json)(
+      { error: "Error creating Person" },
       { status: 500 }
     );
   }
-}, Instruments = () => {
-  let instruments = (0, import_react50.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("h1", { className: "mb-6", children: "Instruments" }, void 0, !1, {
-      fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 97,
+}, People = () => {
+  let people = (0, import_react51.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("h1", { className: "mb-6", children: "People" }, void 0, !1, {
+      fileName: "app/routes/entities.people._index.tsx",
+      lineNumber: 103,
       columnNumber: 4
     }, this),
-    instruments.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("div", { className: "text-gray-500", children: "No Instruments found" }, void 0, !1, {
-      fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 99,
+    people.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("div", { className: "text-gray-500", children: "No People found" }, void 0, !1, {
+      fileName: "app/routes/entities.people._index.tsx",
+      lineNumber: 105,
       columnNumber: 5
     }, this),
-    instruments.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("ul", { children: instruments.map((instrument, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(import_react50.Link, { to: Entity_default.makeHrefForView(instrument), children: instrument.name }, void 0, !1, {
-      fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 105,
+    people.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("ul", { children: people.map((person, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react51.Link, { to: Entity_default.makeHrefForView(person), children: person.name }, void 0, !1, {
+      fileName: "app/routes/entities.people._index.tsx",
+      lineNumber: 111,
       columnNumber: 8
     }, this) }, index, !1, {
-      fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 104,
+      fileName: "app/routes/entities.people._index.tsx",
+      lineNumber: 110,
       columnNumber: 7
     }, this)) }, void 0, !1, {
-      fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 102,
+      fileName: "app/routes/entities.people._index.tsx",
+      lineNumber: 108,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/routes/entities/instruments/index.tsx",
-    lineNumber: 96,
+    fileName: "app/routes/entities.people._index.tsx",
+    lineNumber: 102,
     columnNumber: 3
   }, this);
-}, instruments_default = Instruments;
+}, entities_people_index_default = People;
 
-// app/routes/entities/people/$slug.tsx
-var slug_exports4 = {};
-__export(slug_exports4, {
-  default: () => slug_default4,
-  loader: () => loader8
+// app/routes/entities.places._index.tsx
+var entities_places_index_exports = {};
+__export(entities_places_index_exports, {
+  default: () => entities_places_index_default,
+  loader: () => loader9,
+  meta: () => meta5
 });
-var import_react51 = require("@remix-run/react");
-var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime");
-async function loader8({
+var import_react52 = require("@remix-run/react");
+var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
+function meta5() {
+  return [
+    {
+      title: "Trad Archive - Places"
+    }
+  ];
+}
+function loader9() {
+  return db.place.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  });
+}
+var Places = () => {
+  let places = (0, import_react52.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("h1", { className: "mb-6", children: "Places" }, void 0, !1, {
+      fileName: "app/routes/entities.places._index.tsx",
+      lineNumber: 30,
+      columnNumber: 4
+    }, this),
+    places.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("div", { className: "text-gray-500", children: "No Places found" }, void 0, !1, {
+      fileName: "app/routes/entities.places._index.tsx",
+      lineNumber: 32,
+      columnNumber: 5
+    }, this),
+    places.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("ul", { children: places.map((place, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react52.Link, { to: Entity_default.makeHrefForView(place), children: place.name }, void 0, !1, {
+      fileName: "app/routes/entities.places._index.tsx",
+      lineNumber: 38,
+      columnNumber: 8
+    }, this) }, index, !1, {
+      fileName: "app/routes/entities.places._index.tsx",
+      lineNumber: 37,
+      columnNumber: 7
+    }, this)) }, void 0, !1, {
+      fileName: "app/routes/entities.places._index.tsx",
+      lineNumber: 35,
+      columnNumber: 5
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/entities.places._index.tsx",
+    lineNumber: 29,
+    columnNumber: 3
+  }, this);
+}, entities_places_index_default = Places;
+
+// app/routes/entities.people.$slug.tsx
+var entities_people_slug_exports = {};
+__export(entities_people_slug_exports, {
+  default: () => entities_people_slug_default,
+  loader: () => loader10
+});
+var import_react53 = require("@remix-run/react");
+var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
+async function loader10({
   params,
   request
 }) {
@@ -4408,8 +4555,8 @@ async function loader8({
   };
 }
 var ViewPersonBySlug = () => {
-  let { person, audioItems, totalAudioItems } = (0, import_react51.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
+  let { person, audioItems, totalAudioItems } = (0, import_react53.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
       entity: person,
@@ -4419,122 +4566,27 @@ var ViewPersonBySlug = () => {
     void 0,
     !1,
     {
-      fileName: "app/routes/entities/people/$slug.tsx",
+      fileName: "app/routes/entities.people.$slug.tsx",
       lineNumber: 109,
       columnNumber: 4
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/routes/entities/people/$slug.tsx",
+    fileName: "app/routes/entities.people.$slug.tsx",
     lineNumber: 108,
     columnNumber: 3
   }, this);
-}, slug_default4 = ViewPersonBySlug;
+}, entities_people_slug_default = ViewPersonBySlug;
 
-// app/routes/entities/people/index.tsx
-var people_exports = {};
-__export(people_exports, {
-  action: () => action2,
-  default: () => people_default,
-  loader: () => loader9,
-  meta: () => meta4
+// app/routes/entities.places.$slug.tsx
+var entities_places_slug_exports = {};
+__export(entities_places_slug_exports, {
+  default: () => entities_places_slug_default,
+  loader: () => loader11
 });
-var import_react52 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
-var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
-function meta4() {
-  return [
-    {
-      title: "Trad Archive - People"
-    }
-  ];
-}
-function loader9() {
-  return db.person.findMany({
-    orderBy: {
-      name: "asc"
-    }
-  });
-}
-var action2 = async ({ request }) => {
-  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
-    referer ? new URL(referer).pathname : "/"
-  );
-  if (!userId)
-    return (0, import_node6.redirect)(`/login?redirectTo=${redirectTo}`);
-  let formData = await request.formData(), firstName = String(formData.get("first_name") ?? ""), middleName = String(formData.get("middle_name") ?? ""), lastName = String(formData.get("last_name") ?? ""), slug = String(formData.get("slug") ?? ""), description = String(formData.get("description") ?? ""), aliases = String(formData.get("aliases") ?? ""), name = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`, cleanedSlug = Entity_default.cleanSlug(slug), error;
-  if ((!firstName || !lastName || !slug) && (error = "Must enter first name, last name, and slug"), error)
-    return (0, import_node6.json)({ error }, { status: 400 });
-  let existing = await db.person.findFirst({ where: { slug: cleanedSlug } });
-  if (existing)
-    return (0, import_node6.json)(
-      {
-        error: `This slug is already being used for an existing Person: ${existing.name}`
-      },
-      { status: 400 }
-    );
-  try {
-    let person = await db.person.create({
-      data: {
-        firstName,
-        middleName,
-        lastName,
-        name,
-        slug: cleanedSlug,
-        description,
-        aliases,
-        createdByUserId: userId,
-        updatedByUserId: userId
-      }
-    });
-    return (0, import_node6.json)({ person }, { status: 201 });
-  } catch {
-    return (0, import_node6.json)(
-      { error: "Error creating Person" },
-      { status: 500 }
-    );
-  }
-}, People = () => {
-  let people = (0, import_react52.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("h1", { className: "mb-6", children: "People" }, void 0, !1, {
-      fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 103,
-      columnNumber: 4
-    }, this),
-    people.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("div", { className: "text-gray-500", children: "No People found" }, void 0, !1, {
-      fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 105,
-      columnNumber: 5
-    }, this),
-    people.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("ul", { children: people.map((person, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react52.Link, { to: Entity_default.makeHrefForView(person), children: person.name }, void 0, !1, {
-      fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 111,
-      columnNumber: 8
-    }, this) }, index, !1, {
-      fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 110,
-      columnNumber: 7
-    }, this)) }, void 0, !1, {
-      fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 108,
-      columnNumber: 5
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/entities/people/index.tsx",
-    lineNumber: 102,
-    columnNumber: 3
-  }, this);
-}, people_default = People;
-
-// app/routes/entities/places/$slug.tsx
-var slug_exports5 = {};
-__export(slug_exports5, {
-  default: () => slug_default5,
-  loader: () => loader10
-});
-var import_react53 = require("@remix-run/react");
-var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
-async function loader10({
+var import_react54 = require("@remix-run/react");
+var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
+async function loader11({
   params,
   request
 }) {
@@ -4606,8 +4658,8 @@ async function loader10({
   };
 }
 var ViewPlaceBySlug = () => {
-  let { place, audioItems, totalAudioItems } = (0, import_react53.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
+  let { place, audioItems, totalAudioItems } = (0, import_react54.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
       entity: place,
@@ -4617,83 +4669,128 @@ var ViewPlaceBySlug = () => {
     void 0,
     !1,
     {
-      fileName: "app/routes/entities/places/$slug.tsx",
+      fileName: "app/routes/entities.places.$slug.tsx",
       lineNumber: 109,
       columnNumber: 4
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/routes/entities/places/$slug.tsx",
+    fileName: "app/routes/entities.places.$slug.tsx",
     lineNumber: 108,
     columnNumber: 3
   }, this);
-}, slug_default5 = ViewPlaceBySlug;
+}, entities_places_slug_default = ViewPlaceBySlug;
 
-// app/routes/entities/places/index.tsx
-var places_exports = {};
-__export(places_exports, {
-  default: () => places_default,
-  loader: () => loader11,
-  meta: () => meta5
-});
-var import_react54 = require("@remix-run/react");
-var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
-function meta5() {
-  return [
-    {
-      title: "Trad Archive - Places"
-    }
-  ];
-}
-function loader11() {
-  return db.place.findMany({
-    orderBy: {
-      name: "asc"
-    }
-  });
-}
-var Places = () => {
-  let places = (0, import_react54.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("h1", { className: "mb-6", children: "Places" }, void 0, !1, {
-      fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 30,
-      columnNumber: 4
-    }, this),
-    places.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("div", { className: "text-gray-500", children: "No Places found" }, void 0, !1, {
-      fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 32,
-      columnNumber: 5
-    }, this),
-    places.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("ul", { children: places.map((place, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(import_react54.Link, { to: Entity_default.makeHrefForView(place), children: place.name }, void 0, !1, {
-      fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 38,
-      columnNumber: 8
-    }, this) }, index, !1, {
-      fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 37,
-      columnNumber: 7
-    }, this)) }, void 0, !1, {
-      fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 35,
-      columnNumber: 5
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/entities/places/index.tsx",
-    lineNumber: 29,
-    columnNumber: 3
-  }, this);
-}, places_default = Places;
-
-// app/routes/entities/tunes/$slug.tsx
-var slug_exports6 = {};
-__export(slug_exports6, {
-  default: () => slug_default6,
-  loader: () => loader12
+// app/routes/entities.tunes._index.tsx
+var entities_tunes_index_exports = {};
+__export(entities_tunes_index_exports, {
+  default: () => entities_tunes_index_default,
+  loader: () => loader12,
+  meta: () => meta6
 });
 var import_react55 = require("@remix-run/react");
 var import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
+function meta6() {
+  return [
+    {
+      title: "Trad Archive - Tunes"
+    }
+  ];
+}
+var PER_PAGE = 100;
 async function loader12({
+  request
+}) {
+  let url = new URL(request.url), params = new URLSearchParams(url.search), page = Number(params.get("page") ?? 1), perPage = Number(params.get("perPage") ?? PER_PAGE), [tunes, totalTunes] = await Promise.all([
+    db.tune.findMany({
+      take: perPage,
+      skip: perPage * (page - 1),
+      orderBy: {
+        name: "asc"
+      }
+    }),
+    db.tune.count()
+  ]);
+  return {
+    tunes,
+    totalTunes
+  };
+}
+var Tunes = () => {
+  let { tunes, totalTunes } = (0, import_react55.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
+    totalItems: totalTunes,
+    defaultPerPage: PER_PAGE
+  });
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("h1", { children: "Tunes" }, void 0, !1, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 61,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("div", { className: "text-gray-500 text-sm mt-2", children: [
+      "All tunes are sourced from",
+      " ",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("a", { href: "https://thesession.org", target: "_blank", rel: "noreferrer", children: "The Session \u2197" }, void 0, !1, {
+        fileName: "app/routes/entities.tunes._index.tsx",
+        lineNumber: 65,
+        columnNumber: 5
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 63,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(
+      Filters2,
+      {
+        ...filtersProps,
+        sortBy: void 0,
+        viewAs: void 0,
+        className: "sticky left-0 right-0 py-3 bg-gray-100 top-[48px] mt-4 mb-6"
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/entities.tunes._index.tsx",
+        lineNumber: 70,
+        columnNumber: 4
+      },
+      this
+    ),
+    tunes.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("div", { className: "text-gray-500", children: "No Tunes found" }, void 0, !1, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 78,
+      columnNumber: 5
+    }, this),
+    tunes.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("ul", { className: "space-y-2", children: tunes.map((tune, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(import_react55.Link, { to: Entity_default.makeHrefForView(tune), children: tune.name }, void 0, !1, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 84,
+      columnNumber: 8
+    }, this) }, index, !1, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 83,
+      columnNumber: 7
+    }, this)) }, void 0, !1, {
+      fileName: "app/routes/entities.tunes._index.tsx",
+      lineNumber: 81,
+      columnNumber: 5
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/entities.tunes._index.tsx",
+    lineNumber: 60,
+    columnNumber: 3
+  }, this);
+}, entities_tunes_index_default = Tunes;
+
+// app/routes/entities.tunes.$slug.tsx
+var entities_tunes_slug_exports = {};
+__export(entities_tunes_slug_exports, {
+  default: () => entities_tunes_slug_default,
+  loader: () => loader13
+});
+var import_react56 = require("@remix-run/react");
+var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
+async function loader13({
   params,
   request
 }) {
@@ -4765,8 +4862,8 @@ async function loader12({
   };
 }
 var ViewTuneBySlug = () => {
-  let { tune, audioItems, totalAudioItems } = (0, import_react55.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(
+  let { tune, audioItems, totalAudioItems } = (0, import_react56.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
       entity: tune,
@@ -4776,118 +4873,17 @@ var ViewTuneBySlug = () => {
     void 0,
     !1,
     {
-      fileName: "app/routes/entities/tunes/$slug.tsx",
+      fileName: "app/routes/entities.tunes.$slug.tsx",
       lineNumber: 109,
       columnNumber: 4
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/routes/entities/tunes/$slug.tsx",
+    fileName: "app/routes/entities.tunes.$slug.tsx",
     lineNumber: 108,
     columnNumber: 3
   }, this);
-}, slug_default6 = ViewTuneBySlug;
-
-// app/routes/entities/tunes/index.tsx
-var tunes_exports = {};
-__export(tunes_exports, {
-  default: () => tunes_default,
-  loader: () => loader13,
-  meta: () => meta6
-});
-var import_react56 = require("@remix-run/react");
-var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
-function meta6() {
-  return [
-    {
-      title: "Trad Archive - Tunes"
-    }
-  ];
-}
-var PER_PAGE = 100;
-async function loader13({
-  request
-}) {
-  let url = new URL(request.url), params = new URLSearchParams(url.search), page = Number(params.get("page") ?? 1), perPage = Number(params.get("perPage") ?? PER_PAGE), [tunes, totalTunes] = await Promise.all([
-    db.tune.findMany({
-      take: perPage,
-      skip: perPage * (page - 1),
-      orderBy: {
-        name: "asc"
-      }
-    }),
-    db.tune.count()
-  ]);
-  return {
-    tunes,
-    totalTunes
-  };
-}
-var Tunes = () => {
-  let { tunes, totalTunes } = (0, import_react56.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
-    totalItems: totalTunes,
-    defaultPerPage: PER_PAGE
-  });
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("h1", { children: "Tunes" }, void 0, !1, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 61,
-      columnNumber: 4
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("div", { className: "text-gray-500 text-sm mt-2", children: [
-      "All tunes are sourced from",
-      " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("a", { href: "https://thesession.org", target: "_blank", rel: "noreferrer", children: "The Session \u2197" }, void 0, !1, {
-        fileName: "app/routes/entities/tunes/index.tsx",
-        lineNumber: 65,
-        columnNumber: 5
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 63,
-      columnNumber: 4
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
-      Filters2,
-      {
-        ...filtersProps,
-        sortBy: void 0,
-        viewAs: void 0,
-        className: "sticky left-0 right-0 py-3 bg-gray-100 top-[48px] mt-4 mb-6"
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/routes/entities/tunes/index.tsx",
-        lineNumber: 70,
-        columnNumber: 4
-      },
-      this
-    ),
-    tunes.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("div", { className: "text-gray-500", children: "No Tunes found" }, void 0, !1, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 78,
-      columnNumber: 5
-    }, this),
-    tunes.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("ul", { className: "space-y-2", children: tunes.map((tune, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(import_react56.Link, { to: Entity_default.makeHrefForView(tune), children: tune.name }, void 0, !1, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 84,
-      columnNumber: 8
-    }, this) }, index, !1, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 83,
-      columnNumber: 7
-    }, this)) }, void 0, !1, {
-      fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 81,
-      columnNumber: 5
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/entities/tunes/index.tsx",
-    lineNumber: 60,
-    columnNumber: 3
-  }, this);
-}, tunes_default = Tunes;
+}, entities_tunes_slug_default = ViewTuneBySlug;
 
 // app/routes/choose-new-password.tsx
 var choose_new_password_exports = {};
@@ -5205,63 +5201,16 @@ function ResetPassword() {
   }, this);
 }
 
-// app/routes/account/index.tsx
-var account_exports = {};
-__export(account_exports, {
-  default: () => AccountHome,
-  loader: () => loader16
-});
-var import_react59 = require("@remix-run/react"), import_node9 = require("@remix-run/node");
-var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), loader16 = async ({ request }) => {
-  let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
-    where: { id: currentUserId }
-  });
-  if (!currentUser) {
-    let params = new URLSearchParams();
-    return params.set("redirectTo", "/account"), (0, import_node9.redirect)(`/login?${params.toString()}`);
-  }
-  return (0, import_node9.json)({ currentUser });
-};
-function AccountHome() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("h1", { className: "mb-6", children: "Account" }, void 0, !1, {
-      fileName: "app/routes/account/index.tsx",
-      lineNumber: 31,
-      columnNumber: 4
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "flex flex-col space-y-2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(import_react59.Link, { to: "/reset-password", children: "Change Password" }, void 0, !1, {
-        fileName: "app/routes/account/index.tsx",
-        lineNumber: 33,
-        columnNumber: 5
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(import_react59.Link, { to: "/logout", children: "Log Out " }, void 0, !1, {
-        fileName: "app/routes/account/index.tsx",
-        lineNumber: 34,
-        columnNumber: 5
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/account/index.tsx",
-      lineNumber: 32,
-      columnNumber: 4
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/account/index.tsx",
-    lineNumber: 30,
-    columnNumber: 3
-  }, this);
-}
-
 // app/routes/relationships.tsx
 var relationships_exports = {};
 __export(relationships_exports, {
-  loader: () => loader17
+  loader: () => loader16
 });
-var import_node10 = require("@remix-run/node");
-var loader17 = async ({ request }) => {
+var import_node9 = require("@remix-run/node");
+var loader16 = async ({ request }) => {
   let url = new URL(request.url), subjectEntityType = url.searchParams.get("subjectEntityType"), objectEntityType = url.searchParams.get("objectEntityType");
   if (!subjectEntityType || !objectEntityType)
-    return (0, import_node10.json)(
+    return (0, import_node9.json)(
       { error: "Must specify subject entity type and object entity type" },
       { status: 400 }
     );
@@ -5271,7 +5220,7 @@ var loader17 = async ({ request }) => {
       objectEntityType
     }
   });
-  return (0, import_node10.json)({ relationships }, { status: 200 });
+  return (0, import_node9.json)({ relationships }, { status: 200 });
 };
 
 // app/routes/saved-items.tsx
@@ -5279,15 +5228,15 @@ var saved_items_exports = {};
 __export(saved_items_exports, {
   action: () => action5,
   default: () => SavedItems,
-  loader: () => loader18
+  loader: () => loader17
 });
-var import_react60 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
-var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = async ({ request }) => {
+var import_react59 = require("@remix-run/react"), import_node10 = require("@remix-run/node");
+var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), loader17 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { pathname, searchParams } = new URL(request.url), redirectParams = new URLSearchParams({
     redirectTo: pathname
   });
   if (!userId)
-    return (0, import_node11.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_node10.redirect)(`/login?${redirectParams.toString()}`);
   let page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), [savedItems, totalSavedItems] = await Promise.all([
     db.savedItem.findMany({
       where: {
@@ -5341,13 +5290,13 @@ var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = asyn
         orderedAudioItems.push(a);
         break;
       }
-  return (0, import_node11.json)({ savedItems: orderedAudioItems, totalSavedItems });
+  return (0, import_node10.json)({ savedItems: orderedAudioItems, totalSavedItems });
 }, action5 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectParams = new URLSearchParams({
     redirectTo: referer ? new URL(referer).pathname : "/"
   });
   if (!userId)
-    return (0, import_node11.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_node10.redirect)(`/login?${redirectParams.toString()}`);
   let formData = await request.formData(), audioItemId = String(formData.get("audioItemId") ?? ""), existing = await db.savedItem.findUnique({
     where: {
       userId_audioItemId: {
@@ -5356,20 +5305,20 @@ var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = asyn
       }
     }
   });
-  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node11.json)({ ok: !0 }, { status: 200 });
+  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node10.json)({ ok: !0 }, { status: 200 });
 };
 function SavedItems() {
-  let { savedItems, totalSavedItems } = (0, import_react60.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
+  let { savedItems, totalSavedItems } = (0, import_react59.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     totalItems: totalSavedItems,
     defaultViewAs: "Compact" /* Compact */
   });
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("h1", { className: "mb-6", children: "Saved Items" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "flex flex-col", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("h1", { className: "mb-6", children: "Saved Items" }, void 0, !1, {
       fileName: "app/routes/saved-items.tsx",
       lineNumber: 148,
       columnNumber: 5
     }, this),
-    savedItems.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+    savedItems.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(
       Filters2,
       {
         ...filtersProps,
@@ -5386,10 +5335,10 @@ function SavedItems() {
       },
       this
     ),
-    savedItems.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "text-gray-500", children: [
+    savedItems.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "text-gray-500", children: [
       "Nothing saved yet - try browsing some",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(import_react60.Link, { to: "/", children: "Audio Items" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(import_react59.Link, { to: "/", children: "Audio Items" }, void 0, !1, {
         fileName: "app/routes/saved-items.tsx",
         lineNumber: 162,
         columnNumber: 7
@@ -5400,7 +5349,7 @@ function SavedItems() {
       lineNumber: 160,
       columnNumber: 6
     }, this),
-    savedItems.map((s, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+    savedItems.map((s, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(
       AudioItem_default,
       {
         viewAs,
@@ -5427,25 +5376,25 @@ function SavedItems() {
   }, this);
 }
 
-// app/routes/users/$id.tsx
-var id_exports = {};
-__export(id_exports, {
-  default: () => id_default,
-  loader: () => loader19
+// app/routes/users.$id.tsx
+var users_id_exports = {};
+__export(users_id_exports, {
+  default: () => users_id_default,
+  loader: () => loader18
 });
-var import_react61 = require("@remix-run/react"), import_node12 = require("@remix-run/node");
-var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), loader19 = async ({ params }) => {
+var import_react60 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
+var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
     throw new Response("Not Found", {
       status: 404,
       statusText: "Could not find a user with this ID"
     });
-  return (0, import_node12.json)({ user });
+  return (0, import_node11.json)({ user });
 }, ViewUserById = () => {
-  let { user } = (0, import_react61.useLoaderData)(), { username, createdAt } = user;
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "flex flex-col-reverse md:flex-row", children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "flex flex-1 flex-col pb-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
+  let { user } = (0, import_react60.useLoaderData)(), { username, createdAt } = user;
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex flex-col-reverse md:flex-row", children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex flex-1 flex-col pb-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
       Breadcrumb_default,
       {
         className: "mb-6",
@@ -5454,63 +5403,63 @@ var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), loader19 = asyn
       void 0,
       !1,
       {
-        fileName: "app/routes/users/$id.tsx",
+        fileName: "app/routes/users.$id.tsx",
         lineNumber: 35,
         columnNumber: 6
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "flex-col mb-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex-col mb-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { children: [
       "Account Created:",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("br", {}, void 0, !1, {
-        fileName: "app/routes/users/$id.tsx",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("br", {}, void 0, !1, {
+        fileName: "app/routes/users.$id.tsx",
         lineNumber: 43,
         columnNumber: 8
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("span", { className: "text-gray-500", children: DateTime_default.formatDateYear(createdAt) }, void 0, !1, {
-        fileName: "app/routes/users/$id.tsx",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("span", { className: "text-gray-500", children: DateTime_default.formatDateYear(createdAt) }, void 0, !1, {
+        fileName: "app/routes/users.$id.tsx",
         lineNumber: 44,
         columnNumber: 8
       }, this)
     ] }, void 0, !0, {
-      fileName: "app/routes/users/$id.tsx",
+      fileName: "app/routes/users.$id.tsx",
       lineNumber: 41,
       columnNumber: 7
     }, this) }, void 0, !1, {
-      fileName: "app/routes/users/$id.tsx",
+      fileName: "app/routes/users.$id.tsx",
       lineNumber: 40,
       columnNumber: 6
     }, this)
   ] }, void 0, !0, {
-    fileName: "app/routes/users/$id.tsx",
+    fileName: "app/routes/users.$id.tsx",
     lineNumber: 34,
     columnNumber: 5
   }, this) }, void 0, !1, {
-    fileName: "app/routes/users/$id.tsx",
+    fileName: "app/routes/users.$id.tsx",
     lineNumber: 33,
     columnNumber: 4
   }, this) }, void 0, !1, {
-    fileName: "app/routes/users/$id.tsx",
+    fileName: "app/routes/users.$id.tsx",
     lineNumber: 32,
     columnNumber: 3
   }, this);
-}, id_default = ViewUserById;
+}, users_id_default = ViewUserById;
 
 // app/routes/comments.tsx
 var comments_exports = {};
 __export(comments_exports, {
   action: () => action6
 });
-var import_node13 = require("@remix-run/node");
+var import_node12 = require("@remix-run/node");
 var action6 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
     referer ? new URL(referer).pathname : "/"
   );
   if (!userId)
-    return (0, import_node13.redirect)(`/login?redirectTo=${redirectTo}`);
+    return (0, import_node12.redirect)(`/login?redirectTo=${redirectTo}`);
   let formData = await request.formData(), text = String(formData.get("text") ?? ""), parentAudioItemId = String(formData.get("parentAudioItemId") ?? ""), error;
   if (text ? parentAudioItemId || (error = "Parent audio item ID not defined") : error = "Comment cannot be empty", error)
-    return (0, import_node13.json)({ error }, { status: 400 });
+    return (0, import_node12.json)({ error }, { status: 400 });
   let comment = await db.comment.create({
     data: {
       text,
@@ -5518,16 +5467,511 @@ var action6 = async ({ request }) => {
       createdByUserId: userId
     }
   });
-  return (0, import_node13.json)({ comment }, { status: 201 });
+  return (0, import_node12.json)({ comment }, { status: 201 });
 };
+
+// app/routes/account.tsx
+var account_exports = {};
+__export(account_exports, {
+  default: () => AccountHome,
+  loader: () => loader19
+});
+var import_react61 = require("@remix-run/react"), import_node13 = require("@remix-run/node");
+var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), loader19 = async ({ request }) => {
+  let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
+    where: { id: currentUserId }
+  });
+  if (!currentUser) {
+    let params = new URLSearchParams();
+    return params.set("redirectTo", "/account"), (0, import_node13.redirect)(`/login?${params.toString()}`);
+  }
+  return (0, import_node13.json)({ currentUser });
+};
+function AccountHome() {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("h1", { className: "mb-6", children: "Account" }, void 0, !1, {
+      fileName: "app/routes/account.tsx",
+      lineNumber: 31,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "flex flex-col space-y-2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react61.Link, { to: "/reset-password", children: "Change Password" }, void 0, !1, {
+        fileName: "app/routes/account.tsx",
+        lineNumber: 33,
+        columnNumber: 5
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react61.Link, { to: "/logout", children: "Log Out " }, void 0, !1, {
+        fileName: "app/routes/account.tsx",
+        lineNumber: 34,
+        columnNumber: 5
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/account.tsx",
+      lineNumber: 32,
+      columnNumber: 4
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/account.tsx",
+    lineNumber: 30,
+    columnNumber: 3
+  }, this);
+}
+
+// app/routes/_index.tsx
+var index_exports = {};
+__export(index_exports, {
+  default: () => Home,
+  loader: () => loader20
+});
+var import_react62 = require("react"), import_react63 = require("@remix-run/react"), import_subMinutes = __toESM(require("date-fns/subMinutes"));
+
+// app/services/LocalStorage.ts
+var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
+  localStorageIsAvailable && window.localStorage.setItem(key, value);
+}, getItem = (key) => {
+  if (localStorageIsAvailable)
+    return window.localStorage.getItem(key);
+}, LocalStorageService = {
+  setItem,
+  getItem
+}, LocalStorage_default = LocalStorageService;
+
+// app/components/ProjectIntro.tsx
+var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime"), ProjectIntro = ({ className, onClose }) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+  "div",
+  {
+    className: `flex flex-col flex-grow bg-gray-200 rounded p-4 pl-16 lg:pl-20 relative ${className ?? ""}`,
+    children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+        "img",
+        {
+          src: "/images/logo-square.png",
+          className: "absolute top-5 -left-1 lg:-left-8 w-12 lg:w-20 -rotate-12",
+          alt: "Logo"
+        },
+        void 0,
+        !1,
+        {
+          fileName: "app/components/ProjectIntro.tsx",
+          lineNumber: 13,
+          columnNumber: 4
+        },
+        this
+      ),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("strong", { children: "Welcome!" }, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 18,
+        columnNumber: 4
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("br", {}, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 19,
+        columnNumber: 4
+      }, this),
+      "Trad Archive is an open source experiment by the Irish Traditional Music Archive and Dan Gurney.",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("br", {}, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 22,
+        columnNumber: 4
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("br", {}, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 23,
+        columnNumber: 4
+      }, this),
+      "You can...",
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("br", {}, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 25,
+        columnNumber: 4
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("ul", { className: "list-disc list-inside", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("li", { children: "Listen to previously unreleased archival recordings" }, void 0, !1, {
+          fileName: "app/components/ProjectIntro.tsx",
+          lineNumber: 27,
+          columnNumber: 5
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("li", { children: "Help by tagging each recording with People, Tunes, Instruments, and Collections" }, void 0, !1, {
+          fileName: "app/components/ProjectIntro.tsx",
+          lineNumber: 28,
+          columnNumber: 5
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("li", { children: "Save favorites to listen later" }, void 0, !1, {
+          fileName: "app/components/ProjectIntro.tsx",
+          lineNumber: 32,
+          columnNumber: 5
+        }, this)
+      ] }, void 0, !0, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 26,
+        columnNumber: 4
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("button", { className: "absolute top-2 right-2 btn-icon", onClick: onClose, children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("i", { className: "material-icons", children: "close" }, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 35,
+        columnNumber: 5
+      }, this) }, void 0, !1, {
+        fileName: "app/components/ProjectIntro.tsx",
+        lineNumber: 34,
+        columnNumber: 4
+      }, this)
+    ]
+  },
+  void 0,
+  !0,
+  {
+    fileName: "app/components/ProjectIntro.tsx",
+    lineNumber: 8,
+    columnNumber: 3
+  },
+  this
+), ProjectIntro_default = ProjectIntro;
+
+// app/routes/_index.tsx
+var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime");
+async function loader20({
+  request
+}) {
+  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { searchParams } = new URL(request.url), page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), recentTags = await db.tag.findMany({
+    select: {
+      subjectAudioItemId: !0,
+      createdAt: !0
+    },
+    where: {
+      subjectAudioItemId: {
+        not: null
+      },
+      createdAt: {
+        lt: (0, import_subMinutes.default)(new Date(), 5)
+      }
+    },
+    distinct: ["subjectAudioItemId"],
+    orderBy: {
+      createdAt: "desc"
+    },
+    skip: (page - 1) * perPage,
+    take: perPage
+  }), recentlyTaggedAudioItemIds = [];
+  for (let r of recentTags)
+    r.subjectAudioItemId && recentlyTaggedAudioItemIds.push(r.subjectAudioItemId);
+  let [
+    audioItems,
+    collections,
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
+  ] = await Promise.all([
+    db.audioItem.findMany({
+      where: {
+        id: {
+          in: recentlyTaggedAudioItemIds
+        }
+      },
+      include: {
+        tagsAsSubject: {
+          include: {
+            objectAudioItem: !0,
+            objectCollection: !0,
+            objectInstrument: !0,
+            objectPerson: !0,
+            objectPlace: !0,
+            objectTune: !0,
+            relationship: !0
+          }
+        },
+        createdByUser: !0,
+        updatedByUser: !0,
+        comments: {
+          include: {
+            createdByUser: !0
+          },
+          orderBy: {
+            createdAt: "asc"
+          }
+        },
+        savedItems: {
+          where: {
+            userId
+          }
+        }
+      }
+    }),
+    db.collection.findMany({
+      take: 5,
+      include: {
+        tagsAsSubject: !0,
+        createdByUser: !0,
+        updatedByUser: !0
+      },
+      orderBy: {
+        createdAt: "desc"
+      }
+    }),
+    db.comment.findMany({
+      take: 6,
+      include: {
+        createdByUser: !0,
+        parentAudioItem: !0
+      },
+      orderBy: {
+        createdAt: "desc"
+      }
+    }),
+    db.audioItem.count(),
+    db.tag.count(),
+    db.comment.count()
+  ]), orderedAudioItems = [];
+  for (let id of recentlyTaggedAudioItemIds)
+    for (let a of audioItems)
+      if (a.id === id) {
+        orderedAudioItems.push(a);
+        break;
+      }
+  return {
+    audioItems: orderedAudioItems,
+    collections,
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
+  };
+}
+function Home() {
+  let {
+    audioItems,
+    collections,
+    comments,
+    numAudioItemsAllTime,
+    numTagsAllTime,
+    numCommentsAllTime
+  } = (0, import_react63.useLoaderData)(), { search } = (0, import_react63.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
+    totalItems: numAudioItemsAllTime
+  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react62.useState)(!1);
+  (0, import_react62.useEffect)(() => {
+    LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
+  }, []);
+  let onCloseIntro = (0, import_react62.useCallback)(() => {
+    LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
+  }, []);
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(Layout_default, { children: [
+    shouldShowIntro && /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+      ProjectIntro_default,
+      {
+        className: "mb-8 md:mt-4 md:mb-12",
+        onClose: onCloseIntro
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/routes/_index.tsx",
+        lineNumber: 195,
+        columnNumber: 5
+      },
+      this
+    ),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "flex flex-col md:flex-row", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "flex flex-1 flex-col pb-8", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h1", { children: "Explore" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 203,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+          Filters2,
+          {
+            ...filtersProps,
+            viewAs: void 0,
+            sortBy: "RecentlyTagged" /* RecentlyTagged */,
+            sortByOptions: ["RecentlyTagged" /* RecentlyTagged */],
+            className: "sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px]"
+          },
+          void 0,
+          !1,
+          {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 205,
+            columnNumber: 6
+          },
+          this
+        ),
+        audioItems.map((audioItem, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+          AudioItem_default,
+          {
+            viewAs,
+            audioItem,
+            className: viewAs === "List" /* List */ ? "mb-4" : "mb-6"
+          },
+          index,
+          !1,
+          {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 214,
+            columnNumber: 7
+          },
+          this
+        ))
+      ] }, void 0, !0, {
+        fileName: "app/routes/_index.tsx",
+        lineNumber: 202,
+        columnNumber: 5
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h3", { className: "mb-4", children: "Browse" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 224,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: "/entities/people", className: "mb-2", children: "People" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 225,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: "/entities/tunes", className: "mb-2", children: "Tunes" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 228,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: "/entities/instruments", className: "mb-2", children: "Instruments" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 231,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: "/entities/collections", className: "mb-2", children: "Collections" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 234,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Stats" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 238,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
+          numAudioItemsAllTime,
+          " Audio Items"
+        ] }, void 0, !0, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 239,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
+          numTagsAllTime,
+          " Tags"
+        ] }, void 0, !0, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 242,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
+          numCommentsAllTime,
+          " Comments"
+        ] }, void 0, !0, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 243,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Collections" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 247,
+          columnNumber: 6
+        }, this),
+        collections.map((collection, index) => {
+          let { name } = collection;
+          return name ? /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "mb-2 text-gray-500", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 255,
+            columnNumber: 9
+          }, this) }, index, !1, {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 254,
+            columnNumber: 8
+          }, this) : null;
+        }),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Features + Fixes" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 262,
+          columnNumber: 6
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+          "a",
+          {
+            className: "mb-2",
+            href: "https://github.com/dgurns/trad-archive/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc",
+            target: "_blank",
+            rel: "noreferrer",
+            children: "View on GitHub \u2197"
+          },
+          void 0,
+          !1,
+          {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 263,
+            columnNumber: 6
+          },
+          this
+        ),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Comments" }, void 0, !1, {
+          fileName: "app/routes/_index.tsx",
+          lineNumber: 272,
+          columnNumber: 6
+        }, this),
+        comments.map((comment, index) => {
+          let { createdByUser, parentAudioItem, text } = comment;
+          return !createdByUser || !parentAudioItem ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "mb-4 text-gray-500", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: " mb-1", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: `/users/${createdByUser.id}`, children: createdByUser.username }, void 0, !1, {
+                fileName: "app/routes/_index.tsx",
+                lineNumber: 281,
+                columnNumber: 10
+              }, this),
+              " commented on ",
+              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react63.Link, { to: Entity_default.makeHrefForView(parentAudioItem), children: parentAudioItem.name }, void 0, !1, {
+                fileName: "app/routes/_index.tsx",
+                lineNumber: 285,
+                columnNumber: 10
+              }, this),
+              ":"
+            ] }, void 0, !0, {
+              fileName: "app/routes/_index.tsx",
+              lineNumber: 280,
+              columnNumber: 9
+            }, this),
+            /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "whitespace-pre-line text-sm", children: text }, void 0, !1, {
+              fileName: "app/routes/_index.tsx",
+              lineNumber: 290,
+              columnNumber: 9
+            }, this)
+          ] }, index, !0, {
+            fileName: "app/routes/_index.tsx",
+            lineNumber: 279,
+            columnNumber: 8
+          }, this);
+        })
+      ] }, void 0, !0, {
+        fileName: "app/routes/_index.tsx",
+        lineNumber: 223,
+        columnNumber: 5
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/routes/_index.tsx",
+      lineNumber: 201,
+      columnNumber: 4
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/routes/_index.tsx",
+    lineNumber: 193,
+    columnNumber: 3
+  }, this);
+}
 
 // app/routes/logout.tsx
 var logout_exports = {};
 __export(logout_exports, {
-  loader: () => loader20
+  loader: () => loader21
 });
 var import_node14 = require("@remix-run/node");
-var loader20 = async ({ request }) => {
+var loader21 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie"));
   return (0, import_node14.redirect)("/login", {
     headers: {
@@ -5539,10 +5983,10 @@ var loader20 = async ({ request }) => {
 // app/routes/search.tsx
 var search_exports = {};
 __export(search_exports, {
-  loader: () => loader21
+  loader: () => loader22
 });
 var import_client8 = require("@prisma/client"), import_node15 = require("@remix-run/node");
-var loader21 = async ({ request }) => {
+var loader22 = async ({ request }) => {
   let url = new URL(request.url), searchTerm = url.searchParams.get("searchTerm") || "", entityTypes = url.searchParams.getAll("entityTypes");
   entityTypes.length === 0 && (entityTypes = [
     import_client8.EntityType.Person,
@@ -5690,11 +6134,11 @@ var signup_exports = {};
 __export(signup_exports, {
   action: () => action7,
   default: () => SignUp,
-  loader: () => loader22
+  loader: () => loader23
 });
-var import_react62 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
+var import_react64 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
 var import_node16 = require("@remix-run/node");
-var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime"), loader22 = async ({ request }) => {
+var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime"), loader23 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
     return (0, import_node16.redirect)(redirectTo || "/");
@@ -5755,18 +6199,18 @@ var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime"), loader22 = asyn
   });
 };
 function SignUp() {
-  let { error } = (0, import_react62.useLoaderData)(), { state } = (0, import_react62.useTransition)(), { search } = (0, import_react62.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(
+  let { error } = (0, import_react64.useLoaderData)(), { state } = (0, import_react64.useTransition)(), { search } = (0, import_react64.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(
     redirectTo ? { redirectTo } : void 0
   );
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(Layout_default, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("h1", { className: "mb-6", children: redirectTo ? "Create an account to continue" : "Create your account" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(Layout_default, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h1", { className: "mb-6", children: redirectTo ? "Create an account to continue" : "Create your account" }, void 0, !1, {
       fileName: "app/routes/signup.tsx",
       lineNumber: 128,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("div", { className: "flex flex-col align-start max-w-xs", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("form", { method: "POST", className: "space-y-4 mb-6", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "flex flex-col align-start max-w-xs", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("form", { method: "POST", className: "space-y-4 mb-6", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
           "input",
           {
             type: "text",
@@ -5784,7 +6228,7 @@ function SignUp() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
           "input",
           {
             type: "text",
@@ -5801,7 +6245,7 @@ function SignUp() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
           "input",
           {
             type: "password",
@@ -5818,7 +6262,7 @@ function SignUp() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
           "input",
           {
             type: "password",
@@ -5835,7 +6279,7 @@ function SignUp() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
           "input",
           {
             type: "submit",
@@ -5857,15 +6301,15 @@ function SignUp() {
         lineNumber: 132,
         columnNumber: 5
       }, this),
-      error && /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("div", { className: "text-red-600 mb-6", children: error }, void 0, !1, {
+      error && /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "text-red-600 mb-6", children: error }, void 0, !1, {
         fileName: "app/routes/signup.tsx",
         lineNumber: 166,
         columnNumber: 15
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("div", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { children: [
         "Already have an account?",
         " ",
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react62.Link, { to: `/login?${logInLinkQueryParams.toString()}`, children: "Log in" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: `/login?${logInLinkQueryParams.toString()}`, children: "Log in" }, void 0, !1, {
           fileName: "app/routes/signup.tsx",
           lineNumber: 170,
           columnNumber: 6
@@ -5883,454 +6327,6 @@ function SignUp() {
   ] }, void 0, !0, {
     fileName: "app/routes/signup.tsx",
     lineNumber: 127,
-    columnNumber: 3
-  }, this);
-}
-
-// app/routes/index.tsx
-var routes_exports = {};
-__export(routes_exports, {
-  default: () => Home,
-  loader: () => loader23
-});
-var import_react63 = require("react"), import_react64 = require("@remix-run/react"), import_subMinutes = __toESM(require("date-fns/subMinutes"));
-
-// app/services/LocalStorage.ts
-var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
-  localStorageIsAvailable && window.localStorage.setItem(key, value);
-}, getItem = (key) => {
-  if (localStorageIsAvailable)
-    return window.localStorage.getItem(key);
-}, LocalStorageService = {
-  setItem,
-  getItem
-}, LocalStorage_default = LocalStorageService;
-
-// app/components/ProjectIntro.tsx
-var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime"), ProjectIntro = ({ className, onClose }) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
-  "div",
-  {
-    className: `flex flex-col flex-grow bg-gray-200 rounded p-4 pl-16 lg:pl-20 relative ${className ?? ""}`,
-    children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
-        "img",
-        {
-          src: "/images/logo-square.png",
-          className: "absolute top-5 -left-1 lg:-left-8 w-12 lg:w-20 -rotate-12",
-          alt: "Logo"
-        },
-        void 0,
-        !1,
-        {
-          fileName: "app/components/ProjectIntro.tsx",
-          lineNumber: 13,
-          columnNumber: 4
-        },
-        this
-      ),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("strong", { children: "Welcome!" }, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 18,
-        columnNumber: 4
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("br", {}, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 19,
-        columnNumber: 4
-      }, this),
-      "Trad Archive is an open source experiment by the Irish Traditional Music Archive and Dan Gurney.",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("br", {}, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 22,
-        columnNumber: 4
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("br", {}, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 23,
-        columnNumber: 4
-      }, this),
-      "You can...",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("br", {}, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 25,
-        columnNumber: 4
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("ul", { className: "list-disc list-inside", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("li", { children: "Listen to previously unreleased archival recordings" }, void 0, !1, {
-          fileName: "app/components/ProjectIntro.tsx",
-          lineNumber: 27,
-          columnNumber: 5
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("li", { children: "Help by tagging each recording with People, Tunes, Instruments, and Collections" }, void 0, !1, {
-          fileName: "app/components/ProjectIntro.tsx",
-          lineNumber: 28,
-          columnNumber: 5
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("li", { children: "Save favorites to listen later" }, void 0, !1, {
-          fileName: "app/components/ProjectIntro.tsx",
-          lineNumber: 32,
-          columnNumber: 5
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 26,
-        columnNumber: 4
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("button", { className: "absolute top-2 right-2 btn-icon", onClick: onClose, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("i", { className: "material-icons", children: "close" }, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 35,
-        columnNumber: 5
-      }, this) }, void 0, !1, {
-        fileName: "app/components/ProjectIntro.tsx",
-        lineNumber: 34,
-        columnNumber: 4
-      }, this)
-    ]
-  },
-  void 0,
-  !0,
-  {
-    fileName: "app/components/ProjectIntro.tsx",
-    lineNumber: 8,
-    columnNumber: 3
-  },
-  this
-), ProjectIntro_default = ProjectIntro;
-
-// app/routes/index.tsx
-var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
-async function loader23({
-  request
-}) {
-  let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { searchParams } = new URL(request.url), page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), recentTags = await db.tag.findMany({
-    select: {
-      subjectAudioItemId: !0,
-      createdAt: !0
-    },
-    where: {
-      subjectAudioItemId: {
-        not: null
-      },
-      createdAt: {
-        lt: (0, import_subMinutes.default)(new Date(), 5)
-      }
-    },
-    distinct: ["subjectAudioItemId"],
-    orderBy: {
-      createdAt: "desc"
-    },
-    skip: (page - 1) * perPage,
-    take: perPage
-  }), recentlyTaggedAudioItemIds = [];
-  for (let r of recentTags)
-    r.subjectAudioItemId && recentlyTaggedAudioItemIds.push(r.subjectAudioItemId);
-  let [
-    audioItems,
-    collections,
-    comments,
-    numAudioItemsAllTime,
-    numTagsAllTime,
-    numCommentsAllTime
-  ] = await Promise.all([
-    db.audioItem.findMany({
-      where: {
-        id: {
-          in: recentlyTaggedAudioItemIds
-        }
-      },
-      include: {
-        tagsAsSubject: {
-          include: {
-            objectAudioItem: !0,
-            objectCollection: !0,
-            objectInstrument: !0,
-            objectPerson: !0,
-            objectPlace: !0,
-            objectTune: !0,
-            relationship: !0
-          }
-        },
-        createdByUser: !0,
-        updatedByUser: !0,
-        comments: {
-          include: {
-            createdByUser: !0
-          },
-          orderBy: {
-            createdAt: "asc"
-          }
-        },
-        savedItems: {
-          where: {
-            userId
-          }
-        }
-      }
-    }),
-    db.collection.findMany({
-      take: 5,
-      include: {
-        tagsAsSubject: !0,
-        createdByUser: !0,
-        updatedByUser: !0
-      },
-      orderBy: {
-        createdAt: "desc"
-      }
-    }),
-    db.comment.findMany({
-      take: 6,
-      include: {
-        createdByUser: !0,
-        parentAudioItem: !0
-      },
-      orderBy: {
-        createdAt: "desc"
-      }
-    }),
-    db.audioItem.count(),
-    db.tag.count(),
-    db.comment.count()
-  ]), orderedAudioItems = [];
-  for (let id of recentlyTaggedAudioItemIds)
-    for (let a of audioItems)
-      if (a.id === id) {
-        orderedAudioItems.push(a);
-        break;
-      }
-  return {
-    audioItems: orderedAudioItems,
-    collections,
-    comments,
-    numAudioItemsAllTime,
-    numTagsAllTime,
-    numCommentsAllTime
-  };
-}
-function Home() {
-  let {
-    audioItems,
-    collections,
-    comments,
-    numAudioItemsAllTime,
-    numTagsAllTime,
-    numCommentsAllTime
-  } = (0, import_react64.useLoaderData)(), { search } = (0, import_react64.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
-    totalItems: numAudioItemsAllTime
-  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react63.useState)(!1);
-  (0, import_react63.useEffect)(() => {
-    LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
-  }, []);
-  let onCloseIntro = (0, import_react63.useCallback)(() => {
-    LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
-  }, []);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(Layout_default, { children: [
-    shouldShowIntro && /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
-      ProjectIntro_default,
-      {
-        className: "mb-8 md:mt-4 md:mb-12",
-        onClose: onCloseIntro
-      },
-      void 0,
-      !1,
-      {
-        fileName: "app/routes/index.tsx",
-        lineNumber: 195,
-        columnNumber: 5
-      },
-      this
-    ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "flex flex-col md:flex-row", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "flex flex-1 flex-col pb-8", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h1", { children: "Explore" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 203,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
-          Filters2,
-          {
-            ...filtersProps,
-            viewAs: void 0,
-            sortBy: "RecentlyTagged" /* RecentlyTagged */,
-            sortByOptions: ["RecentlyTagged" /* RecentlyTagged */],
-            className: "sticky left-0 right-0 py-3 px-2 -ml-2 -mr-2 mt-1 mb-2 bg-gray-100 top-[48px]"
-          },
-          void 0,
-          !1,
-          {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 205,
-            columnNumber: 6
-          },
-          this
-        ),
-        audioItems.map((audioItem, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
-          AudioItem_default,
-          {
-            viewAs,
-            audioItem,
-            className: viewAs === "List" /* List */ ? "mb-4" : "mb-6"
-          },
-          index,
-          !1,
-          {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 214,
-            columnNumber: 7
-          },
-          this
-        ))
-      ] }, void 0, !0, {
-        fileName: "app/routes/index.tsx",
-        lineNumber: 202,
-        columnNumber: 5
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "flex flex-col items-start md:ml-8 md:pl-8 md:w-1/4 md:border-l md:border-gray-300", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h3", { className: "mb-4", children: "Browse" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 224,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: "/entities/people", className: "mb-2", children: "People" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 225,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: "/entities/tunes", className: "mb-2", children: "Tunes" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 228,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: "/entities/instruments", className: "mb-2", children: "Instruments" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 231,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: "/entities/collections", className: "mb-2", children: "Collections" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 234,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Stats" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 238,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
-          numAudioItemsAllTime,
-          " Audio Items"
-        ] }, void 0, !0, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 239,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
-          numTagsAllTime,
-          " Tags"
-        ] }, void 0, !0, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 242,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("span", { className: "mb-2 text-gray-500", children: [
-          numCommentsAllTime,
-          " Comments"
-        ] }, void 0, !0, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 243,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Collections" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 247,
-          columnNumber: 6
-        }, this),
-        collections.map((collection, index) => {
-          let { name } = collection;
-          return name ? /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "mb-2 text-gray-500", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 255,
-            columnNumber: 9
-          }, this) }, index, !1, {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 254,
-            columnNumber: 8
-          }, this) : null;
-        }),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Features + Fixes" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 262,
-          columnNumber: 6
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
-          "a",
-          {
-            className: "mb-2",
-            href: "https://github.com/dgurns/trad-archive/pulls?q=is%3Apr+is%3Amerged+sort%3Aupdated-desc",
-            target: "_blank",
-            rel: "noreferrer",
-            children: "View on GitHub \u2197"
-          },
-          void 0,
-          !1,
-          {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 263,
-            columnNumber: 6
-          },
-          this
-        ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h3", { className: "mt-6 mb-4", children: "Latest Comments" }, void 0, !1, {
-          fileName: "app/routes/index.tsx",
-          lineNumber: 272,
-          columnNumber: 6
-        }, this),
-        comments.map((comment, index) => {
-          let { createdByUser, parentAudioItem, text } = comment;
-          return !createdByUser || !parentAudioItem ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "mb-4 text-gray-500", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: " mb-1", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: `/users/${createdByUser.id}`, children: createdByUser.username }, void 0, !1, {
-                fileName: "app/routes/index.tsx",
-                lineNumber: 281,
-                columnNumber: 10
-              }, this),
-              " commented on ",
-              /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react64.Link, { to: Entity_default.makeHrefForView(parentAudioItem), children: parentAudioItem.name }, void 0, !1, {
-                fileName: "app/routes/index.tsx",
-                lineNumber: 285,
-                columnNumber: 10
-              }, this),
-              ":"
-            ] }, void 0, !0, {
-              fileName: "app/routes/index.tsx",
-              lineNumber: 280,
-              columnNumber: 9
-            }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "whitespace-pre-line text-sm", children: text }, void 0, !1, {
-              fileName: "app/routes/index.tsx",
-              lineNumber: 290,
-              columnNumber: 9
-            }, this)
-          ] }, index, !0, {
-            fileName: "app/routes/index.tsx",
-            lineNumber: 279,
-            columnNumber: 8
-          }, this);
-        })
-      ] }, void 0, !0, {
-        fileName: "app/routes/index.tsx",
-        lineNumber: 223,
-        columnNumber: 5
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/routes/index.tsx",
-      lineNumber: 201,
-      columnNumber: 4
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/routes/index.tsx",
-    lineNumber: 193,
     columnNumber: 3
   }, this);
 }
@@ -6560,10 +6556,10 @@ var action9 = async ({ request }) => {
 };
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "b94da72f", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-VD2RZH7A.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-W4FZDM77.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-IR7CUAXU.js", imports: ["/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-E3SI33KS.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-4HQM4E2D.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-4S34WU2F.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-N7WIWN4J.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-M2BYOI3U.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-BHZELHAG.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-JNEKSOLV.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-7QOFBSUQ.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-L6JK5UJY.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-YZDLTG67.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-QUYROJ6I.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-5DF2FW3B.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-4UI5TM32.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-A7VFI3MC.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-2HNC2HKB.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-B94DA72F.js" };
+var assets_manifest_default = { version: "a10de835", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-VD2RZH7A.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-4RNYPQCD.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account": { id: "routes/account", parentId: "root", path: "account", index: void 0, caseSensitive: void 0, module: "/build/routes/account-JON5SBW7.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.$slug": { id: "routes/entities.audio-items.$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.$slug-3RL5V52S.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items._index": { id: "routes/entities.audio-items._index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities.audio-items._index-3JUJIYCA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.random": { id: "routes/entities.audio-items.random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.random-AQ7KFAOL.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections.$slug": { id: "routes/entities.collections.$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.collections.$slug-5GEGC7OK.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections._index": { id: "routes/entities.collections._index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities.collections._index-5NEWO67B.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments.$slug": { id: "routes/entities.instruments.$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.instruments.$slug-NMF2MOIJ.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments._index": { id: "routes/entities.instruments._index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities.instruments._index-5HSWHR2F.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people.$slug": { id: "routes/entities.people.$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.people.$slug-MVO7IVAQ.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people._index": { id: "routes/entities.people._index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities.people._index-WHQRASRE.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places.$slug": { id: "routes/entities.places.$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.places.$slug-JDNBCGF4.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places._index": { id: "routes/entities.places._index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities.places._index-56QAP7BP.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes.$slug": { id: "routes/entities.tunes.$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.tunes.$slug-ZFKOHM6N.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes._index": { id: "routes/entities.tunes._index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities.tunes._index-LECH5HBS.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-A7VFI3MC.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users.$id": { id: "routes/users.$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users.$id-FG6JUIVI.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-A10DE835.js" };
 
 // server-entry-module:@remix-run/dev/server-build
-var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, unstable_cssSideEffectImports: !1, unstable_dev: !1, unstable_postcss: !1, unstable_tailwind: !1, unstable_vanillaExtract: !1, v2_errorBoundary: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !1 }, publicPath = "/build/", entry = { module: entry_server_react_stream_exports }, routes = {
+var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, unstable_cssSideEffectImports: !1, unstable_dev: !1, unstable_postcss: !1, unstable_tailwind: !1, unstable_vanillaExtract: !1, v2_errorBoundary: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_react_stream_exports }, routes = {
   root: {
     id: "root",
     parentId: void 0,
@@ -6572,109 +6568,109 @@ var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, u
     caseSensitive: void 0,
     module: root_exports
   },
-  "routes/entities/audio-items/random": {
-    id: "routes/entities/audio-items/random",
-    parentId: "root",
-    path: "entities/audio-items/random",
-    index: void 0,
-    caseSensitive: void 0,
-    module: random_exports
-  },
-  "routes/entities/audio-items/$slug": {
-    id: "routes/entities/audio-items/$slug",
-    parentId: "root",
-    path: "entities/audio-items/:slug",
-    index: void 0,
-    caseSensitive: void 0,
-    module: slug_exports
-  },
-  "routes/entities/audio-items/index": {
-    id: "routes/entities/audio-items/index",
+  "routes/entities.audio-items._index": {
+    id: "routes/entities.audio-items._index",
     parentId: "root",
     path: "entities/audio-items",
     index: !0,
     caseSensitive: void 0,
-    module: audio_items_exports
+    module: entities_audio_items_index_exports
   },
-  "routes/entities/collections/$slug": {
-    id: "routes/entities/collections/$slug",
+  "routes/entities.audio-items.random": {
+    id: "routes/entities.audio-items.random",
     parentId: "root",
-    path: "entities/collections/:slug",
+    path: "entities/audio-items/random",
     index: void 0,
     caseSensitive: void 0,
-    module: slug_exports2
+    module: entities_audio_items_random_exports
   },
-  "routes/entities/collections/index": {
-    id: "routes/entities/collections/index",
+  "routes/entities.collections._index": {
+    id: "routes/entities.collections._index",
     parentId: "root",
     path: "entities/collections",
     index: !0,
     caseSensitive: void 0,
-    module: collections_exports
+    module: entities_collections_index_exports
   },
-  "routes/entities/instruments/$slug": {
-    id: "routes/entities/instruments/$slug",
-    parentId: "root",
-    path: "entities/instruments/:slug",
-    index: void 0,
-    caseSensitive: void 0,
-    module: slug_exports3
-  },
-  "routes/entities/instruments/index": {
-    id: "routes/entities/instruments/index",
+  "routes/entities.instruments._index": {
+    id: "routes/entities.instruments._index",
     parentId: "root",
     path: "entities/instruments",
     index: !0,
     caseSensitive: void 0,
-    module: instruments_exports
+    module: entities_instruments_index_exports
   },
-  "routes/entities/people/$slug": {
-    id: "routes/entities/people/$slug",
+  "routes/entities.audio-items.$slug": {
+    id: "routes/entities.audio-items.$slug",
     parentId: "root",
-    path: "entities/people/:slug",
+    path: "entities/audio-items/:slug",
     index: void 0,
     caseSensitive: void 0,
-    module: slug_exports4
+    module: entities_audio_items_slug_exports
   },
-  "routes/entities/people/index": {
-    id: "routes/entities/people/index",
+  "routes/entities.collections.$slug": {
+    id: "routes/entities.collections.$slug",
+    parentId: "root",
+    path: "entities/collections/:slug",
+    index: void 0,
+    caseSensitive: void 0,
+    module: entities_collections_slug_exports
+  },
+  "routes/entities.instruments.$slug": {
+    id: "routes/entities.instruments.$slug",
+    parentId: "root",
+    path: "entities/instruments/:slug",
+    index: void 0,
+    caseSensitive: void 0,
+    module: entities_instruments_slug_exports
+  },
+  "routes/entities.people._index": {
+    id: "routes/entities.people._index",
     parentId: "root",
     path: "entities/people",
     index: !0,
     caseSensitive: void 0,
-    module: people_exports
+    module: entities_people_index_exports
   },
-  "routes/entities/places/$slug": {
-    id: "routes/entities/places/$slug",
-    parentId: "root",
-    path: "entities/places/:slug",
-    index: void 0,
-    caseSensitive: void 0,
-    module: slug_exports5
-  },
-  "routes/entities/places/index": {
-    id: "routes/entities/places/index",
+  "routes/entities.places._index": {
+    id: "routes/entities.places._index",
     parentId: "root",
     path: "entities/places",
     index: !0,
     caseSensitive: void 0,
-    module: places_exports
+    module: entities_places_index_exports
   },
-  "routes/entities/tunes/$slug": {
-    id: "routes/entities/tunes/$slug",
+  "routes/entities.people.$slug": {
+    id: "routes/entities.people.$slug",
     parentId: "root",
-    path: "entities/tunes/:slug",
+    path: "entities/people/:slug",
     index: void 0,
     caseSensitive: void 0,
-    module: slug_exports6
+    module: entities_people_slug_exports
   },
-  "routes/entities/tunes/index": {
-    id: "routes/entities/tunes/index",
+  "routes/entities.places.$slug": {
+    id: "routes/entities.places.$slug",
+    parentId: "root",
+    path: "entities/places/:slug",
+    index: void 0,
+    caseSensitive: void 0,
+    module: entities_places_slug_exports
+  },
+  "routes/entities.tunes._index": {
+    id: "routes/entities.tunes._index",
     parentId: "root",
     path: "entities/tunes",
     index: !0,
     caseSensitive: void 0,
-    module: tunes_exports
+    module: entities_tunes_index_exports
+  },
+  "routes/entities.tunes.$slug": {
+    id: "routes/entities.tunes.$slug",
+    parentId: "root",
+    path: "entities/tunes/:slug",
+    index: void 0,
+    caseSensitive: void 0,
+    module: entities_tunes_slug_exports
   },
   "routes/choose-new-password": {
     id: "routes/choose-new-password",
@@ -6692,14 +6688,6 @@ var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, u
     caseSensitive: void 0,
     module: reset_password_exports
   },
-  "routes/account/index": {
-    id: "routes/account/index",
-    parentId: "root",
-    path: "account",
-    index: !0,
-    caseSensitive: void 0,
-    module: account_exports
-  },
   "routes/relationships": {
     id: "routes/relationships",
     parentId: "root",
@@ -6716,13 +6704,13 @@ var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, u
     caseSensitive: void 0,
     module: saved_items_exports
   },
-  "routes/users/$id": {
-    id: "routes/users/$id",
+  "routes/users.$id": {
+    id: "routes/users.$id",
     parentId: "root",
     path: "users/:id",
     index: void 0,
     caseSensitive: void 0,
-    module: id_exports
+    module: users_id_exports
   },
   "routes/comments": {
     id: "routes/comments",
@@ -6731,6 +6719,22 @@ var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, u
     index: void 0,
     caseSensitive: void 0,
     module: comments_exports
+  },
+  "routes/account": {
+    id: "routes/account",
+    parentId: "root",
+    path: "account",
+    index: void 0,
+    caseSensitive: void 0,
+    module: account_exports
+  },
+  "routes/_index": {
+    id: "routes/_index",
+    parentId: "root",
+    path: void 0,
+    index: !0,
+    caseSensitive: void 0,
+    module: index_exports
   },
   "routes/logout": {
     id: "routes/logout",
@@ -6755,14 +6759,6 @@ var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, u
     index: void 0,
     caseSensitive: void 0,
     module: signup_exports
-  },
-  "routes/index": {
-    id: "routes/index",
-    parentId: "root",
-    path: void 0,
-    index: !0,
-    caseSensitive: void 0,
-    module: routes_exports
   },
   "routes/login": {
     id: "routes/login",

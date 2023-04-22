@@ -1,23 +1,14 @@
 import { useLoaderData } from "@remix-run/react";
-import type { DataFunctionArgs } from "@remix-run/node";
-import type { Prisma, Collection } from "@prisma/client";
+import type { DataFunctionArgs, LoaderArgs } from "@remix-run/node";
+import type { Prisma } from "@prisma/client";
 
-import { type AudioItemWithRelations, SortBy } from "~/types";
+import { SortBy } from "~/types";
 import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import ViewEntityAndAudioItems from "~/components/ViewEntityAndAudioItems";
 
-interface LoaderData {
-	collection: Collection;
-	audioItems: AudioItemWithRelations[];
-	totalAudioItems: number;
-}
-
-export async function loader({
-	params,
-	request,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ params, request }: LoaderArgs) {
 	const { slug } = params;
 	const collection = await db.collection.findUnique({
 		where: {
@@ -103,7 +94,7 @@ export async function loader({
 
 const ViewCollectionBySlug = () => {
 	const { collection, audioItems, totalAudioItems } =
-		useLoaderData<LoaderData>();
+		useLoaderData<typeof loader>();
 
 	return (
 		<Layout>

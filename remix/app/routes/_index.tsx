@@ -167,7 +167,7 @@ export default function Home() {
 		numAudioItemsAllTime,
 		numTagsAllTime,
 		numCommentsAllTime,
-	} = useLoaderData<LoaderData>();
+	} = useLoaderData<typeof loader>();
 	const { search } = useLocation();
 	const params = new URLSearchParams(search);
 	const viewAs = (params.get("viewAs") as ViewAs) ?? ViewAs.Cards;

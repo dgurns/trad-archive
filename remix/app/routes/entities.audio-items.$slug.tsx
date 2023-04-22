@@ -10,14 +10,7 @@ import Layout from "~/components/Layout";
 import AudioItemComponent from "~/components/AudioItem";
 import Breadcrumb from "~/components/Breadcrumb";
 
-interface LoaderData {
-	audioItem: AudioItemWithRelations;
-}
-
-export async function loader({
-	request,
-	params,
-}: DataFunctionArgs): Promise<LoaderData> {
+export async function loader({ request, params }: DataFunctionArgs) {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = String(session.get("userId") ?? "");
 
@@ -67,7 +60,7 @@ export async function loader({
 }
 
 const ViewAudioItemBySlug = () => {
-	const { audioItem } = useLoaderData<LoaderData>();
+	const { audioItem } = useLoaderData<typeof loader>();
 
 	return (
 		<Layout>

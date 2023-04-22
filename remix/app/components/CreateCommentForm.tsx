@@ -18,7 +18,7 @@ const CreateCommentForm = ({ parentAudioItem }: Props) => {
 	return (
 		<fetcher.Form
 			ref={formRef}
-			method="post"
+			method="POST"
 			action="/comments"
 			className="w-full"
 		>

@@ -7,7 +7,8 @@
 		"dev": "run-p dev:*",
 		"build:css": "tailwindcss -m -i ./app/styles/globals.css -o ./app/styles/globals-generated-do-not-edit.css",
 		"build": "npm run build:css && remix build",
-		"start": "remix-serve build"
+		"start": "remix-serve build",
+		"postinstall": "prisma generate"
 	},
 	"prisma": {
 		"seed": "node_modules/ts-node/dist/bin.js prisma/seed.ts"

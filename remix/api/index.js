@@ -1910,7 +1910,7 @@ __export(entities_audio_items_slug_exports, {
   default: () => entities_audio_items_slug_default,
   loader: () => loader5
 });
-var import_react44 = require("@remix-run/react");
+var import_remix_typedjson = require("remix-typedjson");
 
 // app/components/AudioItemCard.tsx
 var import_react37 = require("react"), import_react38 = require("@remix-run/react");
@@ -3661,12 +3661,12 @@ async function loader5({ request, params }) {
       status: 404,
       statusText: "Could not find this AudioItem"
     });
-  return {
+  return (0, import_remix_typedjson.typedjson)({
     audioItem
-  };
+  });
 }
 var ViewAudioItemBySlug = () => {
-  let { audioItem } = (0, import_react44.useLoaderData)();
+  let { audioItem } = (0, import_remix_typedjson.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("div", { className: "mb-6", children: /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(
       Breadcrumb_default,
@@ -3743,16 +3743,16 @@ __export(entities_collections_slug_exports, {
   default: () => entities_collections_slug_default,
   loader: () => loader6
 });
-var import_remix_typedjson = require("remix-typedjson");
+var import_remix_typedjson2 = require("remix-typedjson");
 
 // app/components/ViewEntityAndAudioItems.tsx
-var import_react48 = require("@remix-run/react");
+var import_react47 = require("@remix-run/react");
 
 // app/hooks/useFilters.ts
-var import_react46 = require("react"), import_react47 = require("@remix-run/react");
+var import_react45 = require("react"), import_react46 = require("@remix-run/react");
 
 // app/components/Filters.tsx
-var import_react45 = require("react");
+var import_react44 = require("react");
 var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime"), Filters = ({
   totalItems,
   page,
@@ -3766,7 +3766,7 @@ var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime"), Filters = ({
   onChangeViewAs,
   className
 }) => {
-  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortByOptions.length > 0 && sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react45.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react45.useMemo)(() => {
+  let shouldRenderPagination = typeof totalItems == "number" && typeof page == "number" && onChangePage && perPage && onChangePerPage, shouldRenderSortBy = sortByOptions.length > 0 && sortBy && onChangeSortBy, shouldRenderViewAs = viewAs && onChangeViewAs, totalPages = (0, import_react44.useMemo)(() => typeof totalItems != "number" || typeof perPage > "u" || totalItems === 0 ? 1 : Math.ceil(totalItems / perPage), [totalItems, perPage]), pageSelectOptions = (0, import_react44.useMemo)(() => {
     let output = [], i = 1;
     for (; i <= totalPages; )
       output.push(
@@ -3777,7 +3777,7 @@ var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime"), Filters = ({
         }, this)
       ), i++;
     return output;
-  }, [totalPages]), perPageOptions = (0, import_react45.useMemo)(() => {
+  }, [totalPages]), perPageOptions = (0, import_react44.useMemo)(() => {
     let output = [];
     for (let value in PerPage)
       isNaN(Number(value)) || output.push(
@@ -3913,7 +3913,7 @@ var useFilters = ({
   defaultSortBy = "DateAddedOldToNew" /* DateAddedOldToNew */,
   defaultViewAs = "Cards" /* Cards */
 } = {}) => {
-  let navigate = (0, import_react47.useNavigate)(), { pathname, search } = (0, import_react47.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react46.useCallback)(
+  let navigate = (0, import_react46.useNavigate)(), { pathname, search } = (0, import_react46.useLocation)(), queryParams = new URLSearchParams(search), page = parseInt(queryParams.get("page") ?? "1", 10) || defaultPage, perPage = parseInt(queryParams.get("perPage") ?? "20", 10) || defaultPerPage, sortBy = queryParams.get("sortBy") ?? defaultSortBy, viewAs = queryParams.get("viewAs") ?? defaultViewAs, updateQueryParams = (0, import_react45.useCallback)(
     (paramsToUpdate = {}) => {
       let queryParams2 = new URLSearchParams(search);
       return Object.keys(paramsToUpdate).forEach((paramName) => {
@@ -3922,20 +3922,20 @@ var useFilters = ({
       }), navigate(`${pathname}?${queryParams2.toString()}`);
     },
     [navigate, pathname, search]
-  ), onChangePage = (0, import_react46.useCallback)(
+  ), onChangePage = (0, import_react45.useCallback)(
     (event) => updateQueryParams({ page: event.target.value }),
     [updateQueryParams]
-  ), onChangePerPage = (0, import_react46.useCallback)(
+  ), onChangePerPage = (0, import_react45.useCallback)(
     (event) => updateQueryParams({ perPage: event.target.value, page: "1" }),
     [updateQueryParams]
-  ), onChangeSortBy = (0, import_react46.useCallback)(
+  ), onChangeSortBy = (0, import_react45.useCallback)(
     (event) => updateQueryParams({ sortBy: event.target.value }),
     [updateQueryParams]
-  ), onChangeViewAs = (0, import_react46.useCallback)(
+  ), onChangeViewAs = (0, import_react45.useCallback)(
     (event) => updateQueryParams({ viewAs: event.target.value }),
     [updateQueryParams]
   );
-  return (0, import_react46.useMemo)(
+  return (0, import_react45.useMemo)(
     () => ({
       Filters: Filters_default,
       filtersProps: {
@@ -3975,7 +3975,7 @@ var import_client7 = require("@prisma/client"), import_jsx_dev_runtime34 = requi
   totalAudioItems,
   className
 }) => {
-  let { name } = entity ?? {}, { search } = (0, import_react48.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { name } = entity ?? {}, { search } = (0, import_react47.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs"), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalAudioItems
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: `flex flex-1 flex-col ${className ?? ""}`, children: [
@@ -4191,14 +4191,14 @@ async function loader6({ params, request }) {
       }
     })
   ]);
-  return (0, import_remix_typedjson.typedjson)({
+  return (0, import_remix_typedjson2.typedjson)({
     collection,
     audioItems,
     totalAudioItems
   });
 }
 var ViewCollectionBySlug = () => {
-  let { collection, audioItems, totalAudioItems } = (0, import_remix_typedjson.useTypedLoaderData)();
+  let { collection, audioItems, totalAudioItems } = (0, import_remix_typedjson2.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
@@ -4227,7 +4227,7 @@ __export(entities_instruments_slug_exports, {
   default: () => entities_instruments_slug_default,
   loader: () => loader7
 });
-var import_remix_typedjson2 = require("remix-typedjson");
+var import_remix_typedjson3 = require("remix-typedjson");
 var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
 async function loader7({ params, request }) {
   let { slug } = params, instrument = await db.instrument.findUnique({
@@ -4291,14 +4291,14 @@ async function loader7({ params, request }) {
       }
     })
   ]);
-  return (0, import_remix_typedjson2.typedjson)({
+  return (0, import_remix_typedjson3.typedjson)({
     instrument,
     audioItems,
     totalAudioItems
   });
 }
 var ViewInstrumentBySlug = () => {
-  let { instrument, audioItems, totalAudioItems } = (0, import_remix_typedjson2.useTypedLoaderData)();
+  let { instrument, audioItems, totalAudioItems } = (0, import_remix_typedjson3.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
@@ -4329,7 +4329,7 @@ __export(entities_people_index_exports, {
   loader: () => loader8,
   meta: () => meta4
 });
-var import_react49 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
+var import_react48 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
 var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime");
 function meta4() {
   return [
@@ -4384,7 +4384,7 @@ var action2 = async ({ request }) => {
     );
   }
 }, People = () => {
-  let people = (0, import_react49.useLoaderData)();
+  let people = (0, import_react48.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("h1", { className: "mb-6", children: "People" }, void 0, !1, {
       fileName: "app/routes/entities.people._index.tsx",
@@ -4396,7 +4396,7 @@ var action2 = async ({ request }) => {
       lineNumber: 105,
       columnNumber: 5
     }, this),
-    people.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("ul", { children: people.map((person, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react49.Link, { to: Entity_default.makeHrefForView(person), children: person.name }, void 0, !1, {
+    people.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("ul", { children: people.map((person, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react48.Link, { to: Entity_default.makeHrefForView(person), children: person.name }, void 0, !1, {
       fileName: "app/routes/entities.people._index.tsx",
       lineNumber: 111,
       columnNumber: 8
@@ -4423,7 +4423,7 @@ __export(entities_places_index_exports, {
   loader: () => loader9,
   meta: () => meta5
 });
-var import_react50 = require("@remix-run/react");
+var import_react49 = require("@remix-run/react");
 var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
 function meta5() {
   return [
@@ -4440,7 +4440,7 @@ function loader9() {
   });
 }
 var Places = () => {
-  let places = (0, import_react50.useLoaderData)();
+  let places = (0, import_react49.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("h1", { className: "mb-6", children: "Places" }, void 0, !1, {
       fileName: "app/routes/entities.places._index.tsx",
@@ -4452,7 +4452,7 @@ var Places = () => {
       lineNumber: 32,
       columnNumber: 5
     }, this),
-    places.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("ul", { children: places.map((place, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react50.Link, { to: Entity_default.makeHrefForView(place), children: place.name }, void 0, !1, {
+    places.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("ul", { children: places.map((place, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react49.Link, { to: Entity_default.makeHrefForView(place), children: place.name }, void 0, !1, {
       fileName: "app/routes/entities.places._index.tsx",
       lineNumber: 38,
       columnNumber: 8
@@ -4478,7 +4478,7 @@ __export(entities_people_slug_exports, {
   default: () => entities_people_slug_default,
   loader: () => loader10
 });
-var import_remix_typedjson3 = require("remix-typedjson");
+var import_remix_typedjson4 = require("remix-typedjson");
 var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
 async function loader10({ params, request }) {
   let { slug } = params, person = await db.person.findUnique({
@@ -4542,14 +4542,14 @@ async function loader10({ params, request }) {
       }
     })
   ]);
-  return (0, import_remix_typedjson3.typedjson)({
+  return (0, import_remix_typedjson4.typedjson)({
     person,
     audioItems,
     totalAudioItems
   });
 }
 var ViewPersonBySlug = () => {
-  let { person, audioItems, totalAudioItems } = (0, import_remix_typedjson3.useTypedLoaderData)();
+  let { person, audioItems, totalAudioItems } = (0, import_remix_typedjson4.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
@@ -4578,7 +4578,7 @@ __export(entities_places_slug_exports, {
   default: () => entities_places_slug_default,
   loader: () => loader11
 });
-var import_remix_typedjson4 = require("remix-typedjson");
+var import_remix_typedjson5 = require("remix-typedjson");
 var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
 async function loader11({ params, request }) {
   let { slug } = params, place = await db.place.findUnique({
@@ -4642,14 +4642,14 @@ async function loader11({ params, request }) {
       }
     })
   ]);
-  return (0, import_remix_typedjson4.typedjson)({
+  return (0, import_remix_typedjson5.typedjson)({
     place,
     audioItems,
     totalAudioItems
   });
 }
 var ViewPlaceBySlug = () => {
-  let { place, audioItems, totalAudioItems } = (0, import_remix_typedjson4.useTypedLoaderData)();
+  let { place, audioItems, totalAudioItems } = (0, import_remix_typedjson5.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
@@ -4679,7 +4679,7 @@ __export(entities_tunes_index_exports, {
   loader: () => loader12,
   meta: () => meta6
 });
-var import_react51 = require("@remix-run/react");
+var import_react50 = require("@remix-run/react");
 var import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
 function meta6() {
   return [
@@ -4708,7 +4708,7 @@ async function loader12({
   };
 }
 var Tunes = () => {
-  let { tunes, totalTunes } = (0, import_react51.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
+  let { tunes, totalTunes } = (0, import_react50.useLoaderData)(), { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: totalTunes,
     defaultPerPage: PER_PAGE
   });
@@ -4753,7 +4753,7 @@ var Tunes = () => {
       lineNumber: 78,
       columnNumber: 5
     }, this),
-    tunes.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("ul", { className: "space-y-2", children: tunes.map((tune, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(import_react51.Link, { to: Entity_default.makeHrefForView(tune), children: tune.name }, void 0, !1, {
+    tunes.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("ul", { className: "space-y-2", children: tunes.map((tune, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(import_react50.Link, { to: Entity_default.makeHrefForView(tune), children: tune.name }, void 0, !1, {
       fileName: "app/routes/entities.tunes._index.tsx",
       lineNumber: 84,
       columnNumber: 8
@@ -4779,7 +4779,7 @@ __export(entities_tunes_slug_exports, {
   default: () => entities_tunes_slug_default,
   loader: () => loader13
 });
-var import_remix_typedjson5 = require("remix-typedjson");
+var import_remix_typedjson6 = require("remix-typedjson");
 var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
 async function loader13({ params, request }) {
   let { slug } = params, tune = await db.tune.findUnique({
@@ -4843,14 +4843,14 @@ async function loader13({ params, request }) {
       }
     })
   ]);
-  return (0, import_remix_typedjson5.typedjson)({
+  return (0, import_remix_typedjson6.typedjson)({
     tune,
     audioItems,
     totalAudioItems
   });
 }
 var ViewTuneBySlug = () => {
-  let { tune, audioItems, totalAudioItems } = (0, import_remix_typedjson5.useTypedLoaderData)();
+  let { tune, audioItems, totalAudioItems } = (0, import_remix_typedjson6.useTypedLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
     ViewEntityAndAudioItems_default,
     {
@@ -4880,7 +4880,7 @@ __export(choose_new_password_exports, {
   default: () => ChooseNewPassword,
   loader: () => loader14
 });
-var import_node7 = require("@remix-run/node"), import_react52 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
+var import_node7 = require("@remix-run/node"), import_react51 = require("@remix-run/react"), import_bcryptjs = __toESM(require("bcryptjs")), import_isAfter = __toESM(require("date-fns/isAfter"));
 var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), loader14 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), validationError = session.get("validationError") || null, error = null, params = new URL(request.url).searchParams, userEmail = params.get("userEmail") ?? "", tokenUnhashed = params.get("tokenUnhashed") ?? "", user = await db.user.findUnique({ where: { email: userEmail } });
   if (!user || !user.autoLoginTokenHashed || !user.autoLoginTokenExpiry)
@@ -4926,7 +4926,7 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), loader14 = asyn
   });
 };
 function ChooseNewPassword() {
-  let transition = (0, import_react52.useTransition)(), { error, validationError } = (0, import_react52.useLoaderData)(), [searchParams] = (0, import_react52.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
+  let transition = (0, import_react51.useTransition)(), { error, validationError } = (0, import_react51.useLoaderData)(), [searchParams] = (0, import_react51.useSearchParams)(), email = searchParams.get("userEmail") ?? "";
   return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("h1", { className: "mb-6", children: "Choose a new password" }, void 0, !1, {
       fileName: "app/routes/choose-new-password.tsx",
@@ -4939,7 +4939,7 @@ function ChooseNewPassword() {
         lineNumber: 116,
         columnNumber: 6
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(import_react52.Link, { to: "/reset-password", children: "Reset Password" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(import_react51.Link, { to: "/reset-password", children: "Reset Password" }, void 0, !1, {
         fileName: "app/routes/choose-new-password.tsx",
         lineNumber: 117,
         columnNumber: 6
@@ -5036,7 +5036,7 @@ __export(reset_password_exports, {
   default: () => ResetPassword,
   loader: () => loader15
 });
-var import_node8 = require("@remix-run/node"), import_react53 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
+var import_node8 = require("@remix-run/node"), import_react52 = require("@remix-run/react"), import_mail = __toESM(require("@sendgrid/mail")), import_bcryptjs2 = __toESM(require("bcryptjs")), import_uuid = require("uuid"), import_addMinutes = __toESM(require("date-fns/addMinutes"));
 var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime"), loader15 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), error = session.get("error") || null, confirmation = session.get("confirmation") || null;
   return (0, import_node8.json)(
@@ -5092,7 +5092,7 @@ var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime"), loader15 = asyn
   });
 };
 function ResetPassword() {
-  let transition = (0, import_react53.useTransition)(), { error, confirmation } = (0, import_react53.useLoaderData)();
+  let transition = (0, import_react52.useTransition)(), { error, confirmation } = (0, import_react52.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("h1", { className: "mb-4", children: "Reset your password" }, void 0, !1, {
       fileName: "app/routes/reset-password.tsx",
@@ -5163,7 +5163,7 @@ function ResetPassword() {
           lineNumber: 139,
           columnNumber: 17
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(import_react53.Link, { to: "/login", children: "Go back" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(import_react52.Link, { to: "/login", children: "Go back" }, void 0, !1, {
           fileName: "app/routes/reset-password.tsx",
           lineNumber: 142,
           columnNumber: 8
@@ -5218,13 +5218,13 @@ __export(saved_items_exports, {
   default: () => SavedItems,
   loader: () => loader17
 });
-var import_react54 = require("@remix-run/react"), import_node10 = require("@remix-run/node");
+var import_react53 = require("@remix-run/react"), import_remix_typedjson7 = require("remix-typedjson");
 var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), loader17 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), { pathname, searchParams } = new URL(request.url), redirectParams = new URLSearchParams({
     redirectTo: pathname
   });
   if (!userId)
-    return (0, import_node10.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_remix_typedjson7.redirect)(`/login?${redirectParams.toString()}`);
   let page = Number(searchParams.get("page") ?? 1), perPage = Number(searchParams.get("perPage") ?? 20), [savedItems, totalSavedItems] = await Promise.all([
     db.savedItem.findMany({
       where: {
@@ -5278,13 +5278,13 @@ var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), loader17 = asyn
         orderedAudioItems.push(a);
         break;
       }
-  return (0, import_node10.json)({ savedItems: orderedAudioItems, totalSavedItems });
+  return (0, import_remix_typedjson7.typedjson)({ savedItems: orderedAudioItems, totalSavedItems });
 }, action5 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectParams = new URLSearchParams({
     redirectTo: referer ? new URL(referer).pathname : "/"
   });
   if (!userId)
-    return (0, import_node10.redirect)(`/login?${redirectParams.toString()}`);
+    return (0, import_remix_typedjson7.redirect)(`/login?${redirectParams.toString()}`);
   let formData = await request.formData(), audioItemId = String(formData.get("audioItemId") ?? ""), existing = await db.savedItem.findUnique({
     where: {
       userId_audioItemId: {
@@ -5293,17 +5293,17 @@ var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), loader17 = asyn
       }
     }
   });
-  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_node10.json)({ ok: !0 }, { status: 200 });
+  return existing ? await db.savedItem.delete({ where: { id: existing.id } }) : await db.savedItem.create({ data: { userId, audioItemId } }), (0, import_remix_typedjson7.typedjson)({ ok: !0 }, { status: 200 });
 };
 function SavedItems() {
-  let { savedItems, totalSavedItems } = (0, import_react54.useLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
+  let { savedItems, totalSavedItems } = (0, import_remix_typedjson7.useTypedLoaderData)(), { Filters: Filters2, filtersProps, viewAs } = useFilters_default({
     totalItems: totalSavedItems,
     defaultViewAs: "Compact" /* Compact */
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "flex flex-col", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("h1", { className: "mb-6", children: "Saved Items" }, void 0, !1, {
       fileName: "app/routes/saved-items.tsx",
-      lineNumber: 148,
+      lineNumber: 134,
       columnNumber: 5
     }, this),
     savedItems.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(
@@ -5318,7 +5318,7 @@ function SavedItems() {
       !1,
       {
         fileName: "app/routes/saved-items.tsx",
-        lineNumber: 151,
+        lineNumber: 137,
         columnNumber: 6
       },
       this
@@ -5326,15 +5326,15 @@ function SavedItems() {
     savedItems.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "text-gray-500", children: [
       "Nothing saved yet - try browsing some",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(import_react54.Link, { to: "/", children: "Audio Items" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(import_react53.Link, { to: "/", children: "Audio Items" }, void 0, !1, {
         fileName: "app/routes/saved-items.tsx",
-        lineNumber: 162,
+        lineNumber: 148,
         columnNumber: 7
       }, this),
       "!"
     ] }, void 0, !0, {
       fileName: "app/routes/saved-items.tsx",
-      lineNumber: 160,
+      lineNumber: 146,
       columnNumber: 6
     }, this),
     savedItems.map((s, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(
@@ -5348,18 +5348,18 @@ function SavedItems() {
       !1,
       {
         fileName: "app/routes/saved-items.tsx",
-        lineNumber: 167,
+        lineNumber: 153,
         columnNumber: 6
       },
       this
     ))
   ] }, void 0, !0, {
     fileName: "app/routes/saved-items.tsx",
-    lineNumber: 147,
+    lineNumber: 133,
     columnNumber: 4
   }, this) }, void 0, !1, {
     fileName: "app/routes/saved-items.tsx",
-    lineNumber: 146,
+    lineNumber: 132,
     columnNumber: 3
   }, this);
 }
@@ -5370,7 +5370,7 @@ __export(users_id_exports, {
   default: () => users_id_default,
   loader: () => loader18
 });
-var import_react55 = require("@remix-run/react"), import_node11 = require("@remix-run/node");
+var import_react54 = require("@remix-run/react"), import_node10 = require("@remix-run/node");
 var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = async ({ params }) => {
   let user = await db.user.findUnique({ where: { id: params.id } });
   if (!user)
@@ -5378,9 +5378,9 @@ var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), loader18 = asyn
       status: 404,
       statusText: "Could not find a user with this ID"
     });
-  return (0, import_node11.json)({ user });
+  return (0, import_node10.json)({ user });
 }, ViewUserById = () => {
-  let { user } = (0, import_react55.useLoaderData)(), { username, createdAt } = user;
+  let { user } = (0, import_react54.useLoaderData)(), { username, createdAt } = user;
   return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(Layout_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex flex-col-reverse md:flex-row", children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "flex flex-1 flex-col pb-8", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
       Breadcrumb_default,
@@ -5438,16 +5438,16 @@ var comments_exports = {};
 __export(comments_exports, {
   action: () => action6
 });
-var import_node12 = require("@remix-run/node");
+var import_node11 = require("@remix-run/node");
 var action6 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
     referer ? new URL(referer).pathname : "/"
   );
   if (!userId)
-    return (0, import_node12.redirect)(`/login?redirectTo=${redirectTo}`);
+    return (0, import_node11.redirect)(`/login?redirectTo=${redirectTo}`);
   let formData = await request.formData(), text = String(formData.get("text") ?? ""), parentAudioItemId = String(formData.get("parentAudioItemId") ?? ""), error;
   if (text ? parentAudioItemId || (error = "Parent audio item ID not defined") : error = "Comment cannot be empty", error)
-    return (0, import_node12.json)({ error }, { status: 400 });
+    return (0, import_node11.json)({ error }, { status: 400 });
   let comment = await db.comment.create({
     data: {
       text,
@@ -5455,7 +5455,7 @@ var action6 = async ({ request }) => {
       createdByUserId: userId
     }
   });
-  return (0, import_node12.json)({ comment }, { status: 201 });
+  return (0, import_node11.json)({ comment }, { status: 201 });
 };
 
 // app/routes/account.tsx
@@ -5464,16 +5464,16 @@ __export(account_exports, {
   default: () => AccountHome,
   loader: () => loader19
 });
-var import_react56 = require("@remix-run/react"), import_node13 = require("@remix-run/node");
+var import_react55 = require("@remix-run/react"), import_node12 = require("@remix-run/node");
 var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), loader19 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), currentUserId = String(session.get("userId") ?? ""), currentUser = await db.user.findUnique({
     where: { id: currentUserId }
   });
   if (!currentUser) {
     let params = new URLSearchParams();
-    return params.set("redirectTo", "/account"), (0, import_node13.redirect)(`/login?${params.toString()}`);
+    return params.set("redirectTo", "/account"), (0, import_node12.redirect)(`/login?${params.toString()}`);
   }
-  return (0, import_node13.json)({ currentUser });
+  return (0, import_node12.json)({ currentUser });
 };
 function AccountHome() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(Layout_default, { children: [
@@ -5483,12 +5483,12 @@ function AccountHome() {
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "flex flex-col space-y-2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react56.Link, { to: "/reset-password", children: "Change Password" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react55.Link, { to: "/reset-password", children: "Change Password" }, void 0, !1, {
         fileName: "app/routes/account.tsx",
         lineNumber: 33,
         columnNumber: 5
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react56.Link, { to: "/logout", children: "Log Out " }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(import_react55.Link, { to: "/logout", children: "Log Out " }, void 0, !1, {
         fileName: "app/routes/account.tsx",
         lineNumber: 34,
         columnNumber: 5
@@ -5511,7 +5511,7 @@ __export(index_exports, {
   default: () => Home,
   loader: () => loader20
 });
-var import_react57 = require("react"), import_react58 = require("@remix-run/react"), import_subMinutes = __toESM(require("date-fns/subMinutes")), import_remix_typedjson6 = require("remix-typedjson");
+var import_react56 = require("react"), import_react57 = require("@remix-run/react"), import_subMinutes = __toESM(require("date-fns/subMinutes")), import_remix_typedjson8 = require("remix-typedjson");
 
 // app/services/LocalStorage.ts
 var localStorageIsAvailable = typeof window < "u" && (window == null ? void 0 : window.localStorage), setItem = (key, value) => {
@@ -5714,7 +5714,7 @@ async function loader20({ request }) {
         orderedAudioItems.push(a);
         break;
       }
-  return (0, import_remix_typedjson6.typedjson)({
+  return (0, import_remix_typedjson8.typedjson)({
     audioItems: orderedAudioItems,
     collections,
     comments,
@@ -5731,13 +5731,13 @@ function Home() {
     numAudioItemsAllTime,
     numTagsAllTime,
     numCommentsAllTime
-  } = (0, import_remix_typedjson6.useTypedLoaderData)(), { search } = (0, import_react58.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
+  } = (0, import_remix_typedjson8.useTypedLoaderData)(), { search } = (0, import_react57.useLocation)(), viewAs = new URLSearchParams(search).get("viewAs") ?? "Cards" /* Cards */, { Filters: Filters2, filtersProps } = useFilters_default({
     totalItems: numAudioItemsAllTime
-  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react57.useState)(!1);
-  (0, import_react57.useEffect)(() => {
+  }), [shouldShowIntro, setShouldShowIntro] = (0, import_react56.useState)(!1);
+  (0, import_react56.useEffect)(() => {
     LocalStorage_default.getItem("SHOULD_SHOW_INTRO") !== "false" && setShouldShowIntro(!0);
   }, []);
-  let onCloseIntro = (0, import_react57.useCallback)(() => {
+  let onCloseIntro = (0, import_react56.useCallback)(() => {
     LocalStorage_default.setItem("SHOULD_SHOW_INTRO", "false"), setShouldShowIntro(!1);
   }, []);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(Layout_default, { children: [
@@ -5808,22 +5808,22 @@ function Home() {
           lineNumber: 209,
           columnNumber: 6
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: "/entities/people", className: "mb-2", children: "People" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: "/entities/people", className: "mb-2", children: "People" }, void 0, !1, {
           fileName: "app/routes/_index.tsx",
           lineNumber: 210,
           columnNumber: 6
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: "/entities/tunes", className: "mb-2", children: "Tunes" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: "/entities/tunes", className: "mb-2", children: "Tunes" }, void 0, !1, {
           fileName: "app/routes/_index.tsx",
           lineNumber: 213,
           columnNumber: 6
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: "/entities/instruments", className: "mb-2", children: "Instruments" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: "/entities/instruments", className: "mb-2", children: "Instruments" }, void 0, !1, {
           fileName: "app/routes/_index.tsx",
           lineNumber: 216,
           columnNumber: 6
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: "/entities/collections", className: "mb-2", children: "Collections" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: "/entities/collections", className: "mb-2", children: "Collections" }, void 0, !1, {
           fileName: "app/routes/_index.tsx",
           lineNumber: 219,
           columnNumber: 6
@@ -5864,7 +5864,7 @@ function Home() {
         }, this),
         collections.map((collection, index) => {
           let { name } = collection;
-          return name ? /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "mb-2 text-gray-500", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
+          return name ? /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "mb-2 text-gray-500", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
             fileName: "app/routes/_index.tsx",
             lineNumber: 240,
             columnNumber: 9
@@ -5906,13 +5906,13 @@ function Home() {
           let { createdByUser, parentAudioItem, text } = comment;
           return !createdByUser || !parentAudioItem ? null : /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "mb-4 text-gray-500", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: " mb-1", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: `/users/${createdByUser.id}`, children: createdByUser.username }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: `/users/${createdByUser.id}`, children: createdByUser.username }, void 0, !1, {
                 fileName: "app/routes/_index.tsx",
                 lineNumber: 266,
                 columnNumber: 10
               }, this),
               " commented on ",
-              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react58.Link, { to: Entity_default.makeHrefForView(parentAudioItem), children: parentAudioItem.name }, void 0, !1, {
+              /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react57.Link, { to: Entity_default.makeHrefForView(parentAudioItem), children: parentAudioItem.name }, void 0, !1, {
                 fileName: "app/routes/_index.tsx",
                 lineNumber: 270,
                 columnNumber: 10
@@ -5956,10 +5956,10 @@ var logout_exports = {};
 __export(logout_exports, {
   loader: () => loader21
 });
-var import_node14 = require("@remix-run/node");
+var import_node13 = require("@remix-run/node");
 var loader21 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie"));
-  return (0, import_node14.redirect)("/login", {
+  return (0, import_node13.redirect)("/login", {
     headers: {
       "Set-Cookie": await destroySession(session)
     }
@@ -5971,7 +5971,7 @@ var search_exports = {};
 __export(search_exports, {
   loader: () => loader22
 });
-var import_client8 = require("@prisma/client"), import_node15 = require("@remix-run/node");
+var import_client8 = require("@prisma/client"), import_node14 = require("@remix-run/node");
 var loader22 = async ({ request }) => {
   let url = new URL(request.url), searchTerm = url.searchParams.get("searchTerm") || "", entityTypes = url.searchParams.getAll("entityTypes");
   entityTypes.length === 0 && (entityTypes = [
@@ -5984,7 +5984,7 @@ var loader22 = async ({ request }) => {
   ]);
   let take = Number(url.searchParams.get("take") ?? 24);
   if (searchTerm.length < 3)
-    return (0, import_node15.json)(
+    return (0, import_node14.json)(
       { error: "Must include a search term of at least 3 letters" },
       { status: 400 }
     );
@@ -6112,7 +6112,7 @@ var loader22 = async ({ request }) => {
     (prevVal, curVal) => [...prevVal, ...curVal],
     []
   );
-  return (0, import_node15.json)({ results }, { status: 200 });
+  return (0, import_node14.json)({ results }, { status: 200 });
 };
 
 // app/routes/signup.tsx
@@ -6122,14 +6122,14 @@ __export(signup_exports, {
   default: () => SignUp,
   loader: () => loader23
 });
-var import_react59 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
-var import_node16 = require("@remix-run/node");
+var import_react58 = require("@remix-run/react"), import_bcryptjs3 = __toESM(require("bcryptjs"));
+var import_node15 = require("@remix-run/node");
 var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime"), loader23 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node16.redirect)(redirectTo || "/");
+    return (0, import_node15.redirect)(redirectTo || "/");
   let data = { error: session.get("error") };
-  return (0, import_node16.json)(data, {
+  return (0, import_node15.json)(data, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
@@ -6140,7 +6140,7 @@ var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime"), loader23 = asyn
     return session.flash(
       "error",
       "There is already a user with this email address. Try logging in?"
-    ), (0, import_node16.redirect)("/signup", {
+    ), (0, import_node15.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
@@ -6148,25 +6148,25 @@ var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime"), loader23 = asyn
   if (!new RegExp(
     /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i
   ).test(email))
-    return session.flash("error", "Email is not valid"), (0, import_node16.redirect)("/signup", {
+    return session.flash("error", "Email is not valid"), (0, import_node15.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(fullName.split(" ").length >= 2))
-    return session.flash("error", "Please enter your full name"), (0, import_node16.redirect)("/signup", {
+    return session.flash("error", "Please enter your full name"), (0, import_node15.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password === passwordConfirm))
-    return session.flash("error", "Passwords don't match"), (0, import_node16.redirect)("/signup", {
+    return session.flash("error", "Passwords don't match"), (0, import_node15.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
     });
   if (!(password.length >= 8))
-    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node16.redirect)("/signup", {
+    return session.flash("error", "Password must be at least 8 characters long"), (0, import_node15.redirect)("/signup", {
       headers: {
         "Set-Cookie": await commitSession(session)
       }
@@ -6178,14 +6178,14 @@ var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime"), loader23 = asyn
       passwordHashed
     }
   });
-  return session.set("userId", newUser.id), (0, import_node16.redirect)(redirectTo || "/", {
+  return session.set("userId", newUser.id), (0, import_node15.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
 };
 function SignUp() {
-  let { error } = (0, import_react59.useLoaderData)(), { state } = (0, import_react59.useTransition)(), { search } = (0, import_react59.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(
+  let { error } = (0, import_react58.useLoaderData)(), { state } = (0, import_react58.useTransition)(), { search } = (0, import_react58.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), logInLinkQueryParams = new URLSearchParams(
     redirectTo ? { redirectTo } : void 0
   );
   return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(Layout_default, { children: [
@@ -6295,7 +6295,7 @@ function SignUp() {
       /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { children: [
         "Already have an account?",
         " ",
-        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react59.Link, { to: `/login?${logInLinkQueryParams.toString()}`, children: "Log in" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(import_react58.Link, { to: `/login?${logInLinkQueryParams.toString()}`, children: "Log in" }, void 0, !1, {
           fileName: "app/routes/signup.tsx",
           lineNumber: 170,
           columnNumber: 6
@@ -6324,42 +6324,42 @@ __export(login_exports, {
   default: () => Login,
   loader: () => loader24
 });
-var import_react60 = require("@remix-run/react"), import_node17 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
+var import_react59 = require("@remix-run/react"), import_node16 = require("@remix-run/node"), import_bcryptjs4 = __toESM(require("bcryptjs"));
 var import_jsx_dev_runtime51 = require("react/jsx-dev-runtime"), loader24 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo");
   if (session.has("userId"))
-    return (0, import_node17.redirect)(redirectTo || "/");
+    return (0, import_node16.redirect)(redirectTo || "/");
   let data = { error: session.get("error") };
-  return (0, import_node17.json)(data, {
+  return (0, import_node16.json)(data, {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   });
 }, action8 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), redirectTo = new URL(request.url).searchParams.get("redirectTo"), formData = await request.formData(), email = String(formData.get("email") ?? ""), password = String(formData.get("password") ?? ""), user = await db.user.findUnique({ where: { email } });
-  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node17.redirect)(redirectTo || "/", {
+  return user ? user.passwordHashed ? import_bcryptjs4.default.compareSync(password, user.passwordHashed) ? (session.set("userId", user.id), (0, import_node16.redirect)(redirectTo || "/", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Incorrect password"), (0, import_node17.redirect)("/login", {
+  })) : (session.flash("error", "Incorrect password"), (0, import_node16.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   })) : (session.flash(
     "error",
     "This user does not have a password. TODO: Redirect to /reset-password page"
-  ), (0, import_node17.redirect)("/login", {
+  ), (0, import_node16.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
-  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node17.redirect)("/login", {
+  })) : (session.flash("error", "Could not find a user with this email"), (0, import_node16.redirect)("/login", {
     headers: {
       "Set-Cookie": await commitSession(session)
     }
   }));
 };
 function Login() {
-  let { error } = (0, import_react60.useLoaderData)(), transition = (0, import_react60.useTransition)(), { search } = (0, import_react60.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(
+  let { error } = (0, import_react59.useLoaderData)(), transition = (0, import_react59.useTransition)(), { search } = (0, import_react59.useLocation)(), redirectTo = new URLSearchParams(search).get("redirectTo"), signUpLinkQueryParams = new URLSearchParams(
     redirectTo ? { redirectTo } : void 0
   );
   return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Layout_default, { children: [
@@ -6438,7 +6438,7 @@ function Login() {
       /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("p", { className: "mb-2", children: [
         "Don't have an account yet?",
         " ",
-        /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react60.Link, { to: `/signup?${signUpLinkQueryParams.toString()}`, children: "Sign up" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react59.Link, { to: `/signup?${signUpLinkQueryParams.toString()}`, children: "Sign up" }, void 0, !1, {
           fileName: "app/routes/login.tsx",
           lineNumber: 125,
           columnNumber: 6
@@ -6448,7 +6448,7 @@ function Login() {
         lineNumber: 123,
         columnNumber: 5
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react60.Link, { to: "/reset-password", children: "Forgot password?" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("p", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react59.Link, { to: "/reset-password", children: "Forgot password?" }, void 0, !1, {
         fileName: "app/routes/login.tsx",
         lineNumber: 130,
         columnNumber: 6
@@ -6474,13 +6474,13 @@ var tags_exports = {};
 __export(tags_exports, {
   action: () => action9
 });
-var import_client9 = require("@prisma/client"), import_node18 = require("@remix-run/node");
+var import_client9 = require("@prisma/client"), import_node17 = require("@remix-run/node");
 var action9 = async ({ request }) => {
   let session = await getSession(request.headers.get("Cookie")), userId = String(session.get("userId") ?? ""), referer = String(request.headers.get("referer") ?? ""), redirectTo = encodeURIComponent(
     referer ? new URL(referer).pathname : "/"
   );
   if (!userId)
-    return (0, import_node18.redirect)(`/login?redirectTo=${redirectTo}`);
+    return (0, import_node17.redirect)(`/login?redirectTo=${redirectTo}`);
   if (request.method === "POST") {
     let formData = await request.formData(), relationshipId = String(formData.get("relationshipId") ?? ""), inverseRelationshipId = String(
       formData.get("inverseRelationshipId") ?? ""
@@ -6488,7 +6488,7 @@ var action9 = async ({ request }) => {
       formData.get("subjectTimeMarkerSeconds") ?? ""
     ), subjectTimeMarkerSeconds = rawSubjectTimeMarkerSeconds === "" ? void 0 : Number(rawSubjectTimeMarkerSeconds);
     if (!relationshipId || !inverseRelationshipId || !subjectEntityType || !subjectEntityId || !objectEntityType || !objectEntityId)
-      return (0, import_node18.json)(
+      return (0, import_node17.json)(
         { error: "Missing required fields for creating Tag" },
         { status: 400 }
       );
@@ -6511,7 +6511,7 @@ var action9 = async ({ request }) => {
       })
     ]);
     if (existing && existingInverse)
-      return (0, import_node18.json)(
+      return (0, import_node17.json)(
         { error: "This Tag has already been created" },
         { status: 400 }
       );
@@ -6532,17 +6532,17 @@ var action9 = async ({ request }) => {
         relationshipId: inverseRelationshipId,
         subjectTimeMarkerSeconds: objectEntityType === import_client9.EntityType.AudioItem ? subjectTimeMarkerSeconds : void 0
       }
-    })), (0, import_node18.json)({ tag, tagInverse }, { status: 201 });
+    })), (0, import_node17.json)({ tag, tagInverse }, { status: 201 });
   }
   if (request.method === "DELETE") {
     let formData = await request.formData(), tagId = String(formData.get("tagId") ?? "");
-    return await db.tag.delete({ where: { id: tagId } }), (0, import_node18.json)({}, { status: 200 });
+    return await db.tag.delete({ where: { id: tagId } }), (0, import_node17.json)({}, { status: 200 });
   }
   return null;
 };
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "9201061f", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-KJS7TNIY.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-5C3CAG5U.js", imports: ["/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account": { id: "routes/account", parentId: "root", path: "account", index: void 0, caseSensitive: void 0, module: "/build/routes/account-JON5SBW7.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.$slug": { id: "routes/entities.audio-items.$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.$slug-3RL5V52S.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items._index": { id: "routes/entities.audio-items._index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities.audio-items._index-3JUJIYCA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.random": { id: "routes/entities.audio-items.random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.random-AQ7KFAOL.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections.$slug": { id: "routes/entities.collections.$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.collections.$slug-PNX2POWI.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections._index": { id: "routes/entities.collections._index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities.collections._index-5NEWO67B.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments.$slug": { id: "routes/entities.instruments.$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.instruments.$slug-JS734WUA.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments._index": { id: "routes/entities.instruments._index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities.instruments._index-5HSWHR2F.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people.$slug": { id: "routes/entities.people.$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.people.$slug-5KTQD5ZV.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people._index": { id: "routes/entities.people._index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities.people._index-WHQRASRE.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places.$slug": { id: "routes/entities.places.$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.places.$slug-5FSONXU7.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places._index": { id: "routes/entities.places._index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities.places._index-56QAP7BP.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes.$slug": { id: "routes/entities.tunes.$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.tunes.$slug-DNBAWCRB.js", imports: ["/build/_shared/chunk-5FX324PW.js", "/build/_shared/chunk-O4TDNY4D.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes._index": { id: "routes/entities.tunes._index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities.tunes._index-LECH5HBS.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-A7VFI3MC.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users.$id": { id: "routes/users.$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users.$id-FG6JUIVI.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-9201061F.js" };
+var assets_manifest_default = { version: "1085b5c6", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-KJS7TNIY.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-EVLDGUOM.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/account": { id: "routes/account", parentId: "root", path: "account", index: void 0, caseSensitive: void 0, module: "/build/routes/account-JON5SBW7.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.$slug": { id: "routes/entities.audio-items.$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.$slug-SVXHBY74.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items._index": { id: "routes/entities.audio-items._index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities.audio-items._index-3JUJIYCA.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.audio-items.random": { id: "routes/entities.audio-items.random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.audio-items.random-AQ7KFAOL.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections.$slug": { id: "routes/entities.collections.$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.collections.$slug-FCX5WIVJ.js", imports: ["/build/_shared/chunk-TOMY4DRL.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.collections._index": { id: "routes/entities.collections._index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities.collections._index-5NEWO67B.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments.$slug": { id: "routes/entities.instruments.$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.instruments.$slug-3ITVLWLE.js", imports: ["/build/_shared/chunk-TOMY4DRL.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.instruments._index": { id: "routes/entities.instruments._index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities.instruments._index-5HSWHR2F.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people.$slug": { id: "routes/entities.people.$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.people.$slug-NJEVXVBY.js", imports: ["/build/_shared/chunk-TOMY4DRL.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.people._index": { id: "routes/entities.people._index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities.people._index-WHQRASRE.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places.$slug": { id: "routes/entities.places.$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.places.$slug-YPPMM7YF.js", imports: ["/build/_shared/chunk-TOMY4DRL.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.places._index": { id: "routes/entities.places._index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities.places._index-56QAP7BP.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes.$slug": { id: "routes/entities.tunes.$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities.tunes.$slug-EWW2NQ2R.js", imports: ["/build/_shared/chunk-TOMY4DRL.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities.tunes._index": { id: "routes/entities.tunes._index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities.tunes._index-LECH5HBS.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-SJTYUX3R.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-UPMS7PKJ.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users.$id": { id: "routes/users.$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users.$id-FG6JUIVI.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-1085B5C6.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, unstable_cssSideEffectImports: !1, unstable_dev: !1, unstable_postcss: !1, unstable_tailwind: !1, unstable_vanillaExtract: !1, v2_errorBoundary: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_react_stream_exports }, routes = {

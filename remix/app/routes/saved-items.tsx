@@ -1,10 +1,6 @@
-import { Link, useLoaderData } from "@remix-run/react";
-import {
-	type ActionFunction,
-	json,
-	redirect,
-	type LoaderFunction,
-} from "@remix-run/node";
+import { Link } from "@remix-run/react";
+import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import { typedjson, useTypedLoaderData, redirect } from "remix-typedjson";
 
 import useFilters from "~/hooks/useFilters";
 import { type AudioItemWithRelations, ViewAs, SortBy } from "~/types";
@@ -14,12 +10,7 @@ import { getSession } from "~/sessions.server";
 import Layout from "~/components/Layout";
 import AudioItem from "~/components/AudioItem";
 
-interface LoaderData {
-	savedItems: AudioItemWithRelations[];
-	totalSavedItems: number;
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = String(session.get("userId") ?? "");
 
@@ -97,15 +88,10 @@ export const loader: LoaderFunction = async ({ request }) => {
 		}
 	}
 
-	return json<LoaderData>({ savedItems: orderedAudioItems, totalSavedItems });
+	return typedjson({ savedItems: orderedAudioItems, totalSavedItems });
 };
 
-interface ActionData {
-	error?: string;
-	ok: boolean;
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
 	const session = await getSession(request.headers.get("Cookie"));
 	const userId = String(session.get("userId") ?? "");
 	const referer = String(request.headers.get("referer") ?? "");
@@ -131,11 +117,11 @@ export const action: ActionFunction = async ({ request }) => {
 	} else {
 		await db.savedItem.create({ data: { userId, audioItemId } });
 	}
-	return json<ActionData>({ ok: true }, { status: 200 });
+	return typedjson({ ok: true }, { status: 200 });
 };
 
 export default function SavedItems() {
-	const { savedItems, totalSavedItems } = useLoaderData<LoaderData>();
+	const { savedItems, totalSavedItems } = useTypedLoaderData<typeof loader>();
 
 	const { Filters, filtersProps, viewAs } = useFilters({
 		totalItems: totalSavedItems,

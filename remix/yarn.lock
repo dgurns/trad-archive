@@ -1763,7 +1763,7 @@
   resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-4.13.0.tgz#582a6b90b6efeb0f465984f1fe0e72a4afaaa5ae"
   integrity sha512-HrniowHRZXHuGT9XRgoXEaP2gJLXM5RMoItaY2PkjvuZ+iHc0Zjbm/302MB8YsPdWozAPHHn+jpFEcEn71OgPw==
 
-"@remix-run/dev@^1.6.4":
+"@remix-run/dev@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/dev/-/dev-1.15.0.tgz#6e719c0a8f4f4dbf6f8a203087812ad1872b72f7"
   integrity sha512-BsE1GN6WM9PhN+agZi4TqUIuYzoHYZrufEdXLg3ZEYxWXqvtRKUNfhsYSDlEhrW+D5fyVQhJrs61wQ83sEXHLQ==
@@ -1822,7 +1822,7 @@
     ws "^7.4.5"
     xdm "^2.0.0"
 
-"@remix-run/eslint-config@^1.6.4":
+"@remix-run/eslint-config@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/eslint-config/-/eslint-config-1.15.0.tgz#4a0128b906fa5b942cb22d3b414b44ccfd1282c7"
   integrity sha512-nwCPK/4anLMDWJnBsrWL9Wfcy2eRDlKjGWZeYeozDpJnH9iG1vA5aow0OmcpblwgvAwcgSC8Gdb7P5uK4Xy5/Q==
@@ -1851,7 +1851,7 @@
   dependencies:
     "@remix-run/node" "1.15.0"
 
-"@remix-run/node@1.15.0", "@remix-run/node@^1.6.4":
+"@remix-run/node@1.15.0", "@remix-run/node@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/node/-/node-1.15.0.tgz#55058094dcb9ac4c37bccd30c10a82381560892e"
   integrity sha512-CS0p8T6A2KvMoAW5zzLA/BtNNCsv34A5RJoouJvXK9/o6MriAQ/YSugg6ldS5mec49neSep+CGeL1RS6tL+3NQ==
@@ -1866,7 +1866,7 @@
     source-map-support "^0.5.21"
     stream-slice "^0.1.2"
 
-"@remix-run/react@^1.6.4":
+"@remix-run/react@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/react/-/react-1.15.0.tgz#8f1e5c1abc88ede9a25e8e8ee58a2a7fe16121b2"
   integrity sha512-S0RuIeHvQTqryCZ3KVl8EsIWCqL6/ky1/kmDpN2n5Pdjew2BLC6DX7OdrY1ZQjbzOMHAROsZlyaSSVXCItunag==
@@ -1880,7 +1880,7 @@
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.5.0.tgz#57618e57942a5f0131374a9fdb0167e25a117fdc"
   integrity sha512-bkUDCp8o1MvFO+qxkODcbhSqRa6P2GXgrGZVpt0dCXNW2HCSCqYI0ZoAqEOSAjRWmmlKcYgFvN4B4S+zo/f8kg==
 
-"@remix-run/serve@^1.6.4":
+"@remix-run/serve@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/serve/-/serve-1.15.0.tgz#7404d202c37dd22c89789db9c118ef702c7e1774"
   integrity sha512-j06vKhxtLSR3JpkcoBMPb1EeM6QrbbuTdDh4m0eY/D4QgUzba4ws6r3OzEGc5FMe5xSULO0YVd2QWlyqBlMIWQ==
@@ -1903,7 +1903,7 @@
     set-cookie-parser "^2.4.8"
     source-map "^0.7.3"
 
-"@remix-run/vercel@^1.6.4":
+"@remix-run/vercel@^1.15.0":
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@remix-run/vercel/-/vercel-1.15.0.tgz#69645c94f5c3a989a41a2a7961c7879cf1633eea"
   integrity sha512-jrJADuNALU76ZV9ioZGSULlpc13D8qMAx7JjiIVQZagSQQdv1rGHxNLX08WyTDfORIcL9bzHDkXkZFJIxj8eVw==
@@ -2000,7 +2000,7 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tailwindcss/forms@^0.5.2":
+"@tailwindcss/forms@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.5.3.tgz#e4d7989686cbcaf416c53f1523df5225332a86e7"
   integrity sha512-y5mb86JUoiUgBjY/o6FJSFZSEttfb3Q5gllE4xoKjAAD+vBrnIhE4dViwUuow3va8mpH4s9jyUbUbrRGoRdc2Q==
@@ -2449,7 +2449,7 @@
   resolved "https://registry.yarnpkg.com/@vercel/node-bridge/-/node-bridge-4.0.1.tgz#e4f41188f61d9cd4e7c44de31d436dd447e1978c"
   integrity sha512-XEfKfnLGzlIBpad7eGNPql1HnMhoSTv9q3uDNC4axdaAC/kI5yvl8kXjuCPAXYvpbJnVQPpcSUC5/r5ap8F3jA==
 
-"@vercel/node@^2.0.0":
+"@vercel/node@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@vercel/node/-/node-2.12.0.tgz#2eff4ffb04ae3ca19a7fd7e49e4f376791284abb"
   integrity sha512-QItQ4DjKrHqTMk/hmtX64V5RfDdp+fDoFzbSbPUICkIOHK3EBCJ5c/392Iv05AwSv+mJIALZUGRQz5o4HKvs6A==

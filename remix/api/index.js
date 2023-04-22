@@ -1479,11 +1479,7 @@ function Footer() {
 }
 
 // app/root.tsx
-var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime"), meta = () => ({
-  charset: "utf-8",
-  title: "Trad Archive",
-  viewport: "width=device-width,initial-scale=1"
-});
+var import_jsx_dev_runtime13 = require("react/jsx-dev-runtime"), meta = () => [{ title: "Trad Archive" }];
 function links() {
   return [
     { rel: "stylesheet", href: globals_generated_do_not_edit_default },
@@ -1537,17 +1533,27 @@ function App() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("head", { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Meta, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 98,
+        lineNumber: 95,
+        columnNumber: 5
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("meta", { charSet: "utf-8" }, void 0, !1, {
+        fileName: "app/root.tsx",
+        lineNumber: 96,
+        columnNumber: 5
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }, void 0, !1, {
+        fileName: "app/root.tsx",
+        lineNumber: 97,
         columnNumber: 5
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Links, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 99,
+        lineNumber: 98,
         columnNumber: 5
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 97,
+      lineNumber: 94,
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(PlayerContextProvider_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("body", { className: "bg-gray-100", children: [
@@ -1555,64 +1561,64 @@ function App() {
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "flex flex-col justify-start items-center", children: [
           /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Outlet, {}, void 0, !1, {
             fileName: "app/root.tsx",
-            lineNumber: 106,
+            lineNumber: 105,
             columnNumber: 9
           }, this) }, void 0, !1, {
             fileName: "app/root.tsx",
-            lineNumber: 105,
+            lineNumber: 104,
             columnNumber: 8
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Footer, {}, void 0, !1, {
             fileName: "app/root.tsx",
-            lineNumber: 108,
+            lineNumber: 107,
             columnNumber: 8
           }, this)
         ] }, void 0, !0, {
           fileName: "app/root.tsx",
-          lineNumber: 104,
+          lineNumber: 103,
           columnNumber: 7
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "fixed top-0 right-0 left-0", id: "header", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Header_default, { currentUser }, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 113,
+          lineNumber: 112,
           columnNumber: 8
         }, this) }, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 112,
+          lineNumber: 111,
           columnNumber: 7
         }, this)
       ] }, void 0, !0, {
         fileName: "app/root.tsx",
-        lineNumber: 103,
+        lineNumber: 102,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.ScrollRestoration, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 117,
+        lineNumber: 116,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Scripts, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 118,
+        lineNumber: 117,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.LiveReload, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 119,
+        lineNumber: 118,
         columnNumber: 6
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 102,
+      lineNumber: 101,
       columnNumber: 5
     }, this) }, void 0, !1, {
       fileName: "app/root.tsx",
-      lineNumber: 101,
+      lineNumber: 100,
       columnNumber: 4
     }, this)
   ] }, void 0, !0, {
     fileName: "app/root.tsx",
-    lineNumber: 96,
+    lineNumber: 93,
     columnNumber: 3
   }, this);
 }
@@ -1622,17 +1628,17 @@ function ErrorBoundary() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("head", { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Meta, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 132,
+        lineNumber: 131,
         columnNumber: 5
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Links, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 133,
+        lineNumber: 132,
         columnNumber: 5
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 131,
+      lineNumber: 130,
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(PlayerContextProvider_default, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("body", { className: "bg-gray-100", children: [
@@ -1641,70 +1647,70 @@ function ErrorBoundary() {
           /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "w-full min-h-screen lg:max-w-5xl px-4 pt-6 pb-44 text-center", children: [
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("h1", { children: "Oops! There was an error." }, void 0, !1, {
               fileName: "app/root.tsx",
-              lineNumber: 140,
+              lineNumber: 139,
               columnNumber: 9
             }, this),
             /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("p", { className: "text-red-500 mt-2", children: error.message }, void 0, !1, {
               fileName: "app/root.tsx",
-              lineNumber: 141,
+              lineNumber: 140,
               columnNumber: 9
             }, this)
           ] }, void 0, !0, {
             fileName: "app/root.tsx",
-            lineNumber: 139,
+            lineNumber: 138,
             columnNumber: 8
           }, this),
           /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Footer, {}, void 0, !1, {
             fileName: "app/root.tsx",
-            lineNumber: 143,
+            lineNumber: 142,
             columnNumber: 8
           }, this)
         ] }, void 0, !0, {
           fileName: "app/root.tsx",
-          lineNumber: 138,
+          lineNumber: 137,
           columnNumber: 7
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)("div", { className: "fixed top-0 right-0 left-0", id: "header", children: /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(Header_default, {}, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 148,
+          lineNumber: 147,
           columnNumber: 8
         }, this) }, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 147,
+          lineNumber: 146,
           columnNumber: 7
         }, this)
       ] }, void 0, !0, {
         fileName: "app/root.tsx",
-        lineNumber: 137,
+        lineNumber: 136,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.ScrollRestoration, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 152,
+        lineNumber: 151,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.Scripts, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 153,
+        lineNumber: 152,
         columnNumber: 6
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime13.jsxDEV)(import_react16.LiveReload, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 154,
+        lineNumber: 153,
         columnNumber: 6
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 136,
+      lineNumber: 135,
       columnNumber: 5
     }, this) }, void 0, !1, {
       fileName: "app/root.tsx",
-      lineNumber: 135,
+      lineNumber: 134,
       columnNumber: 4
     }, this)
   ] }, void 0, !0, {
     fileName: "app/root.tsx",
-    lineNumber: 130,
+    lineNumber: 129,
     columnNumber: 3
   }, this);
 }
@@ -4079,9 +4085,11 @@ __export(collections_exports, {
 var import_react48 = require("@remix-run/react");
 var import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
 function meta2() {
-  return {
-    title: "Trad Archive - Collections"
-  };
+  return [
+    {
+      title: "Trad Archive - Collections"
+    }
+  ];
 }
 function loader5() {
   return db.collection.findMany({
@@ -4095,30 +4103,30 @@ var Collections = () => {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("h1", { className: "mb-6", children: "Collections" }, void 0, !1, {
       fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 28,
+      lineNumber: 30,
       columnNumber: 4
     }, this),
     collections.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("div", { className: "text-gray-500", children: "No Collections found" }, void 0, !1, {
       fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 30,
+      lineNumber: 32,
       columnNumber: 5
     }, this),
     collections.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("ul", { children: collections.map((collection, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(import_react48.Link, { to: Entity_default.makeHrefForView(collection), children: collection.name }, void 0, !1, {
       fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 36,
+      lineNumber: 38,
       columnNumber: 8
     }, this) }, index, !1, {
       fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 35,
+      lineNumber: 37,
       columnNumber: 7
     }, this)) }, void 0, !1, {
       fileName: "app/routes/entities/collections/index.tsx",
-      lineNumber: 33,
+      lineNumber: 35,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/entities/collections/index.tsx",
-    lineNumber: 27,
+    lineNumber: 29,
     columnNumber: 3
   }, this);
 }, collections_default = Collections;
@@ -4237,9 +4245,11 @@ __export(instruments_exports, {
 var import_react50 = require("@remix-run/react"), import_node5 = require("@remix-run/node");
 var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
 function meta3() {
-  return {
-    title: "Trad Archive - Instruments"
-  };
+  return [
+    {
+      title: "Trad Archive - Instruments"
+    }
+  ];
 }
 function loader7() {
   return db.instrument.findMany({
@@ -4290,30 +4300,30 @@ var action = async ({ request }) => {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("h1", { className: "mb-6", children: "Instruments" }, void 0, !1, {
       fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 95,
+      lineNumber: 97,
       columnNumber: 4
     }, this),
     instruments.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("div", { className: "text-gray-500", children: "No Instruments found" }, void 0, !1, {
       fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 97,
+      lineNumber: 99,
       columnNumber: 5
     }, this),
     instruments.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("ul", { children: instruments.map((instrument, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(import_react50.Link, { to: Entity_default.makeHrefForView(instrument), children: instrument.name }, void 0, !1, {
       fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 103,
+      lineNumber: 105,
       columnNumber: 8
     }, this) }, index, !1, {
       fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 102,
+      lineNumber: 104,
       columnNumber: 7
     }, this)) }, void 0, !1, {
       fileName: "app/routes/entities/instruments/index.tsx",
-      lineNumber: 100,
+      lineNumber: 102,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/entities/instruments/index.tsx",
-    lineNumber: 94,
+    lineNumber: 96,
     columnNumber: 3
   }, this);
 }, instruments_default = Instruments;
@@ -4432,9 +4442,11 @@ __export(people_exports, {
 var import_react52 = require("@remix-run/react"), import_node6 = require("@remix-run/node");
 var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
 function meta4() {
-  return {
-    title: "Trad Archive - People"
-  };
+  return [
+    {
+      title: "Trad Archive - People"
+    }
+  ];
 }
 function loader9() {
   return db.person.findMany({
@@ -4486,30 +4498,30 @@ var action2 = async ({ request }) => {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("h1", { className: "mb-6", children: "People" }, void 0, !1, {
       fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 101,
+      lineNumber: 103,
       columnNumber: 4
     }, this),
     people.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("div", { className: "text-gray-500", children: "No People found" }, void 0, !1, {
       fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 103,
+      lineNumber: 105,
       columnNumber: 5
     }, this),
     people.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("ul", { children: people.map((person, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react52.Link, { to: Entity_default.makeHrefForView(person), children: person.name }, void 0, !1, {
       fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 109,
+      lineNumber: 111,
       columnNumber: 8
     }, this) }, index, !1, {
       fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 108,
+      lineNumber: 110,
       columnNumber: 7
     }, this)) }, void 0, !1, {
       fileName: "app/routes/entities/people/index.tsx",
-      lineNumber: 106,
+      lineNumber: 108,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/entities/people/index.tsx",
-    lineNumber: 100,
+    lineNumber: 102,
     columnNumber: 3
   }, this);
 }, people_default = People;
@@ -4627,9 +4639,11 @@ __export(places_exports, {
 var import_react54 = require("@remix-run/react");
 var import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
 function meta5() {
-  return {
-    title: "Trad Archive - Places"
-  };
+  return [
+    {
+      title: "Trad Archive - Places"
+    }
+  ];
 }
 function loader11() {
   return db.place.findMany({
@@ -4643,30 +4657,30 @@ var Places = () => {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("h1", { className: "mb-6", children: "Places" }, void 0, !1, {
       fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 28,
+      lineNumber: 30,
       columnNumber: 4
     }, this),
     places.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("div", { className: "text-gray-500", children: "No Places found" }, void 0, !1, {
       fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 30,
+      lineNumber: 32,
       columnNumber: 5
     }, this),
     places.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("ul", { children: places.map((place, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)("li", { className: "mb-2", children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(import_react54.Link, { to: Entity_default.makeHrefForView(place), children: place.name }, void 0, !1, {
       fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 36,
+      lineNumber: 38,
       columnNumber: 8
     }, this) }, index, !1, {
       fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 35,
+      lineNumber: 37,
       columnNumber: 7
     }, this)) }, void 0, !1, {
       fileName: "app/routes/entities/places/index.tsx",
-      lineNumber: 33,
+      lineNumber: 35,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/entities/places/index.tsx",
-    lineNumber: 27,
+    lineNumber: 29,
     columnNumber: 3
   }, this);
 }, places_default = Places;
@@ -4784,9 +4798,11 @@ __export(tunes_exports, {
 var import_react56 = require("@remix-run/react");
 var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
 function meta6() {
-  return {
-    title: "Trad Archive - Tunes"
-  };
+  return [
+    {
+      title: "Trad Archive - Tunes"
+    }
+  ];
 }
 var PER_PAGE = 100;
 async function loader13({
@@ -4815,7 +4831,7 @@ var Tunes = () => {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(Layout_default, { children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("h1", { children: "Tunes" }, void 0, !1, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 59,
+      lineNumber: 61,
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("div", { className: "text-gray-500 text-sm mt-2", children: [
@@ -4823,12 +4839,12 @@ var Tunes = () => {
       " ",
       /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("a", { href: "https://thesession.org", target: "_blank", rel: "noreferrer", children: "The Session \u2197" }, void 0, !1, {
         fileName: "app/routes/entities/tunes/index.tsx",
-        lineNumber: 63,
+        lineNumber: 65,
         columnNumber: 5
       }, this)
     ] }, void 0, !0, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 61,
+      lineNumber: 63,
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
@@ -4843,32 +4859,32 @@ var Tunes = () => {
       !1,
       {
         fileName: "app/routes/entities/tunes/index.tsx",
-        lineNumber: 68,
+        lineNumber: 70,
         columnNumber: 4
       },
       this
     ),
     tunes.length === 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("div", { className: "text-gray-500", children: "No Tunes found" }, void 0, !1, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 76,
+      lineNumber: 78,
       columnNumber: 5
     }, this),
     tunes.length > 0 && /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("ul", { className: "space-y-2", children: tunes.map((tune, index) => /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(import_react56.Link, { to: Entity_default.makeHrefForView(tune), children: tune.name }, void 0, !1, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 82,
+      lineNumber: 84,
       columnNumber: 8
     }, this) }, index, !1, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 81,
+      lineNumber: 83,
       columnNumber: 7
     }, this)) }, void 0, !1, {
       fileName: "app/routes/entities/tunes/index.tsx",
-      lineNumber: 79,
+      lineNumber: 81,
       columnNumber: 5
     }, this)
   ] }, void 0, !0, {
     fileName: "app/routes/entities/tunes/index.tsx",
-    lineNumber: 58,
+    lineNumber: 60,
     columnNumber: 3
   }, this);
 }, tunes_default = Tunes;
@@ -6544,10 +6560,10 @@ var action9 = async ({ request }) => {
 };
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "a7900b2d", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-YD2VFXG6.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-W4FZDM77.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-IR7CUAXU.js", imports: ["/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-E3SI33KS.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-4HQM4E2D.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-4S34WU2F.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-WRBVGP4K.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-M2BYOI3U.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-UUPDUAEE.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-JNEKSOLV.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-YAPOYLNG.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-L6JK5UJY.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-54YPDS4N.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-QUYROJ6I.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-SZK5N2YG.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-4UI5TM32.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-A7VFI3MC.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-2HNC2HKB.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-A7900B2D.js" };
+var assets_manifest_default = { version: "b94da72f", entry: { module: "/build/entry.client-TSMCFMUV.js", imports: ["/build/_shared/chunk-E4POIEVB.js", "/build/_shared/chunk-QS3GJO57.js", "/build/_shared/chunk-CUPSZOF3.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-VD2RZH7A.js", imports: ["/build/_shared/chunk-XD23K4ZD.js", "/build/_shared/chunk-SBX4NKV4.js", "/build/_shared/chunk-6MFXEF3F.js", "/build/_shared/chunk-FF66HNX7.js", "/build/_shared/chunk-LFDIS6R5.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !0 }, "routes/account/index": { id: "routes/account/index", parentId: "root", path: "account", index: !0, caseSensitive: void 0, module: "/build/routes/account/index-W4FZDM77.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/choose-new-password": { id: "routes/choose-new-password", parentId: "root", path: "choose-new-password", index: void 0, caseSensitive: void 0, module: "/build/routes/choose-new-password-SZ5CTA63.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/comments": { id: "routes/comments", parentId: "root", path: "comments", index: void 0, caseSensitive: void 0, module: "/build/routes/comments-TE4UCUVI.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/$slug": { id: "routes/entities/audio-items/$slug", parentId: "root", path: "entities/audio-items/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/$slug-IR7CUAXU.js", imports: ["/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/index": { id: "routes/entities/audio-items/index", parentId: "root", path: "entities/audio-items", index: !0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/index-E3SI33KS.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/audio-items/random": { id: "routes/entities/audio-items/random", parentId: "root", path: "entities/audio-items/random", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/audio-items/random-4HQM4E2D.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/$slug": { id: "routes/entities/collections/$slug", parentId: "root", path: "entities/collections/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/collections/$slug-4S34WU2F.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/collections/index": { id: "routes/entities/collections/index", parentId: "root", path: "entities/collections", index: !0, caseSensitive: void 0, module: "/build/routes/entities/collections/index-N7WIWN4J.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/$slug": { id: "routes/entities/instruments/$slug", parentId: "root", path: "entities/instruments/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/instruments/$slug-M2BYOI3U.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/instruments/index": { id: "routes/entities/instruments/index", parentId: "root", path: "entities/instruments", index: !0, caseSensitive: void 0, module: "/build/routes/entities/instruments/index-BHZELHAG.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/$slug": { id: "routes/entities/people/$slug", parentId: "root", path: "entities/people/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/people/$slug-JNEKSOLV.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/people/index": { id: "routes/entities/people/index", parentId: "root", path: "entities/people", index: !0, caseSensitive: void 0, module: "/build/routes/entities/people/index-7QOFBSUQ.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/$slug": { id: "routes/entities/places/$slug", parentId: "root", path: "entities/places/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/places/$slug-L6JK5UJY.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/places/index": { id: "routes/entities/places/index", parentId: "root", path: "entities/places", index: !0, caseSensitive: void 0, module: "/build/routes/entities/places/index-YZDLTG67.js", imports: ["/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/$slug": { id: "routes/entities/tunes/$slug", parentId: "root", path: "entities/tunes/:slug", index: void 0, caseSensitive: void 0, module: "/build/routes/entities/tunes/$slug-QUYROJ6I.js", imports: ["/build/_shared/chunk-SI53EVXF.js", "/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/entities/tunes/index": { id: "routes/entities/tunes/index", parentId: "root", path: "entities/tunes", index: !0, caseSensitive: void 0, module: "/build/routes/entities/tunes/index-5DF2FW3B.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-4UI5TM32.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/login": { id: "routes/login", parentId: "root", path: "login", index: void 0, caseSensitive: void 0, module: "/build/routes/login-DVQME63M.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/logout": { id: "routes/logout", parentId: "root", path: "logout", index: void 0, caseSensitive: void 0, module: "/build/routes/logout-QCIOKXNT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/relationships": { id: "routes/relationships", parentId: "root", path: "relationships", index: void 0, caseSensitive: void 0, module: "/build/routes/relationships-NVSTW3YI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/reset-password": { id: "routes/reset-password", parentId: "root", path: "reset-password", index: void 0, caseSensitive: void 0, module: "/build/routes/reset-password-KBNBUXZ3.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/saved-items": { id: "routes/saved-items", parentId: "root", path: "saved-items", index: void 0, caseSensitive: void 0, module: "/build/routes/saved-items-A7VFI3MC.js", imports: ["/build/_shared/chunk-IGPGF2YZ.js", "/build/_shared/chunk-3O2QNSSL.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/search": { id: "routes/search", parentId: "root", path: "search", index: void 0, caseSensitive: void 0, module: "/build/routes/search-242MWHLE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/signup": { id: "routes/signup", parentId: "root", path: "signup", index: void 0, caseSensitive: void 0, module: "/build/routes/signup-5OPADG5A.js", imports: ["/build/_shared/chunk-RZD3QUYA.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/tags": { id: "routes/tags", parentId: "root", path: "tags", index: void 0, caseSensitive: void 0, module: "/build/routes/tags-B6DTFF6T.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/users/$id": { id: "routes/users/$id", parentId: "root", path: "users/:id", index: void 0, caseSensitive: void 0, module: "/build/routes/users/$id-2HNC2HKB.js", imports: ["/build/_shared/chunk-HM2UVJMW.js", "/build/_shared/chunk-SINXZYOU.js", "/build/_shared/chunk-43JJPWIC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, cssBundleHref: void 0, hmr: void 0, url: "/build/manifest-B94DA72F.js" };
 
 // server-entry-module:@remix-run/dev/server-build
-var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, unstable_cssSideEffectImports: !1, unstable_dev: !1, unstable_postcss: !1, unstable_tailwind: !1, unstable_vanillaExtract: !1, v2_errorBoundary: !0, v2_meta: !1, v2_normalizeFormMethod: !0, v2_routeConvention: !1 }, publicPath = "/build/", entry = { module: entry_server_react_stream_exports }, routes = {
+var assetsBuildDirectory = "public/build", future = { unstable_cssModules: !1, unstable_cssSideEffectImports: !1, unstable_dev: !1, unstable_postcss: !1, unstable_tailwind: !1, unstable_vanillaExtract: !1, v2_errorBoundary: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !1 }, publicPath = "/build/", entry = { module: entry_server_react_stream_exports }, routes = {
   root: {
     id: "root",
     parentId: void 0,

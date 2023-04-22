@@ -9,9 +9,11 @@ import Layout from "~/components/Layout";
 import { db } from "~/utils/db.server";
 
 export function meta() {
-	return {
-		title: "Trad Archive - Tunes",
-	};
+	return [
+		{
+			title: "Trad Archive - Tunes",
+		},
+	];
 }
 
 const PER_PAGE = 100;

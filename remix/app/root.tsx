@@ -1,4 +1,4 @@
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import type { LoaderFunction, V2_MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
 	Links,
@@ -7,7 +7,6 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useCatch,
 	useLoaderData,
 	useRouteError,
 } from "@remix-run/react";
@@ -21,11 +20,9 @@ import Header from "~/components/Header";
 import Footer from "~/components/Footer";
 import type { User } from "@prisma/client";
 
-export const meta: MetaFunction = () => ({
-	charset: "utf-8",
-	title: "Trad Archive",
-	viewport: "width=device-width,initial-scale=1",
-});
+export const meta: V2_MetaFunction = () => {
+	return [{ title: "Trad Archive" }];
+};
 
 export function links() {
 	return [
@@ -90,12 +87,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-	const { currentUser } = useLoaderData<LoaderData>();
+	const { currentUser } = useLoaderData<typeof loader>();
 
 	return (
 		<html lang="en">
 			<head>
 				<Meta />
+				<meta charSet="utf-8" />
+				<meta name="viewport" content="width=device-width,initial-scale=1" />
 				<Links />
 			</head>
 			<PlayerContextProvider>

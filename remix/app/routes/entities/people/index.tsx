@@ -9,9 +9,11 @@ import { db } from "~/utils/db.server";
 import { getSession } from "~/sessions.server";
 
 export function meta() {
-	return {
-		title: "Trad Archive - People",
-	};
+	return [
+		{
+			title: "Trad Archive - People",
+		},
+	];
 }
 
 export function loader(): Promise<Person[]> {
